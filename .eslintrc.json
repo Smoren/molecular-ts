@@ -1,0 +1,68 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "eslint-plugin-tsdoc"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "google",
+        "airbnb-typescript/base",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    ],
+    "rules": {
+        "max-len": ["error", { "code": 120 }],
+        "indent": ["error", 2],
+        "no-var": "error",
+        "semi": "error",
+        "no-multi-spaces": "error",
+        "space-in-parens": "error",
+        "no-multiple-empty-lines": "error",
+        "prefer-const": "error",
+        "object-property-newline": "error",
+        "tsdoc/syntax": "warn",
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/restrict-plus-operands": "off",
+        "@typescript-eslint/space-infix-ops": "off",
+        "@typescript-eslint/lines-between-class-members": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "valid-jsdoc": "off",
+        "no-prototype-builtins": "off",
+        "operator-linebreak": "off",
+        "no-use-before-define": "off",
+        "no-constant-condition": "warn",
+        "require-jsdoc": "off"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module",
+        "project": ["tsconfig.json"]
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".ts"]
+            }
+        }
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/*.test.js"
+            ],
+            "env": {
+                "jest": true
+            }
+        }
+    ]
+}

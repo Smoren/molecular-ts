@@ -1,0 +1,59 @@
+{
+  "name": "molecular-ts",
+  "version": "0.0.1",
+  "description": "Canvas ts",
+  "main": "app.js",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "itertools-ts": "^1.22.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "latest",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/crypto-js": "^4.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "ajv": "^7.0.3",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^16.1.4",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-tsdoc": "^0.2.14",
+    "eslint-webpack-plugin": "^3.1.1",
+    "jest": "latest",
+    "ts-loader": "^9.2.8",
+    "typedoc": "^0.22.13",
+    "typescript": "^4.6.2",
+    "webpack": "^5.67",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-middleware": "^5.3.3",
+    "webpack-dev-server": "^4.7.4",
+    "webpack-hot-middleware": "^2.25.3"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "webpack",
+    "start": "webpack serve",
+    "serve": "webpack serve --open",
+    "doc": "typedoc --entryPointStrategy expand ./src"
+  },
+  "jest": {
+    "rootDir": ".",
+    "transform": {
+      ".*": "<rootDir>/node_modules/babel-jest"
+    },
+    "unmockedModulePathPatterns": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smoren/canvas-ts"
+  },
+  "author": "Smoren",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Smoren/canvas-ts/issues"
+  },
+  "homepage": "https://github.com/Smoren/canvas-ts#readme"
+}
