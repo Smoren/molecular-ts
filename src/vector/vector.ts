@@ -8,7 +8,12 @@ import { isEqual } from './helpers';
  */
 export class Vector extends Array implements VectorInterface {
   constructor(coords: NumericVector | ImmutableNumericVector) {
-    super(...coords);
+    if (coords.length === 1) {
+      super();
+      this[0] = coords[0];
+    } else {
+      super(...coords);
+    }
   }
 
   get abs(): number {
