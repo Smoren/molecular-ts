@@ -1,27 +1,72 @@
 import { Drawer } from './drawer';
 import { InteractionManager, LinkManager } from './interaction';
-import { AtomInterface, CommonConfig, TypesConfig } from './types';
+import { CommonConfig, TypesConfig } from './types';
 import { Atom } from './atom';
 
 const commonConfig: CommonConfig = {
-  atomRadius: 10,
+  atomRadius: 5,
   interactionRadius: 1000,
-  linkRadius: 50,
-  unlinkRadius: 80,
-  gravConst: 50,
-  bounceAddConst: 0.01,
+  linkRadius: 30,
+  unlinkRadius: 40,
+  gravConst: 30,
+  gravLinkConst: 50,
+  bounceAddConst: 0.5,
   bounceDivConst: 1.1,
 };
 const typesConfig: TypesConfig = {
   1: {
-    color: '0000ff',
+    color: 'ff0000',
     interactions: {
       1: {
+        mode: -1,
+        linksCount: 1,
+      },
+      2: {
+        mode: 1,
+        linksCount: 0,
+      },
+      3: {
         mode: 1,
         linksCount: 0,
       },
     },
-    maxLinksCount: 0,
+    maxLinksCount: 1,
+  },
+  2: {
+    color: '00ff00',
+    interactions: {
+      1: {
+        mode: -1,
+        linksCount: 0,
+      },
+      2: {
+        mode: -1,
+        linksCount: 2,
+      },
+      3: {
+        mode: -1,
+        linksCount: 1,
+      },
+    },
+    maxLinksCount: 3,
+  },
+  3: {
+    color: '0000ff',
+    interactions: {
+      1: {
+        mode: 1,
+        linksCount: 1,
+      },
+      2: {
+        mode: -1,
+        linksCount: 1,
+      },
+      3: {
+        mode: -1,
+        linksCount: 0,
+      },
+    },
+    maxLinksCount: 2,
   },
 };
 const linkManager = new LinkManager(typesConfig);
@@ -37,13 +82,16 @@ const drawer = new Drawer({
   typesConfig,
 });
 
-const atoms: AtomInterface[] = [
-  new Atom(1, [100, 100], [0, 0]),
-  new Atom(1, [200, 100], [0, 0]),
-  new Atom(1, [200, 200], [0, 0]),
-];
+const atoms: Atom[] = [];
 
-drawer.initEventHandlers(() => atoms);
+for (let i=0; i<100; ++i) {
+  const type = Math.round(Math.random()*2) + 1;
+  const position = [Math.round(Math.random()*500), Math.round(Math.random()*500)];
+  const speed = [0, 0];
+  atoms.push(new Atom(type, position, speed));
+}
+
+drawer.initEventHandlers(() => atoms, () => linkManager.map);
 
 setInterval(() => {
   for (const atom of atoms) {
@@ -53,5 +101,5 @@ setInterval(() => {
     interactionManager.interact(atom, atoms);
   }
   drawer.clear();
-  drawer.draw(atoms);
+  drawer.draw(atoms, linkManager.map);
 }, 30);

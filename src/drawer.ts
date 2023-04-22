@@ -8,7 +8,6 @@ import {
 import { createVector } from './vector';
 import { NumericVector } from './vector/types';
 
-
 /**
  * Transpose coords with backward applying offset and scale
  * @param coords - coords to transpose
@@ -56,10 +55,17 @@ export class Drawer implements DrawerInterface {
     this.refresh();
   }
 
-  public draw(atoms: Iterable<AtomInterface>): void {
+  public draw(atoms: Iterable<AtomInterface>, links: Map<string, [AtomInterface, AtomInterface]>): void {
     this.context.save();
     this.context.translate(...this.viewConfig.offset as [number, number]);
     this.context.scale(...this.viewConfig.scale as [number, number]);
+    for (const [, [from, to]] of links) {
+      this.drawLine(
+        from.position,
+        to.position,
+        'ffffff',
+      );
+    }
     for (const atom of atoms) {
       this.drawCircle(
         atom.position,
@@ -75,6 +81,15 @@ export class Drawer implements DrawerInterface {
     this.context.fillStyle = `#${color}`;
     this.context.ellipse(...position as [number, number], radius, radius, 0, 0, 2*Math.PI);
     this.context.fill();
+    this.context.closePath();
+  }
+
+  drawLine(from: NumericVector, to: NumericVector, color: string) {
+    this.context.beginPath();
+    this.context.strokeStyle = `#${color}`;
+    this.context.moveTo(...from as [number, number]);
+    this.context.lineTo(...to as [number, number]);
+    this.context.stroke();
     this.context.closePath();
   }
 
@@ -96,10 +111,13 @@ export class Drawer implements DrawerInterface {
     this.context.fill();
   }
 
-  public initEventHandlers(getItems: () => Iterable<AtomInterface>): void {
+  public initEventHandlers(
+    getAtoms: () => Iterable<AtomInterface>,
+    getLinks: () => Map<string, [AtomInterface, AtomInterface]>,
+  ): void {
     const resizeObserver = new ResizeObserver(() => {
       this.refresh();
-      this.draw(getItems());
+      this.draw(getAtoms(), getLinks());
     });
     resizeObserver.observe(this.domElement);
 
@@ -129,7 +147,7 @@ export class Drawer implements DrawerInterface {
       }
 
       this.clear();
-      this.draw(getItems());
+      this.draw(getAtoms(), getLinks());
       event.preventDefault();
     });
   }

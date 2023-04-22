@@ -23,6 +23,7 @@ export type CommonConfig = {
   readonly linkRadius: number;
   readonly unlinkRadius: number;
   readonly gravConst: number;
+  readonly gravLinkConst: number;
   readonly bounceAddConst: number;
   readonly bounceDivConst: number;
 };
@@ -58,7 +59,7 @@ export interface DrawableInterface {
 }
 
 export interface DrawerInterface {
-  draw(items: Iterable<AtomInterface>): void;
+  draw(atoms: Iterable<AtomInterface>, links: Map<string, [AtomInterface, AtomInterface]>): void;
   refresh(): void;
   clear(): void;
   // getBound(): BoundInterface;

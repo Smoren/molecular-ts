@@ -2,20 +2,24 @@ import { AtomInterface, CommonConfig, TypesConfig } from './types';
 import { VectorInterface } from './vector/types';
 
 export class LinkManager {
+  readonly map: Map<string, [AtomInterface, AtomInterface]>;
   private readonly config: TypesConfig;
 
   constructor(config: TypesConfig) {
     this.config = config;
+    this.map = new Map();
   }
 
   public addLink(lhs: AtomInterface, rhs: AtomInterface): void {
     lhs.links.set(rhs.id, rhs);
     rhs.links.set(lhs.id, lhs);
+    this.map.set(this.getId(lhs, rhs), [lhs, rhs]);
   }
 
   public removeLink(lhs: AtomInterface, rhs: AtomInterface): void {
     lhs.links.delete(rhs.id);
     rhs.links.delete(lhs.id);
+    this.map.delete(this.getId(lhs, rhs));
   }
 
   public hasLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
@@ -33,6 +37,10 @@ export class LinkManager {
     const linksCount = lhs.links.countType(rhs.type);
 
     return linksCount < Math.min(maxLinksCount, maxTypeLinksCount);
+  }
+
+  protected getId(lhs: AtomInterface, rhs: AtomInterface): string {
+    return `${Math.min(lhs.id, rhs.id)}-${Math.max(lhs.id, rhs.id)}`;
   }
 }
 
@@ -65,12 +73,12 @@ export class InteractionManager {
       // если атомы соприкасаются
       if (dist < this.commonConfig.atomRadius*2) {
         this.handleBounce(atom, dist, distVector);
-        // continue;
+        continue;
       }
 
       // когда есть связь
       if (hasLink) {
-        this.handleGravity(atom, dist, distVector);
+        this.handleLinkGravity(atom, dist, distVector);
         continue;
       }
 
@@ -90,6 +98,10 @@ export class InteractionManager {
 
   protected handleGravity(atom: AtomInterface, dist: number, distVector: VectorInterface): void {
     atom.speed.add(distVector.normalize().mul(this.commonConfig.gravConst / dist**2));
+  }
+
+  protected handleLinkGravity(atom: AtomInterface, dist: number, distVector: VectorInterface): void {
+    atom.speed.add(distVector.normalize().mul(this.commonConfig.gravLinkConst / dist**2));
   }
 
   protected handleAntiGravity(atom: AtomInterface, dist: number, distVector: VectorInterface): void {
