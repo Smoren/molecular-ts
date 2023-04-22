@@ -23,7 +23,8 @@ export type CommonConfig = {
   readonly linkRadius: number;
   readonly unlinkRadius: number;
   readonly gravConst: number;
-  readonly bounceConst: number;
+  readonly bounceAddConst: number;
+  readonly bounceDivConst: number;
 };
 
 export class LinkMap extends Map<number, AtomInterface> {

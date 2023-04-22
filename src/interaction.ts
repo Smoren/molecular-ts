@@ -97,10 +97,10 @@ export class InteractionManager {
   }
 
   protected handleBounce(atom: AtomInterface, dist: number, distVector: VectorInterface): void {
-    atom.speed.add(
+    atom.speed.div(this.commonConfig.bounceDivConst).add(
       distVector.normalize()
         .inverse()
-        .mul(this.commonConfig.bounceConst),
+        .mul(this.commonConfig.bounceAddConst * (this.commonConfig.atomRadius * 2 - dist)),
     );
   }
 

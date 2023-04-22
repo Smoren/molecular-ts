@@ -9,7 +9,8 @@ const commonConfig: CommonConfig = {
   linkRadius: 50,
   unlinkRadius: 80,
   gravConst: 50,
-  bounceConst: 1,
+  bounceAddConst: 0.01,
+  bounceDivConst: 1.1,
 };
 const typesConfig: TypesConfig = {
   1: {
