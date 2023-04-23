@@ -17,6 +17,7 @@ export type AtomConfig = {
 export type TypesConfig = Record<number, AtomConfig>;
 
 export type CommonConfig = {
+  readonly speed: number;
   readonly atomRadius: number;
   readonly interactionRadius: number;
   readonly linkRadius: number;

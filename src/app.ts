@@ -5,6 +5,7 @@ import { Atom } from './atom';
 // import { createTypes } from './factory';
 
 const commonConfig: CommonConfig = {
+  speed: 1,
   atomRadius: 5,
   interactionRadius: 100,
   linkRadius: 50,

@@ -111,23 +111,29 @@ export class InteractionManager {
 
   protected handleBounds(atom: AtomInterface) {
     if (atom.position[0] < this.commonConfig.bounds[0]) {
-      atom.speed.add([1, 0]);
+      atom.speed.add([this.commonConfig.speed, 0]);
     } else if (atom.position[0] > this.commonConfig.bounds[2]) {
-      atom.speed.add([-1, 0]);
+      atom.speed.add([-this.commonConfig.speed, 0]);
     }
     if (atom.position[1] < this.commonConfig.bounds[1]) {
-      atom.speed.add([0, 1]);
+      atom.speed.add([0, this.commonConfig.speed]);
     } else if (atom.position[1] > this.commonConfig.bounds[3]) {
-      atom.speed.add([0, -1]);
+      atom.speed.add([0, -this.commonConfig.speed]);
     }
   }
 
   protected handleGravity(atom: AtomInterface, dist: number, distVector: VectorInterface, multiplier: number): void {
-    atom.speed.add(distVector.normalize().mul(multiplier * this.commonConfig.gravConst / dist**2));
+    atom.speed.add(
+      distVector.normalize().mul(
+        multiplier * this.commonConfig.gravConst * this.commonConfig.speed / dist**2,
+      ),
+    );
   }
 
   protected handleLinkInfluence(atom: AtomInterface, dist: number, distVector: VectorInterface): void {
-    atom.speed.add(distVector.normalize().mul(this.commonConfig.gravLinkConst));
+    atom.speed.add(
+      distVector.normalize().mul(this.commonConfig.gravLinkConst * this.commonConfig.speed),
+    );
   }
 
   protected handleLinking(lhs: AtomInterface, rhs: AtomInterface, dist: number): boolean {
