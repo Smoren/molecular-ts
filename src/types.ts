@@ -27,7 +27,7 @@ export type CommonConfig = {
   readonly bounceAddConst: number;
   readonly bounceDivConst: number;
   readonly bounds: [number, number, number, number];
-  readonly boundsBounceConst: number
+  readonly boundsBounceConst: number;
 };
 
 export class LinkMap extends Map<number, AtomInterface> {
