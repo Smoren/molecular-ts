@@ -19,11 +19,11 @@ export type TypesConfig = Record<number, AtomConfig>;
 export type CommonConfig = {
   readonly speed: number;
   readonly atomRadius: number;
-  readonly interactionRadius: number;
-  readonly linkRadius: number;
-  readonly unlinkRadius: number;
-  readonly gravConst: number;
-  readonly gravLinkConst: number;
+  readonly maxInteractionRadius: number;
+  readonly minLinkRadius: number;
+  readonly maxUnlinkRadius: number;
+  readonly gravityForce: number;
+  readonly linkForce: number;
   readonly bounds: [number, number, number, number];
 };
 

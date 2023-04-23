@@ -7,11 +7,11 @@ import { Atom } from './atom';
 const commonConfig: CommonConfig = {
   speed: 1,
   atomRadius: 5,
-  interactionRadius: 100,
-  linkRadius: 50,
-  unlinkRadius: 50,
-  gravConst: 50,
-  gravLinkConst: 0.7,
+  maxInteractionRadius: 100,
+  minLinkRadius: 50,
+  maxUnlinkRadius: 50,
+  gravityForce: 50,
+  linkForce: 0.7,
   bounds: [0, 0, 1000, 800],
 };
 const typesConfig: TypesConfig = {

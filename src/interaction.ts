@@ -63,7 +63,7 @@ export class InteractionManager {
     const distVector = this.getDistVector(rhs, lhs);
     const dist = this.getDist(distVector);
 
-    if (this.linkManager.hasLink(lhs, rhs) && dist >= this.commonConfig.unlinkRadius) {
+    if (this.linkManager.hasLink(lhs, rhs) && dist >= this.commonConfig.maxUnlinkRadius) {
       this.linkManager.removeLink(lhs, rhs);
     }
 
@@ -86,7 +86,7 @@ export class InteractionManager {
       const dist = this.getDist(distVector);
 
       // если расстояние между атомами слишком большое для взаимодействия
-      if (dist > this.commonConfig.interactionRadius) {
+      if (dist > this.commonConfig.maxInteractionRadius) {
         continue;
       }
 
@@ -125,21 +125,21 @@ export class InteractionManager {
   protected handleGravity(atom: AtomInterface, dist: number, distVector: VectorInterface, multiplier: number): void {
     atom.speed.add(
       distVector.normalize().mul(
-        multiplier * this.commonConfig.gravConst * this.commonConfig.speed / dist**2,
+        multiplier * this.commonConfig.gravityForce * this.commonConfig.speed / dist**2,
       ),
     );
   }
 
   protected handleLinkInfluence(atom: AtomInterface, dist: number, distVector: VectorInterface): void {
     atom.speed.add(
-      distVector.normalize().mul(this.commonConfig.gravLinkConst * this.commonConfig.speed),
+      distVector.normalize().mul(this.commonConfig.linkForce * this.commonConfig.speed),
     );
   }
 
   protected handleLinking(lhs: AtomInterface, rhs: AtomInterface, dist: number): boolean {
     const hasLink = this.linkManager.hasLink(lhs, rhs);
 
-    if (!hasLink && dist <= this.commonConfig.linkRadius && this.linkManager.canLink(lhs, rhs)) {
+    if (!hasLink && dist <= this.commonConfig.minLinkRadius && this.linkManager.canLink(lhs, rhs)) {
       this.linkManager.addLink(lhs, rhs);
       return true;
     }
