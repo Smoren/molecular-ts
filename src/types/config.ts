@@ -14,6 +14,8 @@ export type WorldConfig = {
   ATOM_RADIUS: number;
   MAX_INTERACTION_RADIUS: number;
   INERTIAL_MULTIPLIER: number;
+  LINK_FORCE_MULTIPLIER: number;
+  PLAYBACK_SPEED: number;
   SPEED: number;
   MAX_POSITION: NumericVector;
 };

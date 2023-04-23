@@ -55,7 +55,7 @@ export class InteractionManager {
       const distVector = this.getDistVector(atom, neighbour);
       const dist2 = this.getDist2(distVector);
 
-      if (dist2 > this.WORLD_CONFIG.MAX_INTERACTION_RADIUS) {
+      if (dist2 > this.WORLD_CONFIG.MAX_INTERACTION_RADIUS**2) {
         continue;
       }
 

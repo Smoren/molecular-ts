@@ -30,33 +30,38 @@ const TYPES_CONFIG: TypesConfig = {
 const WORLD_CONFIG: WorldConfig = {
   ATOM_RADIUS: 5,
   MAX_INTERACTION_RADIUS: 100,
+  LINK_FORCE_MULTIPLIER: 0.015,
   INERTIAL_MULTIPLIER: 0.98,
   SPEED: 8,
+  PLAYBACK_SPEED: 4,
   MAX_POSITION: [1000, 800],
 };
 const INITIAL_CONFIG: InitialConfig = {
-  ATOMS_COUNT: 100,
+  ATOMS_COUNT: 500,
 };
 console.log(INITIAL_CONFIG);
 
 const atoms: AtomInterface[] = [];
 
-atoms.push(createAtom(0, [300, 300]));
-atoms.push(createAtom(1, [310, 310]));
-atoms.push(createAtom(2, [300, 320]));
-atoms.push(createAtom(0, [290, 330]));
-atoms.push(createAtom(0, [330, 300]));
-atoms.push(createAtom(1, [320, 310]));
-atoms.push(createAtom(2, [330, 320]));
-atoms.push(createAtom(0, [340, 330]));
-// for (let i=0; i<INITIAL_CONFIG.ATOMS_COUNT; ++i) {
-//   const type = Math.round(Math.random()*(TYPES_CONFIG.COLORS.length-1));
-//   const position = [
-//     Math.round(Math.random()*WORLD_CONFIG.MAX_POSITION[0]),
-//     Math.round(Math.random()*WORLD_CONFIG.MAX_POSITION[1]),
-//   ];
-//   atoms.push(createAtom(type, position));
-// }
+// atoms.push(createAtom(0, [300, 300]));
+// atoms.push(createAtom(1, [320, 300]));
+
+// atoms.push(createAtom(0, [300, 300]));
+// atoms.push(createAtom(1, [310, 310]));
+// atoms.push(createAtom(2, [300, 320]));
+// atoms.push(createAtom(0, [290, 330]));
+// atoms.push(createAtom(0, [330, 300]));
+// atoms.push(createAtom(1, [320, 310]));
+// atoms.push(createAtom(2, [330, 320]));
+// atoms.push(createAtom(0, [340, 330]));
+for (let i=0; i<INITIAL_CONFIG.ATOMS_COUNT; ++i) {
+  const type = Math.round(Math.random()*(TYPES_CONFIG.COLORS.length-1));
+  const position = [
+    Math.round(Math.random()*WORLD_CONFIG.MAX_POSITION[0]),
+    Math.round(Math.random()*WORLD_CONFIG.MAX_POSITION[1]),
+  ];
+  atoms.push(createAtom(type, position));
+}
 
 const linkManager = new LinkManager();
 
@@ -80,14 +85,17 @@ const drawer = new Drawer({
 drawer.initEventHandlers(() => atoms, () => linkManager);
 
 const tick = () => {
-  for (const atom of atoms) {
-    interactionManager.moveAtom(atom);
-  }
-  for (const link of linkManager) {
-    interactionManager.interactLink(link);
-  }
-  for (const atom of atoms) {
-    interactionManager.interactAtom(atom, atoms);
+  for (let i=0; i<WORLD_CONFIG.PLAYBACK_SPEED; ++i) {
+    for (const atom of atoms) {
+      // atom.speed[0] += 0.01;
+      interactionManager.moveAtom(atom);
+    }
+    for (const link of linkManager) {
+      interactionManager.interactLink(link);
+    }
+    for (const atom of atoms) {
+      interactionManager.interactAtom(atom, atoms);
+    }
   }
   drawer.clear();
   drawer.draw(atoms, linkManager);

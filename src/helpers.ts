@@ -67,18 +67,18 @@ export class RulesHelper implements RulesHelperInterface {
     let multiplier: number;
 
     if (dist2 < this.getAtomsRadiusSum()**2) {
-      multiplier = -1;
+      multiplier = -2;
     } else if (!lhs.bonds.has(rhs)) {
       multiplier = -1;
     } else {
       multiplier = this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
     }
 
-    return multiplier * this.WORLD_CONFIG.SPEED / dist2**2;
+    return multiplier * this.WORLD_CONFIG.SPEED / dist2;
   }
 
   getLinkForce(): number {
-    return this.WORLD_CONFIG.SPEED;
+    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.WORLD_CONFIG.SPEED;
   }
 
   getAtomsRadiusSum(): number {

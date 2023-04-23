@@ -67,7 +67,7 @@ export class Drawer implements DrawerInterface {
       this.drawLine(
         link.lhs.position,
         link.rhs.position,
-        'rgb(100, 100, 100)',
+        'rgb(255, 255, 255)',
       );
     }
     this.context.restore();
