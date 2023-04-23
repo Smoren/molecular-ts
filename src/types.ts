@@ -22,6 +22,7 @@ export type CommonConfig = {
   readonly maxInteractionRadius: number;
   readonly minLinkRadius: number;
   readonly maxUnlinkRadius: number;
+  readonly inertiaMultiplier: number;
   readonly gravityForce: number;
   readonly linkForce: number;
   readonly bounds: [number, number, number, number];

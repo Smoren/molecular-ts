@@ -10,6 +10,7 @@ const commonConfig: CommonConfig = {
   maxInteractionRadius: 100,
   minLinkRadius: 50,
   maxUnlinkRadius: 50,
+  inertiaMultiplier: 0.98,
   gravityForce: 50,
   linkForce: 0.5,
   bounds: [0, 0, 1000, 800],

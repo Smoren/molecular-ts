@@ -73,7 +73,7 @@ export class InteractionManager {
 
   interactAtom(atom: AtomInterface, neighbours: AtomInterface[]): void {
     this.handleBounds(atom);
-    atom.speed.mul(0.9);
+    atom.speed.mul(this.commonConfig.inertiaMultiplier);
 
     for (const neighbour of neighbours) {
       // исключим взаимодействие атома с самим собой
