@@ -7,7 +7,7 @@ import { isEqual } from './helpers';
  */
 export class Vector extends Array implements VectorInterface {
   constructor(coords: NumericVector | ImmutableNumericVector) {
-    super();
+    super(coords.length);
     for (let i=0; i<coords.length; ++i) {
       this[i] = coords[i];
     }

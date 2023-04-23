@@ -1,7 +1,7 @@
 import { TypesConfig, WorldConfig } from './types/config';
 import { LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import { AtomInterface, LinkInterface } from './types/atomic';
-import { VectorInterface } from './vector/types';
+import { NumericVector, VectorInterface } from './vector/types';
 import { toVector, Vector } from './vector';
 
 export class InteractionManager {
@@ -31,11 +31,11 @@ export class InteractionManager {
     atom.speed.mul(this.WORLD_CONFIG.INERTIAL_MULTIPLIER);
 
     // применяем отталкивание от границ
-    this.handleBounds(atom);
+    // this.handleBounds(atom);
   }
 
   interactLink(link: LinkInterface): void {
-    const distVector = this.getDistVector(link.lhs, link.rhs);
+    const distVector = toVector(this.getDistVector(link.lhs, link.rhs));
     const dist2 = this.getDist2(distVector);
 
     if (dist2 >= this.WORLD_CONFIG.MAX_INTERACTION_RADIUS**2) {
@@ -54,9 +54,6 @@ export class InteractionManager {
         continue;
       }
 
-      // const x = neighbour.position[0] - atom.position[0];
-      // const y = neighbour.position[1] - atom.position[1];
-      // const dist2 = x*x + y*y;
       const distVector = this.getDistVector(atom, neighbour);
       const dist2 = this.getDist2(distVector);
 
@@ -64,8 +61,11 @@ export class InteractionManager {
         continue;
       }
 
-      atom.speed.add(distVector.normalize().mul(this.ruleHelper.getGravityForce(atom, neighbour, dist2)));
-      // atom.speed.add(toVector([x, y]).normalize().mul(this.ruleHelper.getGravityForce(atom, neighbour, dist2)));
+      atom.speed.add(
+        toVector(distVector)
+          .normalize()
+          .mul(this.ruleHelper.getGravityForce(atom, neighbour, dist2)),
+      );
 
       if (!atom.bonds.has(neighbour) && this.ruleHelper.canLink(atom, neighbour)) {
         this.linkManager.create(atom, neighbour);
@@ -94,13 +94,19 @@ export class InteractionManager {
     );
   }
 
-  private getDist2(distVector: VectorInterface): number {
-    const dist = distVector.abs2;
+  private getDist2(distVector: NumericVector): number {
+    let dist = 0;
+    for (let i=0; i<distVector.length; ++i) {
+      dist += distVector[i]**2;
+    }
     return dist < 1 ? 1 : dist;
   }
 
-  private getDistVector(lhs: AtomInterface, rhs: AtomInterface): VectorInterface {
-    // return this.bufVector.zero().add(rhs.position).sub(lhs.position);
-    return rhs.position.clone().sub(lhs.position);
+  private getDistVector(lhs: AtomInterface, rhs: AtomInterface): NumericVector {
+    const distVector: number[] = new Array(lhs.position.length) as number[];
+    for (let i=0; i<lhs.position.length; ++i) {
+      distVector[i] = rhs.position[i] - lhs.position[i];
+    }
+    return distVector;
   }
 }

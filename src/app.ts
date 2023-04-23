@@ -34,10 +34,10 @@ const WORLD_CONFIG: WorldConfig = {
   INERTIAL_MULTIPLIER: 0.98,
   SPEED: 8,
   PLAYBACK_SPEED: 4,
-  MAX_POSITION: [1000, 800],
+  MAX_POSITION: [1800, 800],
 };
 const INITIAL_CONFIG: InitialConfig = {
-  ATOMS_COUNT: 500,
+  ATOMS_COUNT: 800,
 };
 console.log(INITIAL_CONFIG);
 
@@ -54,11 +54,12 @@ const atoms: AtomInterface[] = [];
 // atoms.push(createAtom(1, [320, 310]));
 // atoms.push(createAtom(2, [330, 320]));
 // atoms.push(createAtom(0, [340, 330]));
+
 for (let i=0; i<INITIAL_CONFIG.ATOMS_COUNT; ++i) {
   const type = Math.round(Math.random()*(TYPES_CONFIG.COLORS.length-1));
   const position = [
-    Math.round(Math.random()*WORLD_CONFIG.MAX_POSITION[0]),
-    Math.round(Math.random()*WORLD_CONFIG.MAX_POSITION[1]),
+    Math.random()*WORLD_CONFIG.MAX_POSITION[0],
+    Math.random()*WORLD_CONFIG.MAX_POSITION[1],
   ];
   atoms.push(createAtom(type, position));
 }
