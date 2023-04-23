@@ -112,7 +112,15 @@ export class InteractionManager {
   }
 
   protected handleLinkGravity(atom: AtomInterface, dist: number, distVector: VectorInterface): void {
-    atom.speed.div(this.commonConfig.bounceDivConst).add(distVector.normalize().mul(this.commonConfig.gravLinkConst));
+    atom.speed
+      .div(this.commonConfig.bounceDivConst)
+      .add(distVector.normalize().mul(
+        this.commonConfig.gravLinkConst * (dist - 2*this.commonConfig.atomRadius) / 10),
+        // this.commonConfig.gravLinkConst * (dist - 2*this.commonConfig.atomRadius)**2 / 500),
+      );
+    // atom.speed
+    //   .div(this.commonConfig.bounceDivConst)
+    //   .add(distVector.normalize().mul(this.commonConfig.gravLinkConst));
     // atom.speed.add(distVector.normalize().mul(this.commonConfig.gravLinkConst));
   }
 
