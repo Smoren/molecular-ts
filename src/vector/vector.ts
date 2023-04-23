@@ -23,6 +23,14 @@ export class Vector extends Array implements VectorInterface {
     return Math.sqrt(result);
   }
 
+  get abs2(): number {
+    let result = 0;
+    for (const coord of this) {
+      result += coord**2;
+    }
+    return result;
+  }
+
   add(v: NumericVector): VectorInterface {
     for (let i=0; i<this.length; ++i) {
       this[i] += v[i];

@@ -1,7 +1,9 @@
-import { LinkAllocatorInterface, LinkManagerInterface } from './types/helpers';
+import { LinkAllocatorInterface, LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import { AtomInterface, LinkInterface } from './types/atomic';
-import { Link } from './atomic';
+import { Atom, Link } from './atomic';
 import { Swarm } from './tools/swarm';
+import { NumericVector } from './vector/types';
+import { TypesConfig, WorldConfig } from './types/config';
 
 class LinkAllocator implements LinkAllocatorInterface {
   private storage: LinkInterface[] = [];
@@ -28,11 +30,15 @@ export class LinkManager implements LinkManagerInterface {
 
   create(lhs: AtomInterface, rhs: AtomInterface): LinkInterface {
     const link = this.allocator.allocate(this.storage.nextKey, lhs, rhs);
+    lhs.bonds.add(rhs);
+    rhs.bonds.add(lhs);
     this.storage.push(link);
     return link;
   }
 
   delete(link: LinkInterface): void {
+    link.lhs.bonds.delete(link.rhs);
+    link.rhs.bonds.delete(link.lhs);
     this.storage.pop(link.id);
     this.allocator.free(link);
   }
@@ -42,4 +48,53 @@ export class LinkManager implements LinkManagerInterface {
       yield item;
     }
   }
+}
+
+export class RulesHelper implements RulesHelperInterface {
+  private TYPES_CONFIG: TypesConfig;
+  private WORLD_CONFIG: WorldConfig;
+
+  constructor(typesConfig: TypesConfig, worldConfig: WorldConfig) {
+    this.TYPES_CONFIG = typesConfig;
+    this.WORLD_CONFIG = worldConfig;
+  }
+
+  canLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
+    return this._canLink(lhs, rhs) && this._canLink(rhs, lhs);
+  }
+
+  getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
+    let multiplier: number;
+
+    if (dist2 < this.getAtomsRadiusSum()**2) {
+      multiplier = -1;
+    } else if (!lhs.bonds.has(rhs)) {
+      multiplier = -1;
+    } else {
+      multiplier = this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
+    }
+
+    return multiplier * this.WORLD_CONFIG.SPEED / dist2**2;
+  }
+
+  getLinkForce(): number {
+    return this.WORLD_CONFIG.SPEED;
+  }
+
+  getAtomsRadiusSum(): number {
+    return this.WORLD_CONFIG.ATOM_RADIUS*2;
+  }
+
+  private _canLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
+    if (lhs.bonds.length >= this.TYPES_CONFIG.LINKS[lhs.type]) {
+      return false;
+    }
+    return lhs.bonds.lengthOf(rhs.type) < this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
+  }
+}
+
+let LAST_ATOM_ID = 0;
+
+export function createAtom(type: number, position: NumericVector) {
+  return new Atom(LAST_ATOM_ID++, type, position);
 }

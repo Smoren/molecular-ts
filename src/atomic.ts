@@ -1,6 +1,6 @@
 import { AtomInterface, BondMapInterface, LinkInterface } from './types/atomic';
-import { VectorInterface } from './vector/types';
-import { Vector } from './vector';
+import { NumericVector, VectorInterface } from './vector/types';
+import { toVector } from './vector';
 
 class BondMap implements BondMapInterface {
   private storage: Record<number, AtomInterface> = {};
@@ -40,11 +40,11 @@ export class Atom implements AtomInterface {
   readonly speed: VectorInterface;
   readonly bonds: BondMapInterface;
 
-  constructor(id: number, type: number, position: VectorInterface) {
+  constructor(id: number, type: number, position: NumericVector) {
     this.id = id;
     this.type = type;
-    this.position = position;
-    this.speed = new Vector([0, 0]);
+    this.position = toVector(position);
+    this.speed = toVector([0, 0]);
     this.bonds = new BondMap();
   }
 }

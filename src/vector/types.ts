@@ -18,6 +18,10 @@ export interface VectorInterface extends NumericVector {
    * Absolute length of the vector
    */
   abs: number;
+  /**
+   * Absolute length ^2 of the vector
+   */
+  get abs2(): number
 
   /**
    * Add another vector to this vector

@@ -1,12 +1,9 @@
-import {
-  DrawerConfigInterface,
-  DrawerInterface,
-  ViewConfigInterface,
-  AtomInterface,
-  CommonConfig, TypesConfig,
-} from './types';
 import { createVector } from './vector';
 import { NumericVector } from './vector/types';
+import { DrawerConfigInterface, DrawerInterface, ViewConfigInterface } from './types/drawer';
+import { TypesConfig, WorldConfig } from './types/config';
+import { AtomInterface } from './types/atomic';
+import { LinkManagerInterface } from './types/helpers';
 
 /**
  * Transpose coords with backward applying offset and scale
@@ -18,7 +15,7 @@ export function transposeCoordsBackward(
   coords: NumericVector, offset: NumericVector, scale: NumericVector = [1, 1],
 ): NumericVector {
   const [x, y] = coords;
-  return [(x - offset[0])/scale[0], (y - offset[1])/scale[1]];
+  return [(x - offset[0]) / scale[0], (y - offset[1]) / scale[1]];
 }
 
 /**
@@ -31,45 +28,45 @@ export function transposeCoordsForward(
   coords: NumericVector, offset: NumericVector, scale: NumericVector = [1, 1],
 ): NumericVector {
   const [x, y] = coords;
-  return [x*scale[0] + offset[0], y*scale[1] + offset[1]];
+  return [x * scale[0] + offset[0], y * scale[1] + offset[1]];
 }
 
 export class Drawer implements DrawerInterface {
+  readonly WORLD_CONFIG: WorldConfig;
+  readonly TYPES_CONFIG: TypesConfig;
   readonly domElement: HTMLCanvasElement;
   readonly viewConfig: ViewConfigInterface;
   readonly context: CanvasRenderingContext2D;
-  readonly commonConfig: CommonConfig;
-  readonly typesConfig: TypesConfig;
 
   constructor({
     domElement,
     viewConfig,
-    commonConfig,
+    worldConfig,
     typesConfig,
   }: DrawerConfigInterface) {
     this.domElement = domElement;
     this.viewConfig = viewConfig;
-    this.commonConfig = commonConfig;
-    this.typesConfig = typesConfig;
+    this.WORLD_CONFIG = worldConfig;
+    this.TYPES_CONFIG = typesConfig;
     this.context = domElement.getContext('2d');
     this.refresh();
   }
 
-  public draw(atoms: Iterable<AtomInterface>, links: Map<string, [AtomInterface, AtomInterface]>): void {
+  public draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
     this.context.save();
     this.context.translate(...this.viewConfig.offset as [number, number]);
     this.context.scale(...this.viewConfig.scale as [number, number]);
     for (const atom of atoms) {
       this.drawCircle(
         atom.position,
-        this.commonConfig.atomRadius,
-        this.typesConfig[atom.type].color,
+        this.WORLD_CONFIG.ATOM_RADIUS,
+        this.TYPES_CONFIG.COLORS[atom.type],
       );
     }
-    for (const [, [from, to]] of links) {
+    for (const link of links) {
       this.drawLine(
-        from.position,
-        to.position,
+        link.lhs.position,
+        link.rhs.position,
         'rgb(100, 100, 100)',
       );
     }
@@ -79,7 +76,7 @@ export class Drawer implements DrawerInterface {
   drawCircle(position: NumericVector, radius: number, color: string) {
     this.context.beginPath();
     this.context.fillStyle = color;
-    this.context.ellipse(...position as [number, number], radius, radius, 0, 0, 2*Math.PI);
+    this.context.ellipse(...position as [number, number], radius, radius, 0, 0, 2 * Math.PI);
     this.context.fill();
     this.context.closePath();
   }
@@ -113,7 +110,7 @@ export class Drawer implements DrawerInterface {
 
   public initEventHandlers(
     getAtoms: () => Iterable<AtomInterface>,
-    getLinks: () => Map<string, [AtomInterface, AtomInterface]>,
+    getLinks: () => LinkManagerInterface,
   ): void {
     const resizeObserver = new ResizeObserver(() => {
       this.refresh();
@@ -151,13 +148,6 @@ export class Drawer implements DrawerInterface {
       event.preventDefault();
     });
   }
-
-  // public getBound(): BoundInterface {
-  //   return new RectangularBound({
-  //     position: this._viewConfig.transposeBackward([0, 0]),
-  //     size: this._viewConfig.transposeBackward([this.width, this.height]),
-  //   });
-  // }
 
   get width(): number {
     return this.domElement.clientWidth;
