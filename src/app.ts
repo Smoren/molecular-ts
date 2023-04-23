@@ -10,7 +10,7 @@ const commonConfig: CommonConfig = {
   maxInteractionRadius: 100,
   minLinkRadius: 100,
   maxUnlinkRadius: 100,
-  inertiaMultiplier: 0.98,
+  inertialMultiplier: 0.98,
   gravityForce: 50,
   linkForce: 0.015,
   maxPosition: [1000, 800],
@@ -88,15 +88,24 @@ const drawer = new Drawer({
 
 const atoms: Atom[] = [];
 
-for (let i=0; i<300; ++i) {
-  const type = Math.round(Math.random()*2) + 1;
-  const position = [
-    Math.round(Math.random()*commonConfig.maxPosition[0]),
-    Math.round(Math.random()*commonConfig.maxPosition[1]),
-  ];
-  const speed = [0, 0];
-  atoms.push(new Atom(type, position, speed));
-}
+// for (let i=0; i<300; ++i) {
+//   const type = Math.round(Math.random()*2) + 1;
+//   const position = [
+//     Math.round(Math.random()*commonConfig.maxPosition[0]),
+//     Math.round(Math.random()*commonConfig.maxPosition[1]),
+//   ];
+//   const speed = [0, 0];
+//   atoms.push(new Atom(type, position, speed));
+// }
+
+atoms.push(new Atom(1, [300, 300], [0, 0]));
+atoms.push(new Atom(2, [310, 310], [0, 0]));
+atoms.push(new Atom(3, [300, 320], [0, 0]));
+atoms.push(new Atom(1, [290, 330], [0, 0]));
+atoms.push(new Atom(1, [330, 300], [0, 0]));
+atoms.push(new Atom(2, [320, 310], [0, 0]));
+atoms.push(new Atom(3, [330, 320], [0, 0]));
+atoms.push(new Atom(1, [340, 330], [0, 0]));
 
 drawer.initEventHandlers(() => atoms, () => linkManager.map);
 
@@ -112,7 +121,7 @@ const tick = () => {
   }
   drawer.clear();
   drawer.draw(atoms, linkManager.map);
-  setTimeout(tick, 10);
+  setTimeout(tick, 0);
 };
 
 tick();

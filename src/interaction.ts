@@ -64,7 +64,7 @@ export class InteractionManager {
     atom.position.add(atom.speed);
 
     // применяем инертность среды
-    atom.speed.mul(this.commonConfig.inertiaMultiplier);
+    atom.speed.mul(this.commonConfig.inertialMultiplier);
 
     // применяем отталкивание от границ
     this.handleBounds(atom);
@@ -78,8 +78,10 @@ export class InteractionManager {
       this.linkManager.removeLink(lhs, rhs);
     }
 
-    this.handleLinkInfluence(lhs, dist, distVector);
-    this.handleLinkInfluence(rhs, dist, distVector.inverse());
+    if (dist > this.commonConfig.atomRadius*2) {
+      this.handleLinkInfluence(lhs, dist, distVector);
+      this.handleLinkInfluence(rhs, dist, distVector.inverse());
+    }
   }
 
   interactAtom(atom: AtomInterface, neighbours: AtomInterface[]): void {
