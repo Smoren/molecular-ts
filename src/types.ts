@@ -1,5 +1,4 @@
 import { Vector } from './vector';
-import { reduce, single } from 'itertools-ts';
 import { NumericVector } from './vector/types';
 
 export type InteractionMode = 0 | -1 | 1;
@@ -24,15 +23,20 @@ export type CommonConfig = {
   readonly unlinkRadius: number;
   readonly gravConst: number;
   readonly gravLinkConst: number;
-  readonly bounceAddConst: number;
-  readonly bounceDivConst: number;
   readonly bounds: [number, number, number, number];
-  readonly boundsBounceConst: number;
 };
+
+export type Link = [AtomInterface, AtomInterface];
 
 export class LinkMap extends Map<number, AtomInterface> {
   countType(type: number): number {
-    return reduce.toCount(single.filter(this.values(), (atom) => atom.type === type));
+    let result = 0;
+    for (const atom of this.values()) {
+      if (atom.type === type) {
+        result++;
+      }
+    }
+    return result;
   }
 }
 
