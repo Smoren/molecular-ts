@@ -11,7 +11,7 @@ const commonConfig: CommonConfig = {
   minLinkRadius: 50,
   maxUnlinkRadius: 50,
   gravityForce: 50,
-  linkForce: 0.7,
+  linkForce: 0.5,
   bounds: [0, 0, 1000, 800],
 };
 const typesConfig: TypesConfig = {
@@ -89,7 +89,7 @@ const atoms: Atom[] = [];
 
 for (let i=0; i<300; ++i) {
   const type = Math.round(Math.random()*2) + 1;
-  const position = [Math.round(Math.random()*1000), Math.round(Math.random()*800)];
+  const position = [Math.round(Math.random()*commonConfig.bounds[2]), Math.round(Math.random()*commonConfig.bounds[3])];
   const speed = [0, 0];
   atoms.push(new Atom(type, position, speed));
 }
