@@ -5,7 +5,7 @@ import { Atom } from './atom';
 // import { createTypes } from './factory';
 
 const commonConfig: CommonConfig = {
-  speed: 4,
+  speed: 8,
   atomRadius: 5,
   maxInteractionRadius: 100,
   minLinkRadius: 100,
@@ -17,7 +17,7 @@ const commonConfig: CommonConfig = {
 };
 const typesConfig: TypesConfig = {
   1: {
-    color: 'ff0000',
+    color: 'rgb(250, 20, 20)',
     interactions: {
       1: {
         mode: -1,
@@ -35,7 +35,7 @@ const typesConfig: TypesConfig = {
     maxLinksCount: 1,
   },
   2: {
-    color: '00ff00',
+    color: 'rgb(200, 140, 100)',
     interactions: {
       1: {
         mode: -1,
@@ -53,7 +53,7 @@ const typesConfig: TypesConfig = {
     maxLinksCount: 3,
   },
   3: {
-    color: '0000ff',
+    color: 'rgb(80, 170, 140',
     interactions: {
       1: {
         mode: -1,

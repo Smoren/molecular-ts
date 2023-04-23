@@ -71,10 +71,10 @@ export class InteractionManager {
   }
 
   interactLink([lhs, rhs]: Link): void {
-    const distVector = this.getDistVector(rhs, lhs);
+    const distVector = this.getDistVector(lhs, rhs);
     const dist = this.getDist(distVector);
 
-    if (this.linkManager.hasLink(lhs, rhs) && dist >= this.commonConfig.maxUnlinkRadius) {
+    if (dist >= this.commonConfig.maxUnlinkRadius) {
       this.linkManager.removeLink(lhs, rhs);
     }
 
@@ -84,56 +84,56 @@ export class InteractionManager {
 
   interactAtom(atom: AtomInterface, neighbours: AtomInterface[]): void {
     for (const neighbour of neighbours) {
-      // исключим взаимодействие атома с самим собой
       if (atom === neighbour) {
         continue;
       }
 
-      // расстояние между атомами
-      const distVector = this.getDistVector(neighbour, atom);
+      const distVector = this.getDistVector(atom, neighbour);
       const dist = this.getDist(distVector);
 
-      // если расстояние между атомами слишком большое для взаимодействия
       if (dist > this.commonConfig.maxInteractionRadius) {
         continue;
       }
 
-      const hasLink = this.handleLinking(atom, neighbour, dist);
+      if (dist < this.commonConfig.atomRadius * 2) {
+        // отталкиваются, когда расстояние меньше двух радиусов (соприкасаются)
+        atom.speed.add(distVector.normalize().mul(-this.commonConfig.speed / dist ** 2));
+      } else if (!this.linkManager.hasLink(atom, neighbour)) {
+        // отталкиваются, когда между ними нет связи ???
+        atom.speed.add(distVector.normalize().mul(-this.commonConfig.speed / dist ** 2));
+      } else {
+        atom.speed.add(distVector.normalize().mul(
+          this.typesConfig[atom.type].interactions[neighbour.type].mode * this.commonConfig.speed / dist ** 2,
+        ));
+      }
 
-      // если атомы соприкасаются
-      if (dist < this.commonConfig.atomRadius*2) {
-        this.handleGravity(atom, dist, distVector, -1);
+      if (this.linkManager.hasLink(atom, neighbour)) {
         continue;
       }
 
-      if (hasLink) {
-        const interactionMode = this.typesConfig[atom.type].interactions[neighbour.type].mode;
-        if (interactionMode !== 0) {
-          this.handleGravity(atom, dist, distVector, interactionMode);
+      if (
+        atom.links.size < this.typesConfig[atom.type].maxLinksCount &&
+        neighbour.links.size < this.typesConfig[neighbour.type].maxLinksCount
+      ) {
+        if (
+          atom.links.countType(neighbour.type) < this.typesConfig[atom.type].interactions[neighbour.type].linksCount &&
+          neighbour.links.countType(atom.type) < this.typesConfig[neighbour.type].interactions[atom.type].linksCount
+        ) {
+          this.linkManager.addLink(atom, neighbour);
         }
-      } else {
-        this.handleGravity(atom, dist, distVector, -1);
       }
     }
   }
 
   protected handleBounds(atom: AtomInterface) {
-    for (let i=0; i<atom.position.length; ++i) {
+    for (let i = 0; i < atom.position.length; ++i) {
       if (atom.position[i] < 0) {
-        atom.speed[i] += this.commonConfig.speed;
+        atom.speed[i] += 1;
       }
       if (atom.position[i] > this.commonConfig.maxPosition[i]) {
-        atom.speed[i] -= this.commonConfig.speed;
+        atom.speed[i] -= 1;
       }
     }
-  }
-
-  protected handleGravity(atom: AtomInterface, dist: number, distVector: VectorInterface, multiplier: number): void {
-    atom.speed.add(
-      distVector.normalize().mul(
-        multiplier * this.commonConfig.gravityForce * this.commonConfig.speed / dist**2,
-      ),
-    );
   }
 
   protected handleLinkInfluence(atom: AtomInterface, dist: number, distVector: VectorInterface): void {
@@ -142,23 +142,12 @@ export class InteractionManager {
     );
   }
 
-  protected handleLinking(lhs: AtomInterface, rhs: AtomInterface, dist: number): boolean {
-    const hasLink = this.linkManager.hasLink(lhs, rhs);
-
-    if (!hasLink && dist <= this.commonConfig.minLinkRadius && this.linkManager.canLink(lhs, rhs)) {
-      this.linkManager.addLink(lhs, rhs);
-      return true;
-    }
-
-    return hasLink;
-  }
-
   protected getDist(distVector: VectorInterface): number {
     const dist = distVector.abs;
     return dist < 1 ? 1 : dist;
   }
 
   protected getDistVector(lhs: AtomInterface, rhs: AtomInterface): VectorInterface {
-    return lhs.position.clone().sub(rhs.position);
+    return rhs.position.clone().sub(lhs.position);
   }
 }

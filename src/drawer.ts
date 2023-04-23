@@ -59,13 +59,6 @@ export class Drawer implements DrawerInterface {
     this.context.save();
     this.context.translate(...this.viewConfig.offset as [number, number]);
     this.context.scale(...this.viewConfig.scale as [number, number]);
-    for (const [, [from, to]] of links) {
-      this.drawLine(
-        from.position,
-        to.position,
-        'ffffff',
-      );
-    }
     for (const atom of atoms) {
       this.drawCircle(
         atom.position,
@@ -73,12 +66,19 @@ export class Drawer implements DrawerInterface {
         this.typesConfig[atom.type].color,
       );
     }
+    for (const [, [from, to]] of links) {
+      this.drawLine(
+        from.position,
+        to.position,
+        'rgb(100, 100, 100)',
+      );
+    }
     this.context.restore();
   }
 
   drawCircle(position: NumericVector, radius: number, color: string) {
     this.context.beginPath();
-    this.context.fillStyle = `#${color}`;
+    this.context.fillStyle = color;
     this.context.ellipse(...position as [number, number], radius, radius, 0, 0, 2*Math.PI);
     this.context.fill();
     this.context.closePath();
@@ -86,7 +86,7 @@ export class Drawer implements DrawerInterface {
 
   drawLine(from: NumericVector, to: NumericVector, color: string) {
     this.context.beginPath();
-    this.context.strokeStyle = `#${color}`;
+    this.context.strokeStyle = color;
     this.context.moveTo(...from as [number, number]);
     this.context.lineTo(...to as [number, number]);
     this.context.stroke();
@@ -106,7 +106,7 @@ export class Drawer implements DrawerInterface {
   }
 
   public clear(): void {
-    this.context.fillStyle = 'black';
+    this.context.fillStyle = 'rgb(20, 55, 75)';
     this.context.rect(0, 0, this.width, this.height);
     this.context.fill();
   }
