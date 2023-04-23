@@ -2,7 +2,7 @@ import { Drawer } from './drawer';
 import { InteractionManager, LinkManager } from './interaction';
 import { CommonConfig, TypesConfig } from './types';
 import { Atom } from './atom';
-// import { createTypes } from './factory';
+import { createTypes } from './factory';
 
 const commonConfig: CommonConfig = {
   atomRadius: 5,
@@ -16,63 +16,63 @@ const commonConfig: CommonConfig = {
   bounds: [0, 0, 1000, 800],
   boundsBounceConst: 1,
 };
-const typesConfig: TypesConfig = {
-  1: {
-    color: 'ff0000',
-    interactions: {
-      1: {
-        mode: -1,
-        linksCount: 0,
-      },
-      2: {
-        mode: -1,
-        linksCount: 1,
-      },
-      3: {
-        mode: 1,
-        linksCount: 1,
-      },
-    },
-    maxLinksCount: 1,
-  },
-  2: {
-    color: '00ff00',
-    interactions: {
-      1: {
-        mode: -1,
-        linksCount: 1,
-      },
-      2: {
-        mode: -1,
-        linksCount: 2,
-      },
-      3: {
-        mode: -1,
-        linksCount: 1,
-      },
-    },
-    maxLinksCount: 3,
-  },
-  3: {
-    color: '0000ff',
-    interactions: {
-      1: {
-        mode: -1,
-        linksCount: 1,
-      },
-      2: {
-        mode: -1,
-        linksCount: 1,
-      },
-      3: {
-        mode: -1,
-        linksCount: 2,
-      },
-    },
-    maxLinksCount: 2,
-  },
-};
-// const typesConfig: TypesConfig = createTypes(3);
+// const typesConfig: TypesConfig = {
+//   1: {
+//     color: 'ff0000',
+//     interactions: {
+//       1: {
+//         mode: -1,
+//         linksCount: 0,
+//       },
+//       2: {
+//         mode: -1,
+//         linksCount: 1,
+//       },
+//       3: {
+//         mode: 1,
+//         linksCount: 1,
+//       },
+//     },
+//     maxLinksCount: 1,
+//   },
+//   2: {
+//     color: '00ff00',
+//     interactions: {
+//       1: {
+//         mode: -1,
+//         linksCount: 1,
+//       },
+//       2: {
+//         mode: -1,
+//         linksCount: 2,
+//       },
+//       3: {
+//         mode: -1,
+//         linksCount: 1,
+//       },
+//     },
+//     maxLinksCount: 3,
+//   },
+//   3: {
+//     color: '0000ff',
+//     interactions: {
+//       1: {
+//         mode: -1,
+//         linksCount: 1,
+//       },
+//       2: {
+//         mode: -1,
+//         linksCount: 1,
+//       },
+//       3: {
+//         mode: -1,
+//         linksCount: 2,
+//       },
+//     },
+//     maxLinksCount: 2,
+//   },
+// };
+const typesConfig: TypesConfig = createTypes(3);
 console.log(typesConfig);
 const linkManager = new LinkManager(typesConfig);
 const interactionManager = new InteractionManager(commonConfig, typesConfig, linkManager);
@@ -98,7 +98,7 @@ for (let i=0; i<300; ++i) {
 
 drawer.initEventHandlers(() => atoms, () => linkManager.map);
 
-setInterval(() => {
+const tick = () => {
   for (const atom of atoms) {
     interactionManager.interact(atom, atoms);
   }
@@ -107,4 +107,7 @@ setInterval(() => {
   }
   drawer.clear();
   drawer.draw(atoms, linkManager.map);
-}, 30);
+  setTimeout(tick, 10);
+};
+
+tick();
