@@ -25,7 +25,7 @@ export type CommonConfig = {
   readonly inertiaMultiplier: number;
   readonly gravityForce: number;
   readonly linkForce: number;
-  readonly bounds: [number, number, number, number];
+  readonly maxPosition: NumericVector;
 };
 
 export type Link = [AtomInterface, AtomInterface];

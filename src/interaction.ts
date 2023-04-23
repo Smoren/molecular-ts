@@ -59,6 +59,17 @@ export class InteractionManager {
     this.linkManager = linkManager;
   }
 
+  moveAtom(atom: AtomInterface): void {
+    // применяем скорость
+    atom.position.add(atom.speed);
+
+    // применяем инертность среды
+    atom.speed.mul(this.commonConfig.inertiaMultiplier);
+
+    // применяем отталкивание от границ
+    this.handleBounds(atom);
+  }
+
   interactLink([lhs, rhs]: Link): void {
     const distVector = this.getDistVector(rhs, lhs);
     const dist = this.getDist(distVector);
@@ -72,9 +83,6 @@ export class InteractionManager {
   }
 
   interactAtom(atom: AtomInterface, neighbours: AtomInterface[]): void {
-    this.handleBounds(atom);
-    atom.speed.mul(this.commonConfig.inertiaMultiplier);
-
     for (const neighbour of neighbours) {
       // исключим взаимодействие атома с самим собой
       if (atom === neighbour) {
@@ -110,15 +118,13 @@ export class InteractionManager {
   }
 
   protected handleBounds(atom: AtomInterface) {
-    if (atom.position[0] < this.commonConfig.bounds[0]) {
-      atom.speed.add([this.commonConfig.speed, 0]);
-    } else if (atom.position[0] > this.commonConfig.bounds[2]) {
-      atom.speed.add([-this.commonConfig.speed, 0]);
-    }
-    if (atom.position[1] < this.commonConfig.bounds[1]) {
-      atom.speed.add([0, this.commonConfig.speed]);
-    } else if (atom.position[1] > this.commonConfig.bounds[3]) {
-      atom.speed.add([0, -this.commonConfig.speed]);
+    for (let i=0; i<atom.position.length; ++i) {
+      if (atom.position[i] < 0) {
+        atom.speed[i] += this.commonConfig.speed;
+      }
+      if (atom.position[i] > this.commonConfig.maxPosition[i]) {
+        atom.speed[i] -= this.commonConfig.speed;
+      }
     }
   }
 

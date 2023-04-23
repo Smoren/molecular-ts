@@ -5,15 +5,15 @@ import { Atom } from './atom';
 // import { createTypes } from './factory';
 
 const commonConfig: CommonConfig = {
-  speed: 1,
+  speed: 4,
   atomRadius: 5,
   maxInteractionRadius: 100,
-  minLinkRadius: 50,
-  maxUnlinkRadius: 50,
+  minLinkRadius: 100,
+  maxUnlinkRadius: 100,
   inertiaMultiplier: 0.98,
   gravityForce: 50,
-  linkForce: 0.5,
-  bounds: [0, 0, 1000, 800],
+  linkForce: 0.015,
+  maxPosition: [1000, 800],
 };
 const typesConfig: TypesConfig = {
   1: {
@@ -90,7 +90,10 @@ const atoms: Atom[] = [];
 
 for (let i=0; i<300; ++i) {
   const type = Math.round(Math.random()*2) + 1;
-  const position = [Math.round(Math.random()*commonConfig.bounds[2]), Math.round(Math.random()*commonConfig.bounds[3])];
+  const position = [
+    Math.round(Math.random()*commonConfig.maxPosition[0]),
+    Math.round(Math.random()*commonConfig.maxPosition[1]),
+  ];
   const speed = [0, 0];
   atoms.push(new Atom(type, position, speed));
 }
@@ -98,14 +101,14 @@ for (let i=0; i<300; ++i) {
 drawer.initEventHandlers(() => atoms, () => linkManager.map);
 
 const tick = () => {
+  for (const atom of atoms) {
+    interactionManager.moveAtom(atom);
+  }
   for (const [, link] of linkManager.map) {
     interactionManager.interactLink(link);
   }
   for (const atom of atoms) {
     interactionManager.interactAtom(atom, atoms);
-  }
-  for (const atom of atoms) {
-    atom.position.add(atom.speed);
   }
   drawer.clear();
   drawer.draw(atoms, linkManager.map);
