@@ -2,14 +2,13 @@ import { TypesConfig, WorldConfig } from './types/config';
 import { LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import { AtomInterface, LinkInterface } from './types/atomic';
 import { NumericVector, VectorInterface } from './vector/types';
-import { toVector, Vector } from './vector';
+import { toVector } from './vector';
 
 export class InteractionManager {
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly linkManager: LinkManagerInterface;
   private readonly ruleHelper: RulesHelperInterface;
-  private readonly bufVector: VectorInterface = new Vector([0, 0]);
 
   constructor(
     worldConfig: WorldConfig,
@@ -38,7 +37,7 @@ export class InteractionManager {
     const distVector = toVector(this.getDistVector(link.lhs, link.rhs));
     const dist2 = this.getDist2(distVector);
 
-    if (dist2 >= this.WORLD_CONFIG.MAX_INTERACTION_RADIUS**2) {
+    if (dist2 >= this.WORLD_CONFIG.MAX_LINK_RADIUS**2) {
       this.linkManager.delete(link);
     }
 
@@ -67,7 +66,11 @@ export class InteractionManager {
           .mul(this.ruleHelper.getGravityForce(atom, neighbour, dist2)),
       );
 
-      if (!atom.bonds.has(neighbour) && this.ruleHelper.canLink(atom, neighbour)) {
+      if (
+        !atom.bonds.has(neighbour) &&
+        this.ruleHelper.canLink(atom, neighbour) &&
+        dist2 <= this.WORLD_CONFIG.MAX_LINK_RADIUS**2
+      ) {
         this.linkManager.create(atom, neighbour);
       }
     }

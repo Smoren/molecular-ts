@@ -67,11 +67,11 @@ export class RulesHelper implements RulesHelperInterface {
     let multiplier: number;
 
     if (dist2 < this.getAtomsRadiusSum()**2) {
-      multiplier = -2;
+      multiplier = -this.WORLD_CONFIG.BOUNCE_FORCE_MULTIPLIER;
     } else if (!lhs.bonds.has(rhs)) {
-      multiplier = -1;
+      multiplier = -this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER;
     } else {
-      multiplier = this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
+      multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
     }
 
     return multiplier * this.WORLD_CONFIG.SPEED / dist2;
