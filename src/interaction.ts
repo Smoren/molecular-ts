@@ -60,6 +60,17 @@ export class InteractionManager {
   }
 
   interact(atom: AtomInterface, neighbours: AtomInterface[]): void {
+    if (atom.position[0] < this.commonConfig.bounds[0]) {
+      atom.speed.add([1, 0]);
+    } else if (atom.position[0] > this.commonConfig.bounds[2]) {
+      atom.speed.add([-1, 0]);
+    }
+    if (atom.position[1] < this.commonConfig.bounds[1]) {
+      atom.speed.add([0, 1]);
+    } else if (atom.position[1] > this.commonConfig.bounds[3]) {
+      atom.speed.add([0, -1]);
+    }
+
     for (const neighbour of neighbours) {
       if (atom === neighbour) {
         continue;
@@ -101,7 +112,7 @@ export class InteractionManager {
   }
 
   protected handleLinkGravity(atom: AtomInterface, dist: number, distVector: VectorInterface): void {
-    atom.speed.add(distVector.normalize().mul(this.commonConfig.gravLinkConst / dist**2));
+    atom.speed.add(distVector.normalize().mul(this.commonConfig.gravLinkConst));
   }
 
   protected handleAntiGravity(atom: AtomInterface, dist: number, distVector: VectorInterface): void {

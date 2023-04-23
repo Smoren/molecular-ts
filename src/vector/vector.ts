@@ -1,5 +1,4 @@
 import { ImmutableNumericVector, NumericVector, VectorInterface } from './types';
-import { multi, reduce, single, transform } from 'itertools-ts';
 import { isEqual } from './helpers';
 
 /**
@@ -17,72 +16,73 @@ export class Vector extends Array implements VectorInterface {
   }
 
   get abs(): number {
-    return Math.sqrt(
-      reduce.toSum(single.map(this, (coord) => coord ** 2)),
-    );
+    let result = 0;
+    for (const coord of this) {
+      result += coord**2;
+    }
+    return Math.sqrt(result);
   }
 
   add(v: NumericVector): VectorInterface {
-    for (const [i, [lhs, rhs]] of single.enumerate(multi.zip(this as VectorInterface, v))) {
-      this[i] = lhs + rhs;
+    for (let i=0; i<this.length; ++i) {
+      this[i] += v[i];
     }
     return this;
   }
 
   sub(v: NumericVector): VectorInterface {
-    for (const [i, [lhs, rhs]] of single.enumerate(multi.zip(this as VectorInterface, v))) {
-      this[i] = lhs - rhs;
+    for (let i=0; i<this.length; ++i) {
+      this[i] -= v[i];
     }
     return this;
   }
 
   mul(multiplier: number): VectorInterface {
-    for (const [i, value] of single.enumerate(this)) {
-      this[i] = value * multiplier;
+    for (let i=0; i<this.length; ++i) {
+      this[i] *= multiplier;
     }
     return this;
   }
 
   div(divider: number): VectorInterface {
-    for (const [i, value] of single.enumerate(this)) {
-      this[i] = value / divider;
+    for (let i=0; i<this.length; ++i) {
+      this[i] /= divider;
     }
     return this;
   }
 
   inverse(): VectorInterface {
-    for (const [i, value] of single.enumerate(this)) {
-      this[i] = -value;
+    for (let i=0; i<this.length; ++i) {
+      this[i] = -this[i];
     }
     return this;
   }
 
   mulScalar(v: NumericVector): number {
-    return reduce.toSum(
-      single.map(
-        multi.zip(this as NumericVector, v),
-        ([lhs, rhs]) => lhs * rhs,
-      ),
-    );
+    let result = 0;
+    for (let i=0; i<this.length; ++i) {
+      result += this[i] * v[i];
+    }
+    return result;
   }
 
   mulCoords(v: NumericVector): VectorInterface {
-    for (const [i, [lhs, rhs]] of single.enumerate(multi.zip(this as VectorInterface, v))) {
-      this[i] = lhs * rhs;
+    for (let i=0; i<this.length; ++i) {
+      this[i] *= v[i];
     }
     return this;
   }
 
   divCoords(v: NumericVector): VectorInterface {
-    for (const [i, [lhs, rhs]] of single.enumerate(multi.zip(this as VectorInterface, v))) {
-      this[i] = lhs / rhs;
+    for (let i=0; i<this.length; ++i) {
+      this[i] /= v[i];
     }
     return this;
   }
 
   isEqual(v: NumericVector): boolean {
-    for (const [lhs, rhs] of multi.zip(this as NumericVector, v)) {
-      if (!isEqual(lhs, rhs)) {
+    for (let i=0; i<this.length; ++i) {
+      if (!isEqual(this[i] as number, v[i])) {
         return false;
       }
     }
@@ -104,90 +104,6 @@ export class Vector extends Array implements VectorInterface {
 }
 
 /**
- * Immutable Vector class
- * @public
- */
-export class ImmutableVector extends Vector {
-  readonly _abs: number;
-
-  constructor(coords: ImmutableNumericVector) {
-    super(coords);
-    this._abs = Math.sqrt(
-      reduce.toSum(single.map(this, (coord) => coord ** 2)),
-    );
-  }
-
-  get abs(): number {
-    return this._abs;
-  }
-
-  add(v: NumericVector): ImmutableVector {
-    return new ImmutableVector(
-      transform.toArray(
-        single.map(multi.zip(this as VectorInterface, v), ([lhs, rhs]) => lhs + rhs),
-      ),
-    );
-  }
-
-  sub(v: NumericVector): ImmutableVector {
-    return new ImmutableVector(
-      transform.toArray(
-        single.map(multi.zip(this as VectorInterface, v), ([lhs, rhs]) => lhs - rhs),
-      ),
-    );
-  }
-
-  mul(multiplier: number): ImmutableVector {
-    return new ImmutableVector(
-      transform.toArray(
-        single.map(this, (value) => value * multiplier),
-      ),
-    );
-  }
-
-  div(divider: number): ImmutableVector {
-    return new ImmutableVector(
-      transform.toArray(
-        single.map(this, (value) => value / divider),
-      ),
-    );
-  }
-
-  inverse(): ImmutableVector {
-    return new ImmutableVector(
-      transform.toArray(
-        single.map(this, (value) => -value),
-      ),
-    );
-  }
-
-  mulCoords(v: NumericVector): ImmutableVector {
-    return new ImmutableVector(
-      transform.toArray(
-        single.map(multi.zip(this as VectorInterface, v), ([lhs, rhs]) => lhs * rhs),
-      ),
-    );
-  }
-
-  divCoords(v: NumericVector): ImmutableVector {
-    return new ImmutableVector(
-      transform.toArray(
-        single.map(multi.zip(this as VectorInterface, v), ([lhs, rhs]) => lhs / rhs),
-      ),
-    );
-  }
-
-  normalize(): ImmutableVector {
-    this.div(this.abs);
-    return this;
-  }
-
-  clone(): VectorInterface {
-    return new ImmutableVector([...this]);
-  }
-}
-
-/**
  * Creates new vector
  * @public
  * @param coords - coordinates of new vector
@@ -203,22 +119,4 @@ export function createVector(coords: NumericVector): VectorInterface {
  */
 export function toVector(coords: NumericVector): Vector {
   return (coords instanceof Vector) ? coords : createVector(coords);
-}
-
-/**
- * Creates new immutable vector
- * @public
- * @param coords - coordinates of new vector
- */
-export function createImmutableVector(coords: ImmutableNumericVector): ImmutableVector {
-  return new ImmutableVector(coords);
-}
-
-/**
- * Converts instance to immutable vector if it's an array
- * @public
- * @param coords - coords as vector or an array
- */
-export function toImmutableVector(coords: ImmutableNumericVector): ImmutableVector {
-  return (coords instanceof ImmutableVector) ? coords : createImmutableVector(coords);
 }
