@@ -40,7 +40,7 @@ const WORLD_CONFIG: WorldConfig = {
   MAX_POSITION: [1800, 800],
 };
 const INITIAL_CONFIG: InitialConfig = {
-  ATOMS_COUNT: 700,
+  ATOMS_COUNT: 800,
 };
 console.log(INITIAL_CONFIG);
 
