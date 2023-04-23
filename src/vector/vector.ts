@@ -64,6 +64,13 @@ export class Vector extends Array implements VectorInterface {
     return this;
   }
 
+  zero(): VectorInterface {
+    for (let i=0; i<this.length; ++i) {
+      this[i] = 0;
+    }
+    return this;
+  }
+
   mulScalar(v: NumericVector): number {
     let result = 0;
     for (let i=0; i<this.length; ++i) {

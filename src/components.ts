@@ -2,12 +2,14 @@ import { TypesConfig, WorldConfig } from './types/config';
 import { LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import { AtomInterface, LinkInterface } from './types/atomic';
 import { VectorInterface } from './vector/types';
+import { toVector, Vector } from './vector';
 
 export class InteractionManager {
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly linkManager: LinkManagerInterface;
   private readonly ruleHelper: RulesHelperInterface;
+  private readonly bufVector: VectorInterface = new Vector([0, 0]);
 
   constructor(
     worldConfig: WorldConfig,
@@ -52,6 +54,9 @@ export class InteractionManager {
         continue;
       }
 
+      // const x = neighbour.position[0] - atom.position[0];
+      // const y = neighbour.position[1] - atom.position[1];
+      // const dist2 = x*x + y*y;
       const distVector = this.getDistVector(atom, neighbour);
       const dist2 = this.getDist2(distVector);
 
@@ -60,6 +65,7 @@ export class InteractionManager {
       }
 
       atom.speed.add(distVector.normalize().mul(this.ruleHelper.getGravityForce(atom, neighbour, dist2)));
+      // atom.speed.add(toVector([x, y]).normalize().mul(this.ruleHelper.getGravityForce(atom, neighbour, dist2)));
 
       if (!atom.bonds.has(neighbour) && this.ruleHelper.canLink(atom, neighbour)) {
         this.linkManager.create(atom, neighbour);
@@ -94,6 +100,7 @@ export class InteractionManager {
   }
 
   private getDistVector(lhs: AtomInterface, rhs: AtomInterface): VectorInterface {
+    // return this.bufVector.zero().add(rhs.position).sub(lhs.position);
     return rhs.position.clone().sub(lhs.position);
   }
 }

@@ -53,6 +53,11 @@ export interface VectorInterface extends NumericVector {
   inverse(): VectorInterface;
 
   /**
+   * Makes vector zero
+   */
+  zero(): VectorInterface;
+
+  /**
    * Returns scalar product with another vector
    * @param v - another vector
    */
