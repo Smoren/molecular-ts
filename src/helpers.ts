@@ -5,7 +5,7 @@ import { Swarm } from './tools/swarm';
 import { NumericVector } from './vector/types';
 import { TypesConfig, WorldConfig } from './types/config';
 
-class LinkAllocator implements LinkAllocatorInterface {
+class LinkPool implements LinkAllocatorInterface {
   private storage: LinkInterface[] = [];
 
   allocate(id: number, lhs: AtomInterface, rhs: AtomInterface): LinkInterface {
@@ -26,7 +26,7 @@ class LinkAllocator implements LinkAllocatorInterface {
 
 export class LinkManager implements LinkManagerInterface {
   private storage: Swarm<LinkInterface> = new Swarm();
-  private allocator: LinkAllocatorInterface = new LinkAllocator();
+  private allocator: LinkAllocatorInterface = new LinkPool();
 
   create(lhs: AtomInterface, rhs: AtomInterface): LinkInterface {
     const link = this.allocator.allocate(this.storage.nextKey, lhs, rhs);
