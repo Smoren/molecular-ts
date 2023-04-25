@@ -4,7 +4,7 @@ import {
   WorldConfig,
 } from '../types/config';
 import { LinkManager, RulesHelper } from '../helpers';
-import { InteractionManager } from '../components';
+import { InteractionManager } from '../interaction';
 import { Drawer } from '../drawer';
 import { createBaseTypesConfig } from '../config/types';
 import { createBaseWorldConfig } from '../config/world';
