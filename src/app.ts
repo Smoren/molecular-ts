@@ -1,3 +1,3 @@
-import { start } from './simulation/2d';
+import { start } from './app/2d';
 
 start();
