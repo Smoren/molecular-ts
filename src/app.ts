@@ -1,3 +1,4 @@
-import { start } from './app/2d';
+import { create2dSimulation } from './app/2d';
 
-start();
+const sim = create2dSimulation();
+sim.start();

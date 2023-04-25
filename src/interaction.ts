@@ -3,8 +3,9 @@ import { LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import { AtomInterface, LinkInterface } from './types/atomic';
 import { NumericVector, VectorInterface } from './vector/types';
 import { toVector } from './vector';
+import { InteractionManagerInterface } from './types/interaction';
 
-export class InteractionManager {
+export class InteractionManager implements InteractionManagerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly linkManager: LinkManagerInterface;

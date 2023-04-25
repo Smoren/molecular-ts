@@ -1,9 +1,9 @@
-import { createVector } from './vector';
-import { NumericVector } from './vector/types';
-import { DrawerConfigInterface, DrawerInterface, ViewConfigInterface } from './types/drawer';
-import { TypesConfig, WorldConfig } from './types/config';
-import { AtomInterface } from './types/atomic';
-import { LinkManagerInterface } from './types/helpers';
+import { createVector } from '../vector';
+import { NumericVector } from '../vector/types';
+import { DrawerConfigInterface, DrawerInterface, ViewConfigInterface } from '../types/drawer';
+import { TypesConfig, WorldConfig } from '../types/config';
+import { AtomInterface } from '../types/atomic';
+import { LinkManagerInterface } from '../types/helpers';
 
 /**
  * Transpose coords with backward applying offset and scale
@@ -156,4 +156,20 @@ export class Drawer implements DrawerInterface {
   get height(): number {
     return this.domElement.clientHeight;
   }
+}
+
+export function create2dDrawer(
+  canvasId: string,
+  worldConfig: WorldConfig,
+  typesConfig: TypesConfig,
+) {
+  return new Drawer({
+    domElement: document.getElementById(canvasId) as HTMLCanvasElement,
+    viewConfig: {
+      offset: [0, 0],
+      scale: [1, 1],
+    },
+    worldConfig,
+    typesConfig,
+  });
 }

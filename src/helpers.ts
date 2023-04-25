@@ -1,7 +1,7 @@
 import { LinkAllocatorInterface, LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import { AtomInterface, LinkInterface } from './types/atomic';
 import { Atom, Link } from './atomic';
-import { Swarm } from './tools/swarm';
+import { Swarm } from './structs/swarm';
 import { NumericVector } from './vector/types';
 import { TypesConfig, WorldConfig } from './types/config';
 
