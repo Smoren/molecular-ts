@@ -7,25 +7,9 @@ import { createAtom, LinkManager, RulesHelper } from './helpers';
 import { InteractionManager } from './components';
 import { Drawer } from './drawer';
 import { AtomInterface } from './types/atomic';
+import { createBaseTypesConfig } from './config/types';
 
-const TYPES_CONFIG: TypesConfig = {
-  GRAVITY: [
-    [-1, -1, 1],
-    [-1, -1, -1],
-    [-1, -1, -1],
-  ],
-  LINKS: [1, 3, 2],
-  TYPE_LINKS: [
-    [0, 1, 1],
-    [1, 2, 1],
-    [1, 1, 2],
-  ],
-  COLORS: [
-    'rgb(250, 20, 20)',
-    'rgb(200, 140, 100)',
-    'rgb(80, 170, 140)',
-  ],
-};
+const TYPES_CONFIG: TypesConfig = createBaseTypesConfig();
 
 const WORLD_CONFIG: WorldConfig = {
   ATOM_RADIUS: 5,

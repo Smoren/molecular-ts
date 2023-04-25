@@ -13,7 +13,7 @@ class Cluster implements Iterable<AtomInterface> {
     this.atoms.delete(atom);
   }
 
-  [Symbol.iterator](): Iterable<AtomInterface> {
+  [Symbol.iterator](): IterableIterator<AtomInterface> {
     return this.atoms.values();
   }
 }
