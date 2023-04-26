@@ -16,11 +16,6 @@ export interface DrawerInterface {
     getAtoms: () => Iterable<AtomInterface>,
     getLinks: () => LinkManagerInterface,
   ): void;
-  readonly viewConfig: ViewConfigInterface;
-  readonly domElement: HTMLCanvasElement;
-  readonly context: CanvasRenderingContext2D;
-  readonly width: number;
-  readonly height: number;
 }
 
 export interface DrawerConfigInterface {

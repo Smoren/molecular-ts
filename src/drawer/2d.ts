@@ -32,11 +32,11 @@ export function transposeCoordsForward(
 }
 
 export class Drawer2d implements DrawerInterface {
-  readonly WORLD_CONFIG: WorldConfig;
-  readonly TYPES_CONFIG: TypesConfig;
-  readonly domElement: HTMLCanvasElement;
-  readonly viewConfig: ViewConfigInterface;
-  readonly context: CanvasRenderingContext2D;
+  private readonly WORLD_CONFIG: WorldConfig;
+  private readonly TYPES_CONFIG: TypesConfig;
+  private readonly domElement: HTMLCanvasElement;
+  private readonly viewConfig: ViewConfigInterface;
+  private readonly context: CanvasRenderingContext2D;
 
   constructor({
     domElement,
@@ -173,3 +173,24 @@ export function create2dDrawer(
     typesConfig,
   });
 }
+
+// export class Drawer3d implements DrawerInterface {
+//   readonly context: CanvasRenderingContext2D;
+//   readonly domElement: HTMLCanvasElement;
+//   readonly height: number;
+//   readonly viewConfig: ViewConfigInterface;
+//   readonly width: number;
+//
+//   clear(): void {
+//   }
+//
+//   draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
+//   }
+//
+//   initEventHandlers(getAtoms: () => Iterable<AtomInterface>, getLinks: () => LinkManagerInterface): void {
+//   }
+//
+//   refresh(): void {
+//   }
+//
+// }
