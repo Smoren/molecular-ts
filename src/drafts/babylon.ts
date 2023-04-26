@@ -42,7 +42,7 @@ function startBabylon() {
     scene,
   );
   scene.activeCamera.attachControl(domElement);
-  // createLight(scene, [1000, 1000, 1000], 0.003);
+  createLight(scene, [1000, 1000, 1000], 0.003);
   createLight(scene, [-200, -630, -598], 0.003);
 
   // eslint-disable-next-line new-cap
