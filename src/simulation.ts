@@ -6,6 +6,8 @@ import { AtomInterface } from './types/atomic';
 import { DrawerInterface } from './types/drawer';
 import { LinkManagerInterface } from './types/helpers';
 import { InteractionManagerInterface } from './types/interaction';
+import { ClusterManagerInterface } from "./types/cluster";
+import { ClusterManager } from "./cluster";
 
 export class Simulation implements SimulationInterface {
   private readonly typesConfig: TypesConfig;
@@ -20,6 +22,7 @@ export class Simulation implements SimulationInterface {
   private readonly drawer: DrawerInterface;
   private readonly linkManager: LinkManagerInterface;
   private readonly interactionManager: InteractionManagerInterface;
+  private readonly clusterManager: ClusterManagerInterface;
 
   constructor({
     worldConfig,
@@ -41,6 +44,7 @@ export class Simulation implements SimulationInterface {
       this.linkManager,
       new RulesHelper(this.typesConfig, this.worldConfig),
     );
+    this.clusterManager = new ClusterManager(this.worldConfig.MAX_INTERACTION_RADIUS * 2);
     this.drawer.initEventHandlers(() => this.atoms, () => this.linkManager);
   }
 
