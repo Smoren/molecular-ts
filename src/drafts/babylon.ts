@@ -46,6 +46,17 @@ function createLight(scene: Scene, coords: NumericVector, intensity: number): Po
   return light;
 }
 
+function createCamera(scene: Scene, radius: number, position: NumericVector): ArcRotateCamera {
+  return new ArcRotateCamera(
+    'Camera',
+    1,
+    1,
+    radius,
+    new Vector3(...position),
+    scene,
+  );
+}
+
 function normalizeFrame(domElement: HTMLCanvasElement): void {
   if (domElement.width !== domElement.clientWidth) {
     domElement.width = domElement.clientWidth;
@@ -60,14 +71,9 @@ function startBabylon() {
   normalizeFrame(domElement);
   const engine = new Engine(domElement, true);
   const scene = new Scene(engine);
-  new ArcRotateCamera(
-    'Camera',
-    1,
-    1,
-    1000,
-    new Vector3(444, 530, 698),
-    scene,
-  );
+
+  createCamera(scene, 1000, [444, 530, 698]);
+
   scene.activeCamera.attachControl(domElement);
   createLight(scene, [1000, 1000, 1000], 0.003);
   createLight(scene, [-200, -630, -598], 0.003);

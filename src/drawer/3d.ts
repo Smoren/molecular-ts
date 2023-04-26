@@ -18,6 +18,7 @@ import {
   StandardMaterial,
   Color3,
 } from 'babylonjs';
+import { NumericVector } from '../vector/types';
 
 export class Drawer3d implements DrawerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
@@ -41,20 +42,14 @@ export class Drawer3d implements DrawerInterface {
     this.TYPES_CONFIG = typesConfig;
     this.engine = new Engine(this.domElement, true);
     this.scene = new Scene(this.engine);
-    this.camera = new ArcRotateCamera(
-      'Camera',
-      1,
-      1,
-      1000,
-      new Vector3(444, 530, 698),
-      this.scene,
-    );
+    this.camera = this.createCamera(1000, [444, 530, 698]);
     this.scene.activeCamera.attachControl(this.domElement);
     this.lights = [
-      new PointLight('Omni', new Vector3(1000, 1000, 1000), this.scene),
-      // new PointLight('Omni', new Vector3(-200, -630, -598), this.scene),
+      this.createLight([1000, 1000, 1000], 0.003),
+      this.createLight([-200, -630, -598], 0.003),
     ];
     this.engine.runRenderLoop(() => {
+      this.normalizeFrame();
       this.scene.render();
     });
   }
@@ -71,10 +66,30 @@ export class Drawer3d implements DrawerInterface {
     }
   }
 
-  initEventHandlers(getAtoms: () => Iterable<AtomInterface>, getLinks: () => LinkManagerInterface): void {
+  private normalizeFrame(): void {
+    if (this.domElement.width !== this.domElement.clientWidth) {
+      this.domElement.width = this.domElement.clientWidth;
+    }
+    if (this.domElement.height !== this.domElement.clientHeight) {
+      this.domElement.height = this.domElement.clientHeight;
+    }
   }
 
-  refresh(): void {
+  private createCamera(radius: number, position: NumericVector): ArcRotateCamera {
+    return new ArcRotateCamera(
+      'Camera',
+      1,
+      1,
+      radius,
+      new Vector3(...position),
+      this.scene,
+    );
+  }
+
+  private createLight(coords: NumericVector, intensity: number): PointLight {
+    const light = new PointLight('Omni', new Vector3(coords[0], coords[1], coords[2]), this.scene);
+    light.intensity = intensity;
+    return light;
   }
 
   private getAtomDrawObject(atom: AtomInterface): Mesh {
