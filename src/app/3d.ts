@@ -6,14 +6,13 @@ import {
 import { create2dDrawer } from '../drawer/2d';
 import { createBaseTypesConfig } from '../config/types';
 import { createBaseWorldConfig } from '../config/world';
-import { create2dBaseInitialConfig } from '../config/initial';
-// import { create2dButterfly } from '../config/atoms';
-import { create2dRandomDistribution } from '../config/atoms';
+import { create3dBaseInitialConfig } from '../config/initial';
+import { create3dRandomDistribution } from '../config/atoms';
 import { Simulation } from '../simulation';
 
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
 const TYPES_CONFIG: TypesConfig = createBaseTypesConfig();
-const INITIAL_CONFIG: InitialConfig = create2dBaseInitialConfig();
+const INITIAL_CONFIG: InitialConfig = create3dBaseInitialConfig();
 
 export function create2dSimulation() {
   return new Simulation({
@@ -21,7 +20,7 @@ export function create2dSimulation() {
     typesConfig: TYPES_CONFIG,
     initialConfig: INITIAL_CONFIG,
     // atomsFactory: create2dButterfly,
-    atomsFactory: create2dRandomDistribution,
+    atomsFactory: create3dRandomDistribution,
     drawer: create2dDrawer('canvas', WORLD_CONFIG, TYPES_CONFIG),
   });
 }

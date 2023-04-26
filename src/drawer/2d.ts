@@ -31,7 +31,7 @@ export function transposeCoordsForward(
   return [x * scale[0] + offset[0], y * scale[1] + offset[1]];
 }
 
-export class Drawer implements DrawerInterface {
+export class Drawer2d implements DrawerInterface {
   readonly WORLD_CONFIG: WorldConfig;
   readonly TYPES_CONFIG: TypesConfig;
   readonly domElement: HTMLCanvasElement;
@@ -163,7 +163,7 @@ export function create2dDrawer(
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,
 ) {
-  return new Drawer({
+  return new Drawer2d({
     domElement: document.getElementById(canvasId) as HTMLCanvasElement,
     viewConfig: {
       offset: [0, 0],

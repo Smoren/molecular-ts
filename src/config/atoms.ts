@@ -35,3 +35,23 @@ export function create2dRandomDistribution(
 
   return atoms;
 }
+
+export function create3dRandomDistribution(
+  worldConfig: WorldConfig,
+  typesConfig: TypesConfig,
+  initialConfig: InitialConfig,
+): AtomInterface[] {
+  const atoms: AtomInterface[] = [];
+
+  for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
+    const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
+    const position = [
+      Math.random() * initialConfig.MAX_POSITION[0],
+      Math.random() * initialConfig.MAX_POSITION[1],
+      Math.random() * initialConfig.MAX_POSITION[2],
+    ];
+    atoms.push(createAtom(type, position));
+  }
+
+  return atoms;
+}
