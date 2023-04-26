@@ -10,6 +10,6 @@ export function createBaseWorldConfig(): WorldConfig {
     BOUNCE_FORCE_MULTIPLIER: 2,
     INERTIAL_MULTIPLIER: 0.98,
     SPEED: 12,
-    PLAYBACK_SPEED: 2,
+    PLAYBACK_SPEED: 1,
   };
 }
