@@ -1,4 +1,8 @@
-import { DrawerConfigInterface, DrawerInterface, ViewConfigInterface } from '../types/drawer';
+import {
+  Drawer3dConfigInterface,
+  DrawerInterface,
+  ViewConfigInterface
+} from '../types/drawer';
 import { TypesConfig, WorldConfig } from '../types/config';
 import { AtomInterface } from '../types/atomic';
 import { LinkManagerInterface } from '../types/helpers';
@@ -29,12 +33,10 @@ export class Drawer3d implements DrawerInterface {
 
   constructor({
     domElement,
-    viewConfig,
     worldConfig,
     typesConfig,
-  }: DrawerConfigInterface) {
+  }: Drawer3dConfigInterface) {
     this.domElement = domElement;
-    this.viewConfig = viewConfig;
     this.WORLD_CONFIG = worldConfig;
     this.TYPES_CONFIG = typesConfig;
     this.engine = new Engine(this.domElement, true);
@@ -106,12 +108,7 @@ export function create3dDrawer(
 ) {
   return new Drawer3d({
     domElement: document.getElementById(canvasId) as HTMLCanvasElement,
-    viewConfig: {
-      offset: [0, 0],
-      scale: [1, 1],
-    },
     worldConfig,
     typesConfig,
   });
 }
-

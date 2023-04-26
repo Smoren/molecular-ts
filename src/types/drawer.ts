@@ -12,9 +12,15 @@ export interface DrawerInterface {
   draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void;
 }
 
-export interface DrawerConfigInterface {
+export interface Drawer2dConfigInterface {
   readonly domElement: HTMLCanvasElement;
   readonly viewConfig: ViewConfigInterface;
+  readonly worldConfig: WorldConfig;
+  readonly typesConfig: TypesConfig;
+}
+
+export interface Drawer3dConfigInterface {
+  readonly domElement: HTMLCanvasElement;
   readonly worldConfig: WorldConfig;
   readonly typesConfig: TypesConfig;
 }

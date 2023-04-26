@@ -1,6 +1,6 @@
 import { createVector } from '../vector';
 import { NumericVector } from '../vector/types';
-import { DrawerConfigInterface, DrawerInterface, ViewConfigInterface } from '../types/drawer';
+import { Drawer2dConfigInterface, DrawerInterface, ViewConfigInterface } from '../types/drawer';
 import { TypesConfig, WorldConfig } from '../types/config';
 import { AtomInterface } from '../types/atomic';
 import { LinkManagerInterface } from '../types/helpers';
@@ -43,7 +43,7 @@ export class Drawer2d implements DrawerInterface {
     viewConfig,
     worldConfig,
     typesConfig,
-  }: DrawerConfigInterface) {
+  }: Drawer2dConfigInterface) {
     this.domElement = domElement;
     this.viewConfig = viewConfig;
     this.WORLD_CONFIG = worldConfig;
