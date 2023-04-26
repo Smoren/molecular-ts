@@ -9,7 +9,7 @@ export function create2dBaseInitialConfig(): InitialConfig {
 
 export function create3dBaseInitialConfig(): InitialConfig {
   return {
-    ATOMS_COUNT: 100,
+    ATOMS_COUNT: 1,
     MAX_POSITION: [1000, 1000, 1000],
   };
 }
