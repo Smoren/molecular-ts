@@ -112,11 +112,11 @@ class ClusterMap implements ClusterMapInterface {
     return this.getCluster(clusterCoords);
   }
 
-  private getClusterId(clusterCoords: NumericVector) {
+  private getClusterId(clusterCoords: NumericVector): string {
     return clusterCoords.join('-');
   }
 
-  private getClusterCoords(coords: NumericVector) {
+  private getClusterCoords(coords: NumericVector): NumericVector {
     const result: NumericVector = new Array<number>(coords.length);
     for (let i=0; i<coords.length; ++i) {
       result[i] = Math.round(coords[i] / this.quantum) + this.phase;
@@ -127,6 +127,7 @@ class ClusterMap implements ClusterMapInterface {
 
 export class ClusterManager implements ClusterManagerInterface {
   private readonly map: ClusterMap;
+  private readonly buf: Set<AtomInterface> = new Set();
 
   constructor(quantum: number) {
     this.map = new ClusterMap(quantum, 0);
@@ -136,15 +137,16 @@ export class ClusterManager implements ClusterManagerInterface {
     return this.map.countAtoms();
   }
 
-  handleAtom(atom: AtomInterface): Iterable<AtomInterface> {
-    const result: Set<AtomInterface> = new Set();
+  * handleAtom(atom: AtomInterface): Iterable<AtomInterface> {
+    this.buf.clear();
 
     for (const cluster of this.map.getNeighbourhood(atom)) {
       for (const neighbour of cluster) {
-        result.add(neighbour);
+        if (!this.buf.has(neighbour)) {
+          yield neighbour;
+          this.buf.add(neighbour);
+        }
       }
     }
-
-    return result;
   }
 }

@@ -50,6 +50,7 @@ export class Simulation implements SimulationInterface {
 
   start() {
     this.tick();
+    // setInterval(() => console.log(this.clusterManager.countAtoms()), 1000);
   }
 
   private tick() {
