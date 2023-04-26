@@ -1,6 +1,6 @@
 import { AtomInterface } from './types/atomic';
 import { NumericVector } from './vector/types';
-import { ClusterInterface } from './types/cluster';
+import { ClusterInterface, ClusterManagerInterface, ClusterMapInterface } from './types/cluster';
 
 class Cluster implements ClusterInterface {
   atoms: Set<AtomInterface> = new Set<AtomInterface>();
@@ -23,7 +23,7 @@ class Cluster implements ClusterInterface {
 }
 
 // две кластермапы с разными фазами и ребром кластера 2 * max radius
-class ClusterMap {
+class ClusterMap implements ClusterMapInterface {
   map: Map<string, Cluster> = new Map();
   quantum: number;
   phase: number;
@@ -75,7 +75,7 @@ class ClusterMap {
   }
 }
 
-export class ClusterManager {
+export class ClusterManager implements ClusterManagerInterface {
   private readonly map1: ClusterMap;
   private readonly map2: ClusterMap;
 

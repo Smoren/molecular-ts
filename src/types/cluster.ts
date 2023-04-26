@@ -5,3 +5,11 @@ export interface ClusterInterface extends Iterable<AtomInterface> {
   remove(atom: AtomInterface): void;
   empty(): boolean;
 }
+
+export interface ClusterMapInterface {
+  handleAtom(atom: AtomInterface): ClusterInterface;
+}
+
+export interface ClusterManagerInterface {
+  handleAtom(atom: AtomInterface): Iterable<AtomInterface>;
+}
