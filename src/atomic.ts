@@ -1,6 +1,7 @@
 import { AtomInterface, BondMapInterface, LinkInterface } from './types/atomic';
 import { NumericVector, VectorInterface } from './vector/types';
 import { toVector } from './vector';
+import { ClusterInterface } from './types/cluster';
 
 class BondMap implements BondMapInterface {
   private storage: Record<number, AtomInterface> = {};
@@ -39,6 +40,7 @@ export class Atom implements AtomInterface {
   readonly position: VectorInterface;
   readonly speed: VectorInterface;
   readonly bonds: BondMapInterface;
+  cluster?: ClusterInterface;
 
   constructor(id: number, type: number, position: NumericVector) {
     this.id = id;

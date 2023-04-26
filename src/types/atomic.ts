@@ -1,4 +1,5 @@
 import { VectorInterface } from '../vector/types';
+import { ClusterInterface } from './cluster';
 
 export interface BondMapInterface {
   length: number;
@@ -14,6 +15,7 @@ export interface AtomInterface {
   readonly position: VectorInterface;
   readonly speed: VectorInterface;
   readonly bonds: BondMapInterface;
+  cluster?: ClusterInterface;
 }
 
 export interface LinkInterface {
