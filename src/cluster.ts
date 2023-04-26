@@ -84,7 +84,7 @@ export class ClusterManager {
     this.map2 = new ClusterMap(quantum, quantum / 2);
   }
 
-  handleAtom(atom: AtomInterface): Set<AtomInterface> {
+  handleAtom(atom: AtomInterface): Iterable<AtomInterface> {
     const result: Set<AtomInterface> = new Set();
     for (const neighbour of this.map1.handleAtom(atom)) {
       result.add(neighbour);
