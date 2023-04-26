@@ -25,5 +25,6 @@ export type WorldConfig = {
 };
 export type InitialConfig = {
   ATOMS_COUNT: number;
+  MIN_POSITION: NumericVector;
   MAX_POSITION: NumericVector;
 };

@@ -26,9 +26,12 @@ export function create2dRandomDistribution(
 
   for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
     const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
+    const minPos = initialConfig.MIN_POSITION;
+    const maxPos = initialConfig.MAX_POSITION;
+
     const position = [
-      Math.random() * initialConfig.MAX_POSITION[0],
-      Math.random() * initialConfig.MAX_POSITION[1],
+      minPos[0] + Math.random() * (maxPos[0] - minPos[0]),
+      minPos[1] + Math.random() * (maxPos[1] - minPos[1]),
     ];
     atoms.push(createAtom(type, position));
   }
@@ -45,10 +48,13 @@ export function create3dRandomDistribution(
 
   for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
     const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
+    const minPos = initialConfig.MIN_POSITION;
+    const maxPos = initialConfig.MAX_POSITION;
+
     const position = [
-      Math.random() * initialConfig.MAX_POSITION[0],
-      Math.random() * initialConfig.MAX_POSITION[1],
-      Math.random() * initialConfig.MAX_POSITION[2],
+      minPos[0] + Math.random() * (maxPos[0] - minPos[0]),
+      minPos[1] + Math.random() * (maxPos[1] - minPos[1]),
+      minPos[2] + Math.random() * (maxPos[2] - minPos[2]),
     ];
     atoms.push(createAtom(type, position));
   }
