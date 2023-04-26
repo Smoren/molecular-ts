@@ -45,12 +45,10 @@ export class Simulation implements SimulationInterface {
       new RulesHelper(this.typesConfig, this.worldConfig),
     );
     this.clusterManager = new ClusterManager(this.worldConfig.MAX_INTERACTION_RADIUS);
-    this.drawer.initEventHandlers(() => this.atoms, () => this.linkManager);
   }
 
   start() {
     this.tick();
-    // setInterval(() => console.log(this.clusterManager.countAtoms()), 1000);
   }
 
   private tick() {
@@ -66,7 +64,6 @@ export class Simulation implements SimulationInterface {
         this.interactionManager.interactAtom(atom, this.clusterManager.handleAtom(atom));
       }
     }
-    this.drawer.clear();
     this.drawer.draw(this.atoms, this.linkManager);
     setTimeout(() => this.tick(), 10);
   }

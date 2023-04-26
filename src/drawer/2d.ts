@@ -50,9 +50,11 @@ export class Drawer2d implements DrawerInterface {
     this.TYPES_CONFIG = typesConfig;
     this.context = domElement.getContext('2d');
     this.refresh();
+    this.initEventHandlers();
   }
 
   public draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
+    this.clear();
     this.context.save();
     this.context.translate(...this.viewConfig.offset as [number, number]);
     this.context.scale(...this.viewConfig.scale as [number, number]);
@@ -73,7 +75,7 @@ export class Drawer2d implements DrawerInterface {
     this.context.restore();
   }
 
-  drawCircle(position: NumericVector, radius: number, color: string) {
+  private drawCircle(position: NumericVector, radius: number, color: string) {
     this.context.beginPath();
     this.context.fillStyle = color;
     this.context.ellipse(...position as [number, number], radius, radius, 0, 0, 2 * Math.PI);
@@ -81,7 +83,7 @@ export class Drawer2d implements DrawerInterface {
     this.context.closePath();
   }
 
-  drawLine(from: NumericVector, to: NumericVector, color: string) {
+  private drawLine(from: NumericVector, to: NumericVector, color: string) {
     this.context.beginPath();
     this.context.strokeStyle = color;
     this.context.moveTo(...from as [number, number]);
@@ -90,7 +92,7 @@ export class Drawer2d implements DrawerInterface {
     this.context.closePath();
   }
 
-  public refresh(): void {
+  private refresh(): void {
     if (this.domElement.width !== this.width) {
       this.domElement.width = this.width;
     }
@@ -102,19 +104,15 @@ export class Drawer2d implements DrawerInterface {
     this.clear();
   }
 
-  public clear(): void {
+  private clear(): void {
     this.context.fillStyle = 'rgb(20, 55, 75)';
     this.context.rect(0, 0, this.width, this.height);
     this.context.fill();
   }
 
-  public initEventHandlers(
-    getAtoms: () => Iterable<AtomInterface>,
-    getLinks: () => LinkManagerInterface,
-  ): void {
+  private initEventHandlers(): void {
     const resizeObserver = new ResizeObserver(() => {
       this.refresh();
-      this.draw(getAtoms(), getLinks());
     });
     resizeObserver.observe(this.domElement);
 
@@ -143,8 +141,6 @@ export class Drawer2d implements DrawerInterface {
         this.viewConfig.offset[1] -= event.deltaY;
       }
 
-      this.clear();
-      this.draw(getAtoms(), getLinks());
       event.preventDefault();
     });
   }

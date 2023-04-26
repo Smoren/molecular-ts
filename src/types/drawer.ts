@@ -10,12 +10,6 @@ export interface ViewConfigInterface {
 
 export interface DrawerInterface {
   draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void;
-  refresh(): void;
-  clear(): void;
-  initEventHandlers(
-    getAtoms: () => Iterable<AtomInterface>,
-    getLinks: () => LinkManagerInterface,
-  ): void;
 }
 
 export interface DrawerConfigInterface {
