@@ -6,8 +6,8 @@ import { AtomInterface } from './types/atomic';
 import { DrawerInterface } from './types/drawer';
 import { LinkManagerInterface } from './types/helpers';
 import { InteractionManagerInterface } from './types/interaction';
-import { ClusterManagerInterface } from "./types/cluster";
-import { ClusterManager } from "./cluster";
+import { ClusterManagerInterface } from './types/cluster';
+import { ClusterManager } from './cluster';
 
 export class Simulation implements SimulationInterface {
   private readonly typesConfig: TypesConfig;
