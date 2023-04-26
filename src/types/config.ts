@@ -20,8 +20,8 @@ export type WorldConfig = {
   INERTIAL_MULTIPLIER: number;
   PLAYBACK_SPEED: number;
   SPEED: number;
-  MAX_POSITION: NumericVector;
 };
 export type InitialConfig = {
   ATOMS_COUNT: number;
+  MAX_POSITION: NumericVector;
 };

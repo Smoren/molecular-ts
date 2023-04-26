@@ -2,8 +2,39 @@ import { AtomInterface } from './types/atomic';
 import { NumericVector } from './vector/types';
 import { ClusterInterface, ClusterManagerInterface, ClusterMapInterface } from './types/cluster';
 
+function incPoint(aPoint: NumericVector, aCenterPoint: NumericVector, aDim: number): boolean {
+  aPoint[aDim]++;
+  if (aPoint[aDim] > aCenterPoint[aDim] + 1) {
+    if (aDim == aPoint.length - 1) {
+      return false;
+    }
+    aPoint[aDim] = aCenterPoint[aDim] - 1;
+    return incPoint(aPoint, aCenterPoint, aDim + 1);
+  }
+  return true;
+}
+
+function* getNeighboursCoords(coords: NumericVector): Iterable<NumericVector> {
+  const curPoint: NumericVector = new Array<number>(coords.length);
+  for (let i=0; i<curPoint.length; ++i) {
+    curPoint[i] = coords[i] - 1;
+  }
+  do {
+    yield curPoint;
+  } while (incPoint(curPoint, coords, 0));
+}
+
 class Cluster implements ClusterInterface {
   atoms: Set<AtomInterface> = new Set<AtomInterface>();
+  coords: NumericVector;
+
+  constructor(coords: NumericVector) {
+    this.coords = coords;
+  }
+
+  get length(): number {
+    return this.atoms.size;
+  }
 
   add(atom: AtomInterface): void {
     this.atoms.add(atom);
@@ -22,7 +53,6 @@ class Cluster implements ClusterInterface {
   }
 }
 
-// две кластермапы с разными фазами и ребром кластера 2 * max radius
 class ClusterMap implements ClusterMapInterface {
   map: Map<string, Cluster> = new Map();
   quantum: number;
@@ -33,8 +63,24 @@ class ClusterMap implements ClusterMapInterface {
     this.phase = phase;
   }
 
-  handleAtom(atom: AtomInterface): Cluster {
-    const actualCluster = this.getCluster(atom.position);
+  * getNeighbourhood(atom: AtomInterface): Iterable<ClusterInterface> {
+    const currentCluster = this.handleAtom(atom);
+    for (const coords of getNeighboursCoords(currentCluster.coords)) {
+      const cluster = this.getCluster(coords);
+      yield cluster;
+    }
+  }
+
+  countAtoms(): number {
+    let result = 0;
+    for (const [, cluster] of this.map) {
+      result += cluster.length;
+    }
+    return result;
+  }
+
+  private handleAtom(atom: AtomInterface): ClusterInterface {
+    const actualCluster = this.getClusterByAtom(atom);
     const currentCluster = atom.cluster;
 
     if (actualCluster !== currentCluster) {
@@ -48,18 +94,22 @@ class ClusterMap implements ClusterMapInterface {
     return actualCluster;
   }
 
-  private getCluster(coords: NumericVector): Cluster {
-    const clusterCoords = this.getClusterCoords(coords);
+  private getCluster(clusterCoords: NumericVector): ClusterInterface {
     const clusterId = this.getClusterId(clusterCoords);
 
     if (this.map.has(clusterId)) {
       return this.map.get(clusterId);
     }
 
-    const cluster = new Cluster();
+    const cluster = new Cluster([...clusterCoords]);
     this.map.set(clusterId, cluster);
 
     return cluster;
+  }
+
+  private getClusterByAtom(atom: AtomInterface): ClusterInterface {
+    const clusterCoords = this.getClusterCoords(atom.position);
+    return this.getCluster(clusterCoords);
   }
 
   private getClusterId(clusterCoords: NumericVector) {
@@ -76,22 +126,25 @@ class ClusterMap implements ClusterMapInterface {
 }
 
 export class ClusterManager implements ClusterManagerInterface {
-  private readonly map1: ClusterMap;
-  private readonly map2: ClusterMap;
+  private readonly map: ClusterMap;
 
   constructor(quantum: number) {
-    this.map1 = new ClusterMap(quantum, 0);
-    this.map2 = new ClusterMap(quantum, quantum / 2);
+    this.map = new ClusterMap(quantum, 0);
+  }
+
+  countAtoms(): number {
+    return this.map.countAtoms();
   }
 
   handleAtom(atom: AtomInterface): Iterable<AtomInterface> {
     const result: Set<AtomInterface> = new Set();
-    for (const neighbour of this.map1.handleAtom(atom)) {
-      result.add(neighbour);
+
+    for (const cluster of this.map.getNeighbourhood(atom)) {
+      for (const neighbour of cluster) {
+        result.add(neighbour);
+      }
     }
-    for (const neighbour of this.map2.handleAtom(atom)) {
-      result.add(neighbour);
-    }
+
     return result;
   }
 }

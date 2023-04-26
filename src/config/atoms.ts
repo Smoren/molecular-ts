@@ -27,8 +27,8 @@ export function create2dRandomDistribution(
   for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
     const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
     const position = [
-      Math.random() * worldConfig.MAX_POSITION[0],
-      Math.random() * worldConfig.MAX_POSITION[1],
+      Math.random() * initialConfig.MAX_POSITION[0],
+      Math.random() * initialConfig.MAX_POSITION[1],
     ];
     atoms.push(createAtom(type, position));
   }

@@ -44,7 +44,7 @@ export class Simulation implements SimulationInterface {
       this.linkManager,
       new RulesHelper(this.typesConfig, this.worldConfig),
     );
-    this.clusterManager = new ClusterManager(this.worldConfig.MAX_INTERACTION_RADIUS * 2);
+    this.clusterManager = new ClusterManager(this.worldConfig.MAX_INTERACTION_RADIUS);
     this.drawer.initEventHandlers(() => this.atoms, () => this.linkManager);
   }
 
@@ -55,13 +55,13 @@ export class Simulation implements SimulationInterface {
   private tick() {
     for (let i=0; i<this.worldConfig.PLAYBACK_SPEED; ++i) {
       for (const atom of this.atoms) {
-        // atom.speed[0] += 0.01;
         this.interactionManager.moveAtom(atom);
       }
       for (const link of this.linkManager) {
         this.interactionManager.interactLink(link);
       }
       for (const atom of this.atoms) {
+        // this.interactionManager.interactAtom(atom, this.atoms);
         this.interactionManager.interactAtom(atom, this.clusterManager.handleAtom(atom));
       }
     }

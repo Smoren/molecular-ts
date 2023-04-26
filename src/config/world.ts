@@ -11,6 +11,5 @@ export function createBaseWorldConfig(): WorldConfig {
     INERTIAL_MULTIPLIER: 0.98,
     SPEED: 12,
     PLAYBACK_SPEED: 2,
-    MAX_POSITION: [1800, 800],
   };
 }
