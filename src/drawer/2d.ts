@@ -1,7 +1,7 @@
 import { createVector } from '../vector';
 import { NumericVector } from '../vector/types';
 import { Drawer2dConfigInterface, DrawerInterface, ViewConfigInterface } from '../types/drawer';
-import { TypesConfig, WorldConfig } from '../types/config';
+import { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import { AtomInterface } from '../types/atomic';
 import { LinkManagerInterface } from '../types/helpers';
 
@@ -75,9 +75,9 @@ export class Drawer2d implements DrawerInterface {
     this.context.restore();
   }
 
-  private drawCircle(position: NumericVector, radius: number, color: string) {
+  private drawCircle(position: NumericVector, radius: number, color: ColorVector) {
     this.context.beginPath();
-    this.context.fillStyle = color;
+    this.context.fillStyle = `rgb(${color.join(', ')})`;
     this.context.ellipse(...position as [number, number], radius, radius, 0, 0, 2 * Math.PI);
     this.context.fill();
     this.context.closePath();

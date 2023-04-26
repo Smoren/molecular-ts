@@ -1,19 +1,19 @@
-import { TypesConfig } from '../types/config';
+import { ColorVector, TypesConfig } from '../types/config';
 
 
 function getRandomNumber(): number {
   return Math.round(Math.random()*255);
 }
 
-function getRandomColor(): string {
-  return `rgb(${getRandomNumber()}, ${getRandomNumber()}, ${getRandomNumber()})`;
+function getRandomColor(): [number, number, number] {
+  return [getRandomNumber(), getRandomNumber(), getRandomNumber()];
 }
 
-function createColors(count: number): string[] {
-  const predefined = [
-    'rgb(80, 170, 140)',
-    'rgb(200, 140, 100)',
-    'rgb(250, 20, 20)',
+function createColors(count: number): Array<ColorVector> {
+  const predefined: Array<ColorVector> = [
+    [80, 170, 140],
+    [200, 140, 100],
+    [250, 20, 20],
   ];
   const result = [];
   for (let i=0; i<count; ++i) {
