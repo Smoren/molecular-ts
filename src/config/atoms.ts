@@ -17,6 +17,21 @@ export function create2dButterfly(): AtomInterface[] {
   return atoms;
 }
 
+export function create3Butterfly(): AtomInterface[] {
+  const atoms: AtomInterface[] = [];
+
+  atoms.push(createAtom(0, [300, 300, 500]));
+  atoms.push(createAtom(1, [310, 310, 500]));
+  atoms.push(createAtom(2, [300, 320, 500]));
+  atoms.push(createAtom(0, [290, 330, 500]));
+  atoms.push(createAtom(0, [330, 300, 500]));
+  atoms.push(createAtom(1, [320, 310, 500]));
+  atoms.push(createAtom(2, [330, 320, 500]));
+  atoms.push(createAtom(0, [340, 330, 500]));
+
+  return atoms;
+}
+
 export function create2dRandomDistribution(
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,

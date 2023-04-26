@@ -6,6 +6,7 @@ import {
 import { createBaseTypesConfig } from '../config/types';
 import { createBaseWorldConfig } from '../config/world';
 import { create3dBaseInitialConfig } from '../config/initial';
+// import { create3Butterfly } from '../config/atoms';
 import { create3dRandomDistribution } from '../config/atoms';
 import { Simulation } from '../simulation';
 import { create3dDrawer } from '../drawer/3d';
@@ -19,6 +20,7 @@ export function create3dSimulation() {
     worldConfig: WORLD_CONFIG,
     typesConfig: TYPES_CONFIG,
     initialConfig: INITIAL_CONFIG,
+    // atomsFactory: create3Butterfly,
     atomsFactory: create3dRandomDistribution,
     drawer: create3dDrawer('canvas', WORLD_CONFIG, TYPES_CONFIG),
   });

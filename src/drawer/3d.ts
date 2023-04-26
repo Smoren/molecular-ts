@@ -30,7 +30,6 @@ export class Drawer3d implements DrawerInterface {
   private readonly camera: Camera;
   private readonly lights: Light[];
   private readonly map: Map<AtomInterface, Mesh> = new Map();
-  private readonly coordsMultiplier: number = 10;
 
   constructor({
     domElement,
