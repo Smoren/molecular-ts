@@ -42,3 +42,33 @@ export function createBaseTypesConfig(): TypesConfig {
     COLORS: createColors(3),
   };
 }
+
+export function createRandomTypesConfig(count: number): TypesConfig {
+  const gravity: number[][] = [];
+  for (let i=0; i<count; ++i) {
+    gravity.push([]);
+    for (let j=0; j<count; ++j) {
+      gravity[i].push(Math.round(Math.random()*2 - 1));
+    }
+  }
+
+  const typeLinks: number[][] = [];
+  for (let i=0; i<count; ++i) {
+    typeLinks.push([]);
+    for (let j=0; j<count; ++j) {
+      typeLinks[i].push(Math.round(Math.random()*3 + 1));
+    }
+  }
+
+  const links: number[] = [];
+  for (let i=0; i<count; ++i) {
+    links.push(Math.round(Math.random()*4 + 1));
+  }
+
+  return {
+    GRAVITY: gravity,
+    LINKS: links,
+    TYPE_LINKS: typeLinks,
+    COLORS: createColors(count),
+  };
+}
