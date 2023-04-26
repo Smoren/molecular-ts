@@ -19,7 +19,6 @@ export function create3dSimulation() {
     worldConfig: WORLD_CONFIG,
     typesConfig: TYPES_CONFIG,
     initialConfig: INITIAL_CONFIG,
-    // atomsFactory: create2dButterfly,
     atomsFactory: create3dRandomDistribution,
     drawer: create3dDrawer('canvas', WORLD_CONFIG, TYPES_CONFIG),
   });

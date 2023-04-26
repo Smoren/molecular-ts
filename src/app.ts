@@ -2,6 +2,12 @@
 //
 // const sim = create2dSimulation();
 // sim.start();
-import { testBabylon } from './drafts/babylon';
+// import { testBabylon } from './drafts/babylon';
+//
+// testBabylon();
+import { create3dSimulation } from './app/3d';
 
-testBabylon();
+setTimeout(() => {
+  const sim = create3dSimulation();
+  sim.start();
+}, 100);
