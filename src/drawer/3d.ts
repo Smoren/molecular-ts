@@ -44,8 +44,8 @@ export class Drawer3d implements DrawerInterface {
     this.camera = this.createCamera(1000, [444, 530, 698]);
     this.scene.activeCamera.attachControl(this.domElement);
     this.lights = [
-      this.createLight([1000, 1000, 1000], 0.003),
-      this.createLight([-200, -630, -598], 0.003),
+      this.createLight([1000, 1000, 1000], 0.006),
+      this.createLight([-200, -630, -598], 0.006),
     ];
     this.engine.runRenderLoop(() => {
       this.normalizeFrame();
@@ -114,7 +114,7 @@ export class Drawer3d implements DrawerInterface {
     const drawObject = this.createAtomMesh(
       this.WORLD_CONFIG.ATOM_RADIUS,
       atom.position,
-      [255, 255, 255],
+      this.TYPES_CONFIG.COLORS[atom.type],
     );
     this.map.set(atom, drawObject);
 
