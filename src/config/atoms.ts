@@ -20,14 +20,14 @@ export function create2dButterfly(): AtomInterface[] {
 export function create3Butterfly(): AtomInterface[] {
   const atoms: AtomInterface[] = [];
 
-  atoms.push(createAtom(0, [300, 300, 500]));
-  atoms.push(createAtom(1, [310, 310, 500]));
-  atoms.push(createAtom(2, [300, 320, 500]));
-  atoms.push(createAtom(0, [290, 330, 500]));
-  atoms.push(createAtom(0, [330, 300, 500]));
-  atoms.push(createAtom(1, [320, 310, 500]));
-  atoms.push(createAtom(2, [330, 320, 500]));
-  atoms.push(createAtom(0, [340, 330, 500]));
+  atoms.push(createAtom(0, [300, 300, -200]));
+  atoms.push(createAtom(1, [310, 310, -210]));
+  atoms.push(createAtom(2, [300, 320, -220]));
+  atoms.push(createAtom(0, [290, 330, -230]));
+  atoms.push(createAtom(0, [330, 300, -200]));
+  atoms.push(createAtom(1, [320, 310, -210]));
+  atoms.push(createAtom(2, [330, 320, -220]));
+  atoms.push(createAtom(0, [340, 330, -230]));
 
   return atoms;
 }
