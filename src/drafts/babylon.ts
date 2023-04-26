@@ -46,10 +46,18 @@ function createLight(scene: Scene, coords: NumericVector, intensity: number): Po
   return light;
 }
 
+function normalizeFrame(domElement: HTMLCanvasElement): void {
+  if (domElement.width !== domElement.clientWidth) {
+    domElement.width = domElement.clientWidth;
+  }
+  if (domElement.height !== domElement.clientHeight) {
+    domElement.height = domElement.clientHeight;
+  }
+}
+
 function startBabylon() {
   const domElement: HTMLCanvasElement = document.getElementById('canvas') as HTMLCanvasElement;
-  domElement.width = domElement.clientWidth;
-  domElement.height = domElement.clientHeight;
+  normalizeFrame(domElement);
   const engine = new Engine(domElement, true);
   const scene = new Scene(engine);
   new ArcRotateCamera(
@@ -95,6 +103,7 @@ function startBabylon() {
   tick();
 
   engine.runRenderLoop(() => {
+    normalizeFrame(domElement);
     scene.render();
   });
 }
