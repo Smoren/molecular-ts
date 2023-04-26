@@ -62,7 +62,7 @@ export class Simulation implements SimulationInterface {
         this.interactionManager.interactLink(link);
       }
       for (const atom of this.atoms) {
-        this.interactionManager.interactAtom(atom, this.atoms);
+        this.interactionManager.interactAtom(atom, this.clusterManager.handleAtom(atom));
       }
     }
     this.drawer.clear();

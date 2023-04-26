@@ -48,7 +48,7 @@ export class InteractionManager implements InteractionManagerInterface {
     }
   }
 
-  interactAtom(atom: AtomInterface, neighbours: AtomInterface[]): void {
+  interactAtom(atom: AtomInterface, neighbours: Iterable<AtomInterface>): void {
     for (const neighbour of neighbours) {
       if (atom === neighbour) {
         continue;
