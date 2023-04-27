@@ -15,3 +15,9 @@ export function create3dBaseInitialConfig(): InitialConfig {
     MAX_POSITION: [300, 300, 300],
   };
 }
+
+export const MODE = {
+  BUTTERFLY: 1,
+  CONST_TYPES: 2,
+  RANDOM_TYPES: 3,
+};
