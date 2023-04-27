@@ -2,10 +2,10 @@ import { MODE } from './config/initial';
 import { create2dSimulation, create3dSimulation } from './app/choice';
 import { Simulation } from './simulation';
 
-function startSimulation(dimenstions: number, mode: number) {
+function startSimulation(dimensions: number, mode: number) {
   let sim: Simulation;
 
-  if (dimenstions === 2) {
+  if (dimensions === 2) {
     sim = create2dSimulation(mode);
   } else {
     sim = create3dSimulation(mode);
