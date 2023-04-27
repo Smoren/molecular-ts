@@ -12,7 +12,7 @@ export function createBaseWorldConfig(): WorldConfig {
     INERTIAL_MULTIPLIER: 0.98,
     SPEED: 12,
     PLAYBACK_SPEED: 1,
-    TEMPERATION_MULTIPLIER: 0.1,
+    TEMPERATION_MULTIPLIER: 0,
     TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {
       return (Math.cos(c[0]/100) + Math.cos(c[1]/100) + Math.cos(c[2]/100)) + t*0;
     },
