@@ -2,7 +2,7 @@ import { createVector } from '../vector';
 import { NumericVector } from '../vector/types';
 import { Drawer2dConfigInterface, DrawerInterface, ViewConfigInterface } from '../types/drawer';
 import { ColorVector, TypesConfig, WorldConfig } from '../types/config';
-import { AtomInterface } from '../types/atomic';
+import { AtomInterface, LinkInterface } from '../types/atomic';
 import { LinkManagerInterface } from '../types/helpers';
 
 /**
@@ -60,15 +60,11 @@ export class Drawer2d implements DrawerInterface {
     this.context.scale(...this.viewConfig.scale as [number, number]);
 
     for (const link of links) {
-      const lhsColor = this.TYPES_CONFIG.COLORS[link.lhs.type];
-      const rhsColor = this.TYPES_CONFIG.COLORS[link.rhs.type];
-      const color = [(lhsColor[0]+rhsColor[0])/2, (lhsColor[1]+rhsColor[1])/2, (lhsColor[2]+rhsColor[2])/2];
-
       this.drawLine(
         link.lhs.position,
         link.rhs.position,
-        2,
-        `rgb(${color.join(', ')})`,
+        this.getLinkWidth(link),
+        `rgb(${this.getLinkColor(link).join(', ')})`,
       );
     }
 
@@ -99,6 +95,29 @@ export class Drawer2d implements DrawerInterface {
     this.context.lineTo(...to as [number, number]);
     this.context.stroke();
     this.context.closePath();
+  }
+
+  private getLinkColor(link: LinkInterface): ColorVector {
+    const lhsColor = this.TYPES_CONFIG.COLORS[link.lhs.type];
+    const rhsColor = this.TYPES_CONFIG.COLORS[link.rhs.type];
+    return [
+      (lhsColor[0]+rhsColor[0])/2,
+      (lhsColor[1]+rhsColor[1])/2,
+      (lhsColor[2]+rhsColor[2])/2,
+    ];
+  }
+
+  private getLinkWidth(link: LinkInterface): number {
+    const maxValue = this.WORLD_CONFIG.ATOM_RADIUS * 2;
+    const maxLength = this.WORLD_CONFIG.MAX_LINK_RADIUS;
+
+    const dist = Math.sqrt(
+      (link.rhs.position[0] - link.lhs.position[0])**2 +
+      (link.rhs.position[1] - link.lhs.position[1])**2,
+    );
+
+    return (1-(dist - maxLength)/maxLength) * maxValue + 1;
+    // return maxValue;
   }
 
   private refresh(): void {

@@ -14,7 +14,7 @@ function startSimulation(dimensions: number, mode: number) {
   setTimeout(() => sim.start(), 100);
 }
 
-const DIMENSIONS = 3;
+const DIMENSIONS = 2;
 const CURRENT_MODE = MODE.CONST_TYPES;
 
 startSimulation(DIMENSIONS, CURRENT_MODE);
