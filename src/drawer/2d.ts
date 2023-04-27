@@ -58,6 +58,20 @@ export class Drawer2d implements DrawerInterface {
     this.context.save();
     this.context.translate(...this.viewConfig.offset as [number, number]);
     this.context.scale(...this.viewConfig.scale as [number, number]);
+
+    for (const link of links) {
+      const lhsColor = this.TYPES_CONFIG.COLORS[link.lhs.type];
+      const rhsColor = this.TYPES_CONFIG.COLORS[link.rhs.type];
+      const color = [(lhsColor[0]+rhsColor[0])/2, (lhsColor[1]+rhsColor[1])/2, (lhsColor[2]+rhsColor[2])/2];
+
+      this.drawLine(
+        link.lhs.position,
+        link.rhs.position,
+        2,
+        `rgb(${color.join(', ')})`,
+      );
+    }
+
     for (const atom of atoms) {
       this.drawCircle(
         atom.position,
@@ -65,13 +79,7 @@ export class Drawer2d implements DrawerInterface {
         this.TYPES_CONFIG.COLORS[atom.type],
       );
     }
-    for (const link of links) {
-      this.drawLine(
-        link.lhs.position,
-        link.rhs.position,
-        'rgb(255, 255, 255)',
-      );
-    }
+
     this.context.restore();
   }
 
@@ -83,9 +91,10 @@ export class Drawer2d implements DrawerInterface {
     this.context.closePath();
   }
 
-  private drawLine(from: NumericVector, to: NumericVector, color: string) {
+  private drawLine(from: NumericVector, to: NumericVector, width: number, color: string) {
     this.context.beginPath();
     this.context.strokeStyle = color;
+    this.context.lineWidth = width;
     this.context.moveTo(...from as [number, number]);
     this.context.lineTo(...to as [number, number]);
     this.context.stroke();
