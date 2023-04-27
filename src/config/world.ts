@@ -12,13 +12,13 @@ export function createBaseWorldConfig(): WorldConfig {
     INERTIAL_MULTIPLIER: 0.98,
     SPEED: 12,
     PLAYBACK_SPEED: 1,
-    TEMPERATURE_MULTIPLIER: 0,
+    TEMPERATURE_MULTIPLIER: 2,
     TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {
       let sum = 0;
       for (let i=0; i<c.length; ++i) {
-        sum += Math.cos(c[i]/100);
+        sum += (Math.PI/2-Math.abs(Math.atan(c[i]/100)))/Math.PI*2;
       }
-      return sum + t*0;
+      return sum/c.length * (0.5 - Math.cos(t/100)/2);
     },
   };
 }

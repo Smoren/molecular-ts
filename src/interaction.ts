@@ -10,6 +10,7 @@ export class InteractionManager implements InteractionManagerInterface {
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly linkManager: LinkManagerInterface;
   private readonly ruleHelper: RulesHelperInterface;
+  private time: number;
 
   constructor(
     worldConfig: WorldConfig,
@@ -21,18 +22,20 @@ export class InteractionManager implements InteractionManagerInterface {
     this.TYPES_CONFIG = typesConfig;
     this.linkManager = linkManager;
     this.ruleHelper = ruleHelper;
+    this.time = 0;
+  }
+
+  handleTime(): void {
+    this.time++;
+
+    if (this.time % 10 === 0) {
+      console.log('time', this.time, 0.5 - Math.cos(this.time/100)/2);
+    }
   }
 
   moveAtom(atom: AtomInterface): void {
     // применяем температуру
-    const func = this.WORLD_CONFIG.TEMPERATURE_FUNCTION;
-    const mult = this.WORLD_CONFIG.TEMPERATURE_MULTIPLIER;
-    const v = atom.speed
-      .clone()
-      .random()
-      .normalize()
-      .mul(mult * func(atom.position, 1));
-    atom.speed.add(v);
+    this.handleTemperature(atom);
 
     // применяем скорость
     atom.position.add(atom.speed);
@@ -96,6 +99,17 @@ export class InteractionManager implements InteractionManagerInterface {
   //     }
   //   }
   // }
+
+  private handleTemperature(atom: AtomInterface): void {
+    const func = this.WORLD_CONFIG.TEMPERATURE_FUNCTION;
+    const mult = this.WORLD_CONFIG.TEMPERATURE_MULTIPLIER;
+    const v = atom.speed
+      .clone()
+      .random()
+      .normalize()
+      .mul(mult * func(atom.position, this.time));
+    atom.speed.add(v);
+  }
 
   private handleLinkInfluence(
     lhs: AtomInterface,

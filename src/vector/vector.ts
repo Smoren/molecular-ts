@@ -113,7 +113,7 @@ export class Vector extends Array implements VectorInterface {
 
   random(): VectorInterface {
     for (let i=0; i<this.length; ++i) {
-      this[i] = Math.random();
+      this[i] = 1-Math.random()*2;
     }
     return this;
   }

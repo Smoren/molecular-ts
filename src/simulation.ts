@@ -64,6 +64,7 @@ export class Simulation implements SimulationInterface {
         this.interactionManager.interactAtom(atom, this.clusterManager.handleAtom(atom));
       }
     }
+    this.interactionManager.handleTime();
     this.drawer.draw(this.atoms, this.linkManager);
     setTimeout(() => this.tick(), 10);
   }
