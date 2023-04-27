@@ -92,6 +92,11 @@ export interface VectorInterface extends NumericVector {
   normalize(): VectorInterface;
 
   /**
+   * Randomizes this vector
+   */
+  random(): VectorInterface;
+
+  /**
    * Clones vector
    */
   clone(): VectorInterface;

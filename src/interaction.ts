@@ -24,6 +24,16 @@ export class InteractionManager implements InteractionManagerInterface {
   }
 
   moveAtom(atom: AtomInterface): void {
+    // применяем температуру
+    const func = this.WORLD_CONFIG.TEMPERATURE_FUNCTION;
+    const mult = this.WORLD_CONFIG.TEMPERATION_MULTIPLIER;
+    const v = atom.speed
+      .clone()
+      .random()
+      .normalize()
+      .mul(mult * func(atom.position, 1));
+    atom.speed.add(v);
+
     // применяем скорость
     atom.position.add(atom.speed);
 

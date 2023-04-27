@@ -41,7 +41,7 @@ export class Drawer3d implements DrawerInterface {
     this.TYPES_CONFIG = typesConfig;
     this.engine = new Engine(this.domElement, true);
     this.scene = new Scene(this.engine);
-    this.camera = this.createCamera(1000, [444, 530, 698]);
+    this.camera = this.createCamera(1000, [0, 0, 0]);
     this.scene.activeCamera.attachControl(this.domElement);
     this.lights = [
       this.createLight([1000, 1000, 1000], 0.006),

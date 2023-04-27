@@ -111,6 +111,13 @@ export class Vector extends Array implements VectorInterface {
     return this;
   }
 
+  random(): VectorInterface {
+    for (let i=0; i<this.length; ++i) {
+      this[i] = Math.random();
+    }
+    return this;
+  }
+
   clone(): VectorInterface {
     return new Vector(this);
   }

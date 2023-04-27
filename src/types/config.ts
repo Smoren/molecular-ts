@@ -23,6 +23,8 @@ export type WorldConfig = {
   INERTIAL_MULTIPLIER: number;
   PLAYBACK_SPEED: number;
   SPEED: number;
+  TEMPERATION_MULTIPLIER: number;
+  TEMPERATURE_FUNCTION: (p: NumericVector, t: number) => number;
 };
 export type InitialConfig = {
   ATOMS_COUNT: number;
