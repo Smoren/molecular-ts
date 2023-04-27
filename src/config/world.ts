@@ -12,6 +12,7 @@ export function createBaseWorldConfig(): WorldConfig {
     INERTIAL_MULTIPLIER: 0.98,
     SPEED: 12,
     PLAYBACK_SPEED: 1,
+    SIMPLIFIED_VIEW_MODE: true,
     TEMPERATURE_MULTIPLIER: 1,
     TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {
       let sum = 0;

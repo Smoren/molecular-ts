@@ -22,6 +22,7 @@ export type WorldConfig = {
   BOUNCE_FORCE_MULTIPLIER: number;
   INERTIAL_MULTIPLIER: number;
   PLAYBACK_SPEED: number;
+  SIMPLIFIED_VIEW_MODE: boolean;
   SPEED: number;
   TEMPERATURE_MULTIPLIER: number;
   TEMPERATURE_FUNCTION: (p: NumericVector, t: number) => number;

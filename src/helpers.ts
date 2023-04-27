@@ -1,11 +1,11 @@
-import { LinkAllocatorInterface, LinkManagerInterface, RulesHelperInterface } from './types/helpers';
+import { LinksPoolInterface, LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import { AtomInterface, LinkInterface } from './types/atomic';
 import { Atom, Link } from './atomic';
 import { Swarm } from './structs/swarm';
 import { NumericVector } from './vector/types';
 import { TypesConfig, WorldConfig } from './types/config';
 
-class LinkPool implements LinkAllocatorInterface {
+class LinkPool implements LinksPoolInterface {
   private storage: LinkInterface[] = [];
 
   allocate(id: number, lhs: AtomInterface, rhs: AtomInterface): LinkInterface {
@@ -26,10 +26,10 @@ class LinkPool implements LinkAllocatorInterface {
 
 export class LinkManager implements LinkManagerInterface {
   private storage: Swarm<LinkInterface> = new Swarm();
-  private allocator: LinkAllocatorInterface = new LinkPool();
+  private pool: LinksPoolInterface = new LinkPool();
 
   create(lhs: AtomInterface, rhs: AtomInterface): LinkInterface {
-    const link = this.allocator.allocate(this.storage.nextKey, lhs, rhs);
+    const link = this.pool.allocate(this.storage.nextKey, lhs, rhs);
     lhs.bonds.add(rhs);
     rhs.bonds.add(lhs);
     this.storage.push(link);
@@ -40,7 +40,15 @@ export class LinkManager implements LinkManagerInterface {
     link.lhs.bonds.delete(link.rhs);
     link.rhs.bonds.delete(link.lhs);
     this.storage.pop(link.id);
-    this.allocator.free(link);
+    this.pool.free(link);
+  }
+
+  clear(): void {
+    this.storage.clear();
+  }
+
+  has(link: LinkInterface): boolean {
+    return this.storage.has(link.id);
   }
 
   * [Symbol.iterator](): Iterator<LinkInterface> {

@@ -1,8 +1,8 @@
 type NonUndefined<T> = T extends undefined ? never : T;
 
 export class Swarm<T extends NonUndefined<unknown>> implements Iterable<T> {
-  private readonly storage: T[];
-  private readonly stack: number[] = [];
+  private storage: T[];
+  private stack: number[] = [];
   private count: number = 0;
 
   constructor(items: T[] = []) {
@@ -18,6 +18,12 @@ export class Swarm<T extends NonUndefined<unknown>> implements Iterable<T> {
       return this.stack[this.stack.length-1];
     }
     return this.storage.length;
+  }
+
+  clear(): void {
+    this.storage = [];
+    this.stack = [];
+    this.count = 0;
   }
 
   push(item: T): number {

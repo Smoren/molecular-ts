@@ -4,7 +4,7 @@ import {
   ViewConfigInterface,
 } from '../types/drawer';
 import { TypesConfig, WorldConfig } from '../types/config';
-import { AtomInterface } from '../types/atomic';
+import { AtomInterface, LinkInterface } from '../types/atomic';
 // import { LinkManagerInterface } from '../types/helpers';
 import {
   Scene,
@@ -15,10 +15,11 @@ import {
   Light,
   PointLight,
   Mesh,
-  StandardMaterial,
+  StandardMaterial, MeshBuilder,
   // Color3,
 } from 'babylonjs';
 import { NumericVector } from '../vector/types';
+import { LinkManagerInterface } from '../types/helpers';
 
 export class Drawer3d implements DrawerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
@@ -29,7 +30,12 @@ export class Drawer3d implements DrawerInterface {
   private readonly scene: Scene;
   private readonly camera: Camera;
   private readonly lights: Light[];
-  private readonly map: Map<AtomInterface, Mesh> = new Map();
+  private readonly atomsMap: Map<AtomInterface, Mesh> = new Map();
+  private readonly linksMap: Map<LinkInterface, Mesh> = new Map();
+  private readonly bufVectors: Vector3[] = [
+    new Vector3(0, 0, 0),
+    new Vector3(0, 0, 0),
+  ];
 
   constructor({
     domElement,
@@ -53,13 +59,25 @@ export class Drawer3d implements DrawerInterface {
     });
   }
 
-  // , links: LinkManagerInterface
-  draw(atoms: Iterable<AtomInterface>): void {
+  draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
     for (const atom of atoms) {
       const drawObject = this.getAtomDrawObject(atom);
       drawObject.position.x = atom.position[0];
       drawObject.position.y = atom.position[1];
       drawObject.position.z = atom.position[2];
+    }
+
+    if (!this.WORLD_CONFIG.SIMPLIFIED_VIEW_MODE) {
+      for (const [link, drawObject] of this.linksMap) {
+        if (!links.has(link)) {
+          drawObject.dispose();
+          this.linksMap.delete(link);
+        }
+      }
+
+      for (const link of links) {
+        this.getLinkDrawObject(link);
+      }
     }
   }
 
@@ -105,8 +123,41 @@ export class Drawer3d implements DrawerInterface {
     return atomMesh;
   }
 
+  private createLinkMesh(lhsCoords: NumericVector, rhsCoords: NumericVector, mesh?: Mesh): Mesh {
+    const radius = 0.3;
+
+    this.bufVectors[0].x = lhsCoords[0];
+    this.bufVectors[0].y = lhsCoords[1];
+    this.bufVectors[0].z = lhsCoords[2];
+
+    this.bufVectors[1].x = rhsCoords[0];
+    this.bufVectors[1].y = rhsCoords[1];
+    this.bufVectors[1].z = rhsCoords[2];
+
+    if (mesh) {
+      // eslint-disable-next-line new-cap
+      return MeshBuilder.CreateTube('tube', {
+        path: [
+          this.bufVectors[0],
+          this.bufVectors[1],
+        ],
+        instance: mesh,
+      }, this.scene);
+    }
+
+    // eslint-disable-next-line new-cap
+    return MeshBuilder.CreateTube('tube', {
+      path: [
+        this.bufVectors[0],
+        this.bufVectors[1],
+      ],
+      updatable: true,
+      radius: radius,
+    }, this.scene);
+  }
+
   private getAtomDrawObject(atom: AtomInterface): Mesh {
-    return this.map.get(atom) ?? this.addAtomToMap(atom);
+    return this.atomsMap.get(atom) ?? this.addAtomToMap(atom);
   }
 
   private addAtomToMap(atom: AtomInterface): Mesh {
@@ -116,7 +167,23 @@ export class Drawer3d implements DrawerInterface {
       atom.position,
       this.TYPES_CONFIG.COLORS[atom.type],
     );
-    this.map.set(atom, drawObject);
+    this.atomsMap.set(atom, drawObject);
+
+    return drawObject;
+  }
+
+  private getLinkDrawObject(link: LinkInterface): Mesh {
+    const mesh = this.linksMap.get(link) ?? false;
+    if (mesh) {
+      return this.createLinkMesh(link.lhs.position, link.rhs.position, mesh);
+    }
+    return this.addLinkToMap(link);
+  }
+
+  private addLinkToMap(link: LinkInterface): Mesh {
+    // eslint-disable-next-line new-cap
+    const drawObject = this.createLinkMesh(link.lhs.position, link.rhs.position);
+    this.linksMap.set(link, drawObject);
 
     return drawObject;
   }
