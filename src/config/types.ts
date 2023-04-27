@@ -1,12 +1,16 @@
-import { ColorVector, TypesConfig } from '../types/config';
+import { ColorVector, RandomTypesConfig, TypesConfig } from '../types/config';
 
 
-function getRandomNumber(): number {
+function getRandomColorNumber(): number {
   return Math.round(Math.random()*255);
 }
 
+function createRandomInteger([from, until]: [number, number]): number {
+  return Math.round(Math.random() * (until - from)) + from;
+}
+
 function getRandomColor(): [number, number, number] {
-  return [getRandomNumber(), getRandomNumber(), getRandomNumber()];
+  return [getRandomColorNumber(), getRandomColorNumber(), getRandomColorNumber()];
 }
 
 function createColors(count: number): Array<ColorVector> {
@@ -43,32 +47,37 @@ export function createBaseTypesConfig(): TypesConfig {
   };
 }
 
-export function createRandomTypesConfig(count: number): TypesConfig {
+export function createRandomTypesConfig({
+  TYPES_COUNT,
+  GRAVITY_BOUNDS,
+  LINK_TYPE_BOUNDS,
+  LINK_BOUNDS,
+}: RandomTypesConfig): TypesConfig {
   const gravity: number[][] = [];
-  for (let i=0; i<count; ++i) {
+  for (let i=0; i<TYPES_COUNT; ++i) {
     gravity.push([]);
-    for (let j=0; j<count; ++j) {
-      gravity[i].push(Math.round(Math.random()*2 - 1));
-    }
-  }
-
-  const typeLinks: number[][] = [];
-  for (let i=0; i<count; ++i) {
-    typeLinks.push([]);
-    for (let j=0; j<count; ++j) {
-      typeLinks[i].push(Math.round(Math.random()*3 + 1));
+    for (let j=0; j<TYPES_COUNT; ++j) {
+      gravity[i].push(createRandomInteger(GRAVITY_BOUNDS));
     }
   }
 
   const links: number[] = [];
-  for (let i=0; i<count; ++i) {
-    links.push(Math.round(Math.random()*4 + 1));
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    links.push(createRandomInteger(LINK_BOUNDS));
+  }
+
+  const typeLinks: number[][] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    typeLinks.push([]);
+    for (let j=0; j<TYPES_COUNT; ++j) {
+      typeLinks[i].push(createRandomInteger(LINK_TYPE_BOUNDS));
+    }
   }
 
   return {
     GRAVITY: gravity,
     LINKS: links,
     TYPE_LINKS: typeLinks,
-    COLORS: createColors(count),
+    COLORS: createColors(TYPES_COUNT),
   };
 }

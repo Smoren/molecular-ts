@@ -1,4 +1,5 @@
 import { NumericVector } from '../vector/types';
+import { createRandomTypesConfig } from "../config/types";
 
 export type ColorVector = [number, number, number];
 
@@ -28,3 +29,10 @@ export type InitialConfig = {
   MIN_POSITION: NumericVector;
   MAX_POSITION: NumericVector;
 };
+export type RandomTypesConfig = {
+  TYPES_COUNT: number;
+  GRAVITY_BOUNDS: [number, number];
+  LINK_BOUNDS: [number, number];
+  LINK_TYPE_BOUNDS: [number, number];
+};
+
