@@ -108,7 +108,7 @@ export class Drawer2d implements DrawerInterface {
   }
 
   private getLinkWidth(link: LinkInterface): number {
-    const maxValue = this.WORLD_CONFIG.ATOM_RADIUS * 2;
+    const maxValue = this.WORLD_CONFIG.ATOM_RADIUS;
     const maxLength = this.WORLD_CONFIG.MAX_LINK_RADIUS;
 
     const dist = Math.sqrt(
@@ -116,8 +116,7 @@ export class Drawer2d implements DrawerInterface {
       (link.rhs.position[1] - link.lhs.position[1])**2,
     );
 
-    return (1-(dist - maxLength)/maxLength) * maxValue + 1;
-    // return maxValue;
+    return (1-maxValue)/maxLength * dist + maxValue;
   }
 
   private refresh(): void {
