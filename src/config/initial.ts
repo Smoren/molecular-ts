@@ -2,7 +2,7 @@ import { InitialConfig } from '../types/config';
 
 export function create2dBaseInitialConfig(): InitialConfig {
   return {
-    ATOMS_COUNT: 1500,
+    ATOMS_COUNT: 2500,
     MIN_POSITION: [0, 0],
     MAX_POSITION: [2500, 2500],
   };
