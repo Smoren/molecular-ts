@@ -1,7 +1,7 @@
 import { VectorInterface } from '../vector/types';
 import { ClusterInterface } from './cluster';
 
-export interface BondMapInterface {
+export interface BondMapInterface extends Iterable<AtomInterface> {
   length: number;
   lengthOf(type: number): number;
   has(atom: AtomInterface): boolean;

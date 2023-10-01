@@ -31,6 +31,7 @@ export class Simulation implements SimulationInterface {
     atomsFactory,
     drawer,
   }: SimulationConfig) {
+    console.log(typesConfig);
     this.typesConfig = typesConfig;
     this.worldConfig = worldConfig;
     this.initialConfig = initialConfig;

@@ -5,7 +5,7 @@ import { Simulation } from './simulation';
 function startSimulation(dimensions: number, mode: number) {
   let sim: Simulation;
 
-  if (dimensions === 3) {
+  if (dimensions === 2) {
     sim = create2dSimulation(mode);
   } else {
     sim = create3dSimulation(mode);
@@ -14,7 +14,7 @@ function startSimulation(dimensions: number, mode: number) {
   setTimeout(() => sim.start(), 100);
 }
 
-const DIMENSIONS = 3;
+const DIMENSIONS = 2;
 const CURRENT_MODE = MODE.RANDOM_TYPES;
 
 startSimulation(DIMENSIONS, CURRENT_MODE);

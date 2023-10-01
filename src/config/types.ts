@@ -43,6 +43,11 @@ export function createBaseTypesConfig(): TypesConfig {
       [1, 2, 1],
       [1, 1, 2],
     ],
+    UNLINK: [
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0],
+    ],
     COLORS: createColors(3),
   };
 }
@@ -74,10 +79,19 @@ export function createRandomTypesConfig({
     }
   }
 
+  const unlink: number[][] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    unlink.push([]);
+    for (let j=0; j<TYPES_COUNT; ++j) {
+      unlink[i].push(Math.random() > 0.8 ? 1 : 0);
+    }
+  }
+
   return {
     GRAVITY: gravity,
     LINKS: links,
     TYPE_LINKS: typeLinks,
+    UNLINK: unlink,
     COLORS: createColors(TYPES_COUNT),
   };
 }

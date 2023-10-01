@@ -6,6 +6,7 @@ export interface LinksPoolInterface {
 }
 
 export interface LinkManagerInterface extends Iterable<LinkInterface> {
+  get(lhs: AtomInterface, rhs: AtomInterface): LinkInterface;
   create(lhs: AtomInterface, rhs: AtomInterface): LinkInterface;
   delete(link: LinkInterface): void;
   clear(): void;
@@ -14,6 +15,7 @@ export interface LinkManagerInterface extends Iterable<LinkInterface> {
 
 export interface RulesHelperInterface {
   canLink(lhs: AtomInterface, rhs: AtomInterface): boolean;
+  canUnlink(lhs: AtomInterface, rhs: AtomInterface): boolean;
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number;
   getLinkForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number;
   getAtomsRadiusSum(lhs: AtomInterface, rhs: AtomInterface): number;

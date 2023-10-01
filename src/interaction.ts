@@ -74,6 +74,13 @@ export class InteractionManager implements InteractionManagerInterface {
         continue;
       }
 
+      if (this.ruleHelper.canUnlink(atom, neighbour)) {
+        for (const subNeighbor of neighbour.bonds) {
+          const link = this.linkManager.get(neighbour, subNeighbor);
+          this.linkManager.delete(link);
+        }
+      }
+
       atom.speed.add(
         toVector(distVector)
           .normalize()

@@ -26,25 +26,33 @@ class LinkPool implements LinksPoolInterface {
 
 export class LinkManager implements LinkManagerInterface {
   private storage: Swarm<LinkInterface> = new Swarm();
+  private map: Record<string, LinkInterface> = {};
   private pool: LinksPoolInterface = new LinkPool();
+
+  get(lhs: AtomInterface, rhs: AtomInterface): LinkInterface {
+    return this.map[this.getCompositeId(lhs, rhs)];
+  }
 
   create(lhs: AtomInterface, rhs: AtomInterface): LinkInterface {
     const link = this.pool.allocate(this.storage.nextKey, lhs, rhs);
     lhs.bonds.add(rhs);
     rhs.bonds.add(lhs);
     this.storage.push(link);
+    this.map[this.getCompositeId(lhs, rhs)] = link;
     return link;
   }
 
   delete(link: LinkInterface): void {
     link.lhs.bonds.delete(link.rhs);
     link.rhs.bonds.delete(link.lhs);
+    delete this.map[this.getCompositeId(link.lhs, link.rhs)];
     this.storage.pop(link.id);
     this.pool.free(link);
   }
 
   clear(): void {
     this.storage.clear();
+    this.map = {};
   }
 
   has(link: LinkInterface): boolean {
@@ -55,6 +63,10 @@ export class LinkManager implements LinkManagerInterface {
     for (const item of this.storage) {
       yield item;
     }
+  }
+
+  private getCompositeId(lhs: AtomInterface, rhs: AtomInterface): string {
+    return `${Math.max(lhs.id, rhs.id)}-${Math.min(lhs.id, rhs.id)}`;
   }
 }
 
@@ -69,6 +81,10 @@ export class RulesHelper implements RulesHelperInterface {
 
   canLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
     return this._canLink(lhs, rhs) && this._canLink(rhs, lhs);
+  }
+
+  canUnlink(lhs: AtomInterface, rhs: AtomInterface): boolean {
+    return !!this.TYPES_CONFIG.UNLINK[lhs.type][rhs.type];
   }
 
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {

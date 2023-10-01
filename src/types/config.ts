@@ -6,11 +6,13 @@ export type ColorVector = [number, number, number];
 type GravityConfig = number[][];
 type LinksConfig = number[];
 type TypeLinksConfig = number[][];
+type UnlinkConfig = number[][];
 type ColorsConfig = Array<ColorVector>;
 export type TypesConfig = {
   GRAVITY: GravityConfig;
   LINKS: LinksConfig;
   TYPE_LINKS: TypeLinksConfig;
+  UNLINK: UnlinkConfig;
   COLORS: ColorsConfig;
 };
 export type WorldConfig = {

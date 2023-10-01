@@ -32,6 +32,13 @@ class BondMap implements BondMapInterface {
     delete this.storage[atom.id];
     this.count--;
   }
+
+  * [Symbol.iterator](): Iterator<AtomInterface> {
+    // eslint-disable-next-line guard-for-in
+    for (const id in this.storage) {
+      yield this.storage[id];
+    }
+  }
 }
 
 export class Atom implements AtomInterface {
