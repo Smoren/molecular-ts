@@ -10,7 +10,7 @@ export function createBaseWorldConfig(): WorldConfig {
     LINK_FORCE_MULTIPLIER: 0.015,
     BOUNCE_FORCE_MULTIPLIER: 2,
     INERTIAL_MULTIPLIER: 0.98,
-    SPEED: 18,
+    SPEED: 20,
     PLAYBACK_SPEED: 2,
     SIMPLIFIED_VIEW_MODE: true,
     TEMPERATURE_MULTIPLIER: 0.2,
