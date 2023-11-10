@@ -33,11 +33,10 @@ function createColors(count: number): Array<ColorVector> {
 export function createBaseTypesConfig(): TypesConfig {
   return {
     GRAVITY: [
-      [1, -1, 1],
-      [1, -1, 1],
-      [-1, 1, -1],
+      [1, -1],
+      [1, -1],
     ],
-    COLORS: createColors(3),
+    COLORS: createColors(2),
   };
 }
 

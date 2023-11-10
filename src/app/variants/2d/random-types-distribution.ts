@@ -12,7 +12,7 @@ import { Simulation } from '../../../simulation';
 
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
 const TYPES_CONFIG: TypesConfig = createRandomTypesConfig({
-  TYPES_COUNT: 3,
+  TYPES_COUNT: 5,
   GRAVITY_BOUNDS: [-1, 1],
   LINK_BOUNDS: [1, 4],
   LINK_TYPE_BOUNDS: [0, 4],

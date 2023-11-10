@@ -15,6 +15,6 @@ function startSimulation(dimensions: number, mode: number) {
 }
 
 const DIMENSIONS = 3;
-const CURRENT_MODE = MODE.CONST_TYPES;
+const CURRENT_MODE = MODE.RANDOM_TYPES;
 
 startSimulation(DIMENSIONS, CURRENT_MODE);
