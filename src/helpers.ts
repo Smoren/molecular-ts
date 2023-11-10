@@ -68,16 +68,15 @@ export class RulesHelper implements RulesHelperInterface {
   }
 
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
-    let multiplier: number;
+    // let multiplier: number;
+    //
+    // if (dist2 < this.getAtomsRadiusSum()**2) {
+    //   multiplier = -this.WORLD_CONFIG.BOUNCE_FORCE_MULTIPLIER;
+    // } else {
+    //   multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
+    // }
 
-    if (dist2 < this.getAtomsRadiusSum()**2) {
-      multiplier = -this.WORLD_CONFIG.BOUNCE_FORCE_MULTIPLIER;
-    } else if (!lhs.bonds.has(rhs)) {
-      multiplier = -this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER;
-    } else {
-      multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
-    }
-
+    const multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
     return multiplier * this.WORLD_CONFIG.SPEED / dist2;
   }
 

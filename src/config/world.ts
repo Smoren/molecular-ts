@@ -1,5 +1,4 @@
 import { WorldConfig } from '../types/config';
-import { NumericVector } from '../vector/types';
 
 export function createBaseWorldConfig(): WorldConfig {
   return {
@@ -7,20 +6,13 @@ export function createBaseWorldConfig(): WorldConfig {
     MAX_INTERACTION_RADIUS: 100,
     MAX_LINK_RADIUS: 60,
     GRAVITY_FORCE_MULTIPLIER: 1,
-    LINK_FORCE_MULTIPLIER: 0.015,
     BOUNCE_FORCE_MULTIPLIER: 2,
     INERTIAL_MULTIPLIER: 0.98,
-    SPEED: 15,
+    SPEED: 50,
     PLAYBACK_SPEED: 2,
     SIMPLIFIED_VIEW_MODE: true,
     TEMPERATURE_MULTIPLIER: 0.2,
     MAX_POSITION: [5000, 5000],
-    TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {
-      let sum = 0;
-      for (let i=0; i<c.length; ++i) {
-        sum += (Math.PI/2-Math.abs(Math.atan(c[i]/100)))/Math.PI*2;
-      }
-      return sum/c.length * (0.5 - Math.cos(t/100)/2);
-    },
+    TEMPERATURE_FUNCTION: () => 0.1,
   };
 }
