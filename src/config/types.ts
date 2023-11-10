@@ -9,6 +9,10 @@ function createRandomInteger([from, until]: [number, number]): number {
   return Math.round(Math.random() * (until - from)) + from;
 }
 
+function createRandomFloat([from, until]: [number, number]): number {
+  return Math.random() * (until - from) + from;
+}
+
 function getRandomColor(): [number, number, number] {
   return [getRandomColorNumber(), getRandomColorNumber(), getRandomColorNumber()];
 }
@@ -57,7 +61,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     gravity.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      gravity[i].push(createRandomInteger(GRAVITY_BOUNDS));
+      gravity[i].push(createRandomFloat(GRAVITY_BOUNDS));
     }
   }
 
@@ -70,7 +74,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     typeLinks.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      typeLinks[i].push(createRandomInteger(LINK_TYPE_BOUNDS));
+      typeLinks[i].push(createRandomFloat(LINK_TYPE_BOUNDS));
     }
   }
 
