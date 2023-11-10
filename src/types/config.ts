@@ -28,7 +28,7 @@ export type WorldConfig = {
   SPEED: number;
   TEMPERATURE_MULTIPLIER: number;
   TEMPERATURE_FUNCTION: (p: NumericVector, t: number) => number;
-  MAX_POSITION: [number, number];
+  MAX_POSITION: number[];
 };
 export type InitialConfig = {
   ATOMS_COUNT: number;

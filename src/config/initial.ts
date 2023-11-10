@@ -4,15 +4,15 @@ export function create2dBaseInitialConfig(): InitialConfig {
   return {
     ATOMS_COUNT: 2500,
     MIN_POSITION: [0, 0],
-    MAX_POSITION: [2500, 2500],
+    MAX_POSITION: [2000, 2000],
   };
 }
 
 export function create3dBaseInitialConfig(): InitialConfig {
   return {
-    ATOMS_COUNT: 2000,
-    MIN_POSITION: [-300, -300, -300],
-    MAX_POSITION: [300, 300, 300],
+    ATOMS_COUNT: 1500,
+    MIN_POSITION: [-100, -100, -100],
+    MAX_POSITION: [100, 100, 100],
   };
 }
 
