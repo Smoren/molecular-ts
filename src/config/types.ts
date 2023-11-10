@@ -5,8 +5,12 @@ function getRandomColorNumber(): number {
   return Math.round(Math.random()*255);
 }
 
-function createRandomInteger([from, until]: [number, number]): number {
-  return Math.round(Math.random() * (until - from)) + from;
+// function createRandomInteger([from, until]: [number, number]): number {
+//   return Math.round(Math.random() * (until - from)) + from;
+// }
+
+function createRandomFloat([from, until]: [number, number]): number {
+  return Math.random() * (until - from) + from;
 }
 
 function getRandomColor(): [number, number, number] {
@@ -48,7 +52,8 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     gravity.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      gravity[i].push(createRandomInteger(GRAVITY_BOUNDS));
+      // gravity[i].push(createRandomInteger(GRAVITY_BOUNDS));
+      gravity[i].push(createRandomFloat(GRAVITY_BOUNDS));
     }
   }
 

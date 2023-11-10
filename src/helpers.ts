@@ -76,7 +76,7 @@ export class RulesHelper implements RulesHelperInterface {
       multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
     }
 
-    return multiplier * this.WORLD_CONFIG.SPEED / dist2;
+    return multiplier * this.WORLD_CONFIG.SPEED / Math.sqrt(dist2); // TODO sqrt???
   }
 
   getAtomsRadiusSum(): number {
