@@ -13,11 +13,6 @@ export class Simulation implements SimulationInterface {
   private readonly typesConfig: TypesConfig;
   private readonly worldConfig: WorldConfig;
   private readonly initialConfig: InitialConfig;
-  private readonly atomsFactory: (
-    worldConfig: WorldConfig,
-    typesConfig: TypesConfig,
-    initialConfig: InitialConfig
-  ) => AtomInterface[];
   private readonly atoms: AtomInterface[];
   private readonly drawer: DrawerInterface;
   private readonly linkManager: LinkManagerInterface;
@@ -34,7 +29,6 @@ export class Simulation implements SimulationInterface {
     this.typesConfig = typesConfig;
     this.worldConfig = worldConfig;
     this.initialConfig = initialConfig;
-    this.atomsFactory = atomsFactory;
     this.atoms = atomsFactory(this.worldConfig, this.typesConfig, this.initialConfig);
     this.drawer = drawer;
     this.linkManager = new LinkManager();
@@ -54,14 +48,18 @@ export class Simulation implements SimulationInterface {
   private tick() {
     for (let i=0; i<this.worldConfig.PLAYBACK_SPEED; ++i) {
       for (const atom of this.atoms) {
+        // очищаем фактор соединений
+        atom.linkDistanceFactor = 1;
         this.interactionManager.moveAtom(atom);
+      }
+      for (const atom of this.atoms) {
+        this.interactionManager.interactAtomStep1(atom, this.clusterManager.handleAtom(atom));
+      }
+      for (const atom of this.atoms) {
+        this.interactionManager.interactAtomStep2(atom, this.clusterManager.handleAtom(atom));
       }
       for (const link of this.linkManager) {
         this.interactionManager.interactLink(link);
-      }
-      for (const atom of this.atoms) {
-        // this.interactionManager.interactAtom(atom, this.atoms);
-        this.interactionManager.interactAtom(atom, this.clusterManager.handleAtom(atom));
       }
     }
     this.interactionManager.handleTime();

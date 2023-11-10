@@ -4,5 +4,6 @@ export interface InteractionManagerInterface {
   handleTime(): void;
   moveAtom(atom: AtomInterface): void;
   interactLink(link: LinkInterface): void;
-  interactAtom(atom: AtomInterface, neighbours: Iterable<AtomInterface>): void;
+  interactAtomStep1(atom: AtomInterface, neighbours: Iterable<AtomInterface>): void;
+  interactAtomStep2(atom: AtomInterface, neighbours: Iterable<AtomInterface>): void;
 }

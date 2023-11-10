@@ -29,7 +29,7 @@ export class InteractionManager implements InteractionManagerInterface {
     this.time++;
 
     if (this.time % 10 === 0) {
-      console.log('time', this.time, 0.5 - Math.cos(this.time/100)/2);
+      console.log('time', this.time, 0.5 - Math.cos(this.time / 100) / 2);
     }
   }
 
@@ -51,7 +51,9 @@ export class InteractionManager implements InteractionManagerInterface {
     const distVector = toVector(this.getDistVector(link.lhs, link.rhs));
     const dist2 = this.getDist2(distVector);
 
-    if (dist2 >= this.WORLD_CONFIG.MAX_LINK_RADIUS**2) {
+    if (
+      dist2 >= (this.WORLD_CONFIG.MAX_LINK_RADIUS * link.lhs.linkDistanceFactor * link.rhs.linkDistanceFactor) ** 2
+    ) {
       this.linkManager.delete(link);
     }
 
@@ -61,7 +63,7 @@ export class InteractionManager implements InteractionManagerInterface {
     }
   }
 
-  interactAtom(atom: AtomInterface, neighbours: Iterable<AtomInterface>): void {
+  interactAtomStep1(atom: AtomInterface, neighbours: Iterable<AtomInterface>): void {
     for (const neighbour of neighbours) {
       if (atom === neighbour) {
         continue;
@@ -70,7 +72,22 @@ export class InteractionManager implements InteractionManagerInterface {
       const distVector = this.getDistVector(atom, neighbour);
       const dist2 = this.getDist2(distVector);
 
-      if (dist2 > this.WORLD_CONFIG.MAX_INTERACTION_RADIUS**2) {
+      if (dist2 <= this.WORLD_CONFIG.MAX_LINK_RADIUS ** 2) {
+        atom.linkDistanceFactor *= this.TYPES_CONFIG.LINK_FACTOR_DISTANCE[neighbour.type][atom.type];
+      }
+    }
+  }
+
+  interactAtomStep2(atom: AtomInterface, neighbours: Iterable<AtomInterface>): void {
+    for (const neighbour of neighbours) {
+      if (atom === neighbour) {
+        continue;
+      }
+
+      const distVector = this.getDistVector(atom, neighbour);
+      const dist2 = this.getDist2(distVector);
+
+      if (dist2 > this.WORLD_CONFIG.MAX_INTERACTION_RADIUS ** 2) {
         continue;
       }
 
@@ -83,7 +100,7 @@ export class InteractionManager implements InteractionManagerInterface {
       if (
         !atom.bonds.has(neighbour) &&
         this.ruleHelper.canLink(atom, neighbour) &&
-        dist2 <= this.WORLD_CONFIG.MAX_LINK_RADIUS**2
+        dist2 <= (this.WORLD_CONFIG.MAX_LINK_RADIUS * atom.linkDistanceFactor) ** 2
       ) {
         this.linkManager.create(atom, neighbour);
       }
@@ -124,15 +141,15 @@ export class InteractionManager implements InteractionManagerInterface {
 
   private getDist2(distVector: NumericVector): number {
     let dist = 0;
-    for (let i=0; i<distVector.length; ++i) {
-      dist += distVector[i]**2;
+    for (let i = 0; i < distVector.length; ++i) {
+      dist += distVector[i] ** 2;
     }
     return dist < 1 ? 1 : dist;
   }
 
   private getDistVector(lhs: AtomInterface, rhs: AtomInterface): NumericVector {
     const distVector: number[] = new Array(lhs.position.length) as number[];
-    for (let i=0; i<lhs.position.length; ++i) {
+    for (let i = 0; i < lhs.position.length; ++i) {
       distVector[i] = rhs.position[i] - lhs.position[i];
     }
     return distVector;

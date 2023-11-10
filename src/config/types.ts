@@ -52,6 +52,11 @@ export function createBaseTypesConfig(): TypesConfig {
       [1, 2, 1],
       [1, 1, 2],
     ],
+    LINK_FACTOR_DISTANCE: [
+      [1, 1, 1],
+      [1, 1, 1],
+      [1, 1, 1],
+    ],
     COLORS: createColors(3),
   };
 }
@@ -69,6 +74,7 @@ export function createRandomTypesConfig({
       gravity[i].push(createRandomFloat(GRAVITY_BOUNDS));
     }
   }
+
   const linkGravity: number[][] = [];
   for (let i=0; i<TYPES_COUNT; ++i) {
     linkGravity.push([]);
@@ -90,11 +96,22 @@ export function createRandomTypesConfig({
     }
   }
 
+  const linkFactorDistance: number[][] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    linkFactorDistance.push([]);
+    for (let j=0; j<TYPES_COUNT; ++j) {
+      linkFactorDistance[i].push(createRandomFloat([0.9, 1.1]));
+    }
+  }
+
+  console.log('Type links', linkFactorDistance);
+
   return {
     GRAVITY: gravity,
     LINK_GRAVITY: linkGravity,
     LINKS: links,
     TYPE_LINKS: typeLinks,
+    LINK_FACTOR_DISTANCE: linkFactorDistance,
     COLORS: createColors(TYPES_COUNT),
   };
 }

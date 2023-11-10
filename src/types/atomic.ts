@@ -15,6 +15,7 @@ export interface AtomInterface {
   readonly position: VectorInterface;
   readonly speed: VectorInterface;
   readonly bonds: BondMapInterface;
+  linkDistanceFactor: number;
   cluster?: ClusterInterface;
 }
 

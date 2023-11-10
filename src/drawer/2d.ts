@@ -116,6 +116,10 @@ export class Drawer2d implements DrawerInterface {
       (link.rhs.position[1] - link.lhs.position[1])**2,
     );
 
+    if (dist > maxLength) {
+      return 1;
+    }
+
     return (1-maxValue)/maxLength * dist + maxValue;
   }
 

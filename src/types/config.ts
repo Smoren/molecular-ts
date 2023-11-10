@@ -1,17 +1,18 @@
 import { NumericVector } from '../vector/types';
-import { createRandomTypesConfig } from "../config/types";
 
 export type ColorVector = [number, number, number];
 
 type GravityConfig = number[][];
 type LinksConfig = number[];
 type TypeLinksConfig = number[][];
+type LinkFactorDistanceConfig = number[][];
 type ColorsConfig = Array<ColorVector>;
 export type TypesConfig = {
   GRAVITY: GravityConfig;
   LINK_GRAVITY: GravityConfig;
   LINKS: LinksConfig;
   TYPE_LINKS: TypeLinksConfig;
+  LINK_FACTOR_DISTANCE: LinkFactorDistanceConfig;
   COLORS: ColorsConfig;
 };
 export type WorldConfig = {
