@@ -37,27 +37,31 @@ function createColors(count: number): Array<ColorVector> {
 export function createBaseTypesConfig(): TypesConfig {
   return {
     GRAVITY: [
-      [-1, -1, -1],
-      [-1, -1, -1],
-      [-1, -1, -1],
+      [-1, -1, -1, -1],
+      [-1, -1, -1, -1],
+      [-1, -1, -1, -1],
+      [1, 1, 1, 1],
     ],
     LINK_GRAVITY: [
-      [-1, -1, 1],
-      [-1, -1, -1],
-      [-1, -1, -1],
+      [-1, -1, 1, -1],
+      [-1, -1, -1, -1],
+      [-1, -1, -1, -1],
+      [-1, -1, -1, -1],
     ],
-    LINKS: [1, 3, 2],
+    LINKS: [1, 3, 2, 2],
     TYPE_LINKS: [
-      [0, 1, 1],
-      [1, 2, 1],
-      [1, 1, 2],
+      [0, 1, 1, 1],
+      [1, 2, 1, 1],
+      [1, 1, 2, 1],
+      [1, 0, 0, 2],
     ],
     LINK_FACTOR_DISTANCE: [
-      [1, 1, 1],
-      [1, 1, 1],
-      [1, 1, 1],
+      [1, 1, 1, 1],
+      [1, 1, 1, 1],
+      [1, 1, 1, 1],
+      [1, 1.2, 0.7, 1],
     ],
-    COLORS: createColors(3),
+    COLORS: createColors(4),
   };
 }
 
