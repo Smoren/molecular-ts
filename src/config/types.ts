@@ -37,6 +37,11 @@ function createColors(count: number): Array<ColorVector> {
 export function createBaseTypesConfig(): TypesConfig {
   return {
     GRAVITY: [
+      [-1, -1, -1],
+      [-1, -1, -1],
+      [-1, -1, -1],
+    ],
+    LINK_GRAVITY: [
       [-1, -1, 1],
       [-1, -1, -1],
       [-1, -1, -1],
@@ -64,6 +69,13 @@ export function createRandomTypesConfig({
       gravity[i].push(createRandomFloat(GRAVITY_BOUNDS));
     }
   }
+  const linkGravity: number[][] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    linkGravity.push([]);
+    for (let j=0; j<TYPES_COUNT; ++j) {
+      linkGravity[i].push(createRandomFloat(GRAVITY_BOUNDS));
+    }
+  }
 
   const links: number[] = [];
   for (let i=0; i<TYPES_COUNT; ++i) {
@@ -80,6 +92,7 @@ export function createRandomTypesConfig({
 
   return {
     GRAVITY: gravity,
+    LINK_GRAVITY: linkGravity,
     LINKS: links,
     TYPE_LINKS: typeLinks,
     COLORS: createColors(TYPES_COUNT),

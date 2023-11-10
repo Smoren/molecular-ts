@@ -9,6 +9,7 @@ type TypeLinksConfig = number[][];
 type ColorsConfig = Array<ColorVector>;
 export type TypesConfig = {
   GRAVITY: GravityConfig;
+  LINK_GRAVITY: GravityConfig;
   LINKS: LinksConfig;
   TYPE_LINKS: TypeLinksConfig;
   COLORS: ColorsConfig;
