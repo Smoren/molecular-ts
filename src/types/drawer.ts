@@ -9,7 +9,7 @@ export interface ViewConfigInterface {
 }
 
 export interface DrawerInterface {
-  draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void;
+  draw(atoms: Iterable<AtomInterface>): void;
 }
 
 export interface Drawer2dConfigInterface {

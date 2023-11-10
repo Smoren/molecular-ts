@@ -1,16 +1,11 @@
 import { NumericVector } from '../vector/types';
-import { createRandomTypesConfig } from "../config/types";
 
 export type ColorVector = [number, number, number];
 
 type GravityConfig = number[][];
-type LinksConfig = number[];
-type TypeLinksConfig = number[][];
 type ColorsConfig = Array<ColorVector>;
 export type TypesConfig = {
   GRAVITY: GravityConfig;
-  LINKS: LinksConfig;
-  TYPE_LINKS: TypeLinksConfig;
   COLORS: ColorsConfig;
 };
 export type WorldConfig = {
@@ -26,6 +21,7 @@ export type WorldConfig = {
   SPEED: number;
   TEMPERATURE_MULTIPLIER: number;
   TEMPERATURE_FUNCTION: (p: NumericVector, t: number) => number;
+  MAX_POSITION: [number, number];
 };
 export type InitialConfig = {
   ATOMS_COUNT: number;

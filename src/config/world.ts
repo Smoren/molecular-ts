@@ -14,6 +14,7 @@ export function createBaseWorldConfig(): WorldConfig {
     PLAYBACK_SPEED: 2,
     SIMPLIFIED_VIEW_MODE: true,
     TEMPERATURE_MULTIPLIER: 0.2,
+    MAX_POSITION: [5000, 5000],
     TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {
       let sum = 0;
       for (let i=0; i<c.length; ++i) {

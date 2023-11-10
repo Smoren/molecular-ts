@@ -1,7 +1,6 @@
 import {
   Drawer3dConfigInterface,
   DrawerInterface,
-  ViewConfigInterface,
 } from '../types/drawer';
 import { TypesConfig, WorldConfig } from '../types/config';
 import { AtomInterface, LinkInterface } from '../types/atomic';
@@ -19,13 +18,11 @@ import {
   // Color3,
 } from 'babylonjs';
 import { NumericVector } from '../vector/types';
-import { LinkManagerInterface } from '../types/helpers';
 
 export class Drawer3d implements DrawerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly domElement: HTMLCanvasElement;
-  private readonly viewConfig: ViewConfigInterface;
   private readonly engine: Engine;
   private readonly scene: Scene;
   private readonly camera: Camera;
@@ -59,25 +56,12 @@ export class Drawer3d implements DrawerInterface {
     });
   }
 
-  draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
+  draw(atoms: Iterable<AtomInterface>): void {
     for (const atom of atoms) {
       const drawObject = this.getAtomDrawObject(atom);
       drawObject.position.x = atom.position[0];
       drawObject.position.y = atom.position[1];
       drawObject.position.z = atom.position[2];
-    }
-
-    if (!this.WORLD_CONFIG.SIMPLIFIED_VIEW_MODE) {
-      for (const [link, drawObject] of this.linksMap) {
-        if (!links.has(link)) {
-          drawObject.dispose();
-          this.linksMap.delete(link);
-        }
-      }
-
-      for (const link of links) {
-        this.getLinkDrawObject(link);
-      }
     }
   }
 

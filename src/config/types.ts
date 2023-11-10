@@ -37,12 +37,6 @@ export function createBaseTypesConfig(): TypesConfig {
       [-1, -1, -1],
       [-1, -1, -1],
     ],
-    LINKS: [1, 3, 2],
-    TYPE_LINKS: [
-      [0, 1, 1],
-      [1, 2, 1],
-      [1, 1, 2],
-    ],
     COLORS: createColors(3),
   };
 }
@@ -76,8 +70,6 @@ export function createRandomTypesConfig({
 
   return {
     GRAVITY: gravity,
-    LINKS: links,
-    TYPE_LINKS: typeLinks,
     COLORS: createColors(TYPES_COUNT),
   };
 }

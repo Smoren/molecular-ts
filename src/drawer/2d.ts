@@ -3,7 +3,6 @@ import { NumericVector } from '../vector/types';
 import { Drawer2dConfigInterface, DrawerInterface, ViewConfigInterface } from '../types/drawer';
 import { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import { AtomInterface, LinkInterface } from '../types/atomic';
-import { LinkManagerInterface } from '../types/helpers';
 
 /**
  * Transpose coords with backward applying offset and scale
@@ -53,20 +52,11 @@ export class Drawer2d implements DrawerInterface {
     this.initEventHandlers();
   }
 
-  public draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
+  public draw(atoms: Iterable<AtomInterface>): void {
     this.clear();
     this.context.save();
     this.context.translate(...this.viewConfig.offset as [number, number]);
     this.context.scale(...this.viewConfig.scale as [number, number]);
-
-    for (const link of links) {
-      this.drawLine(
-        link.lhs.position,
-        link.rhs.position,
-        this.getLinkWidth(link),
-        `rgb(${this.getLinkColor(link).join(', ')})`,
-      );
-    }
 
     for (const atom of atoms) {
       this.drawCircle(

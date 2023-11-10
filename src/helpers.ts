@@ -67,10 +67,6 @@ export class RulesHelper implements RulesHelperInterface {
     this.WORLD_CONFIG = worldConfig;
   }
 
-  canLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
-    return this._canLink(lhs, rhs) && this._canLink(rhs, lhs);
-  }
-
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
     let multiplier: number;
 
@@ -85,19 +81,8 @@ export class RulesHelper implements RulesHelperInterface {
     return multiplier * this.WORLD_CONFIG.SPEED / dist2;
   }
 
-  getLinkForce(): number {
-    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.WORLD_CONFIG.SPEED;
-  }
-
   getAtomsRadiusSum(): number {
     return this.WORLD_CONFIG.ATOM_RADIUS*2;
-  }
-
-  private _canLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
-    if (lhs.bonds.length >= this.TYPES_CONFIG.LINKS[lhs.type]) {
-      return false;
-    }
-    return lhs.bonds.lengthOf(rhs.type) < this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
   }
 }
 
