@@ -3,7 +3,7 @@ import {
   DrawerInterface,
   ViewConfigInterface,
 } from '../types/drawer';
-import { TypesConfig, WorldConfig } from '../types/config';
+import { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import { AtomInterface, LinkInterface } from '../types/atomic';
 import {
   Scene,
@@ -129,8 +129,8 @@ export class Drawer3d implements DrawerInterface {
     return atomMesh;
   }
 
-  private createLinkMesh(lhsCoords: NumericVector, rhsCoords: NumericVector, mesh?: Mesh): Mesh {
-    const radius = 0.3;
+  private createLinkMesh(lhsCoords: NumericVector, rhsCoords: NumericVector, link: LinkInterface, mesh?: Mesh): Mesh {
+    const radius = this.getLinkWidth(link)/4;
 
     this.bufVectors[0].x = lhsCoords[0];
     this.bufVectors[0].y = lhsCoords[1];
@@ -147,19 +147,30 @@ export class Drawer3d implements DrawerInterface {
           this.bufVectors[0],
           this.bufVectors[1],
         ],
+        radius: radius,
         instance: mesh,
       }, this.scene);
     }
 
     // eslint-disable-next-line new-cap
-    return MeshBuilder.CreateTube('tube', {
+    const newMesh = MeshBuilder.CreateTube('tube', {
       path: [
         this.bufVectors[0],
         this.bufVectors[1],
       ],
       updatable: true,
       radius: radius,
+      tessellation: 8,
     }, this.scene);
+
+    const color = this.getLinkColor(link);
+    const material = new StandardMaterial('material', this.scene);
+    material.diffuseColor.r = color[0];
+    material.diffuseColor.g = color[1];
+    material.diffuseColor.b = color[2];
+    newMesh.material = material;
+
+    return newMesh;
   }
 
   private getAtomDrawObject(atom: AtomInterface): Mesh {
@@ -181,17 +192,43 @@ export class Drawer3d implements DrawerInterface {
   private getLinkDrawObject(link: LinkInterface): Mesh {
     const mesh = this.linksMap.get(link) ?? false;
     if (mesh) {
-      return this.createLinkMesh(link.lhs.position, link.rhs.position, mesh);
+      return this.createLinkMesh(link.lhs.position, link.rhs.position, link, mesh);
     }
     return this.addLinkToMap(link);
   }
 
   private addLinkToMap(link: LinkInterface): Mesh {
     // eslint-disable-next-line new-cap
-    const drawObject = this.createLinkMesh(link.lhs.position, link.rhs.position);
+    const drawObject = this.createLinkMesh(link.lhs.position, link.rhs.position, link);
     this.linksMap.set(link, drawObject);
 
     return drawObject;
+  }
+
+  private getLinkColor(link: LinkInterface): ColorVector {
+    const lhsColor = this.TYPES_CONFIG.COLORS[link.lhs.type];
+    const rhsColor = this.TYPES_CONFIG.COLORS[link.rhs.type];
+    return [
+      (lhsColor[0]+rhsColor[0])/2,
+      (lhsColor[1]+rhsColor[1])/2,
+      (lhsColor[2]+rhsColor[2])/2,
+    ];
+  }
+
+  private getLinkWidth(link: LinkInterface): number {
+    const maxValue = this.WORLD_CONFIG.ATOM_RADIUS;
+    const maxLength = this.WORLD_CONFIG.MAX_LINK_RADIUS;
+
+    const dist = Math.sqrt(
+      (link.rhs.position[0] - link.lhs.position[0])**2 +
+      (link.rhs.position[1] - link.lhs.position[1])**2,
+    );
+
+    if (dist > maxLength) {
+      return 1;
+    }
+
+    return (1-maxValue)/maxLength * dist + maxValue;
   }
 }
 
