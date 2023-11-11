@@ -40,7 +40,10 @@ export function create2dRandomDistribution(
   const atoms: AtomInterface[] = [];
 
   for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
-    const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
+    let type = 0;
+    if (Math.random() > 0.5) {
+      type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
+    }
     const minPos = initialConfig.MIN_POSITION;
     const maxPos = initialConfig.MAX_POSITION;
 
@@ -62,7 +65,10 @@ export function create3dRandomDistribution(
   const atoms: AtomInterface[] = [];
 
   for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
-    const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
+    let type = 0;
+    if (Math.random() > 0.5) {
+      type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
+    }
     const minPos = initialConfig.MIN_POSITION;
     const maxPos = initialConfig.MAX_POSITION;
 
