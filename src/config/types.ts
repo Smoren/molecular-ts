@@ -64,7 +64,7 @@ export function createBaseTypesConfig(): TypesConfig {
       [1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1],
-      [1, 1.2, 0.7, 1, 1],
+      [1, 1.1, 0.7, 1, 1],
       [0.8, 1, 1, 1, 1],
     ],
     COLORS: createColors(5),
