@@ -5,17 +5,16 @@ import {
 } from '../types/drawer';
 import { TypesConfig, WorldConfig } from '../types/config';
 import { AtomInterface, LinkInterface } from '../types/atomic';
-// import { LinkManagerInterface } from '../types/helpers';
 import {
   Scene,
   Engine,
-  Camera,
-  ArcRotateCamera,
+  UniversalCamera,
   Vector3,
   Light,
   PointLight,
   Mesh,
-  StandardMaterial, MeshBuilder,
+  StandardMaterial,
+  MeshBuilder,
   // Color3,
 } from 'babylonjs';
 import { NumericVector } from '../vector/types';
@@ -28,7 +27,7 @@ export class Drawer3d implements DrawerInterface {
   private readonly viewConfig: ViewConfigInterface;
   private readonly engine: Engine;
   private readonly scene: Scene;
-  private readonly camera: Camera;
+  private readonly camera: UniversalCamera;
   private readonly lights: Light[];
   private readonly atomsMap: Map<AtomInterface, Mesh> = new Map();
   private readonly linksMap: Map<LinkInterface, Mesh> = new Map();
@@ -47,7 +46,7 @@ export class Drawer3d implements DrawerInterface {
     this.TYPES_CONFIG = typesConfig;
     this.engine = new Engine(this.domElement, true);
     this.scene = new Scene(this.engine);
-    this.camera = this.createCamera(1000, [0, 0, 0]);
+    this.camera = this.createCamera(1000, [631, 679, 805], [0.54, 97.98, 0]);
     this.scene.activeCamera.attachControl(this.domElement);
     this.lights = [
       this.createLight([1000, 1000, 1000], 0.006),
@@ -60,6 +59,9 @@ export class Drawer3d implements DrawerInterface {
   }
 
   draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
+    if (Math.random() > 0.99) {
+      console.log('camera', this.camera.position, this.camera.rotation);
+    }
     for (const atom of atoms) {
       const drawObject = this.getAtomDrawObject(atom);
       drawObject.position.x = atom.position[0];
@@ -90,15 +92,18 @@ export class Drawer3d implements DrawerInterface {
     }
   }
 
-  private createCamera(radius: number, position: NumericVector): ArcRotateCamera {
-    return new ArcRotateCamera(
-      'Camera',
-      1,
-      1,
-      radius,
-      new Vector3(...position),
-      this.scene,
-    );
+  private createCamera(radius: number, position: NumericVector, rotation: NumericVector): UniversalCamera {
+    const camera = new UniversalCamera('Camera', new Vector3(...position), this.scene);
+    camera.rotation = new Vector3(...rotation);
+    return camera;
+    // return new ArcRotateCamera(
+    //   'Camera',
+    //   1,
+    //   1,
+    //   radius,
+    //   new Vector3(...position),
+    //   this.scene,
+    // );
   }
 
   private createLight(coords: NumericVector, intensity: number): PointLight {
