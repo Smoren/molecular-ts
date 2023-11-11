@@ -19,6 +19,8 @@ function getRandomColor(): [number, number, number] {
 
 function createColors(count: number): Array<ColorVector> {
   const predefined: Array<ColorVector> = [
+    [70, 120, 250],
+    [180, 180, 80],
     [80, 170, 140],
     [200, 140, 100],
     [250, 20, 20],
