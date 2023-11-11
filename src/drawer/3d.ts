@@ -95,6 +95,7 @@ export class Drawer3d implements DrawerInterface {
   private createCamera(radius: number, position: NumericVector, rotation: NumericVector): UniversalCamera {
     const camera = new UniversalCamera('Camera', new Vector3(...position), this.scene);
     camera.rotation = new Vector3(...rotation);
+    camera.speed = 15;
     return camera;
     // return new ArcRotateCamera(
     //   'Camera',
