@@ -147,6 +147,26 @@ export class Drawer2d implements DrawerInterface {
     });
     resizeObserver.observe(this.domElement);
 
+    let keyDown: number | null = null;
+
+    document.body.addEventListener('keydown', (event: KeyboardEvent) => {
+      const key = parseInt(event.key);
+      if (key > 0 && key < 10) {
+        keyDown = key;
+      }
+    });
+
+    document.body.addEventListener('keyup', () => {
+      keyDown = null;
+    });
+
+    this.domElement.addEventListener('click', (event: MouseEvent) => {
+      const coords = createVector(
+        transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
+      );
+      console.log(keyDown, coords);
+    });
+
     this.domElement.addEventListener('wheel', (event: WheelEvent) => {
       if (event.ctrlKey) {
         let scale = this.viewConfig.scale[0];
