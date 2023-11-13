@@ -106,3 +106,21 @@ let LAST_ATOM_ID = 0;
 export function createAtom(type: number, position: NumericVector) {
   return new Atom(LAST_ATOM_ID++, type, position);
 }
+
+export function normalizeFrequencies(weights: number[]): number[] {
+  const sum = weights.reduce((a, b) => a + b);
+  return weights.map((x) => x / sum);
+}
+
+export function getIndexByFrequencies(frequencies: number[]): number {
+  const normFrequencies = normalizeFrequencies(frequencies);
+  const rand = Math.random();
+  let sum = 0;
+  for (let i=0; i<normFrequencies.length; ++i) {
+    sum += normFrequencies[i];
+    if (rand <= sum) {
+      return i;
+    }
+  }
+  return 0;
+}

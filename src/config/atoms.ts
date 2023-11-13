@@ -1,5 +1,5 @@
 import { AtomInterface } from '../types/atomic';
-import { createAtom } from '../helpers';
+import { createAtom, getIndexByFrequencies } from '../helpers';
 import { InitialConfig, TypesConfig, WorldConfig } from '../types/config';
 
 export function create2dButterfly(): AtomInterface[] {
@@ -40,7 +40,8 @@ export function create2dRandomDistribution(
   const atoms: AtomInterface[] = [];
 
   for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
-    const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
+    const type = getIndexByFrequencies(typesConfig.FREQUENCIES);
+    // const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
     const minPos = initialConfig.MIN_POSITION;
     const maxPos = initialConfig.MAX_POSITION;
 
@@ -62,7 +63,8 @@ export function create3dRandomDistribution(
   const atoms: AtomInterface[] = [];
 
   for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
-    const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
+    const type = getIndexByFrequencies(typesConfig.FREQUENCIES);
+    // const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
     const minPos = initialConfig.MIN_POSITION;
     const maxPos = initialConfig.MAX_POSITION;
 

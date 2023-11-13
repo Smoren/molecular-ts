@@ -67,6 +67,7 @@ export function createBaseTypesConfig(): TypesConfig {
       [1, 1.1, 0.7, 1, 1],
       [0.8, 1, 1, 1, 1],
     ],
+    FREQUENCIES: [1, 1, 1, 1, 1],
     COLORS: createColors(5),
   };
 }
@@ -114,6 +115,11 @@ export function createRandomTypesConfig({
     }
   }
 
+  const frequencies: number[] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    frequencies.push(Math.random());
+  }
+
   console.log('Type links', linkFactorDistance);
 
   return {
@@ -122,6 +128,7 @@ export function createRandomTypesConfig({
     LINKS: links,
     TYPE_LINKS: typeLinks,
     LINK_FACTOR_DISTANCE: linkFactorDistance,
+    FREQUENCIES: frequencies,
     COLORS: createColors(TYPES_COUNT),
   };
 }

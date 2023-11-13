@@ -6,6 +6,7 @@ type GravityConfig = number[][];
 type LinksConfig = number[];
 type TypeLinksConfig = number[][];
 type LinkFactorDistanceConfig = number[][];
+type FrequenciesConfig = number[];
 type ColorsConfig = Array<ColorVector>;
 export type TypesConfig = {
   GRAVITY: GravityConfig;
@@ -13,6 +14,7 @@ export type TypesConfig = {
   LINKS: LinksConfig;
   TYPE_LINKS: TypeLinksConfig;
   LINK_FACTOR_DISTANCE: LinkFactorDistanceConfig;
+  FREQUENCIES: FrequenciesConfig;
   COLORS: ColorsConfig;
 };
 export type WorldConfig = {
