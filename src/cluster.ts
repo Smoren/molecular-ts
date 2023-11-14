@@ -56,7 +56,7 @@ class Cluster implements ClusterInterface {
 }
 
 class ClusterMap implements ClusterMapInterface {
-  map: Map<string, Cluster> = new Map();
+  map: Cluster[][] | Cluster[][][] = [];
   quantum: number;
   phase: number;
 
@@ -99,25 +99,29 @@ class ClusterMap implements ClusterMapInterface {
   }
 
   private getCluster(clusterCoords: NumericVector): ClusterInterface {
-    const clusterId = this.getClusterId(clusterCoords);
+    let result: Array<unknown> = this.map;
 
-    if (this.map.has(clusterId)) {
-      return this.map.get(clusterId);
+    for (let i=0; i<clusterCoords.length-1; ++i) {
+      const coord = clusterCoords[i];
+      if (result[coord] === undefined) {
+        result[coord] = [];
+      }
+
+      result = result[coord] as Array<unknown>;
     }
 
-    const cluster = new Cluster([...clusterCoords]);
-    this.map.set(clusterId, cluster);
+    const lastCoord = clusterCoords[clusterCoords.length-1];
 
-    return cluster;
+    if (result[lastCoord] === undefined) {
+      result[lastCoord] = new Cluster([...clusterCoords]);
+    }
+
+    return result[lastCoord] as Cluster;
   }
 
   private getClusterByAtom(atom: AtomInterface): ClusterInterface {
     const clusterCoords = this.getClusterCoords(atom.position);
     return this.getCluster(clusterCoords);
-  }
-
-  private getClusterId(clusterCoords: NumericVector): string {
-    return clusterCoords.join('-');
   }
 
   private getClusterCoords(coords: NumericVector): NumericVector {
