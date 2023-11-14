@@ -63,12 +63,14 @@ class ClusterMap implements ClusterMapInterface {
     this.phase = phase;
   }
 
-  * getNeighbourhood(atom: AtomInterface): Iterable<ClusterInterface> {
+  getNeighbourhood(atom: AtomInterface): Iterable<ClusterInterface> {
+    const result = [];
     const currentCluster = this.handleAtom(atom);
     for (const coords of getNeighboursCoords(currentCluster.coords)) {
       const cluster = this.getCluster(coords);
-      yield cluster;
+      result.push(cluster);
     }
+    return result;
   }
 
   countAtoms(): number {
@@ -127,7 +129,6 @@ class ClusterMap implements ClusterMapInterface {
 
 export class ClusterManager implements ClusterManagerInterface {
   private readonly map: ClusterMap;
-  private readonly buf: Set<AtomInterface> = new Set();
 
   constructor(quantum: number) {
     this.map = new ClusterMap(quantum, 0);
@@ -137,16 +138,15 @@ export class ClusterManager implements ClusterManagerInterface {
     return this.map.countAtoms();
   }
 
-  * handleAtom(atom: AtomInterface): Iterable<AtomInterface> {
-    this.buf.clear();
+  handleAtom(atom: AtomInterface): Iterable<AtomInterface> {
+    const result = [];
 
     for (const cluster of this.map.getNeighbourhood(atom)) {
       for (const neighbour of cluster) {
-        if (!this.buf.has(neighbour)) {
-          yield neighbour;
-          this.buf.add(neighbour);
-        }
+        result.push(neighbour);
       }
     }
+
+    return result;
   }
 }
