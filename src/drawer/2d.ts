@@ -1,6 +1,11 @@
 import { createVector } from '../vector';
 import { NumericVector } from '../vector/types';
-import { Drawer2dConfigInterface, DrawerInterface, ViewConfigInterface } from '../types/drawer';
+import {
+  Drawer2dConfigInterface,
+  DrawerInterface,
+  MouseClickListenerCallback,
+  ViewConfigInterface,
+} from '../types/drawer';
 import { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import { AtomInterface, LinkInterface } from '../types/atomic';
 import { LinkManagerInterface } from '../types/helpers';
@@ -37,6 +42,7 @@ export class Drawer2d implements DrawerInterface {
   private readonly domElement: HTMLCanvasElement;
   private readonly viewConfig: ViewConfigInterface;
   private readonly context: CanvasRenderingContext2D;
+  private readonly listeners: MouseClickListenerCallback[] = [];
 
   constructor({
     domElement,
@@ -77,6 +83,10 @@ export class Drawer2d implements DrawerInterface {
     }
 
     this.context.restore();
+  }
+
+  addClickListener(callback: MouseClickListenerCallback): void {
+    this.listeners.push(callback);
   }
 
   private drawCircle(position: NumericVector, radius: number, color: ColorVector) {
@@ -164,6 +174,9 @@ export class Drawer2d implements DrawerInterface {
       const coords = createVector(
         transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
       );
+      for (const callback of this.listeners) {
+        callback(coords, keyDown);
+      }
       console.log(keyDown, coords);
     });
 

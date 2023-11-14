@@ -1,5 +1,5 @@
 import { SimulationConfig, SimulationInterface } from './types/simulation';
-import { LinkManager, RulesHelper } from './helpers';
+import { createAtom, LinkManager, RulesHelper } from './helpers';
 import { InteractionManager } from './interaction';
 import { InitialConfig, TypesConfig, WorldConfig } from './types/config';
 import { AtomInterface } from './types/atomic';
@@ -39,6 +39,14 @@ export class Simulation implements SimulationInterface {
       new RulesHelper(this.typesConfig, this.worldConfig),
     );
     this.clusterManager = new ClusterManager(this.worldConfig.MAX_INTERACTION_RADIUS);
+
+    this.drawer.addClickListener((coords, extraKey) => {
+      if (extraKey === null || extraKey > this.typesConfig.FREQUENCIES.length) {
+        return;
+      }
+      console.log('atom added');
+      this.atoms.push(createAtom(extraKey-1, coords));
+    });
   }
 
   start() {

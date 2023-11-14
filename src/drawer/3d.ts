@@ -1,6 +1,6 @@
 import {
   Drawer3dConfigInterface,
-  DrawerInterface,
+  DrawerInterface, MouseClickListenerCallback,
   ViewConfigInterface,
 } from '../types/drawer';
 import { ColorVector, TypesConfig, WorldConfig } from '../types/config';
@@ -35,6 +35,7 @@ export class Drawer3d implements DrawerInterface {
     new Vector3(0, 0, 0),
     new Vector3(0, 0, 0),
   ];
+  private readonly listeners: MouseClickListenerCallback[] = [];
 
   constructor({
     domElement,
@@ -81,6 +82,10 @@ export class Drawer3d implements DrawerInterface {
         this.getLinkDrawObject(link);
       }
     }
+  }
+
+  addClickListener(callback: MouseClickListenerCallback): void {
+    this.listeners.push(callback);
   }
 
   private normalizeFrame(): void {
