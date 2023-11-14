@@ -20,7 +20,6 @@ export interface AtomInterface {
 }
 
 export interface LinkInterface {
-  id: number;
   lhs: AtomInterface;
   rhs: AtomInterface;
 }

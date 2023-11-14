@@ -54,12 +54,10 @@ export class Atom implements AtomInterface {
 }
 
 export class Link implements LinkInterface {
-  id: number;
   lhs: AtomInterface;
   rhs: AtomInterface;
 
-  constructor(id: number, lhs: AtomInterface, rhs: AtomInterface) {
-    this.id = id;
+  constructor(lhs: AtomInterface, rhs: AtomInterface) {
     this.lhs = lhs;
     this.rhs = rhs;
   }

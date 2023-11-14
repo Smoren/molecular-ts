@@ -1,7 +1,7 @@
 import { AtomInterface, LinkInterface } from './atomic';
 
 export interface LinksPoolInterface {
-  allocate(id: number, lhs: AtomInterface, rhs: AtomInterface): LinkInterface;
+  allocate(lhs: AtomInterface, rhs: AtomInterface): LinkInterface;
   free(link: LinkInterface): void;
 }
 
