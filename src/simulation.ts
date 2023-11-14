@@ -54,6 +54,7 @@ export class Simulation implements SimulationInterface {
   }
 
   private tick() {
+    const ts = Date.now();
     for (let i=0; i<this.worldConfig.PLAYBACK_SPEED; ++i) {
       for (const atom of this.atoms) {
         // очищаем фактор соединений
@@ -75,6 +76,9 @@ export class Simulation implements SimulationInterface {
       }
     }
     this.interactionManager.handleTime();
+
+    console.log('tick spent', Date.now()-ts);
+
     this.drawer.draw(this.atoms, this.linkManager);
     setTimeout(() => this.tick(), 10);
   }

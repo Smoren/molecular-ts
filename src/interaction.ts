@@ -88,11 +88,18 @@ export class InteractionManager implements InteractionManagerInterface {
       return;
     }
 
-    lhs.speed.add(
-      toVector(distVector)
-        .normalize()
-        .mul(this.ruleHelper.getGravityForce(lhs, rhs, dist2)),
-    );
+    const dist = Math.sqrt(dist2);
+    const gravityForce = this.ruleHelper.getGravityForce(lhs, rhs, dist2);
+    for (let i=0; i<distVector.length; ++i) {
+      distVector[i] = distVector[i] / dist * gravityForce;
+    }
+    lhs.speed.add(distVector);
+
+    // lhs.speed.add(
+    //   toVector(distVector)
+    //     .normalize()
+    //     .mul(this.ruleHelper.getGravityForce(lhs, rhs, dist2)),
+    // );
 
     if (
       !lhs.bonds.has(rhs) &&
