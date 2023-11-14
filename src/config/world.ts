@@ -11,7 +11,7 @@ export function createBaseWorldConfig(): WorldConfig {
     BOUNCE_FORCE_MULTIPLIER: 2,
     INERTIAL_MULTIPLIER: 0.98,
     SPEED: 20,
-    PLAYBACK_SPEED: 2,
+    PLAYBACK_SPEED: 1,
     SIMPLIFIED_VIEW_MODE: false,
     TEMPERATURE_MULTIPLIER: 0.2,
     MAX_POSITION: [2500, 2500, 2500],
