@@ -14,14 +14,16 @@ function incPoint(aPoint: NumericVector, aCenterPoint: NumericVector, aDim: numb
   return true;
 }
 
-function* getNeighboursCoords(coords: NumericVector): Iterable<NumericVector> {
+function getNeighboursCoords(coords: NumericVector): Iterable<NumericVector> {
   const curPoint: NumericVector = new Array<number>(coords.length);
   for (let i=0; i<curPoint.length; ++i) {
     curPoint[i] = coords[i] - 1;
   }
+  const result = [];
   do {
-    yield curPoint;
+    result.push([...curPoint]);
   } while (incPoint(curPoint, coords, 0));
+  return result;
 }
 
 class Cluster implements ClusterInterface {
