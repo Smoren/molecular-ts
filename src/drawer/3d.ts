@@ -19,6 +19,7 @@ import {
 } from 'babylonjs';
 import { NumericVector } from '../vector/types';
 import { LinkManagerInterface } from '../types/helpers';
+import { createVector } from '../vector';
 
 export class Drawer3d implements DrawerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
@@ -57,6 +58,8 @@ export class Drawer3d implements DrawerInterface {
       this.normalizeFrame();
       this.scene.render();
     });
+
+    this.initEventHandlers();
   }
 
   draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
@@ -234,6 +237,31 @@ export class Drawer3d implements DrawerInterface {
     }
 
     return (1-maxValue)/maxLength * dist + maxValue;
+  }
+
+  private initEventHandlers(): void {
+    let keyDown: number | null = null;
+
+    document.body.addEventListener('keydown', (event: KeyboardEvent) => {
+      const key = parseInt(event.key);
+      if (key > 0 && key < 10) {
+        keyDown = key;
+      }
+    });
+
+    document.body.addEventListener('keyup', () => {
+      keyDown = null;
+    });
+
+    this.scene.onPointerDown = (event, pickResult) => {
+      if (event.button == 0) {
+        const pos = this.camera.position.add(pickResult.ray.direction.multiplyByFloats(500, 500, 500));
+
+        for (const callback of this.listeners) {
+          callback(createVector([pos.x, pos.y, pos.z]), keyDown);
+        }
+      }
+    };
   }
 }
 
