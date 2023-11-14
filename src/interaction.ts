@@ -63,47 +63,43 @@ export class InteractionManager implements InteractionManagerInterface {
     }
   }
 
-  interactAtomStep1(atom: AtomInterface, neighbours: Iterable<AtomInterface>): void {
-    for (const neighbour of neighbours) {
-      if (atom === neighbour) {
-        continue;
-      }
+  interactAtomsStep1(lhs: AtomInterface, rhs: AtomInterface): void {
+    if (lhs === rhs) {
+      return;
+    }
 
-      const distVector = this.getDistVector(atom, neighbour);
-      const dist2 = this.getDist2(distVector);
+    const distVector = this.getDistVector(lhs, rhs);
+    const dist2 = this.getDist2(distVector);
 
-      if (dist2 <= this.WORLD_CONFIG.MAX_LINK_RADIUS ** 2) {
-        atom.linkDistanceFactor *= this.TYPES_CONFIG.LINK_FACTOR_DISTANCE[neighbour.type][atom.type];
-      }
+    if (dist2 <= this.WORLD_CONFIG.MAX_LINK_RADIUS ** 2) {
+      lhs.linkDistanceFactor *= this.TYPES_CONFIG.LINK_FACTOR_DISTANCE[rhs.type][lhs.type];
     }
   }
 
-  interactAtomStep2(atom: AtomInterface, neighbours: Iterable<AtomInterface>): void {
-    for (const neighbour of neighbours) {
-      if (atom === neighbour) {
-        continue;
-      }
+  interactAtomsStep2(lhs: AtomInterface, rhs: AtomInterface): void {
+    if (lhs === rhs) {
+      return;
+    }
 
-      const distVector = this.getDistVector(atom, neighbour);
-      const dist2 = this.getDist2(distVector);
+    const distVector = this.getDistVector(lhs, rhs);
+    const dist2 = this.getDist2(distVector);
 
-      if (dist2 > this.WORLD_CONFIG.MAX_INTERACTION_RADIUS ** 2) {
-        continue;
-      }
+    if (dist2 > this.WORLD_CONFIG.MAX_INTERACTION_RADIUS ** 2) {
+      return;
+    }
 
-      atom.speed.add(
-        toVector(distVector)
-          .normalize()
-          .mul(this.ruleHelper.getGravityForce(atom, neighbour, dist2)),
-      );
+    lhs.speed.add(
+      toVector(distVector)
+        .normalize()
+        .mul(this.ruleHelper.getGravityForce(lhs, rhs, dist2)),
+    );
 
-      if (
-        !atom.bonds.has(neighbour) &&
-        this.ruleHelper.canLink(atom, neighbour) &&
-        dist2 <= (this.WORLD_CONFIG.MAX_LINK_RADIUS * atom.linkDistanceFactor) ** 2
-      ) {
-        this.linkManager.create(atom, neighbour);
-      }
+    if (
+      !lhs.bonds.has(rhs) &&
+      this.ruleHelper.canLink(lhs, rhs) &&
+      dist2 <= (this.WORLD_CONFIG.MAX_LINK_RADIUS * lhs.linkDistanceFactor) ** 2
+    ) {
+      this.linkManager.create(lhs, rhs);
     }
   }
 

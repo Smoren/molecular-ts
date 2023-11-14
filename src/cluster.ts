@@ -65,7 +65,7 @@ class ClusterMap implements ClusterMapInterface {
     this.phase = phase;
   }
 
-  getNeighbourhood(atom: AtomInterface): Iterable<ClusterInterface> {
+  getNeighbourhood(atom: AtomInterface): ClusterInterface[] {
     const result = [];
     const currentCluster = this.handleAtom(atom);
     for (const coords of getNeighboursCoords(currentCluster.coords)) {
@@ -140,15 +140,14 @@ export class ClusterManager implements ClusterManagerInterface {
     return this.map.countAtoms();
   }
 
-  handleAtom(atom: AtomInterface): Iterable<AtomInterface> {
-    const result = [];
+  handleAtom(atom: AtomInterface, callback: (lhs: AtomInterface, rhs: AtomInterface) => void): void {
+    const neighborhood = this.map.getNeighbourhood(atom);
 
-    for (const cluster of this.map.getNeighbourhood(atom)) {
-      for (const neighbour of cluster) {
-        result.push(neighbour);
+    for (let i=0; i<neighborhood.length; ++i) {
+      const cluster = neighborhood[i];
+      for (const neighbour of cluster.atoms) {
+        callback(atom, neighbour);
       }
     }
-
-    return result;
   }
 }
