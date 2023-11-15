@@ -21,6 +21,7 @@ export type WorldConfig = {
   ATOM_RADIUS: number;
   MAX_INTERACTION_RADIUS: number;
   MAX_LINK_RADIUS: number;
+  MAX_FORCE: number,
   GRAVITY_FORCE_MULTIPLIER: number;
   LINK_FORCE_MULTIPLIER: number;
   BOUNCE_FORCE_MULTIPLIER: number;

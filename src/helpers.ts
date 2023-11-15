@@ -80,11 +80,23 @@ export class RulesHelper implements RulesHelperInterface {
       multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.LINK_GRAVITY[lhs.type][rhs.type];
     }
 
-    return multiplier * this.WORLD_CONFIG.SPEED / dist2;
+    const result = multiplier * this.WORLD_CONFIG.SPEED / dist2;
+
+    if (Math.abs(result) > this.WORLD_CONFIG.MAX_FORCE) {
+      return Math.sign(result) * this.WORLD_CONFIG.MAX_FORCE;
+    }
+
+    return result;
   }
 
   getLinkForce(): number {
-    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.WORLD_CONFIG.SPEED;
+    const result = Math.min(this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.WORLD_CONFIG.SPEED);
+
+    if (Math.abs(result) > this.WORLD_CONFIG.MAX_FORCE) {
+      return Math.sign(result) * this.WORLD_CONFIG.MAX_FORCE;
+    }
+
+    return result;
   }
 
   getAtomsRadiusSum(): number {
