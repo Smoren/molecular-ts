@@ -1,5 +1,10 @@
-name: Build and Deploy
-on: [push]
+name: Deploy
+
+on:
+  push:
+    branches:
+      - gh-pages
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -14,4 +19,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: . # The folder the action should deploy.
+          folder: dist # The folder the action should deploy.
