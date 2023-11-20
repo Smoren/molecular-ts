@@ -2,6 +2,10 @@
 
 Cellular automaton built on particles.
 
+### Preview
+
+https://smoren.github.io/molecular-ts/
+
 ### Install
 
 ```bash
