@@ -19,13 +19,13 @@ function getRandomColor(): [number, number, number] {
 
 function createColors(count: number): Array<ColorVector> {
   const predefined: Array<ColorVector> = [
-    [250, 100, 250],
-    [70, 120, 250],
-    [180, 180, 80],
-    [80, 170, 140],
-    [200, 140, 100],
     [250, 20, 20],
-  ];
+    [200, 140, 100],
+    [80, 170, 140],
+    [180, 180, 80],
+    [70, 120, 250],
+    [250, 100, 250],
+  ].reverse() as Array<ColorVector>;
   const result = [];
   for (let i=0; i<count; ++i) {
     if (predefined.length) {
@@ -40,11 +40,11 @@ function createColors(count: number): Array<ColorVector> {
 export function createBaseTypesConfig(): TypesConfig {
   return {
     GRAVITY: [
-      [-1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, 0.1, -1],
       [-1, -1, -1, -1, -1, -1],
       [-1, -1, -1, -1, -1, -1],
       [1, 1, 1, 1, -1, -1],
-      [1, -1, 1, -1, 0.5, -1],
+      [1, -1, 1, -1, -0.5, -1],
       [0, 0, -1, 1, 1, 0],
     ],
     LINK_GRAVITY: [
@@ -55,17 +55,17 @@ export function createBaseTypesConfig(): TypesConfig {
       [-1, -1, -1, -1, -1, -1],
       [-1, -1, -1, -1, -1, -1],
     ],
-    LINKS: [1, 3, 2, 2, 2, 1],
+    LINKS: [1, 3, 2, 3, 2, 1],
     TYPE_LINKS: [
       [0, 1, 1, 1, 0, 0],
       [1, 2, 1, 1, 0, 0],
       [1, 1, 2, 1, 0, 0],
-      [1, 0, 0, 1, 1, 0],
+      [1, 0, 0, 2, 1, 0],
       [0, 0, 0, 1, 1, 0],
       [0, 0, 0, 0, 0, 1],
     ],
     LINK_FACTOR_DISTANCE: [
-      [1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 0.7, 1],
       [1, 1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1, 1],
       [1, 1.1, 0.7, 1, 1, 1],
