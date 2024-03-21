@@ -4,9 +4,7 @@
   "description": "Canvas ts",
   "main": "app.js",
   "dependencies": {
-    "babylonjs": "^6.0.0",
-    "crypto-js": "^4.1.1",
-    "itertools-ts": "^1.22.0"
+    "babylonjs": "^6.0.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "latest",
