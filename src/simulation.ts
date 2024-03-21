@@ -18,6 +18,7 @@ export class Simulation implements SimulationInterface {
   private readonly linkManager: LinkManagerInterface;
   private readonly interactionManager: InteractionManagerInterface;
   private readonly clusterManager: ClusterManagerInterface;
+  private isRunning: boolean = false;
 
   constructor({
     worldConfig,
@@ -50,7 +51,12 @@ export class Simulation implements SimulationInterface {
   }
 
   start() {
+    this.isRunning = true;
     this.tick();
+  }
+
+  stop() {
+    this.isRunning = false;
   }
 
   private tick() {
@@ -80,6 +86,9 @@ export class Simulation implements SimulationInterface {
     // console.log('tick spent', Date.now()-ts);
 
     this.drawer.draw(this.atoms, this.linkManager);
-    setTimeout(() => this.tick(), 10);
+
+    if (this.isRunning) {
+      setTimeout(() => this.tick(), 10);
+    }
   }
 }

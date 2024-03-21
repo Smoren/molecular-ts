@@ -1,7 +1,7 @@
 import {
   Drawer3dConfigInterface,
-  DrawerInterface, MouseClickListenerCallback,
-  ViewConfigInterface,
+  DrawerInterface,
+  MouseClickListenerCallback,
 } from '../types/drawer';
 import { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import { AtomInterface, LinkInterface } from '../types/atomic';
@@ -25,7 +25,6 @@ export class Drawer3d implements DrawerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly domElement: HTMLCanvasElement;
-  private readonly viewConfig: ViewConfigInterface;
   private readonly engine: Engine;
   private readonly scene: Scene;
   private readonly camera: UniversalCamera;
