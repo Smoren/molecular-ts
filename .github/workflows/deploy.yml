@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - dev
   workflow_dispatch:
 
 permissions:
@@ -13,36 +12,22 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    name: Build
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2.3.1
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Build
+        run: |
+          npm install
+          npm run build
 
-      - name: Install dependencies
-        run: npm install
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-      - name: Build project
-        run: npm run build
-
-      - name: Upload production-ready build files
-        uses: actions/upload-artifact@v3
-        with:
-          name: production-files
-          path: ./dist
-
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           name: production-files
           path: ./dist
@@ -50,28 +35,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-#jobs:
-#  build-and-deploy:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2.3.1
-#
-#      - name: Build
-#        run: |
-#          npm install
-#          npm run build
-#
-#      - name: Setup Pages
-#        uses: actions/configure-pages@v4
-#
-#      - name: Upload artifact
-#        uses: actions/upload-pages-artifact@v3
-#        with:
-#          name: production-files
-#          path: ./dist
-#
-#      - name: Deploy to GitHub Pages
-#        id: deployment
-#        uses: actions/deploy-pages@v4
