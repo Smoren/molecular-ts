@@ -4,7 +4,7 @@ import { MODE } from "@/lib/example/config/initial";
 import { startSimulation } from "@/lib/example/choice";
 import { onMounted } from "vue";
 
-const DIMENSIONS = 2;
+const DIMENSIONS = 3;
 const CURRENT_MODE = MODE.CONST_TYPES;
 
 onMounted(() => {
