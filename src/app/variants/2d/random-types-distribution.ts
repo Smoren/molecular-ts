@@ -13,9 +13,11 @@ import { Simulation } from '../../../simulation';
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
 const TYPES_CONFIG: TypesConfig = createRandomTypesConfig({
   TYPES_COUNT: 4,
-  GRAVITY_BOUNDS: [-1, 1],
+  GRAVITY_BOUNDS: [-1, 0.5],
+  LINK_GRAVITY_BOUNDS: [-1, 0.5],
   LINK_BOUNDS: [1, 3],
   LINK_TYPE_BOUNDS: [0, 4],
+  LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5],
 });
 const INITIAL_CONFIG: InitialConfig = create2dBaseInitialConfig();
 

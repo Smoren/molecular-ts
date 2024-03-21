@@ -1,6 +1,5 @@
 import { ColorVector, RandomTypesConfig, TypesConfig } from '../types/config';
 
-
 function getRandomColorNumber(): number {
   return Math.round(Math.random()*255);
 }
@@ -80,8 +79,10 @@ export function createBaseTypesConfig(): TypesConfig {
 export function createRandomTypesConfig({
   TYPES_COUNT,
   GRAVITY_BOUNDS,
+  LINK_GRAVITY_BOUNDS,
   LINK_TYPE_BOUNDS,
   LINK_BOUNDS,
+  LINK_FACTOR_DISTANCE_BOUNDS,
 }: RandomTypesConfig): TypesConfig {
   const gravity: number[][] = [];
   for (let i=0; i<TYPES_COUNT; ++i) {
@@ -95,7 +96,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     linkGravity.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      linkGravity[i].push(createRandomFloat(GRAVITY_BOUNDS));
+      linkGravity[i].push(createRandomFloat(LINK_GRAVITY_BOUNDS));
     }
   }
 
@@ -116,7 +117,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     linkFactorDistance.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      linkFactorDistance[i].push(createRandomFloat([0.9, 1.1]));
+      linkFactorDistance[i].push(createRandomFloat(LINK_FACTOR_DISTANCE_BOUNDS));
     }
   }
 

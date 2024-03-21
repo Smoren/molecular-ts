@@ -12,6 +12,9 @@ function startSimulation(dimensions: number, mode: number) {
   }
 
   setTimeout(() => sim.start(), 100);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  window.sim = sim;
 }
 
 const DIMENSIONS = 3;

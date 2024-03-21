@@ -28,7 +28,7 @@ export class InteractionManager implements InteractionManagerInterface {
   handleTime(): void {
     this.time++;
 
-    if (this.time % 10 === 0) {
+    if (this.time % 100 === 0) {
       console.log('time', this.time, 0.5 - Math.cos(this.time / 100) / 2);
     }
   }
