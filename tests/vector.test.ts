@@ -1,5 +1,7 @@
-import { NumericVector } from '../src/vector/types';
-import { createVector, toVector } from '../src/vector';
+import type { NumericVector } from "../src/lib/vector/types";
+import { createVector, toVector } from "../src/lib/vector";
+
+import { describe, expect, it } from '@jest/globals'
 
 describe.each([
   ...dataProviderForAbs(),

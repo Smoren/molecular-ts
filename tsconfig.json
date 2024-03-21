@@ -1,18 +1,18 @@
 {
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
-    "outDir": "./dist/",
-    "noImplicitAny": true,
-    "module": "es6",
-    "target": "es6",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "downlevelIteration": true,
-    "lib": [
-      "dom"
-    ]
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "lib": ["es2017", "dom"],
+    "types": ["unplugin-vue-macros/macros-global"]
   },
-  "exclude": [
-    "node_modules"
+
+  "references": [
+    {
+      "path": "./tsconfig.config.json"
+    }
   ]
 }

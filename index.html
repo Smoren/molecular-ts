@@ -1,31 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Canvas experiment</title>
-    <style>
-      #chart {height: 500px;}
-    </style>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecular TS</title>
   </head>
-  <body class="body">
-    <canvas id="canvas"></canvas>
-    <script src="dist/bundle.js"></script>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/app.ts"></script>
   </body>
-  <style>
-    body, html {
-      height: 100%;
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    #canvas {
-      border: 1px solid black;
-      width: 100%;
-      height: 100%;
-    }
-  </style>
 </html>

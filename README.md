@@ -12,7 +12,7 @@ https://smoren.github.io/molecular-ts/
 npm i
 npm run build
 # or
-npm run start
+npm run dev
 ```
 
 ### Test
