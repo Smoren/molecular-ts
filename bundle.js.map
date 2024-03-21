@@ -1,0 +1,1 @@
+{"version":3,"file":"bundle.js","mappings":";;;;;AAAA,oB","sources":["webpack://genetic-fourier-function-approx/./src/app.js"],"sourcesContent":["console.log('test');"],"names":[],"sourceRoot":""}
