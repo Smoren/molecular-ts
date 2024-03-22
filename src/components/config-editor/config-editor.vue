@@ -1,8 +1,10 @@
 <script setup lang="ts">
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useSwitch } from "@/hooks/use-switch";
+
+import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
 import { ref, type Ref } from 'vue';
+import { useSwitch } from "@/hooks/use-switch";
 import { useConfigStore } from '@/store/config';
 import WorldConfigSection from '@/components/config-editor/components/world-config-section.vue';
 import TypesConfigSection from '@/components/config-editor/components/types-config-section.vue';
@@ -29,6 +31,8 @@ const openRightBar = (mode: number) => {
   rightBarVisible.on();
 };
 
+const activeAccordionItem = ref('collapse-world');
+
 </script>
 
 <template>
@@ -42,8 +46,14 @@ const openRightBar = (mode: number) => {
           Config
         </template>
         <template #body>
-          <world-config-section />
-          <types-config-section />
+          <MDBAccordion v-model="activeAccordionItem">
+            <MDBAccordionItem headerTitle="World" collapseId="collapse-world">
+              <world-config-section />
+            </MDBAccordionItem>
+            <MDBAccordionItem headerTitle="Types" collapseId="collapse-types">
+              <types-config-section />
+            </MDBAccordionItem>
+          </MDBAccordion>
         </template>
       </sidebar>
       <sidebar :visible="rightBarVisible" position="right">

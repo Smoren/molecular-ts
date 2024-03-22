@@ -19,19 +19,15 @@ const classes = computed(() => {
 </script>
 
 <template>
-  <div :class="classes" class="offcanvas">
+  <div :class="classes" class="offcanvas" tabindex="-1">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title">
         <slot name="title" />
       </h5>
-      <button
-          type="button"
-          class="btn-close"
-          @click="visible.off()"
-      ></button>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" @click="visible.off()"></button>
     </div>
     <div class="offcanvas-body">
-      <slot name="body" />
+      <slot name="body" v-if="visible.state.value" />
     </div>
   </div>
 </template>

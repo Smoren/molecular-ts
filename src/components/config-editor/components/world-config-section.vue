@@ -11,9 +11,6 @@ const {
 
 <template>
   <config-section>
-    <template #title>
-      World
-    </template>
     <template #body>
       <div>
         <div>Max Interaction Radius</div>

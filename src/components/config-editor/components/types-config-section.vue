@@ -17,9 +17,6 @@ const getColorString = (color: [number, number, number]) => {
 
 <template>
   <config-section>
-    <template #title>
-      Types
-    </template>
     <template #body>
       <config-matrix name="Gravity" :values="typesConfig.GRAVITY" :colors="typesConfig.COLORS" :step="0.1" />
       <config-matrix name="Link Gravity" :values="typesConfig.LINK_GRAVITY" :colors="typesConfig.COLORS" :step="0.1" />
