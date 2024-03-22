@@ -8,7 +8,7 @@ import { create3dBaseInitialConfig } from "@/lib/config/initial";
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
   const typesConfigRaw: TypesConfig = createBaseTypesConfig();
-  const initialConfigRaw: InitialConfig = create3dBaseInitialConfig();
+  let initialConfigRaw: InitialConfig = create3dBaseInitialConfig();
 
   const worldConfig: Ref<WorldConfig> = ref(worldConfigRaw);
   const typesConfig: Ref<TypesConfig> = ref(typesConfigRaw);
@@ -19,6 +19,12 @@ export const useConfigStore = defineStore("config", () => {
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
       initialConfig: initialConfigRaw,
+    }
+  }
+
+  const setInitialConfig = <T>(newConfig: InitialConfig) => {
+    for (const i in newConfig) {
+      (initialConfigRaw[i as keyof InitialConfig] as T) = newConfig[i as keyof InitialConfig] as T;
     }
   }
 
@@ -45,5 +51,6 @@ export const useConfigStore = defineStore("config", () => {
     typesConfig,
     initialConfig,
     getConfigValues,
+    setInitialConfig,
   }
 });

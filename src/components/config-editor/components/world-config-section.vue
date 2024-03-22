@@ -38,7 +38,7 @@ const {
       </div>
       <div>
         <div>Inertial Multiplier</div>
-        <input type="number" v-model="worldConfig.INERTIAL_MULTIPLIER" step="0.1" />
+        <input type="number" v-model="worldConfig.INERTIAL_MULTIPLIER" step="0.01" />
       </div>
       <div>
         <div>Speed</div>
