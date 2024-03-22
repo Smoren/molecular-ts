@@ -1,0 +1,27 @@
+.section {
+  margin-bottom: 30px;
+
+  > div {
+    margin-bottom: 10px;
+
+    input {
+      width: 100%;
+    }
+
+    button {
+      margin-right: 10px;
+    }
+  }
+
+  table {
+    max-width: 100%;
+
+    input {
+      width: 50px;
+    }
+  }
+}
+
+.offcanvas-end {
+  width: 30%;
+}

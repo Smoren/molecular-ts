@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { onMounted } from "vue";
-import ConfigEditor from "@/components/config-editor.vue";
+import ConfigEditor from "@/components/config-editor/config-editor.vue";
 import { Simulation } from "@/lib/simulation";
 import { create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
