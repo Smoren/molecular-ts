@@ -46,7 +46,7 @@ const openRightBar = (mode: number) => {
         class="offcanvas offcanvas-start"
       >
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title">Main Config</h5>
+          <h5 class="offcanvas-title">Config</h5>
           <button
             type="button"
             class="btn-close"

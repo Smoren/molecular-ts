@@ -12,7 +12,7 @@ const {
 <template>
   <config-section>
     <template #title>
-      World Config
+      World
     </template>
     <template #body>
       <div>

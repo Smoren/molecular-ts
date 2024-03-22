@@ -4,9 +4,9 @@
 
 <template>
   <div class="section">
-    <h3>
+    <h4>
       <slot name="title" />
-    </h3>
+    </h4>
     <slot name="body" />
   </div>
 </template>
