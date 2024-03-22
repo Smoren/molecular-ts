@@ -22,24 +22,21 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
-  watch(worldConfigRaw, (newConfig) => {
+  watch(worldConfigRaw, <T>(newConfig: WorldConfig) => {
     for (const i in newConfig) {
-      // @ts-ignore
-      worldConfigRaw[i] = newConfig[i];
+      (worldConfigRaw[i as keyof WorldConfig] as T) = newConfig[i as keyof WorldConfig] as T;
     }
   }, { deep: true });
 
-  watch(typesConfig, (newConfig) => {
+  watch(typesConfig, <T>(newConfig: TypesConfig) => {
     for (const i in newConfig) {
-      // @ts-ignore
-      typesConfigRaw[i] = newConfig[i];
+      (typesConfigRaw[i as keyof TypesConfig] as T) = newConfig[i as keyof TypesConfig] as T;
     }
   }, { deep: true });
 
-  watch(initialConfig, (newConfig) => {
+  watch(initialConfig, <T>(newConfig: InitialConfig) => {
     for (const i in newConfig) {
-      // @ts-ignore
-      initialConfigRaw[i] = newConfig[i];
+      (initialConfigRaw[i as keyof InitialConfig] as T) = newConfig[i as keyof InitialConfig] as T;
     }
   }, { deep: true });
 
