@@ -69,6 +69,10 @@ export class RulesHelper implements RulesHelperInterface {
     return this._canLink(lhs, rhs) && this._canLink(rhs, lhs);
   }
 
+  isLinkRedundant(lhs: AtomInterface, rhs: AtomInterface): boolean {
+    return this._isLinkRedundant(lhs, rhs) || this._isLinkRedundant(rhs, lhs);
+  }
+
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
     let multiplier: number;
 
@@ -108,6 +112,13 @@ export class RulesHelper implements RulesHelperInterface {
       return false;
     }
     return lhs.bonds.lengthOf(rhs.type) < this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
+  }
+
+  private _isLinkRedundant(lhs: AtomInterface, rhs: AtomInterface): boolean {
+    if (lhs.bonds.length > this.TYPES_CONFIG.LINKS[lhs.type]) {
+      return true;
+    }
+    return lhs.bonds.lengthOf(rhs.type) > this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
   }
 }
 
