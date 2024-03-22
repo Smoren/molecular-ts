@@ -5,16 +5,22 @@ import NavComponent from "@/components/nav.vue";
 import { Simulation } from "@/lib/simulation";
 import { create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
-import { useConfig } from "@/hooks/use-config";
+import { useConfigStore } from '@/store/config';
 
-const config = useConfig();
+const config = useConfigStore();
+const {
+  worldConfig,
+  typesConfig,
+  initialConfig,
+} = config.getConfigValues();
+
 let simulation: Simulation | null = null;
 
 onMounted(() => {
   simulation = new Simulation({
-    worldConfig: config.worldConfig,
-    typesConfig: config.typesConfig,
-    initialConfig: config.initialConfig,
+    worldConfig: worldConfig,
+    typesConfig: typesConfig,
+    initialConfig: initialConfig,
     atomsFactory: create3dRandomDistribution,
     drawer: create3dDrawer('canvas', config.worldConfig, config.typesConfig),
   });
@@ -24,7 +30,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <nav-component :config="config" />
+  <nav-component />
   <canvas id="canvas"></canvas>
 </template>
 
