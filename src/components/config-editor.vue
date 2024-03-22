@@ -80,11 +80,11 @@ const getColorString = (color: [number, number, number]) => {
             </div>
             <div>
               <div>Bounce Force Multiplier</div>
-              <input type="number" v-model="worldConfig.BOUNCE_FORCE_MULTIPLIER" />
+              <input type="number" v-model="worldConfig.BOUNCE_FORCE_MULTIPLIER" step="0.1" />
             </div>
             <div>
               <div>Inertial Multiplier</div>
-              <input type="number" v-model="worldConfig.INERTIAL_MULTIPLIER" />
+              <input type="number" v-model="worldConfig.INERTIAL_MULTIPLIER" step="0.1" />
             </div>
             <div>
               <div>Speed</div>
