@@ -59,39 +59,39 @@ const getColorString = (color: [number, number, number]) => {
             <h3>World Config</h3>
             <div>
               <div>Max Interaction Radius</div>
-              <input type="number" v-model="props.config.worldConfig.MAX_INTERACTION_RADIUS" min="0" />
+              <input type="number" v-model="props.config.worldConfigRef.value.MAX_INTERACTION_RADIUS" min="0" />
             </div>
             <div>
               <div>Max Link Radius</div>
-              <input type="number" v-model="props.config.worldConfig.MAX_LINK_RADIUS" min="0" />
+              <input type="number" v-model="props.config.worldConfigRef.value.MAX_LINK_RADIUS" min="0" />
             </div>
             <div>
               <div>Max Force</div>
-              <input type="number" v-model="props.config.worldConfig.MAX_FORCE" />
+              <input type="number" v-model="props.config.worldConfigRef.value.MAX_FORCE" />
             </div>
             <div>
               <div>Gravity Multiplier</div>
-              <input type="number" v-model="props.config.worldConfig.GRAVITY_FORCE_MULTIPLIER" />
+              <input type="number" v-model="props.config.worldConfigRef.value.GRAVITY_FORCE_MULTIPLIER" />
             </div>
             <div>
               <div>Link Force Multiplier</div>
-              <input type="number" v-model="props.config.worldConfig.LINK_FORCE_MULTIPLIER" step="0.005" min="0.005" />
+              <input type="number" v-model="props.config.worldConfigRef.value.LINK_FORCE_MULTIPLIER" step="0.005" min="0.005" />
             </div>
             <div>
               <div>Bounce Force Multiplier</div>
-              <input type="number" v-model="props.config.worldConfig.BOUNCE_FORCE_MULTIPLIER" />
+              <input type="number" v-model="props.config.worldConfigRef.value.BOUNCE_FORCE_MULTIPLIER" />
             </div>
             <div>
               <div>Inertial Multiplier</div>
-              <input type="number" v-model="props.config.worldConfig.INERTIAL_MULTIPLIER" />
+              <input type="number" v-model="props.config.worldConfigRef.value.INERTIAL_MULTIPLIER" />
             </div>
             <div>
               <div>Speed</div>
-              <input type="number" v-model="props.config.worldConfig.SPEED" min="1" />
+              <input type="number" v-model="props.config.worldConfigRef.value.SPEED" min="1" />
             </div>
             <div>
               <div>Temperature Multiplier</div>
-              <input type="number" v-model="props.config.worldConfig.TEMPERATURE_MULTIPLIER" step="0.1" />
+              <input type="number" v-model="props.config.worldConfigRef.value.TEMPERATURE_MULTIPLIER" step="0.1" />
             </div>
           </div>
 
@@ -104,14 +104,14 @@ const getColorString = (color: [number, number, number]) => {
                   <tr>
                     <td></td>
                     <td
-                      v-for="color in props.config.typesConfig.COLORS"
+                      v-for="color in props.config.typesConfigRef.value.COLORS"
                       :style="{ backgroundColor: getColorString(color) }"
                     >
                       &nbsp;
                     </td>
                   </tr>
-                  <tr v-for="(row, rowIndex) in props.config.typesConfig.GRAVITY">
-                    <td :style="{ backgroundColor: getColorString(props.config.typesConfig.COLORS[rowIndex]), width: '30px' }"></td>
+                  <tr v-for="(row, rowIndex) in props.config.typesConfigRef.value.GRAVITY">
+                    <td :style="{ backgroundColor: getColorString(props.config.typesConfigRef.value.COLORS[rowIndex]), width: '30px' }"></td>
                     <td v-for="(_, colIndex) in row">
                       <input type="number" v-model="row[colIndex]" step="0.1">
                     </td>
@@ -126,14 +126,14 @@ const getColorString = (color: [number, number, number]) => {
                   <tr>
                     <td></td>
                     <td
-                      v-for="color in props.config.typesConfig.COLORS"
+                      v-for="color in props.config.typesConfigRef.value.COLORS"
                       :style="{ backgroundColor: getColorString(color) }"
                     >
                       &nbsp;
                     </td>
                   </tr>
-                  <tr v-for="(row, rowIndex) in props.config.typesConfig.LINK_GRAVITY">
-                    <td :style="{ backgroundColor: getColorString(props.config.typesConfig.COLORS[rowIndex]), width: '30px' }"></td>
+                  <tr v-for="(row, rowIndex) in props.config.typesConfigRef.value.LINK_GRAVITY">
+                    <td :style="{ backgroundColor: getColorString(props.config.typesConfigRef.value.COLORS[rowIndex]), width: '30px' }"></td>
                     <td v-for="(_, colIndex) in row">
                       <input type="number" v-model="row[colIndex]" step="0.1">
                     </td>
@@ -147,15 +147,15 @@ const getColorString = (color: [number, number, number]) => {
                 <table>
                   <tr>
                     <td
-                      v-for="color in props.config.typesConfig.COLORS"
+                      v-for="color in props.config.typesConfigRef.value.COLORS"
                       :style="{ backgroundColor: getColorString(color) }"
                     >
                       &nbsp;
                     </td>
                   </tr>
                   <tr>
-                    <td v-for="(_, index) in props.config.typesConfig.LINKS">
-                      <input type="number" v-model="props.config.typesConfig.LINKS[index]" step="1" min="0">
+                    <td v-for="(_, index) in props.config.typesConfigRef.value.LINKS">
+                      <input type="number" v-model="props.config.typesConfigRef.value.LINKS[index]" step="1" min="0">
                     </td>
                   </tr>
                 </table>
@@ -168,14 +168,14 @@ const getColorString = (color: [number, number, number]) => {
                   <tr>
                     <td></td>
                     <td
-                      v-for="color in props.config.typesConfig.COLORS"
+                      v-for="color in props.config.typesConfigRef.value.COLORS"
                       :style="{ backgroundColor: getColorString(color) }"
                     >
                       &nbsp;
                     </td>
                   </tr>
-                  <tr v-for="(row, rowIndex) in props.config.typesConfig.TYPE_LINKS">
-                    <td :style="{ backgroundColor: getColorString(props.config.typesConfig.COLORS[rowIndex]), width: '30px' }"></td>
+                  <tr v-for="(row, rowIndex) in props.config.typesConfigRef.value.TYPE_LINKS">
+                    <td :style="{ backgroundColor: getColorString(props.config.typesConfigRef.value.COLORS[rowIndex]), width: '30px' }"></td>
                     <td v-for="(_, colIndex) in row">
                       <input type="number" v-model="row[colIndex]" step="1" min="0">
                     </td>
@@ -190,14 +190,14 @@ const getColorString = (color: [number, number, number]) => {
                   <tr>
                     <td></td>
                     <td
-                      v-for="color in props.config.typesConfig.COLORS"
+                      v-for="color in props.config.typesConfigRef.value.COLORS"
                       :style="{ backgroundColor: getColorString(color) }"
                     >
                       &nbsp;
                     </td>
                   </tr>
-                  <tr v-for="(row, rowIndex) in props.config.typesConfig.LINK_FACTOR_DISTANCE">
-                    <td :style="{ backgroundColor: getColorString(props.config.typesConfig.COLORS[rowIndex]), width: '30px' }"></td>
+                  <tr v-for="(row, rowIndex) in props.config.typesConfigRef.value.LINK_FACTOR_DISTANCE">
+                    <td :style="{ backgroundColor: getColorString(props.config.typesConfigRef.value.COLORS[rowIndex]), width: '30px' }"></td>
                     <td v-for="(_, colIndex) in row">
                       <input type="number" v-model="row[colIndex]" step="0.1" min="0">
                     </td>
