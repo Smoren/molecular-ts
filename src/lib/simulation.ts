@@ -1,5 +1,4 @@
 import type { SimulationConfig, SimulationInterface } from './types/simulation';
-import type { InitialConfig, TypesConfig, WorldConfig } from './types/config';
 import type { AtomInterface } from './types/atomic';
 import type { DrawerInterface } from './types/drawer';
 import type { LinkManagerInterface } from './types/helpers';

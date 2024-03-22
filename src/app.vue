@@ -24,7 +24,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <nav-component />
+  <nav-component :config="config" />
   <canvas id="canvas"></canvas>
 </template>
 
