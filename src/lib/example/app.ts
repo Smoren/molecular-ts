@@ -1,4 +1,4 @@
-import { MODE } from './config/initial';
+import { MODE } from '@/lib/config/initial';
 import { startSimulation } from "./choice";
 
 const DIMENSIONS = 3;

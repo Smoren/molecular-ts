@@ -1,10 +1,10 @@
-import type { AtomInterface } from '../../types/atomic';
-import { createAtom, getIndexByFrequencies } from '../../helpers';
+import type { AtomInterface } from '../types/atomic';
+import { createAtom, getIndexByFrequencies } from '../helpers';
 import type {
   InitialConfig,
   TypesConfig,
   WorldConfig,
-} from '../../types/config';
+} from '../types/config';
 
 export function create2dButterfly(): AtomInterface[] {
   const atoms: AtomInterface[] = [];

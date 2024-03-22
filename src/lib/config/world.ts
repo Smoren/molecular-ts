@@ -1,5 +1,5 @@
-import type { WorldConfig } from '../../types/config';
-import type { NumericVector } from '../../vector/types';
+import type { WorldConfig } from '../types/config';
+import type { NumericVector } from '../vector/types';
 
 export function createBaseWorldConfig(): WorldConfig {
   return {

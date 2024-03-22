@@ -1,15 +1,27 @@
 <script setup lang="ts">
 
-import { MODE } from "@/lib/example/config/initial";
-import { startSimulation } from "@/lib/example/choice";
 import { onMounted } from "vue";
+import { useConfigStore } from "@/store/config";
 import NavComponent from "@/components/nav.vue";
+import { Simulation } from "@/lib/simulation";
+import { create3dRandomDistribution } from "@/lib/config/atoms";
+import { create3dDrawer } from "@/lib/drawer/3d";
+import { create3dSimulationWithConstTypes } from "@/lib/example/variants/3d/const-types-distribution";
 
-const DIMENSIONS = 3;
-const CURRENT_MODE = MODE.CONST_TYPES;
+const configStore = useConfigStore();
+let simulation: Simulation | null = null;
 
 onMounted(() => {
-  startSimulation(DIMENSIONS, CURRENT_MODE);
+  simulation = create3dSimulationWithConstTypes();
+  simulation.start();
+  // simulation = new Simulation({
+  //   worldConfig: configStore.worldConfig,
+  //   typesConfig: configStore.typesConfig,
+  //   initialConfig: configStore.initialConfig,
+  //   atomsFactory: create3dRandomDistribution,
+  //   drawer: create3dDrawer('canvas', configStore.worldConfig, configStore.typesConfig),
+  // });
+  // simulation.start();
 });
 
 </script>

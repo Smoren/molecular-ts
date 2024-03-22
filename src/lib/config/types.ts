@@ -1,4 +1,4 @@
-import type { ColorVector, RandomTypesConfig, TypesConfig } from '../../types/config';
+import type { ColorVector, RandomTypesConfig, TypesConfig } from '../types/config';
 
 function getRandomColorNumber(): number {
   return Math.round(Math.random()*255);

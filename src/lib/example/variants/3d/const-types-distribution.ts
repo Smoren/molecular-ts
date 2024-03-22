@@ -3,10 +3,10 @@ import type {
   TypesConfig,
   WorldConfig,
 } from "../../../types/config";
-import { createBaseTypesConfig } from "../../config/types";
-import { createBaseWorldConfig } from "../../config/world";
-import { create3dBaseInitialConfig } from "../../config/initial";
-import { create3dRandomDistribution } from "../../config/atoms";
+import { createBaseTypesConfig } from "@/lib/config/types";
+import { createBaseWorldConfig } from "@/lib/config/world";
+import { create3dBaseInitialConfig } from "@/lib/config/initial";
+import { create3dRandomDistribution } from "@/lib/config/atoms";
 import { Simulation } from "../../../simulation";
 import { create3dDrawer } from "../../../drawer/3d";
 

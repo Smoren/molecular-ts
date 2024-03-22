@@ -4,10 +4,10 @@ import type {
   WorldConfig,
 } from "../../../types/config";
 import { create2dDrawer } from "../../../drawer/2d";
-import { createBaseTypesConfig } from "../../config/types";
-import { createBaseWorldConfig } from "../../config/world";
-import { create2dBaseInitialConfig } from "../../config/initial";
-import { create2dButterfly } from "../../config/atoms";
+import { createBaseTypesConfig } from "@/lib/config/types";
+import { createBaseWorldConfig } from "@/lib/config/world";
+import { create2dBaseInitialConfig } from "@/lib/config/initial";
+import { create2dButterfly } from "@/lib/config/atoms";
 import { Simulation } from "../../../simulation";
 
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
