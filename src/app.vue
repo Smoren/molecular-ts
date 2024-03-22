@@ -17,7 +17,6 @@ onMounted(() => {
 <template>
   <nav-component />
   <canvas id="canvas"></canvas>
-
 </template>
 
 <style scoped lang="scss">
