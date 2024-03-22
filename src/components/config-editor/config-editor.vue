@@ -44,10 +44,6 @@ const openRightBar = (mode: number) => {
         <template #body>
           <world-config-section />
           <types-config-section />
-
-          <button class="btn" @click="rightBarVisible.on()">
-            Open right bar
-          </button>
         </template>
       </sidebar>
       <sidebar :visible="rightBarVisible" position="right">
