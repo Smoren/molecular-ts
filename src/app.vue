@@ -3,6 +3,7 @@
 import { MODE } from "@/lib/example/config/initial";
 import { startSimulation } from "@/lib/example/choice";
 import { onMounted } from "vue";
+import NavComponent from "@/components/nav.vue";
 
 const DIMENSIONS = 3;
 const CURRENT_MODE = MODE.CONST_TYPES;
@@ -14,7 +15,7 @@ onMounted(() => {
 </script>
 
 <template>
-
+  <nav-component />
   <canvas id="canvas"></canvas>
 
 </template>
