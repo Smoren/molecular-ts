@@ -1,6 +1,14 @@
-import { computed, type ComputedRef, ref, watch } from "vue";
+import { computed, type ComputedRef, type Ref, ref, watch } from "vue";
 
-export const useCounter = (defaultValue: number = 0, onChange?: (value: number) => void) => {
+export type CounterInterface = {
+    state: Ref<number>;
+    increment: () => void;
+    decrement: () => void;
+    affecting: (action: () => void | Promise<void>, throwIfError?: boolean) => Promise<void>;
+    getState: () => ComputedRef<number>;
+}
+
+export const useCounter = (defaultValue: number = 0, onChange?: (value: number) => void): CounterInterface => {
   const state = ref(defaultValue);
 
   const increment = (): void => {

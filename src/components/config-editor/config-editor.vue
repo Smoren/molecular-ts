@@ -6,6 +6,8 @@ import { ref, type Ref } from 'vue';
 import { useConfigStore } from '@/store/config';
 import WorldConfigSection from '@/components/config-editor/components/world-config-section.vue';
 import TypesConfigSection from '@/components/config-editor/components/types-config-section.vue';
+import Navbar from "@/components/config-editor/components/navbar.vue";
+import Sidebar from "@/components/config-editor/components/sidebar.vue";
 
 const {
   worldConfig,
@@ -30,54 +32,31 @@ const openRightBar = (mode: number) => {
 </script>
 
 <template>
-  <nav class="navbar bg-body-tertiary fixed-top">
-    <div class="container-fluid">
-      <button
-        class="navbar-toggler"
-        type="button"
-        @click="leftBarVisible.on()"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <a class="navbar-brand" href="#">Molecular TS</a>
-
-      <div
-        :class="{ 'show': leftBarVisible.state.value }"
-        class="offcanvas offcanvas-start"
-      >
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title">Config</h5>
-          <button
-            type="button"
-            class="btn-close"
-            @click="leftBarVisible.off()"
-          ></button>
-        </div>
-        <div class="offcanvas-body">
+  <navbar :on-burger-click="leftBarVisible.on">
+    <template #title>
+      Molecular TS
+    </template>
+    <template #body>
+      <sidebar :visible="leftBarVisible" position="left">
+        <template #title>
+          Config
+        </template>
+        <template #body>
           <world-config-section />
           <types-config-section />
-        </div>
-      </div>
 
-      <div
-        :class="{ 'show': rightBarVisible.state.value }"
-        class="offcanvas offcanvas-end"
-      >
-        <div class="offcanvas-header">
-          <button
-              type="button"
-              class="btn-close"
-              @click="rightBarVisible.off()"
-          ></button>
-        </div>
-        <div class="offcanvas-body">
-          <div class="section" v-if="rightBarMode === rightBarModeMap.LINK_GRAVITY">
-            <h3>Link Gravity</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
+          <button class="btn" @click="rightBarVisible.on()">
+            Open right bar
+          </button>
+        </template>
+      </sidebar>
+      <sidebar :visible="rightBarVisible" position="right">
+        <template #body>
+          Under construction...
+        </template>
+      </sidebar>
+    </template>
+  </navbar>
 </template>
 
 <style scoped lang="scss">

@@ -1,6 +1,15 @@
-import { computed, type ComputedRef, ref, watch } from "vue";
+import { computed, type ComputedRef, type Ref, ref, watch } from "vue";
 
-export const useSwitch = (defaultValue: boolean, onChange?: (value: boolean) => void) => {
+export type SwitchInterface = {
+    state: Ref<boolean>;
+    on: () => void;
+    off: () => void;
+    toggle: () => void;
+    affecting: (action: () => void | Promise<void>, throwIfError?: boolean) => Promise<void>;
+    getState: () => ComputedRef<boolean>;
+}
+
+export const useSwitch = (defaultValue: boolean, onChange?: (value: boolean) => void): SwitchInterface => {
   const state = ref(defaultValue);
 
   const on = (): void => {
