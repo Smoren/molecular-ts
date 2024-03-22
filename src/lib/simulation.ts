@@ -10,9 +10,7 @@ import { createAtom, LinkManager, RulesHelper } from './helpers';
 import { InteractionManager } from './interaction';
 
 export class Simulation implements SimulationInterface {
-  private readonly typesConfig: TypesConfig;
-  private readonly worldConfig: WorldConfig;
-  private readonly initialConfig: InitialConfig;
+  private readonly config: SimulationConfig;
   private readonly atoms: AtomInterface[];
   private readonly drawer: DrawerInterface;
   private readonly linkManager: LinkManagerInterface;
@@ -20,29 +18,21 @@ export class Simulation implements SimulationInterface {
   private readonly clusterManager: ClusterManagerInterface;
   private isRunning: boolean = false;
 
-  constructor({
-    worldConfig,
-    typesConfig,
-    initialConfig,
-    atomsFactory,
-    drawer,
-  }: SimulationConfig) {
-    this.typesConfig = typesConfig;
-    this.worldConfig = worldConfig;
-    this.initialConfig = initialConfig;
-    this.atoms = atomsFactory(this.worldConfig, this.typesConfig, this.initialConfig);
-    this.drawer = drawer;
+  constructor(config: SimulationConfig) {
+    this.config = config
+    this.atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig, this.config.initialConfig);
+    this.drawer = this.config.drawer;
     this.linkManager = new LinkManager();
     this.interactionManager = new InteractionManager(
-      this.worldConfig,
-      this.typesConfig,
+      this.config.worldConfig,
+      this.config.typesConfig,
       this.linkManager,
-      new RulesHelper(this.typesConfig, this.worldConfig),
+      new RulesHelper(this.config.typesConfig, this.config.worldConfig),
     );
-    this.clusterManager = new ClusterManager(this.worldConfig.MAX_INTERACTION_RADIUS);
+    this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
 
     this.drawer.addClickListener((coords, extraKey) => {
-      if (extraKey === null || extraKey > this.typesConfig.FREQUENCIES.length) {
+      if (extraKey === null || extraKey > this.config.typesConfig.FREQUENCIES.length) {
         return;
       }
       console.log('atom added');
@@ -61,7 +51,7 @@ export class Simulation implements SimulationInterface {
 
   private tick() {
     // const ts = Date.now();
-    for (let i=0; i<this.worldConfig.PLAYBACK_SPEED; ++i) {
+    for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
       for (const atom of this.atoms) {
         // очищаем фактор соединений
         atom.linkDistanceFactor = 1;
