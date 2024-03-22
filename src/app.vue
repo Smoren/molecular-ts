@@ -15,6 +15,7 @@ const {
   typesConfig,
   initialConfig,
 } = config.getConfigValues();
+console.log('typesConfig', typesConfig);
 const viewMode: Ref<'2d' | '3d'> = ref('3d');
 
 let simulation2d: Simulation | null = null;
