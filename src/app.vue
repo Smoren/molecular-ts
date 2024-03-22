@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { onMounted } from "vue";
-import NavComponent from "@/components/nav.vue";
+import ConfigEditor from "@/components/config-editor.vue";
 import { Simulation } from "@/lib/simulation";
 import { create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
@@ -30,7 +30,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <nav-component />
+  <config-editor />
   <canvas id="canvas"></canvas>
 </template>
 
