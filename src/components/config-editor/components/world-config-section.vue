@@ -3,15 +3,18 @@
 import ConfigSection from '@/components/config-editor/components/config-section.vue';
 import { useConfigStore } from '@/store/config';
 
-const {
-  worldConfig,
-} = useConfigStore();
+const configStore = useConfigStore();
+const worldConfig = configStore.worldConfig;
 
 </script>
 
 <template>
   <config-section>
     <template #body>
+      <div v-show="configStore.viewMode === '2d'">
+        <div>Atom Radius</div>
+        <input type="number" v-model="worldConfig.ATOM_RADIUS" min="1" />
+      </div>
       <div>
         <div>Max Interaction Radius</div>
         <input type="number" v-model="worldConfig.MAX_INTERACTION_RADIUS" min="0" />
@@ -43,6 +46,10 @@ const {
       <div>
         <div>Speed</div>
         <input type="number" v-model="worldConfig.SPEED" min="1" />
+      </div>
+      <div>
+        <div>Playback Speed</div>
+        <input type="number" v-model="worldConfig.PLAYBACK_SPEED" min="1" />
       </div>
       <div>
         <div>Temperature Multiplier</div>
