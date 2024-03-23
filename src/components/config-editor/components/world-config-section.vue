@@ -38,7 +38,7 @@ const clear = () => {
         <button class="btn btn-outline-secondary" @click="clear" v-if="false">
           Clear
         </button>
-      </div>g
+      </div>
       <div>
         <div>Max Interaction Radius</div>
         <input type="number" v-model="worldConfig.MAX_INTERACTION_RADIUS" min="0" />
