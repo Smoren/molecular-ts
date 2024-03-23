@@ -11,10 +11,6 @@ const worldConfig = configStore.worldConfig;
 <template>
   <config-section>
     <template #body>
-      <div v-show="configStore.viewMode === '2d'">
-        <div>Atom Radius</div>
-        <input type="number" v-model="worldConfig.ATOM_RADIUS" min="1" />
-      </div>
       <div>
         <div>Max Interaction Radius</div>
         <input type="number" v-model="worldConfig.MAX_INTERACTION_RADIUS" min="0" />
