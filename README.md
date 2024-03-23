@@ -1,6 +1,6 @@
 # Molecular simulation
 
-Cellular automaton built on particles. Molecular dynamics simpulations.
+Cellular automaton built on particles. Molecular dynamics simulations.
 
 ### Demo
 
