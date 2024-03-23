@@ -10,12 +10,12 @@ const props = withDefaults(defineProps<{
   min?: number;
   max?: number;
   step?: number;
-  half?: boolean;
+  symmetric?: boolean;
 }>(), {
   step: 1,
 });
 
-if (props.half) {
+if (props.symmetric) {
   watch(() => props.values, (values) => {
     for (let i = 0; i < values.length; i++) {
       for (let j = 0; j < values.length; j++) {

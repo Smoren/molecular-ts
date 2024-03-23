@@ -113,7 +113,11 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     typeLinks.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      typeLinks[i].push(createRandomInteger(LINK_TYPE_BOUNDS));
+      if (i > j) {
+        typeLinks[i].push(typeLinks[j][i]);
+      } else {
+        typeLinks[i].push(createRandomInteger(LINK_TYPE_BOUNDS));
+      }
     }
   }
 
