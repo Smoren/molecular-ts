@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { getColorString } from '@/components/config-editor/helpers/utils';
+import { watch } from "vue";
 
 const props = withDefaults(defineProps<{
   colors: [number, number, number][];
@@ -9,9 +10,22 @@ const props = withDefaults(defineProps<{
   min?: number;
   max?: number;
   step?: number;
+  half?: boolean;
 }>(), {
   step: 1,
 });
+
+if (props.half) {
+  watch(() => props.values, (values) => {
+    for (let i = 0; i < values.length; i++) {
+      for (let j = 0; j < values.length; j++) {
+        if (values[i][j] !== values[j][i]) {
+          values[j][i] = values[i][j];
+        }
+      }
+    }
+  }, { deep: true });
+}
 
 </script>
 
