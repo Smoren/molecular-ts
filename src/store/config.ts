@@ -48,6 +48,35 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
+  const exportConfig = () => {
+    return btoa(JSON.stringify({
+      worldConfig: worldConfigRaw,
+      typesConfig: typesConfigRaw,
+    }));
+  }
+
+  const importConfig = (config: string) => {
+    try {
+      console.log('start import');
+      const newConfig = JSON.parse(atob(config)) as {
+        worldConfig?: WorldConfig,
+        typesConfig?: TypesConfig,
+      };
+      console.log('parsed', newConfig);
+
+      if (newConfig.worldConfig !== undefined) {
+        setWorldConfig(newConfig.worldConfig);
+        console.log('worldConfig upd');
+      }
+      if (newConfig.typesConfig !== undefined) {
+        setTypesConfig(newConfig.typesConfig);
+        console.log('typesConfig upd');
+      }
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
   const randomizeTypesConfig = <T>() => {
     const newConfig = createRandomTypesConfig({
       TYPES_COUNT: typesConfigRaw.COLORS.length,
@@ -96,5 +125,7 @@ export const useConfigStore = defineStore("config", () => {
     setWorldConfig,
     randomizeTypesConfig,
     setDefaultTypesConfig,
+    exportConfig,
+    importConfig,
   }
 });

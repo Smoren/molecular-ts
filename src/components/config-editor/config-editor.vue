@@ -19,6 +19,10 @@ const leftBarVisible = useSwitch(false);
 const rightBarVisible = useSwitch(false);
 const activeAccordionItem = ref('collapse-world');
 
+const copyShareLink = () => {
+  navigator.clipboard.writeText(`${location.origin}${location.pathname}#${configStore.exportConfig()}`);
+}
+
 const rightBarModeMap = {
   GRAVITY: 1,
   LINK_GRAVITY: 2,
@@ -53,6 +57,10 @@ const openRightBar = (mode: number) => {
               <types-config-section/>
             </MDBAccordionItem>
           </MDBAccordion>
+          <br />
+          <button class="btn btn-primary" @click="copyShareLink" style="width: 100%;">
+            Copy share link
+          </button>
         </template>
       </sidebar>
       <sidebar :visible="rightBarVisible" position="right">

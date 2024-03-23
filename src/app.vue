@@ -3,7 +3,9 @@
 import { onMounted, provide } from "vue";
 import ConfigEditor from "@/components/config-editor/config-editor.vue";
 import { useSimulation } from "@/hooks/use-simulation";
-import type { ViewMode } from "@/store/config";
+import { useConfigStore, type ViewMode } from "@/store/config";
+
+const configStore = useConfigStore();
 
 const {
   simulation,
@@ -16,7 +18,15 @@ const getCanvasStyle = (mode: ViewMode) => {
   return { display: isMode(mode) ? 'block' : 'none' };
 }
 
+const importDataFromHash = () => {
+  const hash = window.location.hash.slice(1);
+  if (hash) {
+    configStore.importConfig(hash);
+  }
+}
+
 onMounted(() => {
+  importDataFromHash();
   restartSimulation();
 });
 
