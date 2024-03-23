@@ -14,7 +14,7 @@ export function createBaseWorldConfig(): WorldConfig {
     SPEED: 25,
     PLAYBACK_SPEED: 1,
     SIMPLIFIED_VIEW_MODE: false,
-    TEMPERATURE_MULTIPLIER: 0.2,
+    TEMPERATURE_MULTIPLIER: 0,
     MIN_POSITION: [0, 0, 0],
     MAX_POSITION: [2500, 2500, 2500],
     TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {

@@ -35,7 +35,7 @@ const clear = () => {
         <button class="btn btn-outline-secondary" @click="togglePause">
           {{  speedBuffer === null ? 'Pause' : 'Resume' }}
         </button>
-        <button class="btn btn-outline-secondary" @click="clear" v-if="false">
+        <button class="btn btn-outline-secondary" @click="clear">
           Clear
         </button>
       </div>
