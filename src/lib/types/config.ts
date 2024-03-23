@@ -31,6 +31,7 @@ export type WorldConfig = {
   SPEED: number;
   TEMPERATURE_MULTIPLIER: number;
   TEMPERATURE_FUNCTION: (p: NumericVector, t: number) => number;
+  MIN_POSITION: number[];
   MAX_POSITION: number[];
 };
 export type InitialConfig = {
