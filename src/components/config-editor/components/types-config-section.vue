@@ -9,9 +9,10 @@ const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
 
 const randomizeTypesConfig = () => {
-  return {
-
-  };
+  if (!confirm('Are you sure?')) {
+    return;
+  }
+  configStore.randomizeTypesConfig();
 };
 
 </script>
@@ -19,6 +20,7 @@ const randomizeTypesConfig = () => {
 <template>
   <config-section>
     <template #body>
+      <button class="btn btn-primary" @click="randomizeTypesConfig">Randomize</button>
       <config-matrix name="Gravity" :values="typesConfig.GRAVITY" :colors="typesConfig.COLORS" :step="0.1" />
       <config-matrix name="Link Gravity" :values="typesConfig.LINK_GRAVITY" :colors="typesConfig.COLORS" :step="0.1" />
       <config-list name="Links" :values="typesConfig.LINKS" :colors="typesConfig.COLORS" :step="1" :min="0" />

@@ -2,7 +2,7 @@ import { type Ref, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import type { InitialConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import { createBaseWorldConfig } from "@/lib/config/world";
-import { createBaseTypesConfig } from "@/lib/config/types";
+import { createBaseTypesConfig, createRandomTypesConfig } from "@/lib/config/types";
 import { create3dBaseInitialConfig } from "@/lib/config/initial";
 import { fullCopyObject } from "@/helpers/utils";
 
@@ -48,6 +48,23 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
+  const randomizeTypesConfig = <T>() => {
+    const newConfig = createRandomTypesConfig({
+      TYPES_COUNT: typesConfigRaw.COLORS.length,
+      GRAVITY_BOUNDS: [-1, 0.5],
+      LINK_GRAVITY_BOUNDS: [-1, 0.5],
+      LINK_BOUNDS: [1, 3],
+      LINK_TYPE_BOUNDS: [0, 3],
+      LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5],
+    });
+
+    for (const i in newConfig) {
+      (typesConfig.value[i as keyof TypesConfig] as T) = newConfig[i as keyof TypesConfig] as T;
+    }
+
+    setTypesConfig(newConfig);
+  }
+
   watch(worldConfig, <T>(newConfig: WorldConfig) => {
     setWorldConfig(newConfig);
   }, { deep: true });
@@ -68,5 +85,7 @@ export const useConfigStore = defineStore("config", () => {
     getConfigValues,
     setInitialConfig,
     setTypesConfig,
+    setWorldConfig,
+    randomizeTypesConfig,
   }
 });

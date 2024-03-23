@@ -8,8 +8,12 @@ function createRandomInteger([from, until]: [number, number]): number {
   return Math.round(Math.random() * (until - from)) + from;
 }
 
-function createRandomFloat([from, until]: [number, number]): number {
-  return Math.random() * (until - from) + from;
+function createRandomFloat([from, until]: [number, number], precision?: number): number {
+  const result = Math.random() * (until - from) + from;
+  if (precision !== undefined) {
+    return Number(result.toFixed(precision));
+  }
+  return result;
 }
 
 function getRandomColor(): [number, number, number] {
@@ -88,7 +92,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     gravity.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      gravity[i].push(createRandomFloat(GRAVITY_BOUNDS));
+      gravity[i].push(createRandomFloat(GRAVITY_BOUNDS, 2));
     }
   }
 
@@ -96,7 +100,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     linkGravity.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      linkGravity[i].push(createRandomFloat(LINK_GRAVITY_BOUNDS));
+      linkGravity[i].push(createRandomFloat(LINK_GRAVITY_BOUNDS, 2));
     }
   }
 
@@ -109,7 +113,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     typeLinks.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      typeLinks[i].push(createRandomFloat(LINK_TYPE_BOUNDS));
+      typeLinks[i].push(createRandomInteger(LINK_TYPE_BOUNDS));
     }
   }
 
@@ -117,7 +121,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     linkFactorDistance.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      linkFactorDistance[i].push(createRandomFloat(LINK_FACTOR_DISTANCE_BOUNDS));
+      linkFactorDistance[i].push(createRandomFloat(LINK_FACTOR_DISTANCE_BOUNDS, 2));
     }
   }
 
