@@ -60,7 +60,7 @@ export const useSimulation = () => {
 
   const isMode = (mode: ViewMode) => configStore.viewMode === mode;
 
-  const restartSimulation = () => {
+  const restart = () => {
     if (configStore.viewMode === '3d') {
       start3dSimulation();
     } else {
@@ -73,18 +73,23 @@ export const useSimulation = () => {
     simulation3d?.clear();
   }
 
+  const refillAtoms = () => {
+    simulation.value.refill();
+  }
+
   const simulation = computed<SimulationInterface>(() => {
     return (configStore.viewMode === '3d' ? simulation3d : simulation2d) as SimulationInterface;
   });
 
   watch(() => configStore.viewMode, () => {
-    restartSimulation();
+    restart();
   });
 
   return {
     simulation,
-    restartSimulation,
+    restart,
     clearAtoms,
+    refillAtoms,
     isMode,
   }
 }

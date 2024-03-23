@@ -17,5 +17,6 @@ export type SimulationConfig = {
 export interface SimulationInterface {
   start(): void;
   stop(): void;
+  refill(): void;
   clear(): void;
 }

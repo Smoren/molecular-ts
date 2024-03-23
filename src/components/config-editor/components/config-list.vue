@@ -17,7 +17,9 @@ const props = withDefaults(defineProps<{
 
 <template>
   <div>
-    <div style="text-align: center">Links</div>
+    <div style="text-align: center">
+      {{ name }}
+    </div>
     <table>
       <tr>
         <td style="width: 30px"></td>
@@ -28,7 +30,7 @@ const props = withDefaults(defineProps<{
       <tr>
         <td style="width: 30px"></td>
         <td v-for="(_, index) in values">
-          <input type="number" v-model="values[index]" step="1" min="0">
+          <input type="number" v-model="values[index]" :step="step" :min="min" :max="max">
         </td>
       </tr>
     </table>

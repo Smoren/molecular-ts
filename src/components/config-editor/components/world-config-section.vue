@@ -19,10 +19,17 @@ const togglePause = () => {
 };
 
 const clearAtoms = inject<() => void>('clear');
+const refillAtoms = inject<() => void>('refill');
 
 const clear = () => {
   if (confirm('Are you sure?')) {
     clearAtoms!();
+  }
+};
+
+const refill = () => {
+  if (confirm('Are you sure?')) {
+    refillAtoms!();
   }
 };
 
@@ -37,6 +44,9 @@ const clear = () => {
         </button>
         <button class="btn btn-outline-secondary" @click="clear">
           Clear
+        </button>
+        <button class="btn btn-outline-secondary" @click="refill">
+          Refill
         </button>
       </div>
       <div>

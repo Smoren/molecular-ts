@@ -9,8 +9,9 @@ const configStore = useConfigStore();
 
 const {
   simulation,
-  restartSimulation,
+  restart,
   clearAtoms,
+  refillAtoms,
   isMode,
 } = useSimulation();
 
@@ -27,10 +28,11 @@ const importDataFromHash = () => {
 
 onMounted(() => {
   importDataFromHash();
-  restartSimulation();
+  restart();
 });
 
 provide<() => void>('clear', clearAtoms);
+provide<() => void>('refill', refillAtoms);
 
 </script>
 

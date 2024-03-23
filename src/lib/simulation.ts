@@ -10,7 +10,7 @@ import { InteractionManager } from './interaction';
 
 export class Simulation implements SimulationInterface {
   private readonly config: SimulationConfig;
-  private readonly atoms: AtomInterface[];
+  private atoms: AtomInterface[];
   private readonly drawer: DrawerInterface;
   private readonly linkManager: LinkManagerInterface;
   private readonly interactionManager: InteractionManagerInterface;
@@ -18,7 +18,7 @@ export class Simulation implements SimulationInterface {
   private isRunning: boolean = false;
 
   constructor(config: SimulationConfig) {
-    this.config = config
+    this.config = config;
     this.atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig, this.config.initialConfig);
     this.drawer = this.config.drawer;
     this.linkManager = new LinkManager();
@@ -46,6 +46,11 @@ export class Simulation implements SimulationInterface {
 
   stop() {
     this.isRunning = false;
+  }
+
+  refill() {
+    this.clear();
+    this.atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig, this.config.initialConfig);
   }
 
   clear() {
