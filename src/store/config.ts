@@ -61,7 +61,15 @@ export const useConfigStore = defineStore("config", () => {
     for (const i in newConfig) {
       (typesConfig.value[i as keyof TypesConfig] as T) = newConfig[i as keyof TypesConfig] as T;
     }
+    setTypesConfig(newConfig);
+  }
 
+  const setDefaultTypesConfig = <T>() => {
+    const newConfig = createBaseTypesConfig();
+
+    for (const i in newConfig) {
+      (typesConfig.value[i as keyof TypesConfig] as T) = newConfig[i as keyof TypesConfig] as T;
+    }
     setTypesConfig(newConfig);
   }
 
@@ -87,5 +95,6 @@ export const useConfigStore = defineStore("config", () => {
     setTypesConfig,
     setWorldConfig,
     randomizeTypesConfig,
+    setDefaultTypesConfig,
   }
 });

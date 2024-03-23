@@ -15,12 +15,22 @@ const randomizeTypesConfig = () => {
   configStore.randomizeTypesConfig();
 };
 
+const setDefaultTypesConfig = () => {
+  if (!confirm('Are you sure?')) {
+    return;
+  }
+  configStore.setDefaultTypesConfig();
+};
+
 </script>
 
 <template>
   <config-section>
     <template #body>
-      <button class="btn btn-primary" @click="randomizeTypesConfig">Randomize</button>
+      <div class="btn-group" role="group">
+        <button class="btn btn-outline-secondary" @click="randomizeTypesConfig">Randomize</button>
+        <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button>
+      </div>
       <config-matrix name="Gravity" :values="typesConfig.GRAVITY" :colors="typesConfig.COLORS" :step="0.1" />
       <config-matrix name="Link Gravity" :values="typesConfig.LINK_GRAVITY" :colors="typesConfig.COLORS" :step="0.1" />
       <config-list name="Links" :values="typesConfig.LINKS" :colors="typesConfig.COLORS" :step="1" :min="0" />
