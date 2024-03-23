@@ -34,27 +34,30 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
-  watch(worldConfig, <T>(newConfig: WorldConfig) => {
-    console.log('world config changed');
-    const buf = fullCopyObject(newConfig);
-    for (const i in newConfig) {
-      (worldConfigRaw[i as keyof WorldConfig] as T) = buf[i as keyof WorldConfig] as T;
-    }
-  }, { deep: true });
-
-  watch(typesConfig, <T>(newConfig: TypesConfig) => {
-    console.log('types config changed');
+  const setTypesConfig = <T>(newConfig: TypesConfig) => {
     const buf = fullCopyObject(newConfig);
     for (const i in newConfig) {
       (typesConfigRaw[i as keyof TypesConfig] as T) = buf[i as keyof TypesConfig] as T;
     }
+  }
+
+  const setWorldConfig = <T>(newConfig: WorldConfig) => {
+    const buf = fullCopyObject(newConfig);
+    for (const i in newConfig) {
+      (worldConfigRaw[i as keyof WorldConfig] as T) = buf[i as keyof WorldConfig] as T;
+    }
+  }
+
+  watch(worldConfig, <T>(newConfig: WorldConfig) => {
+    setWorldConfig(newConfig);
+  }, { deep: true });
+
+  watch(typesConfig, <T>(newConfig: TypesConfig) => {
+    setTypesConfig(newConfig);
   }, { deep: true });
 
   watch(initialConfig, <T>(newConfig: InitialConfig) => {
-    const buf = fullCopyObject(newConfig);
-    for (const i in newConfig) {
-      (initialConfigRaw[i as keyof InitialConfig] as T) = buf[i as keyof InitialConfig] as T;
-    }
+    setInitialConfig(newConfig);
   }, { deep: true });
 
   return {
@@ -64,5 +67,6 @@ export const useConfigStore = defineStore("config", () => {
     initialConfig,
     getConfigValues,
     setInitialConfig,
+    setTypesConfig,
   }
 });

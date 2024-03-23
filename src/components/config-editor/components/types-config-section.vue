@@ -5,12 +5,13 @@ import { useConfigStore } from '@/store/config';
 import ConfigMatrix from '@/components/config-editor/components/config-matrix.vue';
 import ConfigList from '@/components/config-editor/components/config-list.vue';
 
-const {
-  typesConfig,
-} = useConfigStore();
+const configStore = useConfigStore();
+const typesConfig = configStore.typesConfig;
 
-const getColorString = (color: [number, number, number]) => {
-  return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+const randomizeTypesConfig = () => {
+  return {
+
+  };
 };
 
 </script>
