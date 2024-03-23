@@ -51,6 +51,39 @@ const worldConfig = configStore.worldConfig;
         <div>Temperature Multiplier</div>
         <input type="number" v-model="worldConfig.TEMPERATURE_MULTIPLIER" step="0.1" />
       </div>
+      <div>
+        <div style="text-align: center;">Bounds</div>
+        <table class="bounds-table">
+          <tr>
+            <td></td>
+            <td>x</td>
+            <td>y</td>
+            <td>z</td>
+          </tr>
+          <tr>
+            <td>min</td>
+            <td v-for="(_, index) in worldConfig.MIN_POSITION">
+              <input
+                :key="index"
+                type="number"
+                v-model="worldConfig.MIN_POSITION[index]"
+                step="50"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>max</td>
+            <td v-for="(_, index) in worldConfig.MAX_POSITION">
+              <input
+                :key="index"
+                type="number"
+                v-model="worldConfig.MAX_POSITION[index]"
+                step="50"
+              />
+            </td>
+          </tr>
+        </table>
+      </div>
     </template>
   </config-section>
 </template>
@@ -58,5 +91,13 @@ const worldConfig = configStore.worldConfig;
 <style scoped lang="scss">
 
 @import "../assets/config-editor.scss";
+
+.bounds-table {
+  width: 100%;
+
+  input {
+    width: 100% !important;
+  }
+}
 
 </style>
