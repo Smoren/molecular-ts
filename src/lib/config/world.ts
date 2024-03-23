@@ -17,11 +17,7 @@ export function createBaseWorldConfig(): WorldConfig {
     TEMPERATURE_MULTIPLIER: 0.2,
     MAX_POSITION: [2500, 2500, 2500],
     TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {
-      let sum = 0;
-      for (let i=0; i<c.length; ++i) {
-        sum += (Math.PI/2-Math.abs(Math.atan(c[i]/100)))/Math.PI*2;
-      }
-      return sum/c.length * (0.5 - Math.cos(t/100)/2);
+      return 1;
     },
   };
 }
