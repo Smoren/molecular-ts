@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { getColorString } from '@/components/config-editor/helpers/utils';
-import { watch } from "vue";
+import { ref, type Ref, watch } from "vue";
 
 const props = withDefaults(defineProps<{
   colors: [number, number, number][];
@@ -15,17 +15,11 @@ const props = withDefaults(defineProps<{
   step: 1,
 });
 
-if (props.symmetric) {
-  watch(() => props.values, (values) => {
-    for (let i = 0; i < values.length; i++) {
-      for (let j = 0; j < values.length; j++) {
-        if (values[i][j] !== values[j][i]) {
-          values[j][i] = values[i][j];
-        }
-      }
-    }
-  }, { deep: true });
-}
+const onChangeValue = (i: number, j: number) => {
+  if (props.symmetric && i !== j) {
+    props.values[j][i] = props.values[i][j];
+  }
+};
 
 </script>
 
@@ -42,7 +36,7 @@ if (props.symmetric) {
       <tr v-for="(row, rowIndex) in values">
         <td :style="{ backgroundColor: getColorString(colors[rowIndex]), width: '30px' }"></td>
         <td v-for="(_, colIndex) in row">
-          <input type="number" v-model="row[colIndex]" :min="min" :max="max" :step="step">
+          <input type="number" v-model="row[colIndex]" :min="min" :max="max" :step="step" @change="onChangeValue(rowIndex, colIndex)">
         </td>
       </tr>
     </table>
