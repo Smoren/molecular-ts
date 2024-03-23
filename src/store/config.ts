@@ -27,42 +27,67 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
-  const setInitialConfig = <T>(newConfig: InitialConfig) => {
+  const setInitialConfigRaw = <T>(newConfig: InitialConfig) => {
     const buf = fullCopyObject(newConfig);
     for (const i in newConfig) {
       (initialConfigRaw[i as keyof InitialConfig] as T) = buf[i as keyof InitialConfig] as T;
     }
   }
 
-  const setTypesConfig = <T>(newConfig: TypesConfig) => {
+  const setInitialConfig = <T>(newConfig: InitialConfig) => {
+    const buf = fullCopyObject(newConfig);
+    for (const i in newConfig) {
+      (initialConfig.value[i as keyof InitialConfig] as T) = buf[i as keyof InitialConfig] as T;
+    }
+    setInitialConfigRaw(newConfig);
+  }
+
+  const setTypesConfigRaw = <T>(newConfig: TypesConfig) => {
     const buf = fullCopyObject(newConfig);
     for (const i in newConfig) {
       (typesConfigRaw[i as keyof TypesConfig] as T) = buf[i as keyof TypesConfig] as T;
     }
   }
 
-  const setWorldConfig = <T>(newConfig: WorldConfig) => {
+  const setTypesConfig = <T>(newConfig: TypesConfig) => {
+    const buf = fullCopyObject(newConfig);
+    for (const i in newConfig) {
+      (typesConfig.value[i as keyof TypesConfig] as T) = buf[i as keyof TypesConfig] as T;
+    }
+    setTypesConfigRaw(newConfig);
+  }
+
+  const setWorldConfigRaw = <T>(newConfig: WorldConfig) => {
     const buf = fullCopyObject(newConfig);
     for (const i in newConfig) {
       (worldConfigRaw[i as keyof WorldConfig] as T) = buf[i as keyof WorldConfig] as T;
     }
   }
 
+  const setWorldConfig = <T>(newConfig: WorldConfig) => {
+    const buf = fullCopyObject(newConfig);
+    for (const i in newConfig) {
+      (worldConfig.value[i as keyof WorldConfig] as T) = buf[i as keyof WorldConfig] as T;
+    }
+    setWorldConfigRaw(newConfig);
+  }
+
   const exportConfig = () => {
     return btoa(JSON.stringify({
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
+      initialConfig: initialConfigRaw,
     }));
   }
 
   const importConfig = (config: string) => {
     try {
-      console.log('start import');
       const newConfig = JSON.parse(atob(config)) as {
         worldConfig?: WorldConfig,
         typesConfig?: TypesConfig,
+        initialConfig?: InitialConfig,
       };
-      console.log('parsed', newConfig);
+      console.log('to import', newConfig);
 
       if (newConfig.worldConfig !== undefined) {
         setWorldConfig(newConfig.worldConfig);
@@ -71,6 +96,10 @@ export const useConfigStore = defineStore("config", () => {
       if (newConfig.typesConfig !== undefined) {
         setTypesConfig(newConfig.typesConfig);
         console.log('typesConfig upd');
+      }
+      if (newConfig.initialConfig !== undefined) {
+        setInitialConfig(newConfig.initialConfig);
+        console.log('initialConfig upd');
       }
     } catch (e) {
       console.warn(e);
@@ -87,10 +116,8 @@ export const useConfigStore = defineStore("config", () => {
       LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5],
     });
 
-    for (const i in newConfig) {
-      (typesConfig.value[i as keyof TypesConfig] as T) = newConfig[i as keyof TypesConfig] as T;
-    }
     setTypesConfig(newConfig);
+    setTypesConfigRaw(newConfig);
   }
 
   const setDefaultTypesConfig = <T>() => {
@@ -99,19 +126,19 @@ export const useConfigStore = defineStore("config", () => {
     for (const i in newConfig) {
       (typesConfig.value[i as keyof TypesConfig] as T) = newConfig[i as keyof TypesConfig] as T;
     }
-    setTypesConfig(newConfig);
+    setTypesConfigRaw(newConfig);
   }
 
   watch(worldConfig, <T>(newConfig: WorldConfig) => {
-    setWorldConfig(newConfig);
+    setWorldConfigRaw(newConfig);
   }, { deep: true });
 
   watch(typesConfig, <T>(newConfig: TypesConfig) => {
-    setTypesConfig(newConfig);
+    setTypesConfigRaw(newConfig);
   }, { deep: true });
 
   watch(initialConfig, <T>(newConfig: InitialConfig) => {
-    setInitialConfig(newConfig);
+    setInitialConfigRaw(newConfig);
   }, { deep: true });
 
   return {
