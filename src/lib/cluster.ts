@@ -83,6 +83,10 @@ class ClusterMap implements ClusterMapInterface {
     return result;
   }
 
+  clear(): void {
+    this.map.length = 0;
+  }
+
   private handleAtom(atom: AtomInterface): ClusterInterface {
     const actualCluster = this.getClusterByAtom(atom);
     const currentCluster = atom.cluster;
@@ -142,6 +146,10 @@ export class ClusterManager implements ClusterManagerInterface {
 
   countAtoms(): number {
     return this.map.countAtoms();
+  }
+
+  clear(): void {
+    this.map.clear();
   }
 
   handleAtom(atom: AtomInterface, callback: (lhs: AtomInterface, rhs: AtomInterface) => void): void {

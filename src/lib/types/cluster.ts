@@ -18,4 +18,5 @@ export interface ClusterMapInterface {
 export interface ClusterManagerInterface {
   handleAtom(atom: AtomInterface, callback: (lhs: AtomInterface, rhs: AtomInterface) => void): void;
   countAtoms(): number;
+  clear(): void;
 }

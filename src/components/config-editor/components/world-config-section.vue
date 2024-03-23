@@ -2,15 +2,43 @@
 
 import ConfigSection from '@/components/config-editor/components/config-section.vue';
 import { useConfigStore } from '@/store/config';
+import { inject, type Ref, ref } from "vue";
 
 const configStore = useConfigStore();
 const worldConfig = configStore.worldConfig;
+const speedBuffer: Ref<number | null> = ref(null);
+
+const togglePause = () => {
+  if (speedBuffer.value === null) {
+    speedBuffer.value = configStore.worldConfig.SPEED;
+    configStore.worldConfig.SPEED = 0;
+  } else {
+    configStore.worldConfig.SPEED = speedBuffer.value;
+    speedBuffer.value = null;
+  }
+};
+
+const clearAtoms = inject<() => void>('clear');
+
+const clear = () => {
+  if (confirm('Are you sure?')) {
+    clearAtoms!();
+  }
+};
 
 </script>
 
 <template>
   <config-section>
     <template #body>
+      <div class="btn-group" role="group">
+        <button class="btn btn-outline-secondary" @click="togglePause">
+          {{  speedBuffer === null ? 'Pause' : 'Resume' }}
+        </button>
+        <button class="btn btn-outline-secondary" @click="clear" v-show="false">
+          Clear
+        </button>
+      </div>
       <div>
         <div>Max Interaction Radius</div>
         <input type="number" v-model="worldConfig.MAX_INTERACTION_RADIUS" min="0" />

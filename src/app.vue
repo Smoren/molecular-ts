@@ -1,12 +1,14 @@
 <script setup lang="ts">
 
-import { onMounted } from "vue";
+import { onMounted, provide } from "vue";
 import ConfigEditor from "@/components/config-editor/config-editor.vue";
 import { useSimulation } from "@/hooks/use-simulation";
 import type { ViewMode } from "@/store/config";
 
 const {
+  simulation,
   restartSimulation,
+  clearAtoms,
   isMode,
 } = useSimulation();
 
@@ -17,6 +19,8 @@ const getCanvasStyle = (mode: ViewMode) => {
 onMounted(() => {
   restartSimulation();
 });
+
+provide<() => void>('clear', clearAtoms);
 
 </script>
 

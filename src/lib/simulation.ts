@@ -48,31 +48,36 @@ export class Simulation implements SimulationInterface {
     this.isRunning = false;
   }
 
-  private tick() {
-    // const ts = Date.now();
-    for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
-      for (const atom of this.atoms) {
-        // очищаем фактор соединений
-        atom.linkDistanceFactor = 1;
-        this.interactionManager.moveAtom(atom);
-      }
-      for (const atom of this.atoms) {
-        this.clusterManager.handleAtom(atom, (lhs, rhs) => {
-          this.interactionManager.interactAtomsStep1(lhs, rhs);
-        });
-      }
-      for (const atom of this.atoms) {
-        this.clusterManager.handleAtom(atom, (lhs, rhs) => {
-          this.interactionManager.interactAtomsStep2(lhs, rhs);
-        });
-      }
-      for (const link of this.linkManager) {
-        this.interactionManager.interactLink(link);
-      }
-    }
-    this.interactionManager.handleTime();
+  clear() {
+    this.atoms.length = 0;
+    this.clusterManager.clear();
+    this.linkManager.clear();
+  }
 
-    // console.log('tick spent', Date.now()-ts);
+  private tick() {
+    if (this.config.worldConfig.SPEED > 0) {
+      for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
+        for (const atom of this.atoms) {
+          // очищаем фактор соединений
+          atom.linkDistanceFactor = 1;
+          this.interactionManager.moveAtom(atom);
+        }
+        for (const atom of this.atoms) {
+          this.clusterManager.handleAtom(atom, (lhs, rhs) => {
+            this.interactionManager.interactAtomsStep1(lhs, rhs);
+          });
+        }
+        for (const atom of this.atoms) {
+          this.clusterManager.handleAtom(atom, (lhs, rhs) => {
+            this.interactionManager.interactAtomsStep2(lhs, rhs);
+          });
+        }
+        for (const link of this.linkManager) {
+          this.interactionManager.interactLink(link);
+        }
+      }
+      this.interactionManager.handleTime();
+    }
 
     this.drawer.draw(this.atoms, this.linkManager);
 

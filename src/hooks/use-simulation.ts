@@ -1,10 +1,11 @@
 import { useConfigStore, type ViewMode } from "@/store/config";
-import { watch } from "vue";
+import { computed, watch } from "vue";
 import { Simulation } from "@/lib/simulation";
 import { create2dBaseInitialConfig, create3dBaseInitialConfig } from "@/lib/config/initial";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
 import { create2dDrawer } from "@/lib/drawer/2d";
+import type { SimulationInterface } from "@/lib/types/simulation";
 
 export const useSimulation = () => {
   const configStore = useConfigStore();
@@ -67,12 +68,23 @@ export const useSimulation = () => {
     }
   };
 
+  const clearAtoms = () => {
+    simulation2d?.clear();
+    simulation3d?.clear();
+  }
+
+  const simulation = computed<SimulationInterface>(() => {
+    return (configStore.viewMode === '3d' ? simulation3d : simulation2d) as SimulationInterface;
+  });
+
   watch(() => configStore.viewMode, () => {
     restartSimulation();
-  })
+  });
 
   return {
+    simulation,
     restartSimulation,
+    clearAtoms,
     isMode,
   }
 }
