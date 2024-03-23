@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import { getColorString } from '@/components/config-editor/helpers/utils';
-import { ref, type Ref, watch } from "vue";
 
 const props = withDefaults(defineProps<{
   colors: [number, number, number][];
