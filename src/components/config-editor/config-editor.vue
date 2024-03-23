@@ -59,7 +59,7 @@ const openRightBar = (mode: number) => {
           </MDBAccordion>
           <br />
           <button class="btn btn-primary" @click="copyShareLink" style="width: 100%;">
-            Copy share link
+            Copy configuration share link
           </button>
         </template>
       </sidebar>

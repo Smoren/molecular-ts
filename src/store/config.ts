@@ -76,7 +76,6 @@ export const useConfigStore = defineStore("config", () => {
     return btoa(JSON.stringify({
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
-      initialConfig: initialConfigRaw,
     }));
   }
 
@@ -85,7 +84,6 @@ export const useConfigStore = defineStore("config", () => {
       const newConfig = JSON.parse(atob(config)) as {
         worldConfig?: WorldConfig,
         typesConfig?: TypesConfig,
-        initialConfig?: InitialConfig,
       };
       console.log('to import', newConfig);
 
@@ -97,16 +95,13 @@ export const useConfigStore = defineStore("config", () => {
         setTypesConfig(newConfig.typesConfig);
         console.log('typesConfig upd');
       }
-      if (newConfig.initialConfig !== undefined) {
-        setInitialConfig(newConfig.initialConfig);
-        console.log('initialConfig upd');
-      }
     } catch (e) {
       console.warn(e);
     }
   }
 
-  const randomizeTypesConfig = <T>() => {
+  const randomizeTypesConfig = () => {
+    const oldFrequencies = typesConfigRaw.FREQUENCIES;
     const newConfig = createRandomTypesConfig({
       TYPES_COUNT: typesConfigRaw.COLORS.length,
       GRAVITY_BOUNDS: [-1, 0.5],
@@ -115,6 +110,7 @@ export const useConfigStore = defineStore("config", () => {
       LINK_TYPE_BOUNDS: [0, 3],
       LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5],
     });
+    newConfig.FREQUENCIES = oldFrequencies;
 
     setTypesConfig(newConfig);
     setTypesConfigRaw(newConfig);
