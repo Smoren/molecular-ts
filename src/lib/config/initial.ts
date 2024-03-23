@@ -4,7 +4,7 @@ export function create2dBaseInitialConfig(): InitialConfig {
   return {
     ATOMS_COUNT: 3000,
     MIN_POSITION: [0, 0],
-    MAX_POSITION: [2000, 2000],
+    MAX_POSITION: [2500, 2000],
   };
 }
 
