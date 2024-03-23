@@ -1,21 +1,18 @@
 # Molecular simulation
 
-Cellular automaton built on particles.
+Cellular automaton built on particles. Molecular dynamics simpulations.
 
-### Preview
+### Demo
 
-https://smoren.github.io/molecular-ts/
+Live demo: https://smoren.github.io/molecular-ts/
+
+<video width="800" height="400" controls>
+  <source src="docs/demo.mp4" type="video/mp4">
+</video>
 
 ### Install
 
 ```bash
 npm i
-npm run build
-# or
 npm run dev
-```
-
-### Test
-```bash
-npm run test
 ```
