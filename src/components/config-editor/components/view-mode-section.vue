@@ -1,6 +1,8 @@
 <script setup lang="ts">
 
-const modelValue = defineModel<'2d' | '3d'>();
+import type { ViewMode } from "@/store/config";
+
+const modelValue = defineModel<ViewMode>();
 
 </script>
 

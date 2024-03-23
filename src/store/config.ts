@@ -6,6 +6,8 @@ import { createBaseTypesConfig } from "@/lib/config/types";
 import { create3dBaseInitialConfig } from "@/lib/config/initial";
 import { fullCopyObject } from "@/helpers/utils";
 
+export type ViewMode = '2d' | '3d';
+
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
   const typesConfigRaw: TypesConfig = createBaseTypesConfig();
@@ -14,6 +16,8 @@ export const useConfigStore = defineStore("config", () => {
   const worldConfig: Ref<WorldConfig> = ref(fullCopyObject(worldConfigRaw));
   const typesConfig: Ref<TypesConfig> = ref(fullCopyObject(typesConfigRaw));
   const initialConfig: Ref<InitialConfig> = ref(fullCopyObject(initialConfigRaw));
+
+  const viewMode: Ref<ViewMode> = ref('3d');
 
   const getConfigValues = () => {
     return {
@@ -30,7 +34,8 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
-  watch(worldConfigRaw, <T>(newConfig: WorldConfig) => {
+  watch(worldConfig, <T>(newConfig: WorldConfig) => {
+    console.log('world config changed');
     const buf = fullCopyObject(newConfig);
     for (const i in newConfig) {
       (worldConfigRaw[i as keyof WorldConfig] as T) = buf[i as keyof WorldConfig] as T;
@@ -38,7 +43,7 @@ export const useConfigStore = defineStore("config", () => {
   }, { deep: true });
 
   watch(typesConfig, <T>(newConfig: TypesConfig) => {
-    console.log('new!!!');
+    console.log('types config changed');
     const buf = fullCopyObject(newConfig);
     for (const i in newConfig) {
       (typesConfigRaw[i as keyof TypesConfig] as T) = buf[i as keyof TypesConfig] as T;
@@ -53,6 +58,7 @@ export const useConfigStore = defineStore("config", () => {
   }, { deep: true });
 
   return {
+    viewMode,
     worldConfig,
     typesConfig,
     initialConfig,

@@ -12,23 +12,12 @@ import Navbar from "@/components/config-editor/components/navbar.vue";
 import Sidebar from "@/components/config-editor/components/sidebar.vue";
 import ViewModeSection from "@/components/config-editor/components/view-mode-section.vue";
 
-const emit = defineEmits<{
-  (e: 'change-view-mode', value: '3d' | '2d'): void
-}>();
-
-const {
-  worldConfig,
-  typesConfig,
-} = useConfigStore();
+const configStore = useConfigStore();
+const { worldConfig, typesConfig } = configStore;
 
 const leftBarVisible = useSwitch(false);
 const rightBarVisible = useSwitch(false);
 const activeAccordionItem = ref('collapse-world');
-const viewMode: Ref<'3d' | '2d'> = ref('3d');
-
-watch(viewMode, (value) => {
-  emit('change-view-mode', value);
-});
 
 const rightBarModeMap = {
   GRAVITY: 1,
@@ -55,7 +44,7 @@ const openRightBar = (mode: number) => {
           Config
         </template>
         <template #body>
-          <view-mode-section v-model="viewMode" />
+          <view-mode-section v-model="configStore.viewMode" />
           <MDBAccordion v-model="activeAccordionItem">
             <MDBAccordionItem headerTitle="World" collapseId="collapse-world">
               <world-config-section/>
