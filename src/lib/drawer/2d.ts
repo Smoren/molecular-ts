@@ -85,8 +85,14 @@ export class Drawer2d implements DrawerInterface {
     this.context.restore();
   }
 
-  addClickListener(callback: MouseClickListenerCallback): void {
+  public addClickListener(callback: MouseClickListenerCallback): void {
     this.listeners.push(callback);
+  }
+
+  public clear(): void {
+    this.context.fillStyle = 'rgb(20, 55, 75)';
+    this.context.rect(0, 0, this.width, this.height);
+    this.context.fill();
   }
 
   private drawCircle(position: NumericVector, radius: number, color: ColorVector) {
@@ -143,12 +149,6 @@ export class Drawer2d implements DrawerInterface {
     }
 
     this.clear();
-  }
-
-  private clear(): void {
-    this.context.fillStyle = 'rgb(20, 55, 75)';
-    this.context.rect(0, 0, this.width, this.height);
-    this.context.fill();
   }
 
   private initEventHandlers(): void {

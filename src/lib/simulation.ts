@@ -52,6 +52,7 @@ export class Simulation implements SimulationInterface {
     this.atoms.length = 0;
     this.clusterManager.clear();
     this.linkManager.clear();
+    this.drawer.clear();
   }
 
   private tick() {

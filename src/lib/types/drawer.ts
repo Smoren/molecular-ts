@@ -12,6 +12,7 @@ export type MouseClickListenerCallback = (coords: VectorInterface, extraKey: num
 
 export interface DrawerInterface {
   draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void;
+  clear(): void;
   addClickListener(callback: MouseClickListenerCallback): void;
 }
 

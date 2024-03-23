@@ -85,7 +85,14 @@ export class Drawer3d implements DrawerInterface {
     }
   }
 
-  addClickListener(callback: MouseClickListenerCallback): void {
+  public clear() {
+    this.atomsMap.forEach((item) => this.scene.removeMesh(item));
+    this.linksMap.forEach((item) => this.scene.removeMesh(item));
+    this.atomsMap.clear();
+    this.linksMap.clear();
+  }
+
+  public addClickListener(callback: MouseClickListenerCallback): void {
     this.listeners.push(callback);
   }
 
