@@ -13,6 +13,7 @@ import Sidebar from "@/components/config-editor/components/sidebar.vue";
 import ViewModeSection from "@/components/config-editor/components/view-mode-section.vue";
 import RandomizeConfigSection from "@/components/config-editor/components/randomize-config-section.vue";
 import { PROVIDED_OPEN_RANDOMIZE_CONFIG } from "@/components/config-editor/constants";
+import InitialConfigSection from "@/components/config-editor/components/initial-config-section.vue";
 
 const configStore = useConfigStore();
 const { worldConfig, typesConfig } = configStore;
@@ -54,10 +55,13 @@ provide<() => void>(PROVIDED_OPEN_RANDOMIZE_CONFIG, () => openRightBar(rightBarM
           <view-mode-section v-model="configStore.viewMode" />
           <MDBAccordion v-model="activeAccordionItem">
             <MDBAccordionItem headerTitle="World" collapseId="collapse-world">
-              <world-config-section/>
+              <world-config-section />
             </MDBAccordionItem>
             <MDBAccordionItem headerTitle="Types" collapseId="collapse-types">
-              <types-config-section/>
+              <types-config-section />
+            </MDBAccordionItem>
+            <MDBAccordionItem headerTitle="Initial" collapseId="collapse-initial">
+              <initial-config-section />
             </MDBAccordionItem>
           </MDBAccordion>
           <br />

@@ -57,8 +57,7 @@ const refill = () => {
   <config-section>
     <template #body>
       <div class="btn-group" role="group">
-        <button class="btn btn-outline-secondary" @click="randomizeTypesConfig">Randomize</button>
-        <button class="btn btn-outline-secondary" @click="openRandomizeConfig">Config Randomize</button>
+        <button class="btn btn-outline-secondary" @click="openRandomizeConfig">Randomize</button>
         <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button>
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
       </div>

@@ -5,9 +5,11 @@ import { useConfigStore } from "@/store/config";
 import ConfigBounds from "@/components/config-editor/components/config-bounds.vue";
 import { computed, inject, ref } from "vue";
 import { PROVIDED_CLEAR_ATOMS, PROVIDED_REFILL_ATOMS } from "@/components/config-editor/constants";
+import ConfigCoordBounds from "@/components/config-editor/components/config-coord-bounds.vue";
+import InitialConfigSection from "@/components/config-editor/components/initial-config-section.vue";
 
 const configStore = useConfigStore();
-const { randomTypesConfig } = configStore;
+const { randomTypesConfig, initialConfig } = configStore;
 
 const clearAtoms = inject<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS);
 const refillAtoms = inject<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS);
@@ -47,6 +49,11 @@ const randomizeTypesConfig = () => {
       <config-bounds name="Links Count" :step="1" :values="randomTypesConfig.LINK_BOUNDS" />
       <config-bounds name="Types Links Count" :step="1" :values="randomTypesConfig.LINK_TYPE_BOUNDS" />
       <config-bounds name="Links Distance Factor" :step="1" :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS" />
+
+      <div v-if="needRefill">
+        <br />
+        <initial-config-section :with-buttons="false" />
+      </div>
       <br />
       <button class="btn btn-outline-primary" @click="randomizeTypesConfig" style="width: 100%;">
         {{ needRefill ? 'Randomize and Refill' : 'Randomize' }}
