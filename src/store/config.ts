@@ -122,6 +122,24 @@ export const useConfigStore = defineStore("config", () => {
     setTypesConfigRaw(newConfig);
   }
 
+  const appendType = () => {
+    typesConfig.value.COLORS.push([100, 100, 100]);
+    typesConfig.value.FREQUENCIES.push(1);
+    typesConfig.value.LINKS.push(0);
+
+    typesConfig.value.GRAVITY.forEach((item) => item.push(0));
+    typesConfig.value.GRAVITY.push(Array(typesConfig.value.COLORS.length).fill(0));
+
+    typesConfig.value.LINK_GRAVITY.forEach((item) => item.push(0));
+    typesConfig.value.LINK_GRAVITY.push(Array(typesConfig.value.COLORS.length).fill(0));
+
+    typesConfig.value.TYPE_LINKS.forEach((item) => item.push(0));
+    typesConfig.value.TYPE_LINKS.push(Array(typesConfig.value.COLORS.length).fill(0));
+
+    typesConfig.value.LINK_FACTOR_DISTANCE.forEach((item) => item.push(0));
+    typesConfig.value.LINK_FACTOR_DISTANCE.push(Array(typesConfig.value.COLORS.length).fill(0));
+  }
+
   watch(worldConfig, <T>(newConfig: WorldConfig) => {
     setWorldConfigRaw(newConfig);
   }, { deep: true });
@@ -146,6 +164,7 @@ export const useConfigStore = defineStore("config", () => {
     setWorldConfig,
     randomizeTypesConfig,
     setDefaultTypesConfig,
+    appendType,
     exportConfig,
     importConfig,
   }
