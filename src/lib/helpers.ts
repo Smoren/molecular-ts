@@ -145,3 +145,31 @@ export function getIndexByFrequencies(frequencies: number[]): number {
   }
   return 0;
 }
+
+function getRandomColorNumber(): number {
+  return Math.round(Math.random()*255);
+}
+
+export function getRandomColor(): [number, number, number] {
+  let r = getRandomColorNumber();
+  let g = getRandomColorNumber();
+  let b = getRandomColorNumber();
+  const sum = r + g + b;
+  if (sum < 256*3 / 2) {
+    const delta = Math.round((256*3 / 2 - sum) / (Math.random() + 1));
+    [r, g, b] = [r+delta, g+delta, b+delta];
+  }
+  return [r, g, b];
+}
+
+export function createRandomInteger([from, until]: [number, number]): number {
+  return Math.round(Math.random() * (until - from)) + from;
+}
+
+export function createRandomFloat([from, until]: [number, number], precision?: number): number {
+  const result = Math.random() * (until - from) + from;
+  if (precision !== undefined) {
+    return Number(result.toFixed(precision));
+  }
+  return result;
+}

@@ -1,24 +1,5 @@
 import type { ColorVector, RandomTypesConfig, TypesConfig } from '../types/config';
-
-function getRandomColorNumber(): number {
-  return Math.round(Math.random()*255);
-}
-
-function createRandomInteger([from, until]: [number, number]): number {
-  return Math.round(Math.random() * (until - from)) + from;
-}
-
-function createRandomFloat([from, until]: [number, number], precision?: number): number {
-  const result = Math.random() * (until - from) + from;
-  if (precision !== undefined) {
-    return Number(result.toFixed(precision));
-  }
-  return result;
-}
-
-function getRandomColor(): [number, number, number] {
-  return [getRandomColorNumber(), getRandomColorNumber(), getRandomColorNumber()];
-}
+import { createRandomFloat, createRandomInteger, getRandomColor } from "@/lib/helpers";
 
 function createColors(count: number): Array<ColorVector> {
   const predefined: Array<ColorVector> = [

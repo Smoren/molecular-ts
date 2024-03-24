@@ -53,7 +53,7 @@ const refill = () => {
         <button class="btn btn-outline-secondary" @click="toggleRandomizeConfig">Randomize</button>
         <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button>
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
-        <button class="btn btn-outline-secondary" @click="configStore.appendType">+</button>
+        <button class="btn btn-outline-secondary" @click="configStore.appendType">Add type</button>
       </div>
       <config-list name="Initial Frequencies" :values="typesConfig.FREQUENCIES" :colors="typesConfig.COLORS" :step="0.1" />
       <config-matrix name="Gravity" :values="typesConfig.GRAVITY" :colors="typesConfig.COLORS" :step="0.1" />

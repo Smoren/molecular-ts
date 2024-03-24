@@ -5,6 +5,7 @@ import { createBaseWorldConfig } from "@/lib/config/world";
 import { createBaseTypesConfig, createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/config/types";
 import { create3dBaseInitialConfig } from "@/lib/config/initial";
 import { fullCopyObject } from "@/helpers/utils";
+import { getRandomColor } from "@/lib/helpers";
 
 export type ViewMode = '2d' | '3d';
 
@@ -123,7 +124,7 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const appendType = () => {
-    typesConfig.value.COLORS.push([100, 100, 100]);
+    typesConfig.value.COLORS.push(getRandomColor());
     typesConfig.value.FREQUENCIES.push(1);
     typesConfig.value.LINKS.push(0);
 
@@ -136,8 +137,8 @@ export const useConfigStore = defineStore("config", () => {
     typesConfig.value.TYPE_LINKS.forEach((item) => item.push(0));
     typesConfig.value.TYPE_LINKS.push(Array(typesConfig.value.COLORS.length).fill(0));
 
-    typesConfig.value.LINK_FACTOR_DISTANCE.forEach((item) => item.push(0));
-    typesConfig.value.LINK_FACTOR_DISTANCE.push(Array(typesConfig.value.COLORS.length).fill(0));
+    typesConfig.value.LINK_FACTOR_DISTANCE.forEach((item) => item.push(1));
+    typesConfig.value.LINK_FACTOR_DISTANCE.push(Array(typesConfig.value.COLORS.length).fill(1));
   }
 
   watch(worldConfig, <T>(newConfig: WorldConfig) => {
