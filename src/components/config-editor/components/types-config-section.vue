@@ -4,23 +4,16 @@ import ConfigSection from '@/components/config-editor/components/config-section.
 import { useConfigStore } from '@/store/config';
 import ConfigMatrix from '@/components/config-editor/components/config-matrix.vue';
 import ConfigList from '@/components/config-editor/components/config-list.vue';
-import { inject } from "vue";
+import { inject, ref } from "vue";
 import { createBaseTypesConfig } from "@/lib/config/types";
 import {
   PROVIDED_CLEAR_ATOMS,
-  PROVIDED_OPEN_RANDOMIZE_CONFIG,
+  PROVIDED_TOGGLE_RANDOMIZE_CONFIG,
   PROVIDED_REFILL_ATOMS
 } from "@/components/config-editor/constants";
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
-
-const randomizeTypesConfig = () => {
-  if (!confirm('Are you sure?')) {
-    return;
-  }
-  configStore.randomizeTypesConfig();
-};
 
 const setDefaultTypesConfig = () => {
   if (!confirm('Are you sure?')) {
@@ -42,7 +35,7 @@ const setDefaultTypesConfig = () => {
   }
 };
 
-const openRandomizeConfig = inject<() => void>(PROVIDED_OPEN_RANDOMIZE_CONFIG);
+const toggleRandomizeConfig = inject<() => boolean>(PROVIDED_TOGGLE_RANDOMIZE_CONFIG);
 const clearAtoms = inject<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS);
 const refillAtoms = inject<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS);
 const refill = () => {
@@ -57,7 +50,7 @@ const refill = () => {
   <config-section>
     <template #body>
       <div class="btn-group" role="group">
-        <button class="btn btn-outline-secondary" @click="openRandomizeConfig">Randomize</button>
+        <button class="btn btn-outline-secondary" @click="toggleRandomizeConfig()">Randomize</button>
         <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button>
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
       </div>

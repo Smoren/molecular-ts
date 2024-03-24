@@ -12,7 +12,7 @@ import Navbar from "@/components/config-editor/components/navbar.vue";
 import Sidebar from "@/components/config-editor/components/sidebar.vue";
 import ViewModeSection from "@/components/config-editor/components/view-mode-section.vue";
 import RandomizeConfigSection from "@/components/config-editor/components/randomize-config-section.vue";
-import { PROVIDED_OPEN_RANDOMIZE_CONFIG } from "@/components/config-editor/constants";
+import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/components/config-editor/constants";
 import InitialConfigSection from "@/components/config-editor/components/initial-config-section.vue";
 
 const configStore = useConfigStore();
@@ -32,12 +32,18 @@ const rightBarModeMap = {
 
 const rightBarMode: Ref<number> = ref(rightBarModeMap.RANDOMIZE);
 
-const openRightBar = (mode: number) => {
-  rightBarMode.value = mode;
-  rightBarVisible.on();
+const toggleRightBar = (mode: number): boolean => {
+  if (mode !== rightBarModeMap.RANDOMIZE || !rightBarVisible.state.value) {
+    rightBarMode.value = mode;
+    rightBarVisible.on();
+    return true;
+  } else {
+    rightBarVisible.off();
+    return false;
+  }
 };
 
-provide<() => void>(PROVIDED_OPEN_RANDOMIZE_CONFIG, () => openRightBar(rightBarModeMap.RANDOMIZE));
+provide<() => boolean>(PROVIDED_TOGGLE_RANDOMIZE_CONFIG, () => toggleRightBar(rightBarModeMap.RANDOMIZE));
 
 </script>
 
