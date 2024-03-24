@@ -3,6 +3,7 @@
 import ConfigSection from '@/components/config-editor/components/config-section.vue';
 import { useConfigStore } from '@/store/config';
 import { inject, type Ref, ref } from "vue";
+import { PROVIDED_CLEAR_ATOMS, PROVIDED_REFILL_ATOMS } from "@/components/config-editor/constants";
 
 const configStore = useConfigStore();
 const worldConfig = configStore.worldConfig;
@@ -18,8 +19,8 @@ const togglePause = () => {
   }
 };
 
-const clearAtoms = inject<(globally?: boolean) => void>('clear');
-const refillAtoms = inject<(globally?: boolean) => void>('refill');
+const clearAtoms = inject<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS);
+const refillAtoms = inject<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS);
 
 const clear = () => {
   if (confirm('Are you sure?')) {

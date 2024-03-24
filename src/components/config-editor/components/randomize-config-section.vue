@@ -4,12 +4,13 @@ import ConfigSection from '@/components/config-editor/components/config-section.
 import { useConfigStore } from "@/store/config";
 import ConfigBounds from "@/components/config-editor/components/config-bounds.vue";
 import { computed, inject, ref } from "vue";
+import { PROVIDED_CLEAR_ATOMS, PROVIDED_REFILL_ATOMS } from "@/components/config-editor/constants";
 
 const configStore = useConfigStore();
 const { randomTypesConfig } = configStore;
 
-const clearAtoms = inject<(globally?: boolean) => void>('clear');
-const refillAtoms = inject<(globally?: boolean) => void>('refill');
+const clearAtoms = inject<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS);
+const refillAtoms = inject<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS);
 
 const needRefill = computed((): boolean => {
   return randomTypesConfig.TYPES_COUNT !== configStore.typesConfig.COLORS.length;

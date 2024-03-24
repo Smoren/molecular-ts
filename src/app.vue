@@ -4,6 +4,7 @@ import { onMounted, provide } from "vue";
 import ConfigEditor from "@/components/config-editor/config-editor.vue";
 import { useSimulation } from "@/hooks/use-simulation";
 import { useConfigStore, type ViewMode } from "@/store/config";
+import { PROVIDED_CLEAR_ATOMS, PROVIDED_REFILL_ATOMS } from "@/components/config-editor/constants";
 
 const configStore = useConfigStore();
 
@@ -31,8 +32,8 @@ onMounted(() => {
   restart();
 });
 
-provide<(globally?: boolean) => void>('clear', clearAtoms);
-provide<(globally?: boolean) => void>('refill', refillAtoms);
+provide<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS, clearAtoms);
+provide<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS, refillAtoms);
 
 </script>
 

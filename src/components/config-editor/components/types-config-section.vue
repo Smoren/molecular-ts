@@ -6,6 +6,11 @@ import ConfigMatrix from '@/components/config-editor/components/config-matrix.vu
 import ConfigList from '@/components/config-editor/components/config-list.vue';
 import { inject } from "vue";
 import { createBaseTypesConfig } from "@/lib/config/types";
+import {
+  PROVIDED_CLEAR_ATOMS,
+  PROVIDED_OPEN_RANDOMIZE_CONFIG,
+  PROVIDED_REFILL_ATOMS
+} from "@/components/config-editor/constants";
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
@@ -37,9 +42,9 @@ const setDefaultTypesConfig = () => {
   }
 };
 
-const openRandomizeConfig = inject<() => void>('openRandomizeConfig');
-const clearAtoms = inject<(globally?: boolean) => void>('clear');
-const refillAtoms = inject<(globally?: boolean) => void>('refill');
+const openRandomizeConfig = inject<() => void>(PROVIDED_OPEN_RANDOMIZE_CONFIG);
+const clearAtoms = inject<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS);
+const refillAtoms = inject<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS);
 const refill = () => {
   if (confirm('Are you sure?')) {
     refillAtoms!();

@@ -12,6 +12,7 @@ import Navbar from "@/components/config-editor/components/navbar.vue";
 import Sidebar from "@/components/config-editor/components/sidebar.vue";
 import ViewModeSection from "@/components/config-editor/components/view-mode-section.vue";
 import RandomizeConfigSection from "@/components/config-editor/components/randomize-config-section.vue";
+import { PROVIDED_OPEN_RANDOMIZE_CONFIG } from "@/components/config-editor/constants";
 
 const configStore = useConfigStore();
 const { worldConfig, typesConfig } = configStore;
@@ -35,7 +36,7 @@ const openRightBar = (mode: number) => {
   rightBarVisible.on();
 };
 
-provide<() => void>('openRandomizeConfig', () => openRightBar(rightBarModeMap.RANDOMIZE));
+provide<() => void>(PROVIDED_OPEN_RANDOMIZE_CONFIG, () => openRightBar(rightBarModeMap.RANDOMIZE));
 
 </script>
 
