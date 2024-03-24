@@ -5,6 +5,7 @@ import { useConfigStore } from '@/store/config';
 import ConfigMatrix from '@/components/config-editor/components/config-matrix.vue';
 import ConfigList from '@/components/config-editor/components/config-list.vue';
 import { inject } from "vue";
+import { createBaseTypesConfig } from "@/lib/config/types";
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
@@ -20,17 +21,30 @@ const setDefaultTypesConfig = () => {
   if (!confirm('Are you sure?')) {
     return;
   }
-  configStore.setDefaultTypesConfig();
+
+  const defaultConfig = createBaseTypesConfig();
+
+  if (defaultConfig.COLORS.length !== typesConfig.COLORS.length) {
+    defaultConfig.COLORS = typesConfig.COLORS;
+  }
+
+  if (defaultConfig.FREQUENCIES.length !== typesConfig.FREQUENCIES.length) {
+    clearAtoms!(true);
+    configStore.setDefaultTypesConfig();
+    refillAtoms!(true);
+  } else {
+    configStore.setDefaultTypesConfig();
+  }
 };
 
+const openRandomizeConfig = inject<() => void>('openRandomizeConfig');
+const clearAtoms = inject<(globally?: boolean) => void>('clear');
 const refillAtoms = inject<(globally?: boolean) => void>('refill');
 const refill = () => {
   if (confirm('Are you sure?')) {
     refillAtoms!();
   }
 };
-
-const openRandomizeConfig = inject<() => void>('openRandomizeConfig');
 
 </script>
 
