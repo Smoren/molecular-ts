@@ -8,13 +8,13 @@ in two-dimensional and three-dimensional space:
 * Building connections between particles and the influence of other particles on these connections.
 * The influence of temperature and other environmental factors on the behavior of particles.
 
-### Demo
+## Demo
 
 Live demo: https://smoren.github.io/molecular-ts/
 
 ![Demo](docs/demo.gif)
 
-### Install
+## Install
 
 ```bash
 npm i
