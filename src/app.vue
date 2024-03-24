@@ -31,8 +31,8 @@ onMounted(() => {
   restart();
 });
 
-provide<() => void>('clear', clearAtoms);
-provide<() => void>('refill', refillAtoms);
+provide<(globally?: boolean) => void>('clear', clearAtoms);
+provide<(globally?: boolean) => void>('refill', refillAtoms);
 
 </script>
 

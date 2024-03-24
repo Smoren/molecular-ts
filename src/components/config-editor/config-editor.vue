@@ -3,7 +3,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
-import { ref, type Ref, watch } from 'vue';
+import { provide, ref, type Ref, watch } from 'vue';
 import { useSwitch } from "@/hooks/use-switch";
 import { useConfigStore } from '@/store/config';
 import WorldConfigSection from '@/components/config-editor/components/world-config-section.vue';
@@ -11,6 +11,7 @@ import TypesConfigSection from '@/components/config-editor/components/types-conf
 import Navbar from "@/components/config-editor/components/navbar.vue";
 import Sidebar from "@/components/config-editor/components/sidebar.vue";
 import ViewModeSection from "@/components/config-editor/components/view-mode-section.vue";
+import RandomizeConfigSection from "@/components/config-editor/components/randomize-config-section.vue";
 
 const configStore = useConfigStore();
 const { worldConfig, typesConfig } = configStore;
@@ -24,16 +25,17 @@ const copyShareLink = () => {
 }
 
 const rightBarModeMap = {
-  GRAVITY: 1,
-  LINK_GRAVITY: 2,
+  RANDOMIZE: 1,
 };
 
-const rightBarMode: Ref<number> = ref(rightBarModeMap.GRAVITY);
+const rightBarMode: Ref<number> = ref(rightBarModeMap.RANDOMIZE);
 
 const openRightBar = (mode: number) => {
   rightBarMode.value = mode;
   rightBarVisible.on();
 };
+
+provide<() => void>('openRandomizeConfig', () => openRightBar(rightBarModeMap.RANDOMIZE));
 
 </script>
 
@@ -65,7 +67,7 @@ const openRightBar = (mode: number) => {
       </sidebar>
       <sidebar :visible="rightBarVisible" position="right">
         <template #body>
-          Under construction...
+          <randomize-config-section v-if="rightBarMode === rightBarModeMap.RANDOMIZE" />
         </template>
       </sidebar>
     </template>

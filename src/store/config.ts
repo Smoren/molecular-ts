@@ -1,8 +1,8 @@
 import { type Ref, ref, watch } from "vue";
 import { defineStore } from "pinia";
-import type { InitialConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
+import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import { createBaseWorldConfig } from "@/lib/config/world";
-import { createBaseTypesConfig, createRandomTypesConfig } from "@/lib/config/types";
+import { createBaseTypesConfig, createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/config/types";
 import { create3dBaseInitialConfig } from "@/lib/config/initial";
 import { fullCopyObject } from "@/helpers/utils";
 
@@ -16,6 +16,7 @@ export const useConfigStore = defineStore("config", () => {
   const worldConfig: Ref<WorldConfig> = ref(fullCopyObject(worldConfigRaw));
   const typesConfig: Ref<TypesConfig> = ref(fullCopyObject(typesConfigRaw));
   const initialConfig: Ref<InitialConfig> = ref(fullCopyObject(initialConfigRaw));
+  const randomTypesConfig: Ref<RandomTypesConfig> = ref(createDefaultRandomTypesConfig(typesConfigRaw.COLORS.length));
 
   const viewMode: Ref<ViewMode> = ref('3d');
 
@@ -102,15 +103,11 @@ export const useConfigStore = defineStore("config", () => {
 
   const randomizeTypesConfig = () => {
     const oldFrequencies = typesConfigRaw.FREQUENCIES;
-    const newConfig = createRandomTypesConfig({
-      TYPES_COUNT: typesConfigRaw.COLORS.length,
-      GRAVITY_BOUNDS: [-1, 0.5],
-      LINK_GRAVITY_BOUNDS: [-1, 0.5],
-      LINK_BOUNDS: [1, 3],
-      LINK_TYPE_BOUNDS: [0, 3],
-      LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5],
-    });
-    newConfig.FREQUENCIES = oldFrequencies;
+    const newConfig = createRandomTypesConfig(randomTypesConfig.value);
+
+    for (const i in newConfig.FREQUENCIES) {
+      newConfig.FREQUENCIES[i] = oldFrequencies[i] ?? 1;
+    }
 
     setTypesConfig(newConfig);
     setTypesConfigRaw(newConfig);
@@ -142,6 +139,7 @@ export const useConfigStore = defineStore("config", () => {
     worldConfig,
     typesConfig,
     initialConfig,
+    randomTypesConfig,
     getConfigValues,
     setInitialConfig,
     setTypesConfig,

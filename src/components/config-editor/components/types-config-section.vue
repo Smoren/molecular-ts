@@ -23,12 +23,14 @@ const setDefaultTypesConfig = () => {
   configStore.setDefaultTypesConfig();
 };
 
-const refillAtoms = inject<() => void>('refill');
+const refillAtoms = inject<(globally?: boolean) => void>('refill');
 const refill = () => {
   if (confirm('Are you sure?')) {
     refillAtoms!();
   }
 };
+
+const openRandomizeConfig = inject<() => void>('openRandomizeConfig');
 
 </script>
 
@@ -37,6 +39,7 @@ const refill = () => {
     <template #body>
       <div class="btn-group" role="group">
         <button class="btn btn-outline-secondary" @click="randomizeTypesConfig">Randomize</button>
+        <button class="btn btn-outline-secondary" @click="openRandomizeConfig">Config Randomize</button>
         <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button>
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
       </div>

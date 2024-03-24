@@ -7,6 +7,7 @@ import type { ClusterManagerInterface } from './types/cluster';
 import { ClusterManager } from './cluster';
 import { createAtom, LinkManager, RulesHelper } from './helpers';
 import { InteractionManager } from './interaction';
+import type { InitialConfig } from "@/lib/types/config";
 
 export class Simulation implements SimulationInterface {
   private readonly config: SimulationConfig;
@@ -48,9 +49,13 @@ export class Simulation implements SimulationInterface {
     this.isRunning = false;
   }
 
-  refill() {
+  refill(initialConfig?: InitialConfig) {
     this.clear();
-    this.atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig, this.config.initialConfig);
+    this.atoms = this.config.atomsFactory(
+      this.config.worldConfig,
+      this.config.typesConfig,
+      initialConfig ?? this.config.initialConfig
+    );
   }
 
   clear() {

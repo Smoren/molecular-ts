@@ -18,8 +18,8 @@ const togglePause = () => {
   }
 };
 
-const clearAtoms = inject<() => void>('clear');
-const refillAtoms = inject<() => void>('refill');
+const clearAtoms = inject<(globally?: boolean) => void>('clear');
+const refillAtoms = inject<(globally?: boolean) => void>('refill');
 
 const clear = () => {
   if (confirm('Are you sure?')) {

@@ -144,3 +144,14 @@ export function createRandomTypesConfig({
     COLORS: createColors(TYPES_COUNT),
   };
 }
+
+export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesConfig {
+  return {
+    TYPES_COUNT: typesCount,
+    GRAVITY_BOUNDS: [-1, 0.5],
+    LINK_GRAVITY_BOUNDS: [-1, 0.5],
+    LINK_BOUNDS: [1, 3],
+    LINK_TYPE_BOUNDS: [0, 3],
+    LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5],
+  };
+}

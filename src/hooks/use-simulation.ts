@@ -68,13 +68,26 @@ export const useSimulation = () => {
     }
   };
 
-  const clearAtoms = () => {
-    simulation2d?.clear();
-    simulation3d?.clear();
+  const clearAtoms = (globally: boolean = false) => {
+    if (globally) {
+      simulation2d?.clear();
+      simulation3d?.clear();
+    } else {
+      simulation.value.clear();
+    }
   }
 
-  const refillAtoms = () => {
-    simulation.value.refill();
+  const refillAtoms = (globally: boolean = false) => {
+    if (globally) {
+      debugger;
+      const initialConfig2d = isMode('2d') ? configStore.initialConfig : create2dBaseInitialConfig();
+      const initialConfig3d = isMode('3d') ? configStore.initialConfig : create3dBaseInitialConfig();
+
+      simulation2d?.refill(initialConfig2d);
+      simulation3d?.refill(initialConfig3d);
+    } else {
+      simulation.value.refill();
+    }
   }
 
   const simulation = computed<SimulationInterface>(() => {
