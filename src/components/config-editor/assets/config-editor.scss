@@ -18,10 +18,12 @@
   }
 }
 
-.offcanvas-start {
-  min-width: 500px;
-}
+@media screen and (orientation: landscape) {
+  .offcanvas-start {
+    min-width: 500px;
+  }
 
-.offcanvas-end {
-  min-width: 30%;
+  .offcanvas-end {
+    min-width: 30%;
+  }
 }
