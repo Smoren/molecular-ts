@@ -3,16 +3,17 @@
 import ConfigSection from '@/components/config-editor/components/config-section.vue';
 import { useConfigStore } from "@/store/config";
 import ConfigBounds from "@/components/config-editor/components/config-bounds.vue";
-import { computed, inject, ref } from "vue";
-import { PROVIDED_CLEAR_ATOMS, PROVIDED_REFILL_ATOMS } from "@/components/config-editor/constants";
-import ConfigCoordBounds from "@/components/config-editor/components/config-coord-bounds.vue";
+import { computed } from "vue";
 import InitialConfigSection from "@/components/config-editor/components/initial-config-section.vue";
+import { useSimulationStore } from "@/store/simulation";
 
 const configStore = useConfigStore();
 const { randomTypesConfig, initialConfig } = configStore;
 
-const clearAtoms = inject<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS);
-const refillAtoms = inject<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS);
+const {
+  clearAtoms,
+  refillAtoms,
+} = useSimulationStore();
 
 const needRefill = computed((): boolean => {
   return randomTypesConfig.TYPES_COUNT !== configStore.typesConfig.COLORS.length;

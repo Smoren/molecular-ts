@@ -66,6 +66,14 @@ export const useSimulationStore = defineStore("simulation", () => {
 
   const isMode = (mode: ViewMode) => configStore.viewMode === mode;
 
+  const getCurrentSimulation = (): SimulationInterface => {
+    return (configStore.viewMode === '3d' ? simulation3d : simulation2d) as SimulationInterface;
+  }
+
+  const simulation = computed<SimulationInterface>(() => {
+    return getCurrentSimulation();
+  });
+
   const restart = () => {
     if (configStore.viewMode === '3d') {
       start3dSimulation();
@@ -79,26 +87,21 @@ export const useSimulationStore = defineStore("simulation", () => {
       simulation2d?.clear();
       simulation3d?.clear();
     } else {
-      simulation.value.clear();
+      getCurrentSimulation().clear();
     }
   }
 
   const refillAtoms = (globally: boolean = false) => {
     if (globally) {
-      debugger;
       const initialConfig2d = isMode('2d') ? configStore.initialConfig : create2dBaseInitialConfig();
       const initialConfig3d = isMode('3d') ? configStore.initialConfig : create3dBaseInitialConfig();
 
       simulation2d?.refill(initialConfig2d);
       simulation3d?.refill(initialConfig3d);
     } else {
-      simulation.value.refill();
+      getCurrentSimulation().refill();
     }
   }
-
-  const simulation = computed<SimulationInterface>(() => {
-    return (configStore.viewMode === '3d' ? simulation3d : simulation2d) as SimulationInterface;
-  });
 
   watch(() => configStore.viewMode, () => {
     restart();

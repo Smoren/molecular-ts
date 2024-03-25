@@ -1,9 +1,8 @@
 <script setup lang="ts">
 
-import { onMounted, provide } from "vue";
+import { onMounted } from "vue";
 import ConfigEditor from "@/components/config-editor/config-editor.vue";
 import { useConfigStore, type ViewMode } from "@/store/config";
-import { PROVIDED_CLEAR_ATOMS, PROVIDED_REFILL_ATOMS } from "@/components/config-editor/constants";
 import { useSimulationStore } from "@/store/simulation";
 
 const configStore = useConfigStore();
@@ -11,8 +10,6 @@ const configStore = useConfigStore();
 const {
   simulation,
   restart,
-  clearAtoms,
-  refillAtoms,
   isMode,
 } = useSimulationStore();
 
@@ -31,9 +28,6 @@ onMounted(() => {
   importDataFromHash();
   restart();
 });
-
-provide<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS, clearAtoms);
-provide<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS, refillAtoms);
 
 </script>
 

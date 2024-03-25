@@ -4,16 +4,18 @@ import ConfigSection from '@/components/config-editor/components/config-section.
 import { useConfigStore } from '@/store/config';
 import ConfigMatrix from '@/components/config-editor/components/config-matrix.vue';
 import ConfigList from '@/components/config-editor/components/config-list.vue';
-import { inject, ref } from "vue";
+import { inject } from "vue";
 import { createBaseTypesConfig } from "@/lib/config/types";
-import {
-  PROVIDED_CLEAR_ATOMS,
-  PROVIDED_TOGGLE_RANDOMIZE_CONFIG,
-  PROVIDED_REFILL_ATOMS
-} from "@/components/config-editor/constants";
+import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/components/config-editor/constants";
+import { useSimulationStore } from "@/store/simulation";
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
+
+const {
+  clearAtoms,
+  refillAtoms,
+} = useSimulationStore();
 
 const setDefaultTypesConfig = () => {
   if (!confirm('Are you sure?')) {
@@ -36,8 +38,6 @@ const setDefaultTypesConfig = () => {
 };
 
 const toggleRandomizeConfig = inject<() => boolean>(PROVIDED_TOGGLE_RANDOMIZE_CONFIG);
-const clearAtoms = inject<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS);
-const refillAtoms = inject<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS);
 const refill = () => {
   if (confirm('Are you sure?')) {
     refillAtoms!();

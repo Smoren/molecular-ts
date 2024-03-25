@@ -3,8 +3,7 @@
 import { useConfigStore } from "@/store/config";
 import ConfigCoordBounds from "@/components/config-editor/components/config-coord-bounds.vue";
 import ConfigSection from "@/components/config-editor/components/config-section.vue";
-import { inject } from "vue";
-import { PROVIDED_REFILL_ATOMS } from "@/components/config-editor/constants";
+import { useSimulationStore } from "@/store/simulation";
 
 withDefaults(defineProps<{
   withButtons?: boolean;
@@ -15,7 +14,10 @@ withDefaults(defineProps<{
 const configStore = useConfigStore();
 const { initialConfig } = configStore;
 
-const refillAtoms = inject<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS);
+const {
+  refillAtoms,
+} = useSimulationStore();
+
 const refill = () => {
   if (confirm('Are you sure?')) {
     refillAtoms!();

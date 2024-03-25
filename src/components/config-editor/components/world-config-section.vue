@@ -2,12 +2,17 @@
 
 import ConfigSection from '@/components/config-editor/components/config-section.vue';
 import { useConfigStore } from '@/store/config';
-import { inject, type Ref, ref } from "vue";
-import { PROVIDED_CLEAR_ATOMS, PROVIDED_REFILL_ATOMS } from "@/components/config-editor/constants";
+import { type Ref, ref } from "vue";
+import { useSimulationStore } from "@/store/simulation";
 
 const configStore = useConfigStore();
 const worldConfig = configStore.worldConfig;
 const speedBuffer: Ref<number | null> = ref(null);
+
+const {
+  clearAtoms,
+  refillAtoms,
+} = useSimulationStore();
 
 const togglePause = () => {
   if (speedBuffer.value === null) {
@@ -18,9 +23,6 @@ const togglePause = () => {
     speedBuffer.value = null;
   }
 };
-
-const clearAtoms = inject<(globally?: boolean) => void>(PROVIDED_CLEAR_ATOMS);
-const refillAtoms = inject<(globally?: boolean) => void>(PROVIDED_REFILL_ATOMS);
 
 const clear = () => {
   if (confirm('Are you sure?')) {
