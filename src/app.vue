@@ -2,9 +2,9 @@
 
 import { onMounted, provide } from "vue";
 import ConfigEditor from "@/components/config-editor/config-editor.vue";
-import { useSimulation } from "@/hooks/use-simulation";
 import { useConfigStore, type ViewMode } from "@/store/config";
 import { PROVIDED_CLEAR_ATOMS, PROVIDED_REFILL_ATOMS } from "@/components/config-editor/constants";
+import { useSimulationStore } from "@/store/simulation";
 
 const configStore = useConfigStore();
 
@@ -14,7 +14,7 @@ const {
   clearAtoms,
   refillAtoms,
   isMode,
-} = useSimulation();
+} = useSimulationStore();
 
 const getCanvasStyle = (mode: ViewMode) => {
   return { display: isMode(mode) ? 'block' : 'none' };

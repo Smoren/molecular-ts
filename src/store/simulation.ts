@@ -1,13 +1,19 @@
-import { useConfigStore, type ViewMode } from "@/store/config";
-import { computed, watch } from "vue";
-import { Simulation } from "@/lib/simulation";
+import { computed, type Ref, ref, watch } from "vue";
+import { defineStore } from "pinia";
+import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
+import { createBaseWorldConfig } from "@/lib/config/world";
+import { createBaseTypesConfig, createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/config/types";
 import { create2dBaseInitialConfig, create3dBaseInitialConfig } from "@/lib/config/initial";
+import { fullCopyObject } from "@/helpers/utils";
+import { getRandomColor } from "@/lib/helpers";
+import { useConfigStore, type ViewMode } from "@/store/config";
+import { Simulation } from "@/lib/simulation";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
 import { create2dDrawer } from "@/lib/drawer/2d";
 import type { SimulationInterface } from "@/lib/types/simulation";
 
-export const useSimulation = () => {
+export const useSimulationStore = defineStore("simulation", () => {
   const configStore = useConfigStore();
   const {
     worldConfig,
@@ -105,4 +111,4 @@ export const useSimulation = () => {
     refillAtoms,
     isMode,
   }
-}
+});
