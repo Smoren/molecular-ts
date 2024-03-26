@@ -69,11 +69,13 @@ export function createRandomTypesConfig({
   LINK_BOUNDS,
   LINK_FACTOR_DISTANCE_BOUNDS,
 }: RandomTypesConfig): TypesConfig {
+  const precision = 8;
+
   const gravity: number[][] = [];
   for (let i=0; i<TYPES_COUNT; ++i) {
     gravity.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      gravity[i].push(createRandomFloat(GRAVITY_BOUNDS, 2));
+      gravity[i].push(createRandomFloat(GRAVITY_BOUNDS, precision));
     }
   }
 
@@ -81,7 +83,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     linkGravity.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      linkGravity[i].push(createRandomFloat(LINK_GRAVITY_BOUNDS, 2));
+      linkGravity[i].push(createRandomFloat(LINK_GRAVITY_BOUNDS, precision));
     }
   }
 
@@ -106,7 +108,7 @@ export function createRandomTypesConfig({
   for (let i=0; i<TYPES_COUNT; ++i) {
     linkFactorDistance.push([]);
     for (let j=0; j<TYPES_COUNT; ++j) {
-      linkFactorDistance[i].push(createRandomFloat(LINK_FACTOR_DISTANCE_BOUNDS, 2));
+      linkFactorDistance[i].push(createRandomFloat(LINK_FACTOR_DISTANCE_BOUNDS, precision));
     }
   }
 
@@ -129,10 +131,10 @@ export function createRandomTypesConfig({
 export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesConfig {
   return {
     TYPES_COUNT: typesCount,
-    GRAVITY_BOUNDS: [-1, 0.5],
-    LINK_GRAVITY_BOUNDS: [-1, 0.5],
+    GRAVITY_BOUNDS: [-1, 0.5, 0.01],
+    LINK_GRAVITY_BOUNDS: [-1, 0.5, 0.01],
     LINK_BOUNDS: [1, 3],
     LINK_TYPE_BOUNDS: [0, 3],
-    LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5],
+    LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5, 0.01],
   };
 }

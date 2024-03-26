@@ -166,10 +166,17 @@ export function createRandomInteger([from, until]: [number, number]): number {
   return Math.round(Math.random() * (until - from)) + from;
 }
 
-export function createRandomFloat([from, until]: [number, number], precision?: number): number {
-  const result = Math.random() * (until - from) + from;
+export function createRandomFloat([from, until, step]: [number, number, number?], precision?: number): number {
+  let result = Math.random() * (until - from) + from;
+  if (step !== undefined) {
+    result = roundWithStep(result, step);
+  }
   if (precision !== undefined) {
-    return Number(result.toFixed(precision));
+    result = Number(result.toFixed(precision));
   }
   return result;
+}
+
+export function roundWithStep(value: number, step: number): number {
+  return Math.round(value / step) * step;
 }

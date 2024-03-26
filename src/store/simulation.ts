@@ -1,11 +1,6 @@
 import { computed, type Ref, ref, watch } from "vue";
 import { defineStore } from "pinia";
-import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
-import { createBaseWorldConfig } from "@/lib/config/world";
-import { createBaseTypesConfig, createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/config/types";
 import { create2dBaseInitialConfig, create3dBaseInitialConfig } from "@/lib/config/initial";
-import { fullCopyObject } from "@/helpers/utils";
-import { getRandomColor } from "@/lib/helpers";
 import { useConfigStore, type ViewMode } from "@/store/config";
 import { Simulation } from "@/lib/simulation";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
