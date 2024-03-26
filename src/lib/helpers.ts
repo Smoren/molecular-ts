@@ -168,7 +168,7 @@ export function createRandomInteger([from, until]: [number, number]): number {
 
 export function createRandomFloat([from, until, step]: [number, number, number?], precision?: number): number {
   let result = Math.random() * (until - from) + from;
-  if (step !== undefined) {
+  if (step !== undefined && step !== 0) {
     result = roundWithStep(result, step);
   }
   if (precision !== undefined) {
