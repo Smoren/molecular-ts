@@ -2,6 +2,7 @@
 
 import { getColorString } from '@/components/config-editor/helpers/utils';
 import { watch } from "vue";
+import Tooltip from "@/components/config-editor/components/tooltip.vue";
 
 const symmetric = defineModel<boolean>('symmetric');
 
@@ -48,7 +49,9 @@ watch(symmetric, () => {
     <table>
       <tr>
         <td>
-          <input type="checkbox" v-model="symmetric" title="Symmetric" />
+          <tooltip text="Make matrix symmetric" :nowrap="true">
+            <input type="checkbox" v-model="symmetric" title="Symmetric" />
+          </tooltip>
         </td>
         <td v-for="color in colors" :style="{ backgroundColor: getColorString(color) }">
           &nbsp;
