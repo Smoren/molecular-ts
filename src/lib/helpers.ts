@@ -180,3 +180,23 @@ export function createRandomFloat([from, until, step]: [number, number, number?]
 export function roundWithStep(value: number, step: number): number {
   return Math.round(value / step) * step;
 }
+
+export function randomizeMatrix(
+  count: number,
+  bounds: [number, number, number?] | [number, number],
+  numberFactory: ((bounds: [number, number, number?]) => number) | ((bounds: [number, number]) => number),
+  symmetric: boolean = false,
+): number[][] {
+  const result: number[][] = [];
+  for (let i=0; i<count; ++i) {
+    result.push([]);
+    for (let j=0; j<count; ++j) {
+      if (symmetric && i > j) {
+        result[i].push(result[j][i]);
+      } else {
+        result[i].push(numberFactory(bounds));
+      }
+    }
+  }
+  return result;
+}

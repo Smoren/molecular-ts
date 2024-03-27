@@ -1,5 +1,5 @@
 import type { ColorVector, RandomTypesConfig, TypesConfig } from '../types/config';
-import { createRandomFloat, createRandomInteger, getRandomColor } from "@/lib/helpers";
+import { createRandomFloat, createRandomInteger, getRandomColor, randomizeMatrix } from "@/lib/helpers";
 
 function createColors(count: number): Array<ColorVector> {
   const predefined: Array<ColorVector> = [
@@ -68,49 +68,44 @@ export function createRandomTypesConfig({
   LINK_TYPE_BOUNDS,
   LINK_BOUNDS,
   LINK_FACTOR_DISTANCE_BOUNDS,
+  GRAVITY_MATRIX_SYMMETRIC,
+  LINK_GRAVITY_MATRIX_SYMMETRIC,
+  LINK_TYPE_MATRIX_SYMMETRIC,
+  LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
 }: RandomTypesConfig): TypesConfig {
   const precision = 8;
 
-  const gravity: number[][] = [];
-  for (let i=0; i<TYPES_COUNT; ++i) {
-    gravity.push([]);
-    for (let j=0; j<TYPES_COUNT; ++j) {
-      gravity[i].push(createRandomFloat(GRAVITY_BOUNDS, precision));
-    }
-  }
-
-  const linkGravity: number[][] = [];
-  for (let i=0; i<TYPES_COUNT; ++i) {
-    linkGravity.push([]);
-    for (let j=0; j<TYPES_COUNT; ++j) {
-      linkGravity[i].push(createRandomFloat(LINK_GRAVITY_BOUNDS, precision));
-    }
-  }
+  const gravity = randomizeMatrix(
+    TYPES_COUNT,
+    GRAVITY_BOUNDS,
+    createRandomFloat,
+    GRAVITY_MATRIX_SYMMETRIC,
+  );
+  const linkGravity = randomizeMatrix(
+    TYPES_COUNT,
+    LINK_GRAVITY_BOUNDS,
+    createRandomFloat,
+    LINK_GRAVITY_MATRIX_SYMMETRIC,
+  );
 
   const links: number[] = [];
   for (let i=0; i<TYPES_COUNT; ++i) {
     links.push(createRandomInteger(LINK_BOUNDS));
   }
 
-  const typeLinks: number[][] = [];
-  for (let i=0; i<TYPES_COUNT; ++i) {
-    typeLinks.push([]);
-    for (let j=0; j<TYPES_COUNT; ++j) {
-      if (i > j) {
-        typeLinks[i].push(typeLinks[j][i]);
-      } else {
-        typeLinks[i].push(createRandomInteger(LINK_TYPE_BOUNDS));
-      }
-    }
-  }
+  const typeLinks = randomizeMatrix(
+    TYPES_COUNT,
+    LINK_TYPE_BOUNDS,
+    createRandomInteger,
+    LINK_TYPE_MATRIX_SYMMETRIC,
+  );
 
-  const linkFactorDistance: number[][] = [];
-  for (let i=0; i<TYPES_COUNT; ++i) {
-    linkFactorDistance.push([]);
-    for (let j=0; j<TYPES_COUNT; ++j) {
-      linkFactorDistance[i].push(createRandomFloat(LINK_FACTOR_DISTANCE_BOUNDS, precision));
-    }
-  }
+  const linkFactorDistance = randomizeMatrix(
+    TYPES_COUNT,
+    LINK_FACTOR_DISTANCE_BOUNDS,
+    createRandomFloat,
+    LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
+  );
 
   const frequencies: number[] = [];
   for (let i=0; i<TYPES_COUNT; ++i) {
