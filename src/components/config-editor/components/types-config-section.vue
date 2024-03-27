@@ -11,6 +11,7 @@ import { useSimulationStore } from "@/store/simulation";
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
+const typesSymmetricConfig = configStore.typesSymmetricConfig;
 
 const {
   clearAtoms,
@@ -55,12 +56,49 @@ const refill = () => {
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
         <button class="btn btn-outline-secondary" @click="configStore.appendType">Add type</button>
       </div>
-      <config-list name="Initial Frequencies" :values="typesConfig.FREQUENCIES" :colors="typesConfig.COLORS" :step="0.1" />
-      <config-matrix name="Gravity" :values="typesConfig.GRAVITY" :colors="typesConfig.COLORS" :step="0.1" />
-      <config-matrix name="Link Gravity" :values="typesConfig.LINK_GRAVITY" :colors="typesConfig.COLORS" :step="0.1" />
-      <config-list name="Links" :values="typesConfig.LINKS" :colors="typesConfig.COLORS" :step="1" :min="0" />
-      <config-matrix name="Type Links" :values="typesConfig.TYPE_LINKS" :colors="typesConfig.COLORS" :step="1" :min="0" />
-      <config-matrix name="Links Distance Factor" :values="typesConfig.LINK_FACTOR_DISTANCE" :colors="typesConfig.COLORS" :step="0.1" :min="0" />
+      <config-list
+        name="Initial Frequencies"
+        :values="typesConfig.FREQUENCIES"
+        :colors="typesConfig.COLORS"
+        :step="0.1"
+      />
+      <config-matrix
+        name="Gravity"
+        :values="typesConfig.GRAVITY"
+        :colors="typesConfig.COLORS"
+        :step="0.1"
+        v-model:symmetric="typesSymmetricConfig.GRAVITY_MATRIX_SYMMETRIC"
+      />
+      <config-matrix
+        name="Link Gravity"
+        :values="typesConfig.LINK_GRAVITY"
+        :colors="typesConfig.COLORS"
+        :step="0.1"
+        v-model:symmetric="typesSymmetricConfig.LINK_GRAVITY_MATRIX_SYMMETRIC"
+      />
+      <config-list
+        name="Links"
+        :values="typesConfig.LINKS"
+        :colors="typesConfig.COLORS"
+        :step="1"
+        :min="0"
+      />
+      <config-matrix
+        name="Type Links"
+        :values="typesConfig.TYPE_LINKS"
+        :colors="typesConfig.COLORS"
+        :step="1"
+        :min="0"
+        v-model:symmetric="typesSymmetricConfig.LINK_TYPE_MATRIX_SYMMETRIC"
+      />
+      <config-matrix
+        name="Links Distance Factor"
+        :values="typesConfig.LINK_FACTOR_DISTANCE"
+        :colors="typesConfig.COLORS"
+        :step="0.1"
+        :min="0"
+        v-model:symmetric="typesSymmetricConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
+      />
     </template>
   </config-section>
 </template>

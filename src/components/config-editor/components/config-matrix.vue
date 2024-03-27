@@ -1,7 +1,9 @@
 <script setup lang="ts">
 
 import { getColorString } from '@/components/config-editor/helpers/utils';
-import { ref, watch } from "vue";
+import { watch } from "vue";
+
+const symmetric = defineModel<boolean>('symmetric');
 
 const props = withDefaults(defineProps<{
   colors: [number, number, number][];
@@ -13,8 +15,6 @@ const props = withDefaults(defineProps<{
 }>(), {
   step: 1,
 });
-
-const symmetric = ref(false);
 
 const onChangeValue = (i: number, j: number) => {
   if (symmetric.value && i !== j) {
@@ -36,11 +36,9 @@ const applySymmetric = () => {
   }
 };
 
-watch(symmetric, (value: boolean) => {
+watch(symmetric, () => {
   applySymmetric();
 });
-
-setInterval(() => applySymmetric(), 100);
 
 </script>
 

@@ -181,11 +181,15 @@ export function roundWithStep(value: number, step: number): number {
   return Math.round(value / step) * step;
 }
 
+type NumberFactory = ((bounds: [number, number, number?], precision?: number) => number) |
+  ((bounds: [number, number], precision?: number) => number);
+
 export function randomizeMatrix(
   count: number,
   bounds: [number, number, number?] | [number, number],
-  numberFactory: ((bounds: [number, number, number?]) => number) | ((bounds: [number, number]) => number),
+  numberFactory: NumberFactory,
   symmetric: boolean = false,
+  precision?: number,
 ): number[][] {
   const result: number[][] = [];
   for (let i=0; i<count; ++i) {
@@ -194,7 +198,7 @@ export function randomizeMatrix(
       if (symmetric && i > j) {
         result[i].push(result[j][i]);
       } else {
-        result[i].push(numberFactory(bounds as [number, number]));
+        result[i].push(numberFactory(bounds as [number, number], precision));
       }
     }
   }

@@ -80,12 +80,14 @@ export function createRandomTypesConfig({
     GRAVITY_BOUNDS,
     createRandomFloat,
     GRAVITY_MATRIX_SYMMETRIC,
+    precision,
   );
   const linkGravity = randomizeMatrix(
     TYPES_COUNT,
     LINK_GRAVITY_BOUNDS,
     createRandomFloat,
     LINK_GRAVITY_MATRIX_SYMMETRIC,
+    precision,
   );
 
   const links: number[] = [];
@@ -98,6 +100,7 @@ export function createRandomTypesConfig({
     LINK_TYPE_BOUNDS,
     createRandomInteger,
     LINK_TYPE_MATRIX_SYMMETRIC,
+    precision,
   );
 
   const linkFactorDistance = randomizeMatrix(
@@ -105,6 +108,7 @@ export function createRandomTypesConfig({
     LINK_FACTOR_DISTANCE_BOUNDS,
     createRandomFloat,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
+    precision,
   );
 
   const frequencies: number[] = [];

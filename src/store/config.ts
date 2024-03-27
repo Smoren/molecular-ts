@@ -1,6 +1,12 @@
 import { type Ref, ref, watch } from "vue";
 import { defineStore } from "pinia";
-import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
+import type {
+  InitialConfig,
+  RandomTypesConfig,
+  TypesSymmetricConfig,
+  TypesConfig,
+  WorldConfig
+} from "@/lib/types/config";
 import { createBaseWorldConfig } from "@/lib/config/world";
 import { createBaseTypesConfig, createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/config/types";
 import { create3dBaseInitialConfig } from "@/lib/config/initial";
@@ -18,6 +24,13 @@ export const useConfigStore = defineStore("config", () => {
   const typesConfig: Ref<TypesConfig> = ref(fullCopyObject(typesConfigRaw));
   const initialConfig: Ref<InitialConfig> = ref(fullCopyObject(initialConfigRaw));
   const randomTypesConfig: Ref<RandomTypesConfig> = ref(createDefaultRandomTypesConfig(typesConfigRaw.COLORS.length));
+
+  const typesSymmetricConfig: Ref<TypesSymmetricConfig> = ref({
+    GRAVITY_MATRIX_SYMMETRIC: false,
+    LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+    LINK_TYPE_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
+  });
 
   const viewMode: Ref<ViewMode> = ref('3d');
 
@@ -112,6 +125,7 @@ export const useConfigStore = defineStore("config", () => {
 
     setTypesConfig(newConfig);
     setTypesConfigRaw(newConfig);
+    setSymmetricTypesConfig(randomTypesConfig.value);
   }
 
   const setDefaultTypesConfig = <T>() => {
@@ -121,6 +135,12 @@ export const useConfigStore = defineStore("config", () => {
       (typesConfig.value[i as keyof TypesConfig] as T) = newConfig[i as keyof TypesConfig] as T;
     }
     setTypesConfigRaw(newConfig);
+  }
+
+  const setSymmetricTypesConfig = (config: RandomTypesConfig) => {
+      for (const key in typesSymmetricConfig.value) {
+        typesSymmetricConfig.value[key as keyof TypesSymmetricConfig] = config[key as keyof TypesSymmetricConfig];
+      }
   }
 
   const appendType = () => {
@@ -159,6 +179,7 @@ export const useConfigStore = defineStore("config", () => {
     typesConfig,
     initialConfig,
     randomTypesConfig,
+    typesSymmetricConfig,
     getConfigValues,
     setInitialConfig,
     setTypesConfig,
