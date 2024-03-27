@@ -22,17 +22,25 @@ const onChangeValue = (i: number, j: number) => {
   }
 };
 
-watch(symmetric, (value: boolean) => {
-  if (!value) {
+const applySymmetric = () => {
+  if (!symmetric.value) {
     return;
   }
 
   for (let i = 1; i < props.values.length; ++i) {
     for (let j = 0; j < i; ++j) {
-      props.values[i][j] = props.values[j][i];
+      if (props.values[i][j] !== props.values[j][i]) {
+        props.values[i][j] = props.values[j][i];
+      }
     }
   }
+};
+
+watch(symmetric, (value: boolean) => {
+  applySymmetric();
 });
+
+setInterval(() => applySymmetric(), 100);
 
 </script>
 
