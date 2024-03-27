@@ -3,16 +3,18 @@
 withDefaults(defineProps<{
   text: string;
   nowrap?: boolean;
+  center?: boolean;
 }>(), {
   nowrap: false,
+  center: false,
 });
 
 </script>
 
 <template>
-  <div :data-tooltip="text" :class="{ nowrap }">
+  <span :data-tooltip="text" :class="{ nowrap, center }">
     <slot />
-  </div>
+  </span>
 </template>
 
 <style scoped lang="scss">
@@ -35,11 +37,17 @@ withDefaults(defineProps<{
   pointer-events: none;
   text-align: center;
   z-index: 100000;
+  margin-bottom: 3px;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.9);
 }
 
 [data-tooltip].nowrap::before {
   white-space: nowrap;
+}
+
+[data-tooltip].center::before {
+  width: 300px;
+  left: -150px;
 }
 
 [data-tooltip]:hover::before { opacity:1; bottom: 100%; }

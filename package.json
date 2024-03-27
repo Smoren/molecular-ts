@@ -11,6 +11,11 @@
     "test": "jest"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/vue-fontawesome": "^3.0.6",
     "@vueuse/core": "^10.7.1",
     "babylonjs": "^6.0.0",
     "bootstrap": "^5.2.3",
@@ -18,8 +23,7 @@
     "mdb-vue-ui-kit": "^4.1.1",
     "pinia": "^2.0.28",
     "unplugin-vue-macros": "^2.7.9",
-    "vue": "^3.4.15",
-    "vue3-hive-ui-kit": "^0.6.5"
+    "vue": "^3.4.15"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

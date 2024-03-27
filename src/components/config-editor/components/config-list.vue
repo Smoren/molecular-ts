@@ -1,11 +1,13 @@
 <script setup lang="ts">
 
 import { getColorString } from '@/components/config-editor/helpers/utils';
+import InputHeader from "@/components/config-editor/components/input-header.vue";
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   colors: [number, number, number][];
   values: number[];
   name: string;
+  tooltip?: string;
   min?: number;
   max?: number;
   step?: number;
@@ -18,7 +20,7 @@ const props = withDefaults(defineProps<{
 <template>
   <div>
     <div style="text-align: center">
-      {{ name }}
+      <input-header :name="name" :tooltip="tooltip" />
     </div>
     <table>
       <tr>

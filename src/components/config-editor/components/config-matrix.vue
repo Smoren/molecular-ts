@@ -3,6 +3,7 @@
 import { getColorString } from '@/components/config-editor/helpers/utils';
 import { watch } from "vue";
 import Tooltip from "@/components/config-editor/components/tooltip.vue";
+import InputHeader from "@/components/config-editor/components/input-header.vue";
 
 const symmetric = defineModel<boolean>('symmetric');
 
@@ -10,6 +11,7 @@ const props = withDefaults(defineProps<{
   colors: [number, number, number][];
   values: number[][];
   name: string;
+  tooltip?: string;
   min?: number;
   max?: number;
   step?: number;
@@ -45,7 +47,9 @@ watch(symmetric, () => {
 
 <template>
   <div>
-    <div style="text-align: center"> {{ name }} </div>
+    <div style="text-align: center">
+      <input-header :name="name" :tooltip="tooltip" />
+    </div>
     <table>
       <tr>
         <td>

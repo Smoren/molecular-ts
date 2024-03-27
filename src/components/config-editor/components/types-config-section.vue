@@ -58,12 +58,15 @@ const refill = () => {
       </div>
       <config-list
         name="Initial Frequencies"
+        tooltip="Ratio of the number of particles that will be generated on refill."
         :values="typesConfig.FREQUENCIES"
         :colors="typesConfig.COLORS"
         :step="0.1"
       />
       <config-matrix
         name="Gravity"
+        tooltip="Gravity coefficient matrix for unlinked particles shows whether a particle of one type will attract or
+                 repel a particle of another type in the case when they are not linked to each other, and with what force."
         :values="typesConfig.GRAVITY"
         :colors="typesConfig.COLORS"
         :step="0.1"
@@ -71,6 +74,8 @@ const refill = () => {
       />
       <config-matrix
         name="Link Gravity"
+        tooltip="Gravity coefficient matrix for linked particles shows whether a particle of one type will attract or
+                 repel a particle of another type in the case when they are linked to each other, and with what force."
         :values="typesConfig.LINK_GRAVITY"
         :colors="typesConfig.COLORS"
         :step="0.1"
@@ -78,6 +83,7 @@ const refill = () => {
       />
       <config-list
         name="Links"
+        tooltip="Connection limit map shows the maximum number of links for particles of each type."
         :values="typesConfig.LINKS"
         :colors="typesConfig.COLORS"
         :step="1"
@@ -85,6 +91,8 @@ const refill = () => {
       />
       <config-matrix
         name="Type Links"
+        tooltip="Connection limit matrix shows the maximum number of connections that particles of each type can have
+                 with particles of different types."
         :values="typesConfig.TYPE_LINKS"
         :colors="typesConfig.COLORS"
         :step="1"
@@ -93,6 +101,8 @@ const refill = () => {
       />
       <config-matrix
         name="Links Distance Factor"
+        tooltip="Matrix of influence on neighbors links shows how particles of each type affect the maximum length of
+                 links of neighboring particles of different types."
         :values="typesConfig.LINK_FACTOR_DISTANCE"
         :colors="typesConfig.COLORS"
         :step="0.1"
