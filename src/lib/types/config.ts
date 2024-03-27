@@ -46,5 +46,9 @@ export type RandomTypesConfig = {
   LINK_BOUNDS: [number, number];
   LINK_TYPE_BOUNDS: [number, number];
   LINK_FACTOR_DISTANCE_BOUNDS: [number, number, number?];
+  GRAVITY_MATRIX_SYMMETRIC: boolean;
+  LINK_GRAVITY_MATRIX_SYMMETRIC: boolean;
+  LINK_TYPE_MATRIX_SYMMETRIC: boolean;
+  LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: boolean;
 };
 

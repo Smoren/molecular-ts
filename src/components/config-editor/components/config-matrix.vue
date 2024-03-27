@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<{
 const symmetric = ref(false);
 
 const onChangeValue = (i: number, j: number) => {
-  if (symmetric && i !== j) {
+  if (symmetric.value && i !== j) {
     props.values[j][i] = props.values[i][j];
   }
 };

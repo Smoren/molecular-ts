@@ -6,6 +6,7 @@ import ConfigBounds from "@/components/config-editor/components/config-bounds.vu
 import { computed } from "vue";
 import InitialConfigSection from "@/components/config-editor/components/initial-config-section.vue";
 import { useSimulationStore } from "@/store/simulation";
+import Flag from "@/components/config-editor/components/flag.vue";
 
 const configStore = useConfigStore();
 const { randomTypesConfig, initialConfig } = configStore;
@@ -46,10 +47,18 @@ const randomizeTypesConfig = () => {
         <input type="number" min="0" step="1" v-model="randomTypesConfig.TYPES_COUNT" />
       </div>
       <config-bounds name="Gravity" :step="1" :values="randomTypesConfig.GRAVITY_BOUNDS" />
+      <flag title="Symmetric" v-model="randomTypesConfig.GRAVITY_MATRIX_SYMMETRIC" />
+
       <config-bounds name="Link Gravity" :step="1" :values="randomTypesConfig.LINK_GRAVITY_BOUNDS" />
+      <flag title="Symmetric" v-model="randomTypesConfig.LINK_GRAVITY_MATRIX_SYMMETRIC" />
+
       <config-bounds name="Links Count" :step="1" :values="randomTypesConfig.LINK_BOUNDS" />
+
       <config-bounds name="Types Links Count" :step="1" :values="randomTypesConfig.LINK_TYPE_BOUNDS" />
+      <flag title="Symmetric" v-model="randomTypesConfig.LINK_TYPE_MATRIX_SYMMETRIC" />
+
       <config-bounds name="Links Distance Factor" :step="1" :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS" />
+      <flag title="Symmetric" v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC" />
 
       <div v-if="needRefill">
         <br />
