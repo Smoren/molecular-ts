@@ -104,7 +104,7 @@ const refill = () => {
       </div>
       <div>
         <input-header
-          name="Speed"
+          name="Speed Parameter"
           tooltip="The speed parameter by which all simulation forces are multiplied."
         />
         <input type="number" v-model="worldConfig.SPEED" min="1" />
