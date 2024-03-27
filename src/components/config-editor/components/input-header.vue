@@ -17,7 +17,7 @@ defineProps<{
 </script>
 
 <template>
-  <div :style="{ marginLeft: tooltip ? '30px' : 0 }">
+  <div>
     {{ name }}
     <tooltip :text="tooltip" :center="true" v-if="tooltip" style="margin-left: 2px;">
       <font-awesome-icon icon="fa-regular fa-circle-question" style="color: #bbb" />

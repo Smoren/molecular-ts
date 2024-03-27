@@ -4,6 +4,7 @@ import ConfigSection from '@/components/config-editor/components/config-section.
 import { useConfigStore } from '@/store/config';
 import { type Ref, ref } from "vue";
 import { useSimulationStore } from "@/store/simulation";
+import InputHeader from "@/components/config-editor/components/input-header.vue";
 
 const configStore = useConfigStore();
 const worldConfig = configStore.worldConfig;
@@ -53,47 +54,82 @@ const refill = () => {
         </button>
       </div>
       <div>
-        <div>Max Interaction Radius</div>
+        <input-header
+          name="Max Interaction Radius"
+          tooltip="Maximum radius at which unlinked particles can interact."
+        />
         <input type="number" v-model="worldConfig.MAX_INTERACTION_RADIUS" min="0" />
       </div>
       <div>
-        <div>Max Link Radius</div>
+        <input-header
+          name="Max Link Radius"
+          tooltip="Maximum link length (can be increased by Links Distance Factor parameters)."
+        />
         <input type="number" v-model="worldConfig.MAX_LINK_RADIUS" min="0" />
       </div>
       <div>
-        <div>Max Force</div>
+        <input-header
+          name="Max Force Value"
+          tooltip="Maximum interaction force value."
+        />
         <input type="number" v-model="worldConfig.MAX_FORCE" />
       </div>
       <div>
-        <div>Gravity Multiplier</div>
+        <input-header
+          name="Gravity Multiplier"
+          tooltip="Parameter by which the force of gravity is multiplied."
+        />
         <input type="number" v-model="worldConfig.GRAVITY_FORCE_MULTIPLIER" />
       </div>
       <div>
-        <div>Link Force Multiplier</div>
+        <input-header
+          name="Link Force Multiplier"
+          tooltip="Parameter by which the link elastic force is multiplied."
+        />
         <input type="number" v-model="worldConfig.LINK_FORCE_MULTIPLIER" step="0.005" min="0.005" />
       </div>
       <div>
-        <div>Bounce Force Multiplier</div>
+        <input-header
+          name="Bounce Force Multiplier"
+          tooltip="Parameter by which the collision rebound force is multiplied."
+        />
         <input type="number" v-model="worldConfig.BOUNCE_FORCE_MULTIPLIER" step="0.1" />
       </div>
       <div>
-        <div>Inertial Multiplier</div>
+        <input-header
+          name="Inertial Multiplier"
+          tooltip="Parameter by which the particle speed is multiplied after each iteration."
+        />
         <input type="number" v-model="worldConfig.INERTIAL_MULTIPLIER" step="0.01" />
       </div>
       <div>
-        <div>Speed</div>
+        <input-header
+          name="Speed"
+          tooltip="The speed parameter by which all simulation forces are multiplied."
+        />
         <input type="number" v-model="worldConfig.SPEED" min="1" />
       </div>
       <div>
-        <div>Playback Speed</div>
+        <input-header
+          name="Playback Speed"
+          tooltip="Number of simulation iterations per rendering step."
+        />
         <input type="number" v-model="worldConfig.PLAYBACK_SPEED" min="1" />
       </div>
       <div>
-        <div>Temperature Multiplier</div>
+        <input-header
+          name="Temperature Multiplier"
+          tooltip="Parameter responsible for the temperature of the environment."
+        />
         <input type="number" v-model="worldConfig.TEMPERATURE_MULTIPLIER" step="0.1" />
       </div>
       <div>
-        <div style="text-align: center;">Bounds</div>
+        <div style="text-align: center;">
+          <input-header
+            name="Bounds"
+            tooltip="Boundaries of the maximum position of particles in space."
+          />
+        </div>
         <table class="bounds-table">
           <tr>
             <td></td>
