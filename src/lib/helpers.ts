@@ -194,7 +194,7 @@ export function randomizeMatrix(
       if (symmetric && i > j) {
         result[i].push(result[j][i]);
       } else {
-        result[i].push(numberFactory(bounds));
+        result[i].push(numberFactory(bounds as [number, number]));
       }
     }
   }

@@ -18,6 +18,10 @@ const TYPES_CONFIG: TypesConfig = createRandomTypesConfig({
   LINK_BOUNDS: [1, 3],
   LINK_TYPE_BOUNDS: [0, 4],
   LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5],
+  GRAVITY_MATRIX_SYMMETRIC: false,
+  LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+  LINK_TYPE_MATRIX_SYMMETRIC: false,
+  LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
 });
 const INITIAL_CONFIG: InitialConfig = create2dBaseInitialConfig();
 
