@@ -13,6 +13,7 @@ export interface InteractionManagerInterface {
 export interface PhysicModelInterface {
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number;
   getLinkForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number;
+  getBoundsForce(dist: number): number;
 }
 
 export type PhysicModelConstructor ={ new (worldConfig: WorldConfig, typesConfig: TypesConfig): PhysicModelInterface };

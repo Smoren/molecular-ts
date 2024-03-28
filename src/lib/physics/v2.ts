@@ -13,7 +13,6 @@ export class PhysicModelV2 implements PhysicModelInterface {
   }
 
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
-    // console.log('v2');
     let multiplier: number;
 
     const bounceDistance = this.WORLD_CONFIG.ATOM_RADIUS * 2;
@@ -22,7 +21,7 @@ export class PhysicModelV2 implements PhysicModelInterface {
 
     if (dist2 < bounceDistance ** 2) {
       multiplier = -this.WORLD_CONFIG.BOUNCE_FORCE_MULTIPLIER * this.BOUNCE_CORRECTION_FACTOR;
-      bounceForce = (bounceDistance - Math.sqrt(dist2)) * multiplier * this.WORLD_CONFIG.SPEED;
+      bounceForce = (bounceDistance - Math.sqrt(dist2)) * multiplier;
     }
 
     if (dist2 > (bounceDistance / 2) ** 2) {
@@ -32,25 +31,17 @@ export class PhysicModelV2 implements PhysicModelInterface {
         multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.LINK_GRAVITY[lhs.type][rhs.type];
       }
 
-      gravityForce = multiplier * this.WORLD_CONFIG.SPEED / dist2 + bounceForce;
+      gravityForce = multiplier / dist2 + bounceForce;
     }
 
-    const result = gravityForce + bounceForce;
-
-    if (Math.abs(result) > this.WORLD_CONFIG.MAX_FORCE) {
-      return Math.sign(result) * this.WORLD_CONFIG.MAX_FORCE;
-    }
-
-    return result;
+    return gravityForce + bounceForce;
   }
 
   getLinkForce(): number {
-    const result = Math.min(this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.WORLD_CONFIG.SPEED);
+    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER;
+  }
 
-    if (Math.abs(result) > this.WORLD_CONFIG.MAX_FORCE) {
-      return Math.sign(result) * this.WORLD_CONFIG.MAX_FORCE;
-    }
-
-    return result;
+  getBoundsForce(): number {
+    return 1;
   }
 }

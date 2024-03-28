@@ -12,7 +12,6 @@ export class PhysicModelV1 implements PhysicModelInterface {
   }
 
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
-    // console.log('v1');
     let multiplier: number;
 
     if (dist2 < (this.WORLD_CONFIG.ATOM_RADIUS * 2) ** 2) {
@@ -23,22 +22,14 @@ export class PhysicModelV1 implements PhysicModelInterface {
       multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.LINK_GRAVITY[lhs.type][rhs.type];
     }
 
-    const result = multiplier * this.WORLD_CONFIG.SPEED / dist2;
-
-    if (Math.abs(result) > this.WORLD_CONFIG.MAX_FORCE) {
-      return Math.sign(result) * this.WORLD_CONFIG.MAX_FORCE;
-    }
-
-    return result;
+    return multiplier / dist2;
   }
 
   getLinkForce(): number {
-    const result = Math.min(this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.WORLD_CONFIG.SPEED);
+    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER;
+  }
 
-    if (Math.abs(result) > this.WORLD_CONFIG.MAX_FORCE) {
-      return Math.sign(result) * this.WORLD_CONFIG.MAX_FORCE;
-    }
-
-    return result;
+  getBoundsForce(): number {
+    return 1;
   }
 }

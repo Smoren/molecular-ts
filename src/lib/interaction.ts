@@ -94,9 +94,9 @@ export class InteractionManager implements InteractionManagerInterface {
     }
 
     const dist = Math.sqrt(dist2);
-    const gravityForce = this.physicModel.getGravityForce(lhs, rhs, dist2);
+    const force = this.normalizeForce(this.physicModel.getGravityForce(lhs, rhs, dist2));
     for (let i=0; i<distVector.length; ++i) {
-      distVector[i] = distVector[i] / dist * gravityForce;
+      distVector[i] = distVector[i] / dist * force;
     }
     lhs.speed.add(distVector);
 
@@ -113,12 +113,22 @@ export class InteractionManager implements InteractionManagerInterface {
     this.physicModel = model;
   }
 
+  private normalizeForce(value: number): number {
+    const result = value * this.WORLD_CONFIG.SPEED;
+
+    if (Math.abs(result) > this.WORLD_CONFIG.MAX_FORCE) {
+      return Math.sign(result) * this.WORLD_CONFIG.MAX_FORCE;
+    }
+
+    return result;
+  }
+
   private handleBounds(atom: AtomInterface): void {
     for (let i = 0; i < atom.position.length; ++i) {
       if (atom.position[i] < this.WORLD_CONFIG.MIN_POSITION[i]) {
-        atom.speed[i] += 1;
+        atom.speed[i] += this.physicModel.getBoundsForce(this.WORLD_CONFIG.MIN_POSITION[i] - atom.position[i]);
       } else if (atom.position[i] > this.WORLD_CONFIG.MAX_POSITION[i]) {
-        atom.speed[i] -= 1;
+        atom.speed[i] -= this.physicModel.getBoundsForce(atom.position[i] - this.WORLD_CONFIG.MAX_POSITION[i]);
       }
     }
   }
@@ -141,7 +151,7 @@ export class InteractionManager implements InteractionManagerInterface {
     distVector: VectorInterface,
   ): void {
     lhs.speed.add(
-      distVector.normalize().mul(this.physicModel.getLinkForce(lhs, rhs, dist2)),
+      distVector.normalize().mul(this.normalizeForce(this.physicModel.getLinkForce(lhs, rhs, dist2))),
     );
   }
 
