@@ -1,6 +1,7 @@
 import type { NumericVector } from '../vector/types';
 
 export type ColorVector = [number, number, number];
+export type PhysicModelName = 'v1' | 'v2';
 
 type GravityConfig = number[][];
 type LinksConfig = number[];
@@ -18,6 +19,7 @@ export type TypesConfig = {
   COLORS: ColorsConfig;
 };
 export type WorldConfig = {
+  PHYSIC_MODEL: PhysicModelName;
   ATOM_RADIUS: number;
   MAX_INTERACTION_RADIUS: number;
   MAX_LINK_RADIUS: number;

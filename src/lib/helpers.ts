@@ -1,8 +1,11 @@
 import type { LinksPoolInterface, LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector } from './vector/types';
-import type { TypesConfig, WorldConfig } from './types/config';
+import type { PhysicModelName, TypesConfig, WorldConfig } from './types/config';
+import type { PhysicModelConstructor, PhysicModelInterface } from './types/interaction';
 import { Atom, Link } from './atomic';
+import { PhysicModelV1 } from './physics/v1';
+import { PhysicModelV2 } from './physics/v2';
 
 class LinkPool implements LinksPoolInterface {
   private storage: LinkInterface[] = [];
@@ -173,4 +176,21 @@ export function randomizeMatrix(
     }
   }
   return result;
+}
+
+export function createPhysicModel(
+  worldConfig: WorldConfig,
+  typesConfig: TypesConfig,
+): PhysicModelInterface {
+  console.log('createPhysicModel', worldConfig.PHYSIC_MODEL);
+  if (worldConfig.PHYSIC_MODEL === undefined) {
+    return new PhysicModelV1(worldConfig, typesConfig);
+  }
+
+  const map: Record<PhysicModelName, PhysicModelConstructor> = {
+    v1: PhysicModelV1,
+    v2: PhysicModelV2,
+  };
+
+  return new map[worldConfig.PHYSIC_MODEL](worldConfig, typesConfig);
 }

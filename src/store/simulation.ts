@@ -1,4 +1,4 @@
-import { computed, type Ref, ref, watch } from "vue";
+import { computed, watch } from "vue";
 import { defineStore } from "pinia";
 import { create2dBaseInitialConfig, create3dBaseInitialConfig } from "@/lib/config/initial";
 import { useConfigStore, type ViewMode } from "@/store/config";
@@ -7,7 +7,8 @@ import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/co
 import { create3dDrawer } from "@/lib/drawer/3d";
 import { create2dDrawer } from "@/lib/drawer/2d";
 import type { SimulationInterface } from "@/lib/types/simulation";
-import { PhysicModelV1 } from "@/lib/physics/v1";
+import { createPhysicModel } from '@/lib/helpers';
+import type { PhysicModelInterface } from '@/lib/types/interaction';
 
 export const useSimulationStore = defineStore("simulation", () => {
   const configStore = useConfigStore();
@@ -32,7 +33,7 @@ export const useSimulationStore = defineStore("simulation", () => {
         worldConfig: worldConfig,
         typesConfig: typesConfig,
         initialConfig: initialConfig,
-        physicModel: new PhysicModelV1(worldConfig, typesConfig),
+        physicModel: createPhysicModel(worldConfig, typesConfig),
         atomsFactory: create3dRandomDistribution,
         drawer: create3dDrawer('canvas3d', configStore.worldConfig, configStore.typesConfig),
       });
@@ -53,7 +54,7 @@ export const useSimulationStore = defineStore("simulation", () => {
         worldConfig: worldConfig,
         typesConfig: typesConfig,
         initialConfig: initialConfig,
-        physicModel: new PhysicModelV1(worldConfig, typesConfig),
+        physicModel: createPhysicModel(worldConfig, typesConfig),
         atomsFactory: create2dRandomDistribution,
         drawer: create2dDrawer('canvas2d', configStore.worldConfig, configStore.typesConfig),
       });
@@ -101,6 +102,11 @@ export const useSimulationStore = defineStore("simulation", () => {
     }
   }
 
+  const setPhysicModel = (model: PhysicModelInterface) => {
+    simulation2d?.setPhysicModel(model);
+    simulation3d?.setPhysicModel(model);
+  }
+
   watch(() => configStore.viewMode, () => {
     restart();
   });
@@ -110,6 +116,7 @@ export const useSimulationStore = defineStore("simulation", () => {
     restart,
     clearAtoms,
     refillAtoms,
+    setPhysicModel,
     isMode,
   }
 });

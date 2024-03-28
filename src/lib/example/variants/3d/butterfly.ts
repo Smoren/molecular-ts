@@ -6,7 +6,7 @@ import type {
 import { createBaseTypesConfig } from "@/lib/config/types";
 import { createBaseWorldConfig } from "@/lib/config/world";
 import { create3dBaseInitialConfig } from "@/lib/config/initial";
-import { create3Butterfly } from "@/lib/config/atoms";
+import { create3dButterfly } from "@/lib/config/atoms";
 import { Simulation } from "../../../simulation";
 import { create3dDrawer } from "../../../drawer/3d";
 import { PhysicModelV1 } from "@/lib/physics/v1";
@@ -21,7 +21,7 @@ export function create3dSimulationButterfly() {
     typesConfig: TYPES_CONFIG,
     initialConfig: INITIAL_CONFIG,
     physicModel: new PhysicModelV1(WORLD_CONFIG, TYPES_CONFIG),
-    atomsFactory: create3Butterfly,
+    atomsFactory: create3dButterfly,
     drawer: create3dDrawer('canvas', WORLD_CONFIG, TYPES_CONFIG),
   });
 }

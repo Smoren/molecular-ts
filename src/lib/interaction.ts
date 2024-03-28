@@ -10,8 +10,8 @@ export class InteractionManager implements InteractionManagerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly linkManager: LinkManagerInterface;
-  private readonly physicModel: PhysicModelInterface;
   private readonly ruleHelper: RulesHelperInterface;
+  private physicModel: PhysicModelInterface;
   private time: number;
 
   constructor(
@@ -107,6 +107,10 @@ export class InteractionManager implements InteractionManagerInterface {
     ) {
       this.linkManager.create(lhs, rhs);
     }
+  }
+
+  setPhysicModel(model: PhysicModelInterface): void {
+    this.physicModel = model;
   }
 
   private handleBounds(atom: AtomInterface): void {

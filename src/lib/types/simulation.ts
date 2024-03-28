@@ -21,4 +21,5 @@ export interface SimulationInterface {
   stop(): void;
   refill(initialConfig?: InitialConfig): void;
   clear(): void;
+  setPhysicModel(model: PhysicModelInterface): void;
 }

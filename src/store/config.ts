@@ -88,10 +88,12 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const exportConfig = () => {
-    return btoa(JSON.stringify({
+    const config = {
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
-    }));
+    };
+    console.log('export', config);
+    return btoa(JSON.stringify(config));
   }
 
   const importConfig = (config: string) => {

@@ -2,12 +2,12 @@ import type { SimulationConfig, SimulationInterface } from './types/simulation';
 import type { AtomInterface } from './types/atomic';
 import type { DrawerInterface } from './types/drawer';
 import type { LinkManagerInterface } from './types/helpers';
-import type { InteractionManagerInterface } from './types/interaction';
+import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
 import type { ClusterManagerInterface } from './types/cluster';
+import type { InitialConfig } from "./types/config";
 import { ClusterManager } from './cluster';
 import { createAtom, LinkManager, RulesHelper } from './helpers';
 import { InteractionManager } from './interaction';
-import type { InitialConfig } from "@/lib/types/config";
 
 export class Simulation implements SimulationInterface {
   private readonly config: SimulationConfig;
@@ -64,6 +64,10 @@ export class Simulation implements SimulationInterface {
     this.clusterManager.clear();
     this.linkManager.clear();
     this.drawer.clear();
+  }
+
+  setPhysicModel(model: PhysicModelInterface): void {
+    this.interactionManager.setPhysicModel(model);
   }
 
   private tick() {

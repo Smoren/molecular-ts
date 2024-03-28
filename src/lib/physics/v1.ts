@@ -12,6 +12,7 @@ export class PhysicModelV1 implements PhysicModelInterface {
   }
 
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
+    // console.log('v1');
     let multiplier: number;
 
     if (dist2 < (this.WORLD_CONFIG.ATOM_RADIUS * 2) ** 2) {

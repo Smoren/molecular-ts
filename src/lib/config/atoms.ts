@@ -9,19 +9,19 @@ import type {
 export function create2dButterfly(): AtomInterface[] {
   const atoms: AtomInterface[] = [];
 
-  atoms.push(createAtom(0, [300, 300]));
-  atoms.push(createAtom(1, [310, 310]));
-  atoms.push(createAtom(2, [300, 320]));
-  atoms.push(createAtom(0, [290, 330]));
-  atoms.push(createAtom(0, [330, 300]));
-  atoms.push(createAtom(1, [320, 310]));
-  atoms.push(createAtom(2, [330, 320]));
-  atoms.push(createAtom(0, [340, 330]));
+  atoms.push(createAtom(0, [300+500, 300+500]));
+  atoms.push(createAtom(1, [310+500, 310+500]));
+  atoms.push(createAtom(2, [300+500, 320+500]));
+  atoms.push(createAtom(0, [290+500, 330+500]));
+  atoms.push(createAtom(0, [330+500, 300+500]));
+  atoms.push(createAtom(1, [320+500, 310+500]));
+  atoms.push(createAtom(2, [330+500, 320+500]));
+  atoms.push(createAtom(0, [340+500, 330+500]));
 
   return atoms;
 }
 
-export function create3Butterfly(): AtomInterface[] {
+export function create3dButterfly(): AtomInterface[] {
   const atoms: AtomInterface[] = [];
 
   atoms.push(createAtom(0, [300, 300, -200]));

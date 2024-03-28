@@ -2,9 +2,13 @@
 
 import ConfigSection from '@/components/config-editor/components/config-section.vue';
 import { useConfigStore } from '@/store/config';
-import { type Ref, ref } from "vue";
+import { type Ref, ref, toRefs } from "vue";
 import { useSimulationStore } from "@/store/simulation";
 import InputHeader from "@/components/config-editor/components/input-header.vue";
+import { usePhysicsStore } from '@/store/physics';
+
+const physicsStore = usePhysicsStore();
+const { physicModelName } = toRefs(physicsStore);
 
 const configStore = useConfigStore();
 const worldConfig = configStore.worldConfig;
@@ -52,6 +56,16 @@ const refill = () => {
         <button class="btn btn-outline-secondary" @click="refill">
           Refill
         </button>
+      </div>
+      <div>
+        <input-header
+          name="Physic Model"
+          tooltip="Defines the rules for calculating forces."
+        />
+        <label v-for="(title, value) in physicsStore.physicModelNameMap">
+          <input type="radio" name="physic-model" v-model="physicModelName" :value="value">
+          {{ title }} &nbsp;
+        </label>
       </div>
       <div>
         <input-header
