@@ -111,6 +111,13 @@ const refill = () => {
       </div>
       <div>
         <input-header
+          name="Bounds Force Multiplier"
+          tooltip="Parameter by which the force of repulsion from the boundaries of space is multiplied."
+        />
+        <input type="number" v-model="worldConfig.BOUNDS_FORCE_MULTIPLIER" step="0.01" />
+      </div>
+      <div>
+        <input-header
           name="Inertial Multiplier"
           tooltip="Parameter by which the particle speed is multiplied after each iteration."
         />

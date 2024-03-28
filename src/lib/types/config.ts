@@ -27,6 +27,7 @@ export type WorldConfig = {
   GRAVITY_FORCE_MULTIPLIER: number;
   LINK_FORCE_MULTIPLIER: number;
   BOUNCE_FORCE_MULTIPLIER: number;
+  BOUNDS_FORCE_MULTIPLIER: number;
   INERTIAL_MULTIPLIER: number;
   PLAYBACK_SPEED: number;
   SIMPLIFIED_VIEW_MODE: boolean;

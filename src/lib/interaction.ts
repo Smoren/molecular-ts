@@ -126,9 +126,13 @@ export class InteractionManager implements InteractionManagerInterface {
   private handleBounds(atom: AtomInterface): void {
     for (let i = 0; i < atom.position.length; ++i) {
       if (atom.position[i] < this.WORLD_CONFIG.MIN_POSITION[i]) {
-        atom.speed[i] += this.physicModel.getBoundsForce(this.WORLD_CONFIG.MIN_POSITION[i] - atom.position[i]);
+        atom.speed[i] += this.normalizeForce(
+          this.physicModel.getBoundsForce(this.WORLD_CONFIG.MIN_POSITION[i] - atom.position[i])
+        );
       } else if (atom.position[i] > this.WORLD_CONFIG.MAX_POSITION[i]) {
-        atom.speed[i] -= this.physicModel.getBoundsForce(atom.position[i] - this.WORLD_CONFIG.MAX_POSITION[i]);
+        atom.speed[i] -= this.normalizeForce(
+          this.physicModel.getBoundsForce(atom.position[i] - this.WORLD_CONFIG.MAX_POSITION[i])
+        );
       }
     }
   }

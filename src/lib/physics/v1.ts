@@ -29,7 +29,7 @@ export class PhysicModelV1 implements PhysicModelInterface {
     return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER;
   }
 
-  getBoundsForce(): number {
-    return 1;
+  getBoundsForce(dist: number): number {
+    return this.WORLD_CONFIG.BOUNDS_FORCE_MULTIPLIER * dist;
   }
 }
