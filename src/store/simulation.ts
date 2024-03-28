@@ -7,6 +7,7 @@ import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/co
 import { create3dDrawer } from "@/lib/drawer/3d";
 import { create2dDrawer } from "@/lib/drawer/2d";
 import type { SimulationInterface } from "@/lib/types/simulation";
+import { PhysicModelV1 } from "@/lib/physics/v1";
 
 export const useSimulationStore = defineStore("simulation", () => {
   const configStore = useConfigStore();
@@ -31,6 +32,7 @@ export const useSimulationStore = defineStore("simulation", () => {
         worldConfig: worldConfig,
         typesConfig: typesConfig,
         initialConfig: initialConfig,
+        physicModel: new PhysicModelV1(worldConfig, typesConfig),
         atomsFactory: create3dRandomDistribution,
         drawer: create3dDrawer('canvas3d', configStore.worldConfig, configStore.typesConfig),
       });
@@ -51,6 +53,7 @@ export const useSimulationStore = defineStore("simulation", () => {
         worldConfig: worldConfig,
         typesConfig: typesConfig,
         initialConfig: initialConfig,
+        physicModel: new PhysicModelV1(worldConfig, typesConfig),
         atomsFactory: create2dRandomDistribution,
         drawer: create2dDrawer('canvas2d', configStore.worldConfig, configStore.typesConfig),
       });

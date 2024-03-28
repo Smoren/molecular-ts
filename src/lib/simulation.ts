@@ -27,6 +27,7 @@ export class Simulation implements SimulationInterface {
       this.config.worldConfig,
       this.config.typesConfig,
       this.linkManager,
+      this.config.physicModel,
       new RulesHelper(this.config.typesConfig, this.config.worldConfig),
     );
     this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);

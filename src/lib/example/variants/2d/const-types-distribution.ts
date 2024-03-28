@@ -9,6 +9,7 @@ import { createBaseWorldConfig } from "@/lib/config/world";
 import { create2dBaseInitialConfig } from "@/lib/config/initial";
 import { create2dRandomDistribution } from "@/lib/config/atoms";
 import { Simulation } from "../../../simulation";
+import { PhysicModelV1 } from "@/lib/physics/v1";
 
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
 const TYPES_CONFIG: TypesConfig = createBaseTypesConfig();
@@ -19,6 +20,7 @@ export function create2dSimulationWithConstTypes() {
     worldConfig: WORLD_CONFIG,
     typesConfig: TYPES_CONFIG,
     initialConfig: INITIAL_CONFIG,
+    physicModel: new PhysicModelV1(WORLD_CONFIG, TYPES_CONFIG),
     atomsFactory: create2dRandomDistribution,
     drawer: create2dDrawer('canvas', WORLD_CONFIG, TYPES_CONFIG),
   });

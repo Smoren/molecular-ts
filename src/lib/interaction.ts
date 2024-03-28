@@ -3,12 +3,14 @@ import type { LinkManagerInterface, RulesHelperInterface } from './types/helpers
 import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector, VectorInterface } from './vector/types';
 import type { InteractionManagerInterface } from './types/interaction';
+import type { PhysicModelInterface } from "./types/interaction";
 import { toVector } from './vector';
 
 export class InteractionManager implements InteractionManagerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly linkManager: LinkManagerInterface;
+  private readonly physicModel: PhysicModelInterface;
   private readonly ruleHelper: RulesHelperInterface;
   private time: number;
 
@@ -16,11 +18,13 @@ export class InteractionManager implements InteractionManagerInterface {
     worldConfig: WorldConfig,
     typesConfig: TypesConfig,
     linkManager: LinkManagerInterface,
+    physicModel: PhysicModelInterface,
     ruleHelper: RulesHelperInterface,
   ) {
     this.WORLD_CONFIG = worldConfig;
     this.TYPES_CONFIG = typesConfig;
     this.linkManager = linkManager;
+    this.physicModel = physicModel;
     this.ruleHelper = ruleHelper;
     this.time = 0;
   }
@@ -90,17 +94,11 @@ export class InteractionManager implements InteractionManagerInterface {
     }
 
     const dist = Math.sqrt(dist2);
-    const gravityForce = this.ruleHelper.getGravityForce(lhs, rhs, dist2);
+    const gravityForce = this.physicModel.getGravityForce(lhs, rhs, dist2);
     for (let i=0; i<distVector.length; ++i) {
       distVector[i] = distVector[i] / dist * gravityForce;
     }
     lhs.speed.add(distVector);
-
-    // lhs.speed.add(
-    //   toVector(distVector)
-    //     .normalize()
-    //     .mul(this.ruleHelper.getGravityForce(lhs, rhs, dist2)),
-    // );
 
     if (
       !lhs.bonds.has(rhs) &&
@@ -139,7 +137,7 @@ export class InteractionManager implements InteractionManagerInterface {
     distVector: VectorInterface,
   ): void {
     lhs.speed.add(
-      distVector.normalize().mul(this.ruleHelper.getLinkForce(lhs, rhs, dist2)),
+      distVector.normalize().mul(this.physicModel.getLinkForce(lhs, rhs, dist2)),
     );
   }
 

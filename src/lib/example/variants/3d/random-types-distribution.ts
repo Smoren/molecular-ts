@@ -9,6 +9,7 @@ import { create3dBaseInitialConfig } from "@/lib/config/initial";
 import { create3dRandomDistribution } from "@/lib/config/atoms";
 import { Simulation } from "../../../simulation";
 import { create3dDrawer } from "../../../drawer/3d";
+import { PhysicModelV1 } from "@/lib/physics/v1";
 
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
 const TYPES_CONFIG: TypesConfig = createRandomTypesConfig({
@@ -30,6 +31,7 @@ export function create3dSimulationWithRandomTypes() {
     worldConfig: WORLD_CONFIG,
     typesConfig: TYPES_CONFIG,
     initialConfig: INITIAL_CONFIG,
+    physicModel: new PhysicModelV1(WORLD_CONFIG, TYPES_CONFIG),
     atomsFactory: create3dRandomDistribution,
     drawer: create3dDrawer('canvas', WORLD_CONFIG, TYPES_CONFIG),
   });
