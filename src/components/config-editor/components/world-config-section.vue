@@ -84,9 +84,9 @@ const refill = () => {
       <div>
         <input-header
           name="Max Force Value"
-          tooltip="Maximum interaction force value."
+          tooltip="Maximum force value of each individual interaction."
         />
-        <input type="number" v-model="worldConfig.MAX_FORCE" />
+        <input type="number" v-model="worldConfig.MAX_FORCE" step="0.1" />
       </div>
       <div>
         <input-header

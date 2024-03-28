@@ -110,13 +110,11 @@ export class InteractionManager implements InteractionManagerInterface {
   }
 
   private normalizeForce(value: number): number {
-    const result = value * this.WORLD_CONFIG.SPEED;
-
-    if (Math.abs(result) > this.WORLD_CONFIG.MAX_FORCE) {
-      return Math.sign(result) * this.WORLD_CONFIG.MAX_FORCE;
+    if (Math.abs(value) > this.WORLD_CONFIG.MAX_FORCE) {
+      return Math.sign(value) * this.WORLD_CONFIG.MAX_FORCE * this.WORLD_CONFIG.SPEED;
     }
 
-    return result;
+    return value * this.WORLD_CONFIG.SPEED;
   }
 
   private handleBounds(atom: AtomInterface): void {

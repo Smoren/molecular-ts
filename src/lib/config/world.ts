@@ -7,7 +7,7 @@ export function createBaseWorldConfig(): WorldConfig {
     ATOM_RADIUS: 5,
     MAX_INTERACTION_RADIUS: 100,
     MAX_LINK_RADIUS: 60,
-    MAX_FORCE: 10,
+    MAX_FORCE: 0.4,
     GRAVITY_FORCE_MULTIPLIER: 1,
     LINK_FORCE_MULTIPLIER: 0.015,
     BOUNCE_FORCE_MULTIPLIER: 2,
