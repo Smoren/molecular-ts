@@ -13,6 +13,6 @@
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor.scss";
+@import "../../assets/config-editor";
 
 </style>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
-import ConfigSection from '@/components/config-editor/components/config-section.vue';
-import { useConfigStore } from '@/store/config';
 import { type Ref, ref, toRefs } from "vue";
+import { useConfigStore } from '@/store/config';
 import { useSimulationStore } from "@/store/simulation";
-import InputHeader from "@/components/config-editor/components/input-header.vue";
 import { usePhysicsStore } from '@/store/physics';
+import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
+import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 
 const physicsStore = usePhysicsStore();
 const { physicModelName } = toRefs(physicsStore);
@@ -188,7 +188,7 @@ const refill = () => {
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor.scss";
+@import "../../assets/config-editor";
 
 .bounds-table {
   width: 100%;

@@ -2,18 +2,18 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
-import { provide, ref, type Ref, watch } from 'vue';
+import { provide, ref, type Ref } from 'vue';
 import { useSwitch } from "@/hooks/use-switch";
 import { useConfigStore } from '@/store/config';
-import WorldConfigSection from '@/components/config-editor/components/world-config-section.vue';
-import TypesConfigSection from '@/components/config-editor/components/types-config-section.vue';
-import Navbar from "@/components/config-editor/components/navbar.vue";
-import Sidebar from "@/components/config-editor/components/sidebar.vue";
-import ViewModeSection from "@/components/config-editor/components/view-mode-section.vue";
-import RandomizeConfigSection from "@/components/config-editor/components/randomize-config-section.vue";
 import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/components/config-editor/constants";
-import InitialConfigSection from "@/components/config-editor/components/initial-config-section.vue";
+import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
+import Navbar from "@/components/config-editor/components/containers/navbar.vue";
+import Sidebar from "@/components/config-editor/components/containers/sidebar.vue";
+import InitialConfigSection from "@/components/config-editor/components/sections/initial-config-section.vue";
+import RandomizeConfigSection from "@/components/config-editor/components/sections/randomize-config-section.vue";
+import TypesConfigSection from '@/components/config-editor/components/sections/types-config-section.vue';
+import ViewModeSection from "@/components/config-editor/components/sections/view-mode-section.vue";
+import WorldConfigSection from '@/components/config-editor/components/sections/world-config-section.vue';
 
 const configStore = useConfigStore();
 const { worldConfig, typesConfig } = configStore;

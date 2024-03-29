@@ -1,12 +1,12 @@
 <script setup lang="ts">
 
-import ConfigSection from '@/components/config-editor/components/config-section.vue';
-import { useConfigStore } from "@/store/config";
-import ConfigBounds from "@/components/config-editor/components/config-bounds.vue";
 import { computed } from "vue";
-import InitialConfigSection from "@/components/config-editor/components/initial-config-section.vue";
+import { useConfigStore } from "@/store/config";
 import { useSimulationStore } from "@/store/simulation";
-import Flag from "@/components/config-editor/components/flag.vue";
+import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
+import ConfigBounds from "@/components/config-editor/components/inputs/config-bounds.vue";
+import InitialConfigSection from "@/components/config-editor/components/sections/initial-config-section.vue";
+import Flag from "@/components/config-editor/components/inputs/flag.vue";
 
 const configStore = useConfigStore();
 const { randomTypesConfig, initialConfig } = configStore;
@@ -74,6 +74,6 @@ const randomizeTypesConfig = () => {
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor.scss";
+@import "../../assets/config-editor";
 
 </style>

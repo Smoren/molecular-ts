@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   values: [number, number, number?];
   name: string;
   min?: number;
@@ -40,6 +40,6 @@ const props = withDefaults(defineProps<{
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor.scss";
+@import "../../assets/config-editor";
 
 </style>

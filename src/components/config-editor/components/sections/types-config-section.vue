@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
-import ConfigSection from '@/components/config-editor/components/config-section.vue';
-import { useConfigStore } from '@/store/config';
-import ConfigMatrix from '@/components/config-editor/components/config-matrix.vue';
-import ConfigList from '@/components/config-editor/components/config-list.vue';
 import { inject } from "vue";
+import { useConfigStore } from '@/store/config';
+import { useSimulationStore } from "@/store/simulation";
 import { createBaseTypesConfig } from "@/lib/config/types";
 import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/components/config-editor/constants";
-import { useSimulationStore } from "@/store/simulation";
+import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
+import ConfigMatrix from '@/components/config-editor/components/inputs/config-matrix.vue';
+import ConfigList from '@/components/config-editor/components/inputs/config-list.vue';
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
@@ -115,6 +115,6 @@ const refill = () => {
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor.scss";
+@import "../../assets/config-editor";
 
 </style>

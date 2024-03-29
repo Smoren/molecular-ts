@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
 import { useConfigStore } from "@/store/config";
-import ConfigCoordBounds from "@/components/config-editor/components/config-coord-bounds.vue";
-import ConfigSection from "@/components/config-editor/components/config-section.vue";
 import { useSimulationStore } from "@/store/simulation";
+import ConfigCoordsBounds from "@/components/config-editor/components/inputs/config-coords-bounds.vue";
+import ConfigSection from "@/components/config-editor/components/containers/config-section.vue";
 
 withDefaults(defineProps<{
   withButtons?: boolean;
@@ -36,8 +36,8 @@ const refill = () => {
         <div>Atoms Count</div>
         <input type="number" v-model="initialConfig.ATOMS_COUNT" :min="1" :step="1" />
       </div>
-      <config-coord-bounds name="Min Position" :step="1" :values="initialConfig.MIN_POSITION" />
-      <config-coord-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" />
+      <config-coords-bounds name="Min Position" :step="1" :values="initialConfig.MIN_POSITION" />
+      <config-coords-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" />
       <div v-if="withButtons">
         <br />
         <div class="btn-group" role="group">
@@ -52,6 +52,6 @@ const refill = () => {
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor.scss";
+@import "../../assets/config-editor";
 
 </style>

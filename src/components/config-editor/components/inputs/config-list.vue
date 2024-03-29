@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import { getColorString } from '@/components/config-editor/helpers/utils';
-import InputHeader from "@/components/config-editor/components/input-header.vue";
+import { getColorString } from '@/components/config-editor/utils';
+import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 
 withDefaults(defineProps<{
   colors: [number, number, number][];
@@ -41,6 +41,6 @@ withDefaults(defineProps<{
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor.scss";
+@import "../../assets/config-editor";
 
 </style>

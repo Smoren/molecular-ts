@@ -5,7 +5,7 @@ import type {
   RandomTypesConfig,
   TypesSymmetricConfig,
   TypesConfig,
-  WorldConfig
+  WorldConfig,
 } from "@/lib/types/config";
 import { createBaseWorldConfig } from "@/lib/config/world";
 import { createBaseTypesConfig, createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/config/types";

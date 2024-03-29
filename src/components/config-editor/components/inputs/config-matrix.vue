@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import { getColorString } from '@/components/config-editor/helpers/utils';
+import { getColorString } from '@/components/config-editor/utils';
 import { watch } from "vue";
-import Tooltip from "@/components/config-editor/components/tooltip.vue";
-import InputHeader from "@/components/config-editor/components/input-header.vue";
+import Tooltip from "@/components/config-editor/components/base/tooltip.vue";
+import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 
 const symmetric = defineModel<boolean>('symmetric');
 
@@ -73,6 +73,6 @@ watch(symmetric, () => {
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor.scss";
+@import "../../assets/config-editor";
 
 </style>

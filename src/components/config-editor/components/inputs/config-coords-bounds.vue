@@ -40,6 +40,6 @@ const slicedTitles = computed(() => props.titles.slice(0, props.values.length));
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor.scss";
+@import "../../assets/config-editor";
 
 </style>
