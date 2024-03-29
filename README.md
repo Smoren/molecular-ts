@@ -49,3 +49,12 @@ npm run dev
 
 This project was inspired by the [ParticleAutomataJS](https://github.com/artemonigiri/ParticleAutomataJS) 
 developed by [ArtemOnigiri](https://github.com/artemonigiri).
+
+## Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request on the 
+[GitHub repository](https://github.com/Smoren/molecular-ts).
+
+## License
+
+Molecular TS is licensed under the MIT License.
