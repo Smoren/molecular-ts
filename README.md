@@ -44,3 +44,8 @@ Live demo: https://smoren.github.io/molecular-ts/
 npm i
 npm run dev
 ```
+
+## Inspiration
+
+This project was inspired by the [ParticleAutomataJS](https://github.com/artemonigiri/ParticleAutomataJS) 
+developed by [ArtemOnigiri](https://github.com/artemonigiri).
