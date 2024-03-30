@@ -22,7 +22,7 @@ withDefaults(defineProps<{
         <td>min</td>
         <td>max</td>
         <td>median</td>
-        <td v-if="values[3] !== undefined" width="20%">step</td>
+        <td v-if="values[3] !== undefined" width="25%">step</td>
       </tr>
       <tr>
         <td>
