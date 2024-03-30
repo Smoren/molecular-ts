@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 withDefaults(defineProps<{
-  values: [number, number, number?];
+  values: [number, number, number?, number?];
   name: string;
   min?: number;
   max?: number;
@@ -21,7 +21,8 @@ withDefaults(defineProps<{
       <tr>
         <td>min</td>
         <td>max</td>
-        <td v-if="values[2] !== undefined" width="33%">step</td>
+        <td>median</td>
+        <td v-if="values[3] !== undefined" width="20%">step</td>
       </tr>
       <tr>
         <td>
@@ -30,8 +31,11 @@ withDefaults(defineProps<{
         <td>
           <input type="number" v-model="values[1]" :step="step" :min="min" :max="max">
         </td>
-        <td v-if="values[2] !== undefined">
-          <input type="number" v-model="values[2]" :min="0" :max="values[1] - values[0]">
+        <td>
+          <input type="number" v-model="values[2]" :step="0.1" :min="min" :max="max">
+        </td>
+        <td v-if="values[3] !== undefined">
+          <input type="number" v-model="values[3]" :step="0.1" :min="0" :max="values[1] - values[0]">
         </td>
       </tr>
     </table>

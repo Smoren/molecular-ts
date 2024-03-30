@@ -44,11 +44,11 @@ export type InitialConfig = {
 };
 export type RandomTypesConfig = {
   TYPES_COUNT: number;
-  GRAVITY_BOUNDS: [number, number, number?];
-  LINK_GRAVITY_BOUNDS: [number, number, number?];
-  LINK_BOUNDS: [number, number];
-  LINK_TYPE_BOUNDS: [number, number];
-  LINK_FACTOR_DISTANCE_BOUNDS: [number, number, number?];
+  GRAVITY_BOUNDS: [number, number, number?, number?];
+  LINK_GRAVITY_BOUNDS: [number, number, number?, number?];
+  LINK_BOUNDS: [number, number, number?];
+  LINK_TYPE_BOUNDS: [number, number, number?];
+  LINK_FACTOR_DISTANCE_BOUNDS: [number, number, number?, number?];
   GRAVITY_MATRIX_SYMMETRIC: boolean;
   LINK_GRAVITY_MATRIX_SYMMETRIC: boolean;
   LINK_TYPE_MATRIX_SYMMETRIC: boolean;

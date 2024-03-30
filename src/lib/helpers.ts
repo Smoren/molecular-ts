@@ -135,11 +135,29 @@ export function getRandomColor(): [number, number, number] {
   return [r, g, b];
 }
 
-export function createRandomInteger([from, until]: [number, number]): number {
-  return Math.round(Math.random() * (until - from)) + from;
+function applyMedian(from: number, until: number, median?: number): [number, number] {
+  if (median === undefined) {
+    return [from, until];
+  }
+
+  if (Math.random() > 0.5) {
+    return [median, until];
+  }
+
+  return [from, median];
 }
 
-export function createRandomFloat([from, until, step]: [number, number, number?], precision?: number): number {
+export function createRandomInteger([from, until, median]: [number, number, number?]): number {
+  [from, until] = applyMedian(from, until, median);
+  return Math.round(Math.random() * (until - from) + from);
+}
+
+export function createRandomFloat(
+  [from, until, median, step]: [number, number, number?, number?],
+  precision?: number,
+): number {
+  [from, until] = applyMedian(from, until, median);
+
   let result = Math.random() * (until - from) + from;
   if (step !== undefined && step !== 0) {
     result = roundWithStep(result, step);
@@ -154,12 +172,12 @@ export function roundWithStep(value: number, step: number): number {
   return Math.round(value / step) * step;
 }
 
-type NumberFactory = ((bounds: [number, number, number?], precision?: number) => number) |
-  ((bounds: [number, number], precision?: number) => number);
+type NumberFactory = ((bounds: [number, number, number?, number?], precision?: number) => number) |
+  ((bounds: [number, number, number?], precision?: number) => number);
 
 export function randomizeMatrix(
   count: number,
-  bounds: [number, number, number?] | [number, number],
+  bounds: [number, number, number?, number?] | [number, number, number?],
   numberFactory: NumberFactory,
   symmetric: boolean = false,
   precision?: number,
