@@ -22,6 +22,10 @@
   }
 }
 
+.offcanvas-body {
+  overflow-y: visible;
+}
+
 @media screen and (orientation: landscape) {
   .offcanvas-start {
     min-width: 500px;
