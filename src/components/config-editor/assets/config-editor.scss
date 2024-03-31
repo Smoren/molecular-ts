@@ -23,7 +23,8 @@
 }
 
 .offcanvas-body {
-  overflow-y: visible;
+  overflow-x: visible;
+  overflow-y: auto;
 }
 
 @media screen and (orientation: landscape) {
