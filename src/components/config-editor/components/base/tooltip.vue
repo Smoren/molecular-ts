@@ -1,16 +1,18 @@
 <script setup lang="ts">
 
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
-withDefaults(defineProps<{
+type Position = 'center' | 'left' | 'right';
+
+const props = withDefaults(defineProps<{
   text: string;
   nowrap?: boolean;
-  center?: boolean;
   width?: number;
+  position?: Position;
 }>(), {
   nowrap: false,
-  center: false,
   width: 300,
+  position: 'center',
 });
 
 const container = ref(null);
@@ -30,11 +32,25 @@ const onMouseover = () => {
   }
 };
 
+const style = computed(() => {
+  let left = '0';
+  if (props.position === 'center') {
+    left = `${-props.width/2}px`;
+  } else if (props.position === 'right') {
+    left = `100%`;
+  }
+
+  return {
+    width: `${props.width}px`,
+    left: left,
+  };
+});
+
 </script>
 
 <template>
-  <span :data-tooltip="text" :class="{ nowrap, center }" @mouseover="onMouseover">
-    <span class="before" :style="{ width: `${width}px`, left: `${-width/2}px` }" ref="container">
+  <span :data-tooltip="text" :class="{ nowrap }" @mouseover="onMouseover">
+    <span class="before" :style="style" ref="container">
       {{ text }}
     </span>
     <slot />

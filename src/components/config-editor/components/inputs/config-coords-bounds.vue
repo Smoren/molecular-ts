@@ -4,7 +4,6 @@ import { computed } from "vue";
 
 const props = withDefaults(defineProps<{
   values: number[];
-  name: string;
   titles?: string[];
   min?: number;
   max?: number;
@@ -20,9 +19,6 @@ const slicedTitles = computed(() => props.titles.slice(0, props.values.length));
 
 <template>
   <div>
-    <div>
-      {{ name }}
-    </div>
     <table>
       <tr>
         <td v-for="title in slicedTitles">

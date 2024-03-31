@@ -4,6 +4,7 @@ import { useConfigStore } from "@/store/config";
 import { useSimulationStore } from "@/store/simulation";
 import ConfigCoordsBounds from "@/components/config-editor/components/inputs/config-coords-bounds.vue";
 import ConfigSection from "@/components/config-editor/components/containers/config-section.vue";
+import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 
 withDefaults(defineProps<{
   withButtons?: boolean;
@@ -33,11 +34,21 @@ const refill = () => {
     </template>
     <template #body>
       <div>
-        <div>Atoms Count</div>
+        <input-header name="Atoms Count" />
+      </div>
+      <div>
         <input type="number" v-model="initialConfig.ATOMS_COUNT" :min="1" :step="1" />
       </div>
-      <config-coords-bounds name="Min Position" :step="1" :values="initialConfig.MIN_POSITION" />
-      <config-coords-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" />
+
+      <div>
+        <input-header name="Min Position" />
+        <config-coords-bounds name="Min Position" :step="1" :values="initialConfig.MIN_POSITION" />
+      </div>
+      <div>
+        <input-header name="Max Position" />
+        <config-coords-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" />
+      </div>
+
       <div v-if="withButtons">
         <br />
         <div class="btn-group" role="group">
