@@ -45,6 +45,7 @@ export class Atom implements AtomInterface {
   readonly speed: VectorInterface;
   readonly bonds: BondMapInterface;
   readonly linkDistanceFactor: number;
+  readonly linkDistanceFactors: number[];
   cluster?: ClusterInterface;
 
   constructor(id: number, type: number, position: NumericVector) {
@@ -54,6 +55,7 @@ export class Atom implements AtomInterface {
     this.speed = toVector(new Array<number>(position.length).fill(0));
     this.bonds = new BondMap();
     this.linkDistanceFactor = 1;
+    this.linkDistanceFactors = [];
   }
 }
 

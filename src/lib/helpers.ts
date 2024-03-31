@@ -1,11 +1,18 @@
 import type { LinksPoolInterface, LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector } from './vector/types';
-import type { PhysicModelName, TypesConfig, WorldConfig } from './types/config';
+import type {
+  LinkFactorDistanceConfig,
+  LinkFactorDistanceExtendedConfig,
+  PhysicModelName,
+  TypesConfig,
+  WorldConfig
+} from './types/config';
 import type { PhysicModelConstructor, PhysicModelInterface } from './types/interaction';
 import { Atom, Link } from './atomic';
 import { PhysicModelV1 } from './physics/v1';
 import { PhysicModelV2 } from './physics/v2';
+import { fullCopyObject } from "@/helpers/utils";
 
 class LinkPool implements LinksPoolInterface {
   private storage: LinkInterface[] = [];
@@ -97,7 +104,7 @@ export class RulesHelper implements RulesHelperInterface {
 
 let LAST_ATOM_ID = 0;
 
-export function createAtom(type: number, position: NumericVector) {
+export function createAtom(type: number, position: NumericVector): AtomInterface {
   return new Atom(LAST_ATOM_ID++, type, position);
 }
 
@@ -211,4 +218,19 @@ export function createPhysicModel(
   };
 
   return new map[worldConfig.PHYSIC_MODEL](worldConfig, typesConfig);
+}
+
+export function distributeLinkFactorDistance(matrix: LinkFactorDistanceConfig): LinkFactorDistanceExtendedConfig {
+  const result: LinkFactorDistanceExtendedConfig = [];
+  for (let i=0; i<matrix.length; ++i) {
+    const level1: number[][] = [];
+    for (let j=0; j<matrix.length; ++j) {
+      const level2: number[] = [];
+      level2.length = matrix[i].length;
+      level2.fill(matrix[i][j]);
+      level1.push(level2);
+    }
+    result.push(level1);
+  }
+  return result;
 }

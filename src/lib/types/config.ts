@@ -3,18 +3,21 @@ import type { NumericVector } from '../vector/types';
 export type ColorVector = [number, number, number];
 export type PhysicModelName = 'v1' | 'v2';
 
-type GravityConfig = number[][];
-type LinksConfig = number[];
-type TypeLinksConfig = number[][];
-type LinkFactorDistanceConfig = number[][];
-type FrequenciesConfig = number[];
-type ColorsConfig = Array<ColorVector>;
+export type GravityConfig = number[][];
+export type LinksConfig = number[];
+export type TypeLinksConfig = number[][];
+export type LinkFactorDistanceConfig = number[][];
+export type LinkFactorDistanceExtendedConfig = number[][][];
+export type FrequenciesConfig = number[];
+export type ColorsConfig = Array<ColorVector>;
 export type TypesConfig = {
   GRAVITY: GravityConfig;
   LINK_GRAVITY: GravityConfig;
   LINKS: LinksConfig;
   TYPE_LINKS: TypeLinksConfig;
   LINK_FACTOR_DISTANCE: LinkFactorDistanceConfig;
+  LINK_FACTOR_DISTANCE_EXTENDED: LinkFactorDistanceExtendedConfig;
+  LINK_FACTOR_DISTANCE_USE_EXTENDED: boolean;
   FREQUENCIES: FrequenciesConfig;
   COLORS: ColorsConfig;
 };

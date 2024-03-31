@@ -19,6 +19,7 @@ export class Simulation implements SimulationInterface {
   private isRunning: boolean = false;
 
   constructor(config: SimulationConfig) {
+    console.log(config);
     this.config = config;
     this.atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig, this.config.initialConfig);
     this.drawer = this.config.drawer;
@@ -74,8 +75,7 @@ export class Simulation implements SimulationInterface {
     if (this.config.worldConfig.SPEED > 0) {
       for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
         for (const atom of this.atoms) {
-          // очищаем фактор соединений
-          atom.linkDistanceFactor = 1;
+          this.interactionManager.clearDistanceFactor(atom);
           this.interactionManager.moveAtom(atom);
         }
         for (const atom of this.atoms) {

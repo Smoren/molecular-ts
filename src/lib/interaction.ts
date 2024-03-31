@@ -52,7 +52,7 @@ export class InteractionManager implements InteractionManagerInterface {
     const dist2 = this.getDist2(distVector);
 
     if (
-      dist2 >= (this.WORLD_CONFIG.MAX_LINK_RADIUS * link.lhs.linkDistanceFactor * link.rhs.linkDistanceFactor) ** 2
+      dist2 >= (this.WORLD_CONFIG.MAX_LINK_RADIUS * this.getDistanceFactor(link.lhs, link.rhs) * this.getDistanceFactor(link.rhs, link.lhs)) ** 2
       || this.ruleHelper.isLinkRedundant(link.lhs, link.rhs)
     ) {
       this.linkManager.delete(link);
@@ -73,7 +73,7 @@ export class InteractionManager implements InteractionManagerInterface {
     const dist2 = this.getDist2(distVector);
 
     if (dist2 <= this.WORLD_CONFIG.MAX_LINK_RADIUS ** 2) {
-      lhs.linkDistanceFactor *= this.TYPES_CONFIG.LINK_FACTOR_DISTANCE[rhs.type][lhs.type];
+      this.updateDistanceFactor(lhs, rhs);
     }
   }
 
@@ -99,7 +99,7 @@ export class InteractionManager implements InteractionManagerInterface {
     if (
       !lhs.bonds.has(rhs) &&
       this.ruleHelper.canLink(lhs, rhs) &&
-      dist2 <= (this.WORLD_CONFIG.MAX_LINK_RADIUS * lhs.linkDistanceFactor) ** 2
+      dist2 <= (this.WORLD_CONFIG.MAX_LINK_RADIUS * this.getDistanceFactor(lhs, rhs)) ** 2 // TODO * rhs DF ???
     ) {
       this.linkManager.create(lhs, rhs);
     }
@@ -107,6 +107,37 @@ export class InteractionManager implements InteractionManagerInterface {
 
   setPhysicModel(model: PhysicModelInterface): void {
     this.physicModel = model;
+  }
+
+  clearDistanceFactor(atom: AtomInterface): void {
+    atom.linkDistanceFactor = 1;
+    if (
+      this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_USE_EXTENDED ||
+      atom.linkDistanceFactors.length !== this.TYPES_CONFIG.FREQUENCIES.length
+    ) {
+      for (let i = 0; i < this.TYPES_CONFIG.FREQUENCIES.length; ++i) {
+        atom.linkDistanceFactors[i] = 1;
+      }
+    }
+  }
+
+  getDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): number {
+    if (this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_USE_EXTENDED) {
+      return lhs.linkDistanceFactors[rhs.type];
+    }
+
+    return lhs.linkDistanceFactor;
+  }
+
+  updateDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): void {
+    if (this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_USE_EXTENDED) {
+      const mults = this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_EXTENDED[rhs.type][lhs.type];
+      for (let i=0; i<mults.length; ++i) {
+        lhs.linkDistanceFactors[i] *= mults[i];
+      }
+    } else {
+      lhs.linkDistanceFactor *= this.TYPES_CONFIG.LINK_FACTOR_DISTANCE[rhs.type][lhs.type];
+    }
   }
 
   private normalizeForce(value: number): number {

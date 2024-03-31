@@ -8,6 +8,9 @@ export interface InteractionManagerInterface {
   interactAtomsStep1(atom: AtomInterface, neighbour: AtomInterface): void;
   interactAtomsStep2(atom: AtomInterface, neighbour: AtomInterface): void;
   setPhysicModel(model: PhysicModelInterface): void;
+  clearDistanceFactor(atom: AtomInterface): void;
+  getDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): number;
+  updateDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): void;
 }
 
 export interface PhysicModelInterface {
