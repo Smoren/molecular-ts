@@ -10,6 +10,7 @@ import ConfigMatrix from '@/components/config-editor/components/inputs/config-ma
 import ConfigList from '@/components/config-editor/components/inputs/config-list.vue';
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 import Flag from "@/components/config-editor/components/inputs/flag.vue";
+import ConfigTensor from "@/components/config-editor/components/inputs/config-tensor.vue";
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
@@ -130,6 +131,15 @@ const refill = () => {
           position="center"
         />
         <config-matrix
+          v-if="!typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED"
+          :values="typesConfig.LINK_FACTOR_DISTANCE"
+          :colors="typesConfig.COLORS"
+          :step="0.1"
+          :min="0"
+          v-model:symmetric="typesSymmetricConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
+        />
+        <config-tensor
+          v-else
           :values="typesConfig.LINK_FACTOR_DISTANCE"
           :colors="typesConfig.COLORS"
           :step="0.1"
