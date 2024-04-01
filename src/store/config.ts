@@ -12,6 +12,7 @@ import { createBaseTypesConfig, createDefaultRandomTypesConfig, createRandomType
 import { create3dBaseInitialConfig } from "@/lib/config/initial";
 import { fullCopyObject } from "@/helpers/utils";
 import { createDistributedLinkFactorDistance, distributeLinkFactorDistance, getRandomColor } from "@/lib/helpers";
+import { useFlash } from '@/hooks/use-flash';
 
 export type ViewMode = '2d' | '3d';
 
@@ -25,7 +26,8 @@ export const useConfigStore = defineStore("config", () => {
   const initialConfig: Ref<InitialConfig> = ref(fullCopyObject(initialConfigRaw));
   const randomTypesConfig: Ref<RandomTypesConfig> = ref(createDefaultRandomTypesConfig(typesConfigRaw.COLORS.length));
 
-  const denyLinkDistanceFactorExtendedConfig = ref(false);
+  const flash = useFlash();
+  const FLASH_IMPORT_STARTED = Symbol();
 
   const typesSymmetricConfig: Ref<TypesSymmetricConfig> = ref({
     GRAVITY_MATRIX_SYMMETRIC: false,
@@ -107,7 +109,7 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const importConfig = (config: string) => {
-    denyLinkDistanceFactorExtendedConfig.value = true;
+    flash.turnOn(FLASH_IMPORT_STARTED);
     try {
       const newConfig = JSON.parse(atob(config)) as {
         worldConfig?: WorldConfig,
@@ -195,11 +197,10 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   watch(() => typesConfig.value.LINK_FACTOR_DISTANCE_USE_EXTENDED, (value: boolean) => {
-    if (!value || denyLinkDistanceFactorExtendedConfig.value) {
-      denyLinkDistanceFactorExtendedConfig.value = false;
+    if (!value || flash.receive(FLASH_IMPORT_STARTED)) {
       return;
     }
-    console.log('link flag on');
+    console.log('link flag on'); // TODO remove
 
     distributeLinkFactorDistance(typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED, typesConfig.value.LINK_FACTOR_DISTANCE);
   });
