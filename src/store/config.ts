@@ -25,6 +25,8 @@ export const useConfigStore = defineStore("config", () => {
   const initialConfig: Ref<InitialConfig> = ref(fullCopyObject(initialConfigRaw));
   const randomTypesConfig: Ref<RandomTypesConfig> = ref(createDefaultRandomTypesConfig(typesConfigRaw.COLORS.length));
 
+  const denyLinkDistanceFactorExtendedConfig = ref(false);
+
   const typesSymmetricConfig: Ref<TypesSymmetricConfig> = ref({
     GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_GRAVITY_MATRIX_SYMMETRIC: false,
@@ -105,6 +107,7 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const importConfig = (config: string) => {
+    denyLinkDistanceFactorExtendedConfig.value = true;
     try {
       const newConfig = JSON.parse(atob(config)) as {
         worldConfig?: WorldConfig,
@@ -190,6 +193,16 @@ export const useConfigStore = defineStore("config", () => {
     typesConfig.value.LINK_FACTOR_DISTANCE.forEach((item) => item.push(1));
     typesConfig.value.LINK_FACTOR_DISTANCE.push(Array(typesConfig.value.COLORS.length).fill(1));
   }
+
+  watch(() => typesConfig.value.LINK_FACTOR_DISTANCE_USE_EXTENDED, (value: boolean) => {
+    if (!value || denyLinkDistanceFactorExtendedConfig.value) {
+      denyLinkDistanceFactorExtendedConfig.value = false;
+      return;
+    }
+    console.log('link flag on');
+
+    distributeLinkFactorDistance(typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED, typesConfig.value.LINK_FACTOR_DISTANCE);
+  });
 
   watch(worldConfig, <T>(newConfig: WorldConfig) => {
     setWorldConfigRaw(newConfig);
