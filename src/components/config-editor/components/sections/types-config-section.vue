@@ -9,6 +9,7 @@ import ConfigSection from '@/components/config-editor/components/containers/conf
 import ConfigMatrix from '@/components/config-editor/components/inputs/config-matrix.vue';
 import ConfigList from '@/components/config-editor/components/inputs/config-list.vue';
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
+import Flag from "@/components/config-editor/components/inputs/flag.vue";
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
@@ -135,6 +136,8 @@ const refill = () => {
           :min="0"
           v-model:symmetric="typesSymmetricConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
         />
+        <div style="margin-bottom: 5px;"></div>
+        <flag title="Extended mode" v-model="typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED" />
       </div>
     </template>
   </config-section>

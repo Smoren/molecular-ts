@@ -88,6 +88,7 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const exportConfig = () => {
+    // TODO typeSymmetricConfig
     const config = {
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
@@ -98,6 +99,7 @@ export const useConfigStore = defineStore("config", () => {
 
   const importConfig = (config: string) => {
     try {
+      // TODO typeSymmetricConfig
       const newConfig = JSON.parse(atob(config)) as {
         worldConfig?: WorldConfig,
         typesConfig?: TypesConfig,
