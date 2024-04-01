@@ -47,10 +47,10 @@ const randomizeTypesConfig = () => {
     <template #body>
       <div>
         <input-header
-            name="Types Count"
-            tooltip="Count of particle types."
-            tooltip-position="left"
-            :tooltip-width="200"
+          name="Types Count"
+          tooltip="Count of particle types."
+          tooltip-position="left"
+          :tooltip-width="200"
         />
       </div>
       <div>
@@ -108,8 +108,17 @@ const randomizeTypesConfig = () => {
           tooltip-position="left"
         />
         <config-bounds name="Links Distance Factor" :step="1" :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS" />
-        <flag title="Symmetric" v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC" style="float: left; margin-right: 20px;" />
-        <flag title="Extended" v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED" style="float: right;" />
+        <flag
+          title="Symmetric"
+          v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
+          v-show="!randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
+          style="float: left;"
+        />
+        <flag
+          title="Extended"
+          v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
+          style="float: right;"
+        />
       </div>
 
       <div v-if="needRefill">
