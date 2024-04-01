@@ -11,7 +11,7 @@ import { createBaseWorldConfig } from "@/lib/config/world";
 import { createBaseTypesConfig, createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/config/types";
 import { create3dBaseInitialConfig } from "@/lib/config/initial";
 import { fullCopyObject } from "@/helpers/utils";
-import { getRandomColor } from "@/lib/helpers";
+import { createDistributedLinkFactorDistance, distributeLinkFactorDistance, getRandomColor } from "@/lib/helpers";
 
 export type ViewMode = '2d' | '3d';
 
@@ -24,6 +24,8 @@ export const useConfigStore = defineStore("config", () => {
   const typesConfig: Ref<TypesConfig> = ref(fullCopyObject(typesConfigRaw));
   const initialConfig: Ref<InitialConfig> = ref(fullCopyObject(initialConfigRaw));
   const randomTypesConfig: Ref<RandomTypesConfig> = ref(createDefaultRandomTypesConfig(typesConfigRaw.COLORS.length));
+
+  const isImportInProgress = ref(false);
 
   const typesSymmetricConfig: Ref<TypesSymmetricConfig> = ref({
     GRAVITY_MATRIX_SYMMETRIC: false,
@@ -64,6 +66,13 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
+  const setTypesSymmetricConfig = <T>(newConfig: TypesSymmetricConfig) => {
+    const buf = fullCopyObject(newConfig);
+    for (const i in newConfig) {
+      (typesSymmetricConfig.value[i as keyof TypesSymmetricConfig] as T) = buf[i as keyof TypesSymmetricConfig] as T;
+    }
+  }
+
   const setTypesConfig = <T>(newConfig: TypesConfig) => {
     const buf = fullCopyObject(newConfig);
     for (const i in newConfig) {
@@ -88,34 +97,56 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const exportConfig = () => {
-    // TODO typeSymmetricConfig
     const config = {
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
+      typesSymmetricConfig,
     };
     console.log('export', config);
     return btoa(JSON.stringify(config));
   }
 
   const importConfig = (config: string) => {
+    isImportInProgress.value = true;
     try {
-      // TODO typeSymmetricConfig
       const newConfig = JSON.parse(atob(config)) as {
         worldConfig?: WorldConfig,
         typesConfig?: TypesConfig,
+        typeSymmetricConfig?: TypesSymmetricConfig,
       };
-      console.log('to import', newConfig);
 
       if (newConfig.worldConfig !== undefined) {
         setWorldConfig(newConfig.worldConfig);
         console.log('worldConfig upd');
       }
       if (newConfig.typesConfig !== undefined) {
+
+        if (newConfig.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED === undefined) {
+          newConfig.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = false;
+        }
+
+        if (
+          newConfig.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED === undefined ||
+          !newConfig.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED
+        ) {
+          newConfig.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED = createDistributedLinkFactorDistance(
+            newConfig.typesConfig.LINK_FACTOR_DISTANCE,
+          );
+        }
+
+        console.log('typesConfig upd');
         setTypesConfig(newConfig.typesConfig);
+      }
+      if (newConfig.typeSymmetricConfig !== undefined) {
+        setTypesSymmetricConfig(newConfig.typeSymmetricConfig);
         console.log('typesConfig upd');
       }
+
+      console.log('imported', newConfig);
     } catch (e) {
       console.warn(e);
+    } finally {
+      isImportInProgress.value = false;
     }
   }
 
@@ -184,6 +215,7 @@ export const useConfigStore = defineStore("config", () => {
     initialConfig,
     randomTypesConfig,
     typesSymmetricConfig,
+    isImportInProgress,
     getConfigValues,
     setInitialConfig,
     setTypesConfig,

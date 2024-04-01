@@ -50,9 +50,10 @@ const refill = () => {
 };
 
 watch(() => typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED, (value: boolean) => {
-  if (!value) {
+  if (!value || configStore.isImportInProgress) {
     return;
   }
+  console.log('link flag on');
 
   distributeLinkFactorDistance(typesConfig.LINK_FACTOR_DISTANCE_EXTENDED, typesConfig.LINK_FACTOR_DISTANCE);
 });
