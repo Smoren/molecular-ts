@@ -2,7 +2,7 @@ import type { ColorVector, RandomTypesConfig, TypesConfig } from '../types/confi
 import {
   createRandomFloat,
   createRandomInteger,
-  distributeLinkFactorDistance,
+  createDistributedLinkFactorDistance,
   getRandomColor,
   randomizeMatrix
 } from "@/lib/helpers";
@@ -64,7 +64,7 @@ export function createBaseTypesConfig(): TypesConfig {
       [0, 0, 0, 0, 0, 1],
     ],
     LINK_FACTOR_DISTANCE: linkFactorDistance,
-    LINK_FACTOR_DISTANCE_EXTENDED: distributeLinkFactorDistance(linkFactorDistance),
+    LINK_FACTOR_DISTANCE_EXTENDED: createDistributedLinkFactorDistance(linkFactorDistance),
     LINK_FACTOR_DISTANCE_USE_EXTENDED: false,
     FREQUENCIES: [1, 1, 1, 1, 1, 0.05],
     COLORS: createColors(6),
@@ -132,7 +132,7 @@ export function createRandomTypesConfig({
     LINKS: links,
     TYPE_LINKS: typeLinks,
     LINK_FACTOR_DISTANCE: linkFactorDistance,
-    LINK_FACTOR_DISTANCE_EXTENDED: distributeLinkFactorDistance(linkFactorDistance),
+    LINK_FACTOR_DISTANCE_EXTENDED: createDistributedLinkFactorDistance(linkFactorDistance),
     LINK_FACTOR_DISTANCE_USE_EXTENDED: false,
     FREQUENCIES: frequencies,
     COLORS: createColors(TYPES_COUNT),

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { inject } from "vue";
+import { inject, watch } from "vue";
 import { useConfigStore } from '@/store/config';
 import { useSimulationStore } from "@/store/simulation";
 import { createBaseTypesConfig } from "@/lib/config/types";
@@ -11,6 +11,7 @@ import ConfigList from '@/components/config-editor/components/inputs/config-list
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 import Flag from "@/components/config-editor/components/inputs/flag.vue";
 import ConfigTensor from "@/components/config-editor/components/inputs/config-tensor.vue";
+import { distributeLinkFactorDistance } from '@/lib/helpers';
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
@@ -47,6 +48,14 @@ const refill = () => {
     refillAtoms!();
   }
 };
+
+watch(() => typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED, (value: boolean) => {
+  if (!value) {
+    return;
+  }
+
+  distributeLinkFactorDistance(typesConfig.LINK_FACTOR_DISTANCE_EXTENDED, typesConfig.LINK_FACTOR_DISTANCE);
+});
 
 </script>
 

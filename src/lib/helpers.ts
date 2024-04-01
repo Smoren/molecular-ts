@@ -220,7 +220,7 @@ export function createPhysicModel(
   return new map[worldConfig.PHYSIC_MODEL](worldConfig, typesConfig);
 }
 
-export function distributeLinkFactorDistance(matrix: LinkFactorDistanceConfig): LinkFactorDistanceExtendedConfig {
+export function createDistributedLinkFactorDistance(matrix: LinkFactorDistanceConfig): LinkFactorDistanceExtendedConfig {
   const result: LinkFactorDistanceExtendedConfig = [];
   for (let i=0; i<matrix.length; ++i) {
     const level1: number[][] = [];
@@ -233,4 +233,15 @@ export function distributeLinkFactorDistance(matrix: LinkFactorDistanceConfig): 
     result.push(level1);
   }
   return result;
+}
+
+export function distributeLinkFactorDistance(
+  tensor: LinkFactorDistanceExtendedConfig,
+  matrix: LinkFactorDistanceConfig,
+): void {
+  for (let i=0; i<matrix.length; ++i) {
+    for (let j=0; j<matrix.length; ++j) {
+      tensor[i][j].fill(matrix[i][j])
+    }
+  }
 }
