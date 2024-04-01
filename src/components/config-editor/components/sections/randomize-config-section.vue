@@ -91,10 +91,10 @@ const randomizeTypesConfig = () => {
 
       <div>
         <input-header
-            name="Types Links Count"
-            tooltip="Connection limit matrix shows the maximum number of connections that particles of each type can have
-                     with particles of different types."
-            tooltip-position="left"
+          name="Types Links Count"
+          tooltip="Connection limit matrix shows the maximum number of connections that particles of each type can have
+                   with particles of different types."
+          tooltip-position="left"
         />
         <config-bounds :step="1" :values="randomTypesConfig.LINK_TYPE_BOUNDS" />
         <flag title="Symmetric" v-model="randomTypesConfig.LINK_TYPE_MATRIX_SYMMETRIC" />
@@ -102,10 +102,10 @@ const randomizeTypesConfig = () => {
 
       <div>
         <input-header
-            name="Links Distance Factor"
-            tooltip="Matrix of influence on neighbors links shows how particles of each type affect the maximum length of
-                     links of neighboring particles of different types."
-            tooltip-position="left"
+          name="Links Distance Factor"
+          tooltip="Matrix of influence on neighbors links shows how particles of each type affect the maximum length of
+                   links of neighboring particles of different types."
+          tooltip-position="left"
         />
         <config-bounds name="Links Distance Factor" :step="1" :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS" />
         <flag title="Symmetric" v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC" />
