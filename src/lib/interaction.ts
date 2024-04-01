@@ -99,7 +99,7 @@ export class InteractionManager implements InteractionManagerInterface {
     if (
       !lhs.bonds.has(rhs) &&
       this.ruleHelper.canLink(lhs, rhs) &&
-      dist2 <= (this.WORLD_CONFIG.MAX_LINK_RADIUS * this.getDistanceFactor(lhs, rhs)) ** 2 // TODO * rhs DF ???
+      dist2 <= (this.WORLD_CONFIG.MAX_LINK_RADIUS * this.getDistanceFactor(lhs, rhs) * this.getDistanceFactor(rhs, lhs)) ** 2
     ) {
       this.linkManager.create(lhs, rhs);
     }
