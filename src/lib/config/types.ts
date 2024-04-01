@@ -82,6 +82,7 @@ export function createRandomTypesConfig({
   LINK_GRAVITY_MATRIX_SYMMETRIC,
   LINK_TYPE_MATRIX_SYMMETRIC,
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
+  LINK_FACTOR_DISTANCE_EXTENDED,
 }: RandomTypesConfig): TypesConfig {
   const precision = 8;
 
@@ -121,6 +122,21 @@ export function createRandomTypesConfig({
     precision,
   );
 
+  let linkFactorDistanceExtended: number[][][] | undefined;
+
+  if (LINK_FACTOR_DISTANCE_EXTENDED) {
+    linkFactorDistanceExtended = [];
+    for (let i=0; i<TYPES_COUNT; ++i) {
+      linkFactorDistanceExtended.push(randomizeMatrix(
+        TYPES_COUNT,
+        LINK_FACTOR_DISTANCE_BOUNDS,
+        createRandomFloat,
+        LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
+        precision,
+      ));
+    }
+  }
+
   const frequencies: number[] = [];
   for (let i=0; i<TYPES_COUNT; ++i) {
     frequencies.push(Math.random());
@@ -132,8 +148,8 @@ export function createRandomTypesConfig({
     LINKS: links,
     TYPE_LINKS: typeLinks,
     LINK_FACTOR_DISTANCE: linkFactorDistance,
-    LINK_FACTOR_DISTANCE_EXTENDED: createDistributedLinkFactorDistance(linkFactorDistance),
-    LINK_FACTOR_DISTANCE_USE_EXTENDED: false,
+    LINK_FACTOR_DISTANCE_EXTENDED: linkFactorDistanceExtended ?? createDistributedLinkFactorDistance(linkFactorDistance),
+    LINK_FACTOR_DISTANCE_USE_EXTENDED: LINK_FACTOR_DISTANCE_EXTENDED,
     FREQUENCIES: frequencies,
     COLORS: createColors(TYPES_COUNT),
   };
@@ -151,5 +167,6 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     LINK_GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_TYPE_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_DISTANCE_EXTENDED: false,
   };
 }

@@ -13,7 +13,7 @@ import ConfigMatrix from '@/components/config-editor/components/inputs/config-ma
 
 const props = withDefaults(defineProps<{
   colors: [number, number, number][];
-  values: number[][];
+  values: number[][][];
   min?: number;
   max?: number;
   step?: number;

@@ -158,6 +158,7 @@ export const useConfigStore = defineStore("config", () => {
       newConfig.FREQUENCIES[i] = oldFrequencies[i] ?? 1;
     }
 
+    flash.turnOn(FLASH_IMPORT_STARTED);
     setTypesConfig(newConfig);
     setTypesConfigRaw(newConfig);
     setSymmetricTypesConfig(randomTypesConfig.value);

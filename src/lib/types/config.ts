@@ -56,6 +56,7 @@ export type RandomTypesConfig = {
   LINK_GRAVITY_MATRIX_SYMMETRIC: boolean;
   LINK_TYPE_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: boolean;
+  LINK_FACTOR_DISTANCE_EXTENDED: boolean;
 };
 export type TypesSymmetricConfig = {
   GRAVITY_MATRIX_SYMMETRIC: boolean;

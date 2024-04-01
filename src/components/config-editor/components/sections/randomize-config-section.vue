@@ -108,7 +108,8 @@ const randomizeTypesConfig = () => {
           tooltip-position="left"
         />
         <config-bounds name="Links Distance Factor" :step="1" :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS" />
-        <flag title="Symmetric" v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC" />
+        <flag title="Symmetric" v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC" style="float: left; margin-right: 20px;" />
+        <flag title="Extended" v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED" style="float: right;" />
       </div>
 
       <div v-if="needRefill">
