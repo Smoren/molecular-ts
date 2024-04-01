@@ -19,7 +19,7 @@ const classes = computed(() => {
 </script>
 
 <template>
-  <div :class="classes" class="offcanvas" tabindex="-1">
+  <div :class="classes" class="offcanvas" tabindex="-1" :style="{ visibility: visible.state ? 'visible' : 'hidden' }">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title">
         <slot name="title" />
