@@ -27,7 +27,7 @@ const classes = computed(() => {
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" @click="visible.off()"></button>
     </div>
     <div class="offcanvas-body">
-      <slot name="body" v-if="visible.state.value" />
+      <slot name="body" />
     </div>
   </div>
 </template>
