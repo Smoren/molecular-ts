@@ -49,8 +49,11 @@ const refill = () => {
   }
 };
 
+let firstWatchFlag = true; // TODO костыль
+
 watch(() => typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED, (value: boolean) => {
-  if (!value || configStore.isImportInProgress) {
+  if (!value || firstWatchFlag) {
+    firstWatchFlag = false;
     return;
   }
   console.log('link flag on');
