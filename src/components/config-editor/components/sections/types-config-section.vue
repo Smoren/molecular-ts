@@ -140,7 +140,7 @@ const refill = () => {
         />
         <config-tensor
           v-else
-          :values="typesConfig.LINK_FACTOR_DISTANCE"
+          :values="typesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
           :colors="typesConfig.COLORS"
           :step="0.1"
           :min="0"

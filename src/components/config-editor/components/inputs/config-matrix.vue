@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
 import { getColorString } from '@/components/config-editor/utils';
-import { watch } from "vue";
+import { onMounted, watch } from "vue";
 import Tooltip from "@/components/config-editor/components/base/tooltip.vue";
 
-const symmetric = defineModel<boolean>('symmetric');
+const symmetric = defineModel<boolean | undefined>('symmetric');
 
 const props = withDefaults(defineProps<{
   colors: [number, number, number][];
@@ -12,8 +12,10 @@ const props = withDefaults(defineProps<{
   min?: number;
   max?: number;
   step?: number;
+  hideSymmetric?: boolean;
 }>(), {
   step: 1,
+  hideSymmetric: false,
 });
 
 const onChangeValue = (i: number, j: number) => {
@@ -46,7 +48,7 @@ watch(symmetric, () => {
   <table>
     <tr>
       <td>
-        <tooltip text="Make matrix symmetric" :nowrap="true" position="left">
+        <tooltip text="Make matrix symmetric" :nowrap="true" position="left" v-if="!hideSymmetric">
           <input type="checkbox" v-model="symmetric" title="Symmetric" />
         </tooltip>
       </td>
@@ -57,7 +59,14 @@ watch(symmetric, () => {
     <tr v-for="(row, rowIndex) in values">
       <td :style="{ backgroundColor: getColorString(colors[rowIndex]), width: '30px' }"></td>
       <td v-for="(_, colIndex) in row">
-        <input type="number" v-model="row[colIndex]" :min="min" :max="max" :step="step" @change="onChangeValue(rowIndex, colIndex)">
+        <input
+          type="number"
+          v-model="row[colIndex]"
+          :min="min"
+          :max="max"
+          :step="step"
+          @change="onChangeValue(rowIndex, colIndex)"
+        />
       </td>
     </tr>
   </table>

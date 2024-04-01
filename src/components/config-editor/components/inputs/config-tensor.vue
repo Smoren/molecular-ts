@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import {
   MDBTabs,
   MDBTabNav,
@@ -9,9 +9,7 @@ import {
   MDBTabPane,
 } from 'mdb-vue-ui-kit';
 import { getColorString } from '@/components/config-editor/utils';
-import Tooltip from "@/components/config-editor/components/base/tooltip.vue";
-
-const symmetric = defineModel<boolean>('symmetric');
+import ConfigMatrix from '@/components/config-editor/components/inputs/config-matrix.vue';
 
 const props = withDefaults(defineProps<{
   colors: [number, number, number][];
@@ -23,28 +21,67 @@ const props = withDefaults(defineProps<{
   step: 1,
 });
 
-const activeTabId1 = ref('ex1-1');
+const activeTabId = ref('tab-0');
 
 </script>
 
 <template>
-  <MDBTabs v-model="activeTabId1">
-    <MDBTabNav tabsClasses="mb-3" fill>
-      <MDBTabItem
-        :tabId="`tab-${index}`"
-        href="javascript:void(0);"
-        v-for="(color, index) in colors"
-        :style="{ backgroundColor: getColorString(color), height: '30px' }"
-      ></MDBTabItem>
-    </MDBTabNav>
-    <MDBTabContent>
-      <MDBTabPane :tabId="`tab-${index}`" v-for="(color, index) in colors">Content #{{ index }}</MDBTabPane>
-    </MDBTabContent>
-  </MDBTabs>
+  <div class="config-tensor-widget">
+    <MDBTabs v-model="activeTabId">
+      <MDBTabNav fill>
+        <MDBTabItem
+          :tabId="`tab-${index}`"
+          href="javascript:void(0);"
+          v-for="(color, index) in colors"
+          :style="{ backgroundColor: getColorString(color), height: '30px' }"
+        ></MDBTabItem>
+      </MDBTabNav>
+      <MDBTabContent>
+        <MDBTabPane :tabId="`tab-${index}`" v-for="(matrix, index) in values">
+          <div class="my-tab-pane">
+            <config-matrix
+              :values="matrix"
+              :colors="colors"
+              :step="0.1"
+              :min="0"
+              :hide-symmetric="true"
+            />
+          </div>
+        </MDBTabPane>
+      </MDBTabContent>
+    </MDBTabs>
+  </div>
 </template>
 
 <style scoped lang="scss">
 
 @import "../../assets/config-editor";
+@import "bootstrap/scss/bootstrap-utilities";
+
+.my-tab-pane {
+  padding: 15px;
+  border: 1px solid var(--bs-border-color);
+  border-top: transparent;
+}
+
+</style>
+
+<style lang="scss">
+
+.config-tensor-widget {
+  .fade {
+    transition: none !important;
+    opacity: 1 !important;
+  }
+
+  .nav-link {
+    opacity: 0.4 !important;
+  }
+
+  .nav-link.active {
+    opacity: 1 !important;
+  }
+}
+
 
 </style>
