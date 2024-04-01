@@ -3,15 +3,12 @@
 import { getColorString } from '@/components/config-editor/utils';
 import { watch } from "vue";
 import Tooltip from "@/components/config-editor/components/base/tooltip.vue";
-import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 
 const symmetric = defineModel<boolean>('symmetric');
 
 const props = withDefaults(defineProps<{
   colors: [number, number, number][];
   values: number[][];
-  name: string;
-  tooltip?: string;
   min?: number;
   max?: number;
   step?: number;
@@ -46,29 +43,24 @@ watch(symmetric, () => {
 </script>
 
 <template>
-  <div>
-    <div style="text-align: center">
-      <input-header :name="name" :tooltip="tooltip" />
-    </div>
-    <table>
-      <tr>
-        <td>
-          <tooltip text="Make matrix symmetric" :nowrap="true">
-            <input type="checkbox" v-model="symmetric" title="Symmetric" />
-          </tooltip>
-        </td>
-        <td v-for="color in colors" :style="{ backgroundColor: getColorString(color) }">
-          &nbsp;
-        </td>
-      </tr>
-      <tr v-for="(row, rowIndex) in values">
-        <td :style="{ backgroundColor: getColorString(colors[rowIndex]), width: '30px' }"></td>
-        <td v-for="(_, colIndex) in row">
-          <input type="number" v-model="row[colIndex]" :min="min" :max="max" :step="step" @change="onChangeValue(rowIndex, colIndex)">
-        </td>
-      </tr>
-    </table>
-  </div>
+  <table>
+    <tr>
+      <td>
+        <tooltip text="Make matrix symmetric" :nowrap="true" position="left">
+          <input type="checkbox" v-model="symmetric" title="Symmetric" />
+        </tooltip>
+      </td>
+      <td v-for="color in colors" :style="{ backgroundColor: getColorString(color) }">
+        &nbsp;
+      </td>
+    </tr>
+    <tr v-for="(row, rowIndex) in values">
+      <td :style="{ backgroundColor: getColorString(colors[rowIndex]), width: '30px' }"></td>
+      <td v-for="(_, colIndex) in row">
+        <input type="number" v-model="row[colIndex]" :min="min" :max="max" :step="step" @change="onChangeValue(rowIndex, colIndex)">
+      </td>
+    </tr>
+  </table>
 </template>
 
 <style scoped lang="scss">

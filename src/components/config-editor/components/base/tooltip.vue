@@ -25,6 +25,10 @@ const offset = (el: HTMLElement) => {
 }
 
 const onMouseover = () => {
+  if (props.position === 'left') {
+    return;
+  }
+
   const divOffset = offset((container.value as unknown as HTMLElement));
   const element = (container.value as unknown as HTMLElement);
   if (divOffset.left < 0) {
