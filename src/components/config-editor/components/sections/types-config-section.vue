@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { inject, watch } from "vue";
+import { computed, inject, watch } from "vue";
 import { useConfigStore } from '@/store/config';
 import { useSimulationStore } from "@/store/simulation";
 import { createBaseTypesConfig } from "@/lib/config/types";
@@ -48,6 +48,17 @@ const refill = () => {
     refillAtoms!();
   }
 };
+
+const linkInfluenceConfigDescription = computed(() => {
+  const matrixDescription = "Matrix of influence on neighbors links shows how particles of each type affect " +
+      "the maximum length of links of neighboring particles of different types."
+  const tensorDescription = "Tensor of influence on neighbors links shows how particles of each type affect " +
+      "the maximum length of links of neighboring particles of different types with particles of specific types."
+
+  return typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED
+    ? tensorDescription
+    : matrixDescription;
+})
 
 </script>
 
@@ -127,8 +138,7 @@ const refill = () => {
       <div>
         <input-header
           name="Links Distance Factor"
-          tooltip="Matrix of influence on neighbors links shows how particles of each type affect the maximum length of
-                   links of neighboring particles of different types."
+          :tooltip="linkInfluenceConfigDescription"
           position="center"
         />
         <config-matrix
