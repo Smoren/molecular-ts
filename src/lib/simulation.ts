@@ -6,7 +6,7 @@ import type { InteractionManagerInterface, PhysicModelInterface } from './types/
 import type { ClusterManagerInterface } from './types/cluster';
 import type { InitialConfig } from "./types/config";
 import { ClusterManager } from './cluster';
-import { createAtom, LinkManager, RulesHelper } from './helpers';
+import { createAtom, GeometryHelper, LinkManager, RulesHelper } from './helpers';
 import { InteractionManager } from './interaction';
 
 export class Simulation implements SimulationInterface {
@@ -29,7 +29,7 @@ export class Simulation implements SimulationInterface {
       this.config.typesConfig,
       this.linkManager,
       this.config.physicModel,
-      new RulesHelper(this.config.typesConfig, this.config.worldConfig),
+      new RulesHelper(this.config.worldConfig, this.config.typesConfig),
     );
     this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
 

@@ -1,8 +1,10 @@
 import type { TypesConfig, WorldConfig } from "../types/config";
 import type { AtomInterface } from "../types/atomic";
 import type { PhysicModelInterface } from "../types/interaction";
+import { GeometryHelper } from '../helpers';
 
 export class PhysicModelV2 implements PhysicModelInterface {
+  public readonly geometry: GeometryHelper;
   private WORLD_CONFIG: WorldConfig;
   private TYPES_CONFIG: TypesConfig;
   private BOUNCE_CORRECTION_FACTOR: number = 0.01;
@@ -10,12 +12,13 @@ export class PhysicModelV2 implements PhysicModelInterface {
   constructor(worldConfig: WorldConfig, typesConfig: TypesConfig) {
     this.WORLD_CONFIG = worldConfig;
     this.TYPES_CONFIG = typesConfig;
+    this.geometry = new GeometryHelper(this.WORLD_CONFIG, this.TYPES_CONFIG);
   }
 
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
     let multiplier: number;
 
-    const bounceDistance = this.WORLD_CONFIG.ATOM_RADIUS * 2;
+    const bounceDistance = this.geometry.getAtomsRadiusSum(lhs, rhs);
     let bounceForce = 0;
     let gravityForce = 0;
 

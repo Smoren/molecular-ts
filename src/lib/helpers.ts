@@ -1,4 +1,9 @@
-import type { LinksPoolInterface, LinkManagerInterface, RulesHelperInterface } from './types/helpers';
+import type {
+  LinksPoolInterface,
+  LinkManagerInterface,
+  RulesHelperInterface,
+  GeometryHelperInterface
+} from './types/helpers';
 import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector } from './vector/types';
 import type {
@@ -70,7 +75,7 @@ export class RulesHelper implements RulesHelperInterface {
   private TYPES_CONFIG: TypesConfig;
   private WORLD_CONFIG: WorldConfig;
 
-  constructor(typesConfig: TypesConfig, worldConfig: WorldConfig) {
+  constructor(worldConfig: WorldConfig, typesConfig: TypesConfig) {
     this.TYPES_CONFIG = typesConfig;
     this.WORLD_CONFIG = worldConfig;
   }
@@ -81,10 +86,6 @@ export class RulesHelper implements RulesHelperInterface {
 
   isLinkRedundant(lhs: AtomInterface, rhs: AtomInterface): boolean {
     return this._isLinkRedundant(lhs, rhs) || this._isLinkRedundant(rhs, lhs);
-  }
-
-  getAtomsRadiusSum(): number {
-    return this.WORLD_CONFIG.ATOM_RADIUS * 2;
   }
 
   private _canLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
@@ -99,6 +100,24 @@ export class RulesHelper implements RulesHelperInterface {
       return true;
     }
     return lhs.bonds.lengthOf(rhs.type) > this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
+  }
+}
+
+export class GeometryHelper implements GeometryHelperInterface {
+  private WORLD_CONFIG: WorldConfig;
+  private TYPES_CONFIG: TypesConfig;
+
+  constructor(worldConfig: WorldConfig, typesConfig: TypesConfig) {
+    this.WORLD_CONFIG = worldConfig;
+    this.TYPES_CONFIG = typesConfig;
+  }
+
+  getAtomRadius(atom: AtomInterface): number {
+    return this.WORLD_CONFIG.ATOM_RADIUS * this.TYPES_CONFIG.RADIUS[atom.type];
+  }
+
+  getAtomsRadiusSum(lhs: AtomInterface, rhs: AtomInterface): number {
+    return this.getAtomRadius(lhs) + this.getAtomRadius(rhs);
   }
 }
 

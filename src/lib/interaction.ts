@@ -58,7 +58,7 @@ export class InteractionManager implements InteractionManagerInterface {
       this.linkManager.delete(link);
     }
 
-    if (dist2 > this.ruleHelper.getAtomsRadiusSum(link.lhs, link.rhs)) {
+    if (dist2 > this.physicModel.geometry.getAtomsRadiusSum(link.lhs, link.rhs)) {
       this.handleLinkInfluence(link.lhs, link.rhs, dist2, distVector);
       this.handleLinkInfluence(link.rhs, link.rhs, dist2, distVector.inverse());
     }

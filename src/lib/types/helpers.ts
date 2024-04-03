@@ -15,5 +15,9 @@ export interface LinkManagerInterface extends Iterable<LinkInterface> {
 export interface RulesHelperInterface {
   canLink(lhs: AtomInterface, rhs: AtomInterface): boolean;
   isLinkRedundant(lhs: AtomInterface, rhs: AtomInterface): boolean;
+}
+
+export interface GeometryHelperInterface {
+  getAtomRadius(atom: AtomInterface): number;
   getAtomsRadiusSum(lhs: AtomInterface, rhs: AtomInterface): number;
 }

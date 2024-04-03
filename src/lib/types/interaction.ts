@@ -1,5 +1,6 @@
 import type { AtomInterface, LinkInterface } from './atomic';
 import type { TypesConfig, WorldConfig } from './config';
+import type { GeometryHelperInterface } from '@/lib/types/helpers';
 
 export interface InteractionManagerInterface {
   handleTime(): void;
@@ -14,6 +15,7 @@ export interface InteractionManagerInterface {
 }
 
 export interface PhysicModelInterface {
+  readonly geometry: GeometryHelperInterface;
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number;
   getLinkForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number;
   getBoundsForce(dist: number): number;
