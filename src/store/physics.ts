@@ -24,6 +24,10 @@ export const usePhysicsStore = defineStore("physics", () => {
     simulationStore.setPhysicModel(createPhysicModel(worldConfig, typesConfig));
   });
 
+  watch(() => configStore.worldConfig.PHYSIC_MODEL, <T>(modelName: PhysicModelName) => {
+    physicModelName.value = modelName;
+  });
+
   return {
     physicModelName,
     physicModelNameMap,
