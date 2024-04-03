@@ -3,6 +3,7 @@ import type { NumericVector } from '../vector/types';
 export type ColorVector = [number, number, number];
 export type PhysicModelName = 'v1' | 'v2';
 
+export type RadiusConfig = number[];
 export type GravityConfig = number[][];
 export type LinksConfig = number[];
 export type TypeLinksConfig = number[][];
@@ -11,6 +12,7 @@ export type LinkFactorDistanceExtendedConfig = number[][][];
 export type FrequenciesConfig = number[];
 export type ColorsConfig = Array<ColorVector>;
 export type TypesConfig = {
+  RADIUS: RadiusConfig;
   GRAVITY: GravityConfig;
   LINK_GRAVITY: GravityConfig;
   LINKS: LinksConfig;
@@ -47,6 +49,7 @@ export type InitialConfig = {
 };
 export type RandomTypesConfig = {
   TYPES_COUNT: number;
+  RADIUS_BOUNDS: [number, number, number?, number?];
   GRAVITY_BOUNDS: [number, number, number?, number?];
   LINK_GRAVITY_BOUNDS: [number, number, number?, number?];
   LINK_BOUNDS: [number, number, number?];

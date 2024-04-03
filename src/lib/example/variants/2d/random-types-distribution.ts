@@ -14,6 +14,7 @@ import { PhysicModelV1 } from "@/lib/physics/v1";
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
 const TYPES_CONFIG: TypesConfig = createRandomTypesConfig({
   TYPES_COUNT: 4,
+  RADIUS_BOUNDS: [0.5, 1.5],
   GRAVITY_BOUNDS: [-1, 0.5],
   LINK_GRAVITY_BOUNDS: [-1, 0.5],
   LINK_BOUNDS: [1, 3],

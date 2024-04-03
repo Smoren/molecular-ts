@@ -59,11 +59,20 @@ const randomizeTypesConfig = () => {
 
       <div>
         <input-header
-          name="Gravity"
-          tooltip="Gravity coefficient matrix for unlinked particles shows whether a particle of one type will attract or
+            name="Radius"
+            tooltip="Radius of each type of particles."
+            tooltip-position="left"
+            :tooltip-width="400"
+        />
+        <config-bounds name="Gravity" :step="1" :values="randomTypesConfig.RADIUS_BOUNDS" />
+      </div>
+
+      <div>
+        <input-header
+            name="Gravity"
+            tooltip="Gravity coefficient matrix for unlinked particles shows whether a particle of one type will attract or
                    repel a particle of another type in the case when they are not linked to each other, and with what force."
-          tooltip-position="left"
-          :tooltip-width="400"
+            tooltip-position="left"
         />
         <config-bounds name="Gravity" :step="1" :values="randomTypesConfig.GRAVITY_BOUNDS" />
         <flag title="Symmetric" v-model="randomTypesConfig.GRAVITY_MATRIX_SYMMETRIC" />

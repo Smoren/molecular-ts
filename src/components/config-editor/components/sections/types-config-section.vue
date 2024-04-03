@@ -73,11 +73,19 @@ const linkInfluenceConfigDescription = computed(() => {
       </div>
       <div>
         <input-header
-          name="Initial Frequencies"
-          tooltip="Ratio of the number of particles that will be generated on refill."
-          position="center"
+            name="Initial Frequencies"
+            tooltip="Ratio of the number of particles that will be generated on refill."
+            position="center"
         />
         <config-list :values="typesConfig.FREQUENCIES" :colors="typesConfig.COLORS" :step="0.1" />
+      </div>
+      <div>
+        <input-header
+            name="Radius"
+            tooltip="Radius of each type of particles."
+            position="center"
+        />
+        <config-list :values="typesConfig.RADIUS" :colors="typesConfig.COLORS" :step="0.1" />
       </div>
       <div>
         <input-header

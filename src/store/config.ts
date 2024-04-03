@@ -122,7 +122,6 @@ export const useConfigStore = defineStore("config", () => {
         console.log('worldConfig upd');
       }
       if (newConfig.typesConfig !== undefined) {
-
         if (newConfig.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED === undefined) {
           newConfig.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = false;
         }
@@ -134,6 +133,13 @@ export const useConfigStore = defineStore("config", () => {
           newConfig.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED = createDistributedLinkFactorDistance(
             newConfig.typesConfig.LINK_FACTOR_DISTANCE,
           );
+        }
+
+        if (newConfig.typesConfig.RADIUS === undefined) {
+          const radius: number[] = [];
+          radius.length = newConfig.typesConfig.FREQUENCIES.length;
+          radius.fill(1);
+          newConfig.typesConfig.RADIUS = radius;
         }
 
         console.log('typesConfig upd');

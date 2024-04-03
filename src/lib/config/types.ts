@@ -38,6 +38,7 @@ export function createBaseTypesConfig(): TypesConfig {
   ];
 
   return {
+    RADIUS: [1, 1, 1, 1, 1, 1],
     GRAVITY: [
       [-1, -1, -1, -1, 0.1, -1],
       [-1, -1, -1, -1, -1, -1],
@@ -73,6 +74,7 @@ export function createBaseTypesConfig(): TypesConfig {
 
 export function createRandomTypesConfig({
   TYPES_COUNT,
+  RADIUS_BOUNDS,
   GRAVITY_BOUNDS,
   LINK_GRAVITY_BOUNDS,
   LINK_TYPE_BOUNDS,
@@ -86,6 +88,11 @@ export function createRandomTypesConfig({
 }: RandomTypesConfig): TypesConfig {
   const precision = 8;
 
+  const radius: number[] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    radius.push(createRandomFloat(RADIUS_BOUNDS, precision));
+  }
+
   const gravity = randomizeMatrix(
     TYPES_COUNT,
     GRAVITY_BOUNDS,
@@ -93,6 +100,7 @@ export function createRandomTypesConfig({
     GRAVITY_MATRIX_SYMMETRIC,
     precision,
   );
+
   const linkGravity = randomizeMatrix(
     TYPES_COUNT,
     LINK_GRAVITY_BOUNDS,
@@ -143,6 +151,7 @@ export function createRandomTypesConfig({
   }
 
   return {
+    RADIUS: radius,
     GRAVITY: gravity,
     LINK_GRAVITY: linkGravity,
     LINKS: links,
@@ -158,6 +167,7 @@ export function createRandomTypesConfig({
 export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesConfig {
   return {
     TYPES_COUNT: typesCount,
+    RADIUS_BOUNDS: [0.5, 1.5, 1, 0.1],
     GRAVITY_BOUNDS: [-2, 1, -1, 0.1],
     LINK_GRAVITY_BOUNDS: [-5, 1, -1, 0.1],
     LINK_BOUNDS: [1, 3, 2],
