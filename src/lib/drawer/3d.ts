@@ -190,7 +190,7 @@ export class Drawer3d implements DrawerInterface {
   private addAtomToMap(atom: AtomInterface): Mesh {
     // eslint-disable-next-line new-cap
     const drawObject = this.createAtomMesh(
-      this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS,
+      this.WORLD_CONFIG.ATOM_RADIUS,
       atom.position,
       this.TYPES_CONFIG.COLORS[atom.type],
     );
