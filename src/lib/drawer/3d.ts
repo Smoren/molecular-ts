@@ -61,11 +61,16 @@ export class Drawer3d implements DrawerInterface {
   }
 
   draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
-    if (Math.random() > 0.99) {
-      console.log('camera', this.camera.position, this.camera.rotation);
-    }
     for (const atom of atoms) {
+      const radius = this.TYPES_CONFIG.RADIUS[atom.type];
       const drawObject = this.getAtomDrawObject(atom);
+
+      if (drawObject.position.x !== radius) {
+        drawObject.scaling.x = radius;
+        drawObject.scaling.y = radius;
+        drawObject.scaling.z = radius;
+      }
+
       drawObject.position.x = atom.position[0];
       drawObject.position.y = atom.position[1];
       drawObject.position.z = atom.position[2];
@@ -185,7 +190,7 @@ export class Drawer3d implements DrawerInterface {
   private addAtomToMap(atom: AtomInterface): Mesh {
     // eslint-disable-next-line new-cap
     const drawObject = this.createAtomMesh(
-      this.WORLD_CONFIG.ATOM_RADIUS,
+      this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS,
       atom.position,
       this.TYPES_CONFIG.COLORS[atom.type],
     );

@@ -77,7 +77,7 @@ export class Drawer2d implements DrawerInterface {
     for (const atom of atoms) {
       this.drawCircle(
         atom.position,
-        this.WORLD_CONFIG.ATOM_RADIUS,
+        this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS,
         this.TYPES_CONFIG.COLORS[atom.type],
       );
     }
