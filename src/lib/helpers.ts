@@ -119,6 +119,10 @@ export class GeometryHelper implements GeometryHelperInterface {
   getAtomsRadiusSum(lhs: AtomInterface, rhs: AtomInterface): number {
     return this.getAtomRadius(lhs) + this.getAtomRadius(rhs);
   }
+
+  getMassMultiplier(lhs: AtomInterface, rhs: AtomInterface): number {
+    return (this.TYPES_CONFIG.RADIUS[rhs.type] ** 3) / (this.TYPES_CONFIG.RADIUS[lhs.type] ** 3);
+  }
 }
 
 let LAST_ATOM_ID = 0;

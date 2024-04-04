@@ -20,4 +20,5 @@ export interface RulesHelperInterface {
 export interface GeometryHelperInterface {
   getAtomRadius(atom: AtomInterface): number;
   getAtomsRadiusSum(lhs: AtomInterface, rhs: AtomInterface): number;
+  getMassMultiplier(lhs: AtomInterface, rhs: AtomInterface): number;
 }

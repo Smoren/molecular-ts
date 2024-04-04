@@ -25,11 +25,11 @@ export class PhysicModelV1 implements PhysicModelInterface {
       multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.LINK_GRAVITY[lhs.type][rhs.type];
     }
 
-    return multiplier / dist2;
+    return multiplier * this.geometry.getMassMultiplier(lhs, rhs) / dist2;
   }
 
-  getLinkForce(): number {
-    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER;
+  getLinkForce(lhs: AtomInterface, rhs: AtomInterface): number {
+    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.geometry.getMassMultiplier(lhs, rhs);
   }
 
   getBoundsForce(dist: number): number {
