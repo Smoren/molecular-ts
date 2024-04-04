@@ -3,7 +3,7 @@ import type { NumericVector } from '../vector/types';
 
 export function createBaseWorldConfig(): WorldConfig {
   return {
-    PHYSIC_MODEL: 'v1',
+    PHYSIC_MODEL: 'v2',
     ATOM_RADIUS: 5,
     MAX_INTERACTION_RADIUS: 100,
     MAX_LINK_RADIUS: 60,
