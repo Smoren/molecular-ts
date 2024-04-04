@@ -20,24 +20,21 @@ export class PhysicModelV2 implements PhysicModelInterface {
 
     const bounceDistance = this.geometry.getAtomsRadiusSum(lhs, rhs);
     let bounceForce = 0;
-    let gravityForce = 0;
 
     if (dist2 < bounceDistance ** 2) {
       multiplier = -this.WORLD_CONFIG.BOUNCE_FORCE_MULTIPLIER * this.BOUNCE_CORRECTION_FACTOR;
       bounceForce = (bounceDistance - Math.sqrt(dist2)) * multiplier;
     }
 
-    if (dist2 > (bounceDistance / 2) ** 2) {
-      if (!lhs.bonds.has(rhs)) {
-        multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
-      } else {
-        multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.LINK_GRAVITY[lhs.type][rhs.type];
-      }
-
-      gravityForce = (multiplier / dist2 + bounceForce) * this.geometry.getMassMultiplier(lhs, rhs);
+    if (!lhs.bonds.has(rhs)) {
+      multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
+    } else {
+      multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.LINK_GRAVITY[lhs.type][rhs.type];
     }
 
-    return gravityForce + bounceForce;
+    const gravityForce = multiplier / dist2;
+
+    return (gravityForce + bounceForce) * this.geometry.getMassMultiplier(lhs, rhs);
   }
 
   getLinkForce(lhs: AtomInterface, rhs: AtomInterface): number {
