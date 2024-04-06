@@ -41,6 +41,10 @@ export class LinkManager implements LinkManagerInterface {
   private storage: Set<LinkInterface> = new Set();
   private pool: LinksPoolInterface = new LinkPool();
 
+  get length(): number {
+    return this.storage.size;
+  }
+
   create(lhs: AtomInterface, rhs: AtomInterface): LinkInterface {
     const link = this.pool.allocate(lhs, rhs);
     lhs.bonds.add(rhs);

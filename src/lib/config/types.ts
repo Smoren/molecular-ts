@@ -167,7 +167,7 @@ export function createRandomTypesConfig({
 export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesConfig {
   return {
     TYPES_COUNT: typesCount,
-    RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+    RADIUS_BOUNDS: [1, 1, 1, 0.1],
     GRAVITY_BOUNDS: [-2, 1, -1, 0.1],
     LINK_GRAVITY_BOUNDS: [-5, 1, -1, 0.1],
     LINK_BOUNDS: [1, 3, 2],

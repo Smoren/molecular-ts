@@ -6,6 +6,7 @@ export interface LinksPoolInterface {
 }
 
 export interface LinkManagerInterface extends Iterable<LinkInterface> {
+  length: number;
   create(lhs: AtomInterface, rhs: AtomInterface): LinkInterface;
   delete(link: LinkInterface): void;
   clear(): void;
