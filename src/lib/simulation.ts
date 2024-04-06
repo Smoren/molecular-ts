@@ -114,7 +114,7 @@ export class Simulation implements SimulationInterface {
     this.stepSummaryManager.buffer.ATOMS_COUNT = this.atoms.length;
     this.stepSummaryManager.buffer.LINKS_COUNT = this.linkManager.length;
     this.stepSummaryManager.buffer.STEP_DURATION = Date.now() - this.stepStarted;
-    this.stepSummaryManager.buffer.STEP_FREQUENCY = roundWithStep(1000 / this.stepSummaryManager.buffer.STEP_DURATION, 0.01);
+    this.stepSummaryManager.buffer.STEP_FREQUENCY = this.getStepFrequency();
     this.stepSummaryManager.save();
     this.stepStarted = Date.now();
     this.step++;
@@ -122,5 +122,9 @@ export class Simulation implements SimulationInterface {
     if (this.step % 30 === 0) {
       console.log('SUMMARY', this.stepSummaryManager.summary);
     }
+  }
+
+  private getStepFrequency(): number {
+    return roundWithStep(1000 / this.stepSummaryManager.buffer.STEP_DURATION, 0.1, 1);
   }
 }

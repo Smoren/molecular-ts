@@ -194,16 +194,17 @@ export function createRandomFloat(
 
   let result = Math.random() * (until - from) + from;
   if (step !== undefined && step !== 0) {
-    result = roundWithStep(result, step);
-  }
-  if (precision !== undefined) {
-    result = Number(result.toFixed(precision));
+    result = roundWithStep(result, step, precision);
   }
   return result;
 }
 
-export function roundWithStep(value: number, step: number): number {
-  return Math.round(value / step) * step;
+export function roundWithStep(value: number, step: number, precision?: number): number {
+  const result = Math.round(value / step) * step;
+  if (precision !== undefined) {
+    return Number(result.toFixed(precision));
+  }
+  return result;
 }
 
 type NumberFactory = ((bounds: [number, number, number?, number?], precision?: number) => number) |
