@@ -9,7 +9,7 @@ import { createBaseWorldConfig } from "@/lib/config/world";
 import { create2dBaseInitialConfig } from "@/lib/config/initial";
 import { create2dRandomDistribution } from "@/lib/config/atoms";
 import { Simulation } from "../../../simulation";
-import { PhysicModelV1 } from "@/lib/physics/v1";
+import { PhysicModelV1 } from "../../../physics/v1";
 
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
 const TYPES_CONFIG: TypesConfig = createRandomTypesConfig({
