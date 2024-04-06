@@ -59,23 +59,39 @@ const randomizeTypesConfig = () => {
 
       <div>
         <input-header
-            name="Radius"
-            tooltip="Radius of each type of particles."
-            tooltip-position="left"
-            :tooltip-width="400"
-        />
-        <config-bounds name="Gravity" :step="1" :values="randomTypesConfig.RADIUS_BOUNDS" />
+          name="Radius"
+          tooltip="Radius of each type of particles."
+          tooltip-position="left"
+          :tooltip-width="400"
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_RADIUS_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_RADIUS_BOUNDS">
+          <config-bounds
+            name="Gravity"
+            :step="1"
+            :values="randomTypesConfig.RADIUS_BOUNDS"
+          />
+        </div>
       </div>
 
       <div>
         <input-header
+          name="Gravity"
+          tooltip="Gravity coefficient matrix for unlinked particles shows whether a particle of one type will attract or
+                 repel a particle of another type in the case when they are not linked to each other, and with what force."
+          tooltip-position="left"
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_GRAVITY_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_GRAVITY_BOUNDS">
+          <config-bounds
             name="Gravity"
-            tooltip="Gravity coefficient matrix for unlinked particles shows whether a particle of one type will attract or
-                   repel a particle of another type in the case when they are not linked to each other, and with what force."
-            tooltip-position="left"
-        />
-        <config-bounds name="Gravity" :step="1" :values="randomTypesConfig.GRAVITY_BOUNDS" />
-        <flag title="Symmetric" v-model="randomTypesConfig.GRAVITY_MATRIX_SYMMETRIC" />
+            :step="1"
+            :values="randomTypesConfig.GRAVITY_BOUNDS"
+          />
+          <flag title="Symmetric" v-model="randomTypesConfig.GRAVITY_MATRIX_SYMMETRIC" />
+        </div>
       </div>
 
       <div>
@@ -84,9 +100,16 @@ const randomizeTypesConfig = () => {
           tooltip="Gravity coefficient matrix for linked particles shows whether a particle of one type will attract or
                  repel a particle of another type in the case when they are linked to each other, and with what force."
           tooltip-position="left"
-        />
-        <config-bounds :step="1" :values="randomTypesConfig.LINK_GRAVITY_BOUNDS" />
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_GRAVITY_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_LINK_GRAVITY_BOUNDS">
+          <config-bounds
+            :step="1"
+            :values="randomTypesConfig.LINK_GRAVITY_BOUNDS"
+          />
         <flag title="Symmetric" v-model="randomTypesConfig.LINK_GRAVITY_MATRIX_SYMMETRIC" />
+        </div>
       </div>
 
       <div>
@@ -94,8 +117,12 @@ const randomizeTypesConfig = () => {
           name="Links Count"
           tooltip="Connection limit map shows the maximum number of links for particles of each type."
           tooltip-position="left"
-        />
-        <config-bounds :step="1" :values="randomTypesConfig.LINK_BOUNDS" />
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_LINK_BOUNDS">
+          <config-bounds :step="1" :values="randomTypesConfig.LINK_BOUNDS" />
+        </div>
       </div>
 
       <div>
@@ -104,9 +131,13 @@ const randomizeTypesConfig = () => {
           tooltip="Connection limit matrix shows the maximum number of connections that particles of each type can have
                    with particles of different types."
           tooltip-position="left"
-        />
-        <config-bounds :step="1" :values="randomTypesConfig.LINK_TYPE_BOUNDS" />
-        <flag title="Symmetric" v-model="randomTypesConfig.LINK_TYPE_MATRIX_SYMMETRIC" />
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_TYPE_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_LINK_TYPE_BOUNDS">
+          <config-bounds :step="1" :values="randomTypesConfig.LINK_TYPE_BOUNDS" />
+          <flag title="Symmetric" v-model="randomTypesConfig.LINK_TYPE_MATRIX_SYMMETRIC" />
+        </div>
       </div>
 
       <div>
@@ -115,19 +146,23 @@ const randomizeTypesConfig = () => {
           tooltip="Matrix of influence on neighbors links shows how particles of each type affect the maximum length of
                    links of neighboring particles of different types."
           tooltip-position="left"
-        />
-        <config-bounds name="Links Distance Factor" :step="1" :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS" />
-        <flag
-          title="Symmetric"
-          v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
-          v-show="!randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
-          style="float: left;"
-        />
-        <flag
-          title="Extended"
-          v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
-          style="float: right;"
-        />
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_FACTOR_DISTANCE_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_LINK_FACTOR_DISTANCE_BOUNDS">
+          <config-bounds name="Links Distance Factor" :step="1" :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS" />
+          <flag
+              title="Symmetric"
+              v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
+              v-show="!randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
+              style="float: left;"
+          />
+          <flag
+              title="Extended"
+              v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
+              style="float: right;"
+          />
+        </div>
       </div>
 
       <div v-if="needRefill">
@@ -145,5 +180,9 @@ const randomizeTypesConfig = () => {
 <style scoped lang="scss">
 
 @import "../../assets/config-editor";
+
+.title-flag {
+  margin-right: 5px;
+}
 
 </style>

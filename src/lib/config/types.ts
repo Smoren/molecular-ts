@@ -167,12 +167,21 @@ export function createRandomTypesConfig({
 export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesConfig {
   return {
     TYPES_COUNT: typesCount,
-    RADIUS_BOUNDS: [1, 1, 1, 0.1],
+
+    USE_RADIUS_BOUNDS: false,
+    USE_GRAVITY_BOUNDS: true,
+    USE_LINK_GRAVITY_BOUNDS: true,
+    USE_LINK_BOUNDS: true,
+    USE_LINK_TYPE_BOUNDS: true,
+    USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+
+    RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
     GRAVITY_BOUNDS: [-2, 1, -1, 0.1],
     LINK_GRAVITY_BOUNDS: [-5, 1, -1, 0.1],
     LINK_BOUNDS: [1, 3, 2],
     LINK_TYPE_BOUNDS: [0, 3, 2],
     LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
+
     GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_TYPE_MATRIX_SYMMETRIC: false,

@@ -156,12 +156,66 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
+  const copyConfigListValue = (copyFrom: unknown[], copyTo: unknown[], defaultValue: number) => {
+    for (const i in copyTo as Array<unknown>) {
+      copyTo[i] = copyFrom[i] ?? defaultValue;
+    }
+  }
+
+  const copyConfigMatrixValue = (copyFrom: unknown[][], copyTo: unknown[][], defaultValue: number) => {
+    for (let i=0; i<copyTo.length; ++i) {
+      for (let j=0; j<copyTo[i].length; ++j) {
+        if (copyFrom[i] === undefined) {
+          copyTo[i][j] = defaultValue;
+        } else {
+          copyTo[i][j] = copyFrom[i][j] ?? defaultValue;
+        }
+      }
+    }
+  }
+
+  const copyConfigTensorValue = (copyFrom: unknown[][][], copyTo: unknown[][][], defaultValue: number) => {
+    for (let i=0; i<copyTo.length; ++i) {
+      for (let j=0; j<copyTo[i].length; ++j) {
+        for (let k=0; k<copyTo[i][j].length; ++k)
+        if (copyFrom[i] === undefined || copyFrom[i][j] === undefined) {
+          copyTo[i][j][k] = defaultValue;
+        } else {
+          copyTo[i][j][k] = copyFrom[i][j][k] ?? defaultValue;
+        }
+      }
+    }
+  }
+
   const randomizeTypesConfig = () => {
-    const oldFrequencies = typesConfigRaw.FREQUENCIES;
     const newConfig = createRandomTypesConfig(randomTypesConfig.value);
 
-    for (const i in newConfig.FREQUENCIES) {
-      newConfig.FREQUENCIES[i] = oldFrequencies[i] ?? 1;
+    copyConfigListValue(typesConfigRaw.FREQUENCIES, newConfig.FREQUENCIES, 1);
+
+    if (!randomTypesConfig.value.USE_RADIUS_BOUNDS) {
+      copyConfigListValue(typesConfigRaw.RADIUS, newConfig.RADIUS, 1);
+    }
+
+    if (!randomTypesConfig.value.USE_GRAVITY_BOUNDS) {
+      copyConfigMatrixValue(typesConfigRaw.GRAVITY, newConfig.GRAVITY, 0);
+    }
+
+    if (!randomTypesConfig.value.USE_LINK_GRAVITY_BOUNDS) {
+      copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0);
+    }
+
+    if (!randomTypesConfig.value.USE_LINK_BOUNDS) {
+      copyConfigListValue(typesConfigRaw.LINKS, newConfig.LINKS, 0);
+    }
+
+    if (!randomTypesConfig.value.USE_LINK_TYPE_BOUNDS) {
+      copyConfigMatrixValue(typesConfigRaw.TYPE_LINKS, newConfig.TYPE_LINKS, 0);
+    }
+
+    if (!randomTypesConfig.value.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
+      copyConfigMatrixValue(typesConfigRaw.LINK_FACTOR_DISTANCE, newConfig.LINK_FACTOR_DISTANCE, 1);
+      copyConfigTensorValue(typesConfigRaw.LINK_FACTOR_DISTANCE_EXTENDED, newConfig.LINK_FACTOR_DISTANCE_EXTENDED, 1);
+      newConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = typesConfigRaw.LINK_FACTOR_DISTANCE_USE_EXTENDED;
     }
 
     flash.turnOn(FLASH_IMPORT_STARTED);

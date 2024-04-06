@@ -24,7 +24,10 @@ withDefaults(defineProps<{
 
 <template>
   <div :style="{ textAlign: position }">
-    <span style="font-weight: 600;">{{ name }}</span>
+    <label>
+      <slot />
+      <span style="font-weight: 600;">{{ name }}</span>
+    </label>
     <tooltip :text="tooltip" :position="tooltipPosition" :width="tooltipWidth" v-if="tooltip" style="margin-left: 5px;">
       <font-awesome-icon icon="fa-regular fa-circle-question" style="color: #bbb" />
     </tooltip>
