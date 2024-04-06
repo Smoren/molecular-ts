@@ -243,6 +243,7 @@ export const useConfigStore = defineStore("config", () => {
 
   const appendType = () => {
     typesConfig.value.COLORS.push(getRandomColor());
+    typesConfig.value.RADIUS.push(1);
     typesConfig.value.FREQUENCIES.push(1);
     typesConfig.value.LINKS.push(0);
 
@@ -257,6 +258,8 @@ export const useConfigStore = defineStore("config", () => {
 
     typesConfig.value.LINK_FACTOR_DISTANCE.forEach((item) => item.push(1));
     typesConfig.value.LINK_FACTOR_DISTANCE.push(Array(typesConfig.value.COLORS.length).fill(1));
+
+    // TODO LINK_FACTOR_DISTANCE_EXTENDED
   }
 
   watch(() => typesConfig.value.LINK_FACTOR_DISTANCE_USE_EXTENDED, (value: boolean) => {
