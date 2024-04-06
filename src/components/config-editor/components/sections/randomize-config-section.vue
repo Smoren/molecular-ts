@@ -21,7 +21,7 @@ const {
 
 const needRefill = computed((): boolean => {
   return randomTypesConfig.TYPES_COUNT !== configStore.typesConfig.COLORS.length ||
-      randomTypesConfig.USE_FREQUENCY_BOUNDS;
+    randomTypesConfig.USE_FREQUENCY_BOUNDS;
 });
 
 const randomizeTypesConfig = () => {
