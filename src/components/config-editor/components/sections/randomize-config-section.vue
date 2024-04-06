@@ -8,8 +8,6 @@ import ConfigBounds from "@/components/config-editor/components/inputs/config-bo
 import InitialConfigSection from "@/components/config-editor/components/sections/initial-config-section.vue";
 import Flag from "@/components/config-editor/components/inputs/flag.vue";
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
-import ConfigMatrix from "@/components/config-editor/components/inputs/config-matrix.vue";
-import ConfigList from "@/components/config-editor/components/inputs/config-list.vue";
 
 const configStore = useConfigStore();
 const { randomTypesConfig, initialConfig } = configStore;
