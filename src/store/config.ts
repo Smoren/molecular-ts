@@ -190,7 +190,9 @@ export const useConfigStore = defineStore("config", () => {
   const randomizeTypesConfig = () => {
     const newConfig = createRandomTypesConfig(randomTypesConfig.value);
 
-    copyConfigListValue(typesConfigRaw.FREQUENCIES, newConfig.FREQUENCIES, 1);
+    if (!randomTypesConfig.value.USE_FREQUENCY_BOUNDS) {
+      copyConfigListValue(typesConfigRaw.FREQUENCIES, newConfig.FREQUENCIES, 1);
+    }
 
     if (!randomTypesConfig.value.USE_RADIUS_BOUNDS) {
       copyConfigListValue(typesConfigRaw.RADIUS, newConfig.RADIUS, 1);

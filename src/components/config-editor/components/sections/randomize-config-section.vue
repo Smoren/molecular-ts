@@ -20,7 +20,8 @@ const {
 } = useSimulationStore();
 
 const needRefill = computed((): boolean => {
-  return randomTypesConfig.TYPES_COUNT !== configStore.typesConfig.COLORS.length;
+  return randomTypesConfig.TYPES_COUNT !== configStore.typesConfig.COLORS.length ||
+      randomTypesConfig.USE_FREQUENCY_BOUNDS;
 });
 
 const randomizeTypesConfig = () => {
@@ -68,9 +69,25 @@ const randomizeTypesConfig = () => {
         </input-header>
         <div v-show="randomTypesConfig.USE_RADIUS_BOUNDS">
           <config-bounds
-            name="Gravity"
             :step="1"
             :values="randomTypesConfig.RADIUS_BOUNDS"
+          />
+        </div>
+      </div>
+
+      <div>
+        <input-header
+          name="Frequencies"
+          tooltip="Ratio of the number of particles that will be generated on refill."
+          tooltip-position="left"
+          :tooltip-width="400"
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_FREQUENCY_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_FREQUENCY_BOUNDS">
+          <config-bounds
+            :step="1"
+            :values="randomTypesConfig.FREQUENCY_BOUNDS"
           />
         </div>
       </div>
@@ -86,7 +103,6 @@ const randomizeTypesConfig = () => {
         </input-header>
         <div v-show="randomTypesConfig.USE_GRAVITY_BOUNDS">
           <config-bounds
-            name="Gravity"
             :step="1"
             :values="randomTypesConfig.GRAVITY_BOUNDS"
           />

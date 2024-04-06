@@ -51,6 +51,7 @@ export type RandomTypesConfig = {
   TYPES_COUNT: number;
 
   USE_RADIUS_BOUNDS: boolean;
+  USE_FREQUENCY_BOUNDS: boolean;
   USE_GRAVITY_BOUNDS: boolean;
   USE_LINK_GRAVITY_BOUNDS: boolean;
   USE_LINK_BOUNDS: boolean;
@@ -58,6 +59,7 @@ export type RandomTypesConfig = {
   USE_LINK_FACTOR_DISTANCE_BOUNDS: boolean;
 
   RADIUS_BOUNDS: [number, number, number?, number?];
+  FREQUENCY_BOUNDS: [number, number, number?, number?];
   GRAVITY_BOUNDS: [number, number, number?, number?];
   LINK_GRAVITY_BOUNDS: [number, number, number?, number?];
   LINK_BOUNDS: [number, number, number?];

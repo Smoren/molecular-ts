@@ -75,6 +75,7 @@ export function createBaseTypesConfig(): TypesConfig {
 export function createRandomTypesConfig({
   TYPES_COUNT,
   RADIUS_BOUNDS,
+  FREQUENCY_BOUNDS,
   GRAVITY_BOUNDS,
   LINK_GRAVITY_BOUNDS,
   LINK_TYPE_BOUNDS,
@@ -100,6 +101,11 @@ export function createRandomTypesConfig({
     GRAVITY_MATRIX_SYMMETRIC,
     precision,
   );
+
+  const frequencies: number[] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    frequencies.push(createRandomFloat(FREQUENCY_BOUNDS, precision));
+  }
 
   const linkGravity = randomizeMatrix(
     TYPES_COUNT,
@@ -145,21 +151,16 @@ export function createRandomTypesConfig({
     }
   }
 
-  const frequencies: number[] = [];
-  for (let i=0; i<TYPES_COUNT; ++i) {
-    frequencies.push(Math.random());
-  }
-
   return {
     RADIUS: radius,
     GRAVITY: gravity,
+    FREQUENCIES: frequencies,
     LINK_GRAVITY: linkGravity,
     LINKS: links,
     TYPE_LINKS: typeLinks,
     LINK_FACTOR_DISTANCE: linkFactorDistance,
     LINK_FACTOR_DISTANCE_EXTENDED: linkFactorDistanceExtended ?? createDistributedLinkFactorDistance(linkFactorDistance),
     LINK_FACTOR_DISTANCE_USE_EXTENDED: LINK_FACTOR_DISTANCE_EXTENDED,
-    FREQUENCIES: frequencies,
     COLORS: createColors(TYPES_COUNT),
   };
 }
@@ -169,6 +170,7 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     TYPES_COUNT: typesCount,
 
     USE_RADIUS_BOUNDS: false,
+    USE_FREQUENCY_BOUNDS: false,
     USE_GRAVITY_BOUNDS: true,
     USE_LINK_GRAVITY_BOUNDS: true,
     USE_LINK_BOUNDS: true,
@@ -176,6 +178,7 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
 
     RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+    FREQUENCY_BOUNDS: [0.1, 1, 0.5, 0.1],
     GRAVITY_BOUNDS: [-2, 1, -1, 0.1],
     LINK_GRAVITY_BOUNDS: [-5, 1, -1, 0.1],
     LINK_BOUNDS: [1, 3, 2],
