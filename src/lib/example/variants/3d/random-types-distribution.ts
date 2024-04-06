@@ -14,12 +14,21 @@ import { PhysicModelV1 } from "@/lib/physics/v1";
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
 const TYPES_CONFIG: TypesConfig = createRandomTypesConfig({
   TYPES_COUNT: 4,
+
+  USE_RADIUS_BOUNDS: false,
+  USE_GRAVITY_BOUNDS: true,
+  USE_LINK_GRAVITY_BOUNDS: true,
+  USE_LINK_BOUNDS: true,
+  USE_LINK_TYPE_BOUNDS: true,
+  USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+
   RADIUS_BOUNDS: [0.5, 1.5],
   GRAVITY_BOUNDS: [-1, 0.5],
   LINK_GRAVITY_BOUNDS: [-1, 0.5],
   LINK_BOUNDS: [1, 3],
   LINK_TYPE_BOUNDS: [0, 3],
   LINK_FACTOR_DISTANCE_BOUNDS: [0.5, 1.5],
+
   GRAVITY_MATRIX_SYMMETRIC: false,
   LINK_GRAVITY_MATRIX_SYMMETRIC: false,
   LINK_TYPE_MATRIX_SYMMETRIC: false,
