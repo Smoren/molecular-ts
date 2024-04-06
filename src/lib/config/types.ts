@@ -15,6 +15,10 @@ function createColors(count: number): Array<ColorVector> {
     [180, 180, 80],
     [70, 120, 250],
     [250, 100, 250],
+    [206, 255, 182],
+    [157, 68, 216],
+    [61, 192, 249],
+    [121, 242, 52],
   ].reverse() as Array<ColorVector>;
   const result: Array<ColorVector> = [];
   for (let i=0; i<count; ++i) {

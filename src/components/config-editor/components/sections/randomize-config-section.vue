@@ -164,7 +164,11 @@ const randomizeTypesConfig = () => {
           <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_FACTOR_DISTANCE_BOUNDS" />
         </input-header>
         <div v-show="randomTypesConfig.USE_LINK_FACTOR_DISTANCE_BOUNDS">
-          <config-bounds name="Links Distance Factor" :step="1" :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS" />
+          <config-bounds
+            name="Links Distance Factor"
+            :step="0.1"
+            :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS"
+          />
           <flag
               title="Symmetric"
               v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
