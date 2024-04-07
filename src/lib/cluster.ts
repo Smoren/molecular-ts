@@ -84,7 +84,7 @@ class ClusterMap implements ClusterMapInterface {
   }
 
   clear(): void {
-    this.map.length = 0;
+    this.map = [];
   }
 
   private handleAtom(atom: AtomInterface): ClusterInterface {
