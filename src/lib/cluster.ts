@@ -177,7 +177,6 @@ export class ClusterManager implements ClusterManagerInterface {
       }
     } else {
       const neighborhood = this.map.getNeighbourhood(atom);
-
       for (let i=0; i<neighborhood.length; ++i) {
         const cluster = neighborhood[i];
         for (const neighbour of cluster.atoms) {
