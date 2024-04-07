@@ -56,6 +56,7 @@ export class Drawer3d implements DrawerInterface {
       this.normalizeFrame();
       this.scene.render();
     });
+    this.scene.skipPointerMovePicking = true;
 
     this.initEventHandlers();
   }
