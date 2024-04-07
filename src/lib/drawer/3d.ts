@@ -44,7 +44,7 @@ export class Drawer3d implements DrawerInterface {
     this.domElement = domElement;
     this.WORLD_CONFIG = worldConfig;
     this.TYPES_CONFIG = typesConfig;
-    this.engine = new Engine(this.domElement, true);
+    this.engine = new Engine(this.domElement, false, {}, true);
     this.scene = new Scene(this.engine);
     this.camera = this.createCamera([631, 679, 805], [0.54, 97.98, 0]);
     this.scene.activeCamera!.attachControl(this.domElement);
@@ -134,7 +134,11 @@ export class Drawer3d implements DrawerInterface {
     material.diffuseColor.r = color[0];
     material.diffuseColor.g = color[1];
     material.diffuseColor.b = color[2];
+    material.freeze();
+
     atomMesh.material = material;
+    atomMesh.isPickable = false;
+    atomMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION;
 
     return atomMesh;
   }
@@ -178,7 +182,11 @@ export class Drawer3d implements DrawerInterface {
     material.diffuseColor.r = color[0];
     material.diffuseColor.g = color[1];
     material.diffuseColor.b = color[2];
+    material.freeze();
+
     newMesh.material = material;
+    newMesh.isPickable = false;
+    newMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION_THEN_BSPHERE_ONLY;
 
     return newMesh;
   }
