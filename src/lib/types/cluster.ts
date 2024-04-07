@@ -13,6 +13,8 @@ export interface ClusterInterface extends Iterable<AtomInterface> {
 export interface ClusterMapInterface {
   getNeighbourhood(atom: AtomInterface): ClusterInterface[];
   countAtoms(): number;
+  handleAtom(atom: AtomInterface): ClusterInterface;
+  getCluster(clusterCoords: NumericVector): ClusterInterface;
 }
 
 export interface ClusterManagerInterface {

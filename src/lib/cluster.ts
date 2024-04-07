@@ -87,7 +87,7 @@ class ClusterMap implements ClusterMapInterface {
     this.map = [];
   }
 
-  private handleAtom(atom: AtomInterface): ClusterInterface {
+  public handleAtom(atom: AtomInterface): ClusterInterface {
     const actualCluster = this.getClusterByAtom(atom);
     const currentCluster = atom.cluster;
 
@@ -102,7 +102,7 @@ class ClusterMap implements ClusterMapInterface {
     return actualCluster;
   }
 
-  private getCluster(clusterCoords: NumericVector): ClusterInterface {
+  public getCluster(clusterCoords: NumericVector): ClusterInterface {
     let result: Array<unknown> = this.map;
 
     for (let i=0; i<clusterCoords.length-1; ++i) {
@@ -153,12 +153,36 @@ export class ClusterManager implements ClusterManagerInterface {
   }
 
   handleAtom(atom: AtomInterface, callback: (lhs: AtomInterface, rhs: AtomInterface) => void): void {
-    const neighborhood = this.map.getNeighbourhood(atom);
+    if (atom.position.length === 3) {
+      const cc = this.map.handleAtom(atom);
+      for (let i=cc.coords[0]-1; i<=cc.coords[0]+1; ++i) {
+        for (let j=cc.coords[1]-1; j<=cc.coords[1]+1; ++j) {
+          for (let k=cc.coords[2]-1; k<=cc.coords[2]+1; ++k) {
+            const cluster = this.map.getCluster([i, j, k]);
+            for (const neighbour of cluster.atoms) {
+              callback(atom, neighbour);
+            }
+          }
+        }
+      }
+    } else if (atom.position.length === 1) {
+      const cc = this.map.handleAtom(atom);
+      for (let i=cc.coords[0]-1; i<=cc.coords[0]+1; ++i) {
+        for (let j=cc.coords[1]-1; j<=cc.coords[1]+1; ++j) {
+          const cluster = this.map.getCluster([i, j]);
+          for (const neighbour of cluster.atoms) {
+            callback(atom, neighbour);
+          }
+        }
+      }
+    } else {
+      const neighborhood = this.map.getNeighbourhood(atom);
 
-    for (let i=0; i<neighborhood.length; ++i) {
-      const cluster = neighborhood[i];
-      for (const neighbour of cluster.atoms) {
-        callback(atom, neighbour);
+      for (let i=0; i<neighborhood.length; ++i) {
+        const cluster = neighborhood[i];
+        for (const neighbour of cluster.atoms) {
+          callback(atom, neighbour);
+        }
       }
     }
   }
