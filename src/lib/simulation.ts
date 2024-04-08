@@ -106,7 +106,7 @@ export class Simulation implements SimulationInterface {
     this.handleStepSummary();
 
     if (this.isRunning) {
-      setTimeout(() => this.tick(), 1);
+      requestAnimationFrame(() => this.tick());
     }
   }
 
