@@ -1,7 +1,8 @@
 import type { InitialConfig, TypesConfig, WorldConfig } from './config';
 import type { AtomInterface } from './atomic';
 import type { DrawerInterface } from './drawer';
-import type { PhysicModelInterface } from "./interaction";
+import type { PhysicModelInterface } from './interaction';
+import type { Summary } from './summary';
 
 export type SimulationConfig = {
   worldConfig: WorldConfig;
@@ -17,6 +18,7 @@ export type SimulationConfig = {
 };
 
 export interface SimulationInterface {
+  readonly summary: Summary;
   start(): void;
   stop(): void;
   refill(initialConfig?: InitialConfig): void;

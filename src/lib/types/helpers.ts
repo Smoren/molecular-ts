@@ -23,3 +23,11 @@ export interface GeometryHelperInterface {
   getAtomsRadiusSum(lhs: AtomInterface, rhs: AtomInterface): number;
   getMassMultiplier(lhs: AtomInterface, rhs: AtomInterface): number;
 }
+
+export interface QueueInterface {
+  push(value: number): void;
+  pop(): number | undefined;
+  first(): number | undefined;
+  last(): number | undefined;
+  mean(): number | undefined;
+}

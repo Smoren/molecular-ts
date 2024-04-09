@@ -4,12 +4,12 @@ import type { DrawerInterface } from './types/drawer';
 import type { LinkManagerInterface } from './types/helpers';
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
 import type { ClusterManagerInterface } from './types/cluster';
-import type { StepSummaryManagerInterface } from './types/summary';
+import type { QueueSummaryManagerInterface, StepSummaryManagerInterface, Summary } from './types/summary';
 import type { InitialConfig } from './types/config';
 import { ClusterManager } from './cluster';
 import { createAtom, LinkManager, roundWithStep, RulesHelper } from './helpers';
 import { InteractionManager } from './interaction';
-import { StepSummaryManager } from './summary';
+import { QueueSummaryManager, StepSummaryManager } from './summary';
 
 export class Simulation implements SimulationInterface {
   private readonly config: SimulationConfig;
@@ -19,6 +19,7 @@ export class Simulation implements SimulationInterface {
   private readonly interactionManager: InteractionManagerInterface;
   private readonly clusterManager: ClusterManagerInterface;
   private readonly stepSummaryManager: StepSummaryManagerInterface;
+  private readonly queueSummaryManager: QueueSummaryManagerInterface;
   private isRunning: boolean = false;
   private step: number;
   private stepStarted: number;
@@ -37,6 +38,7 @@ export class Simulation implements SimulationInterface {
     );
     this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
     this.stepSummaryManager = new StepSummaryManager();
+    this.queueSummaryManager = new QueueSummaryManager(30);
     this.step = 0;
     this.stepStarted = Date.now();
 
@@ -47,6 +49,10 @@ export class Simulation implements SimulationInterface {
       console.log('atom added');
       this.atoms.push(createAtom(extraKey-1, coords));
     });
+  }
+
+  get summary(): Summary {
+    return this.queueSummaryManager.mean();
   }
 
   start() {
@@ -119,8 +125,10 @@ export class Simulation implements SimulationInterface {
     this.stepStarted = Date.now();
     this.step++;
 
+    this.queueSummaryManager.push(this.stepSummaryManager.summary);
+
     if (this.step % 30 === 0) {
-      console.log('SUMMARY', this.stepSummaryManager.summary);
+      console.log('SUMMARY', this.queueSummaryManager.mean());
     }
   }
 

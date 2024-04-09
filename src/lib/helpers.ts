@@ -2,7 +2,8 @@ import type {
   LinksPoolInterface,
   LinkManagerInterface,
   RulesHelperInterface,
-  GeometryHelperInterface
+  GeometryHelperInterface,
+  QueueInterface,
 } from './types/helpers';
 import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector } from './vector/types';
@@ -11,13 +12,12 @@ import type {
   LinkFactorDistanceExtendedConfig,
   PhysicModelName,
   TypesConfig,
-  WorldConfig
+  WorldConfig,
 } from './types/config';
 import type { PhysicModelConstructor, PhysicModelInterface } from './types/interaction';
 import { Atom, Link } from './atomic';
 import { PhysicModelV1 } from './physics/v1';
 import { PhysicModelV2 } from './physics/v2';
-import { fullCopyObject } from "@/helpers/utils";
 
 class LinkPool implements LinksPoolInterface {
   private storage: LinkInterface[] = [];
@@ -129,6 +129,42 @@ export class GeometryHelper implements GeometryHelperInterface {
   }
 }
 
+export class Queue implements QueueInterface {
+  private readonly maxSize?: number;
+  private storage: number[] = [];
+
+  constructor(maxSize?: number) {
+    this.maxSize = maxSize;
+  }
+
+  first(): number | undefined {
+    return this.storage[0] ?? undefined;
+  }
+
+  last(): number | undefined {
+    return this.storage[this.storage.length-1] ?? undefined;
+  }
+
+  mean(): number | undefined {
+    return this.storage.length > 0
+      ? this.storage.reduce((acc, x) => acc + x, 0) / this.storage.length
+      : undefined;
+  }
+
+  pop(): number | undefined {
+    const result = this.storage[0] ?? undefined;
+    this.storage = this.storage.slice(1);
+    return result;
+  }
+
+  push(value: number): void {
+    if (this.maxSize !== undefined && this.storage.length === this.maxSize) {
+      this.pop();
+    }
+    this.storage.push(value);
+  }
+}
+
 let LAST_ATOM_ID = 0;
 
 export function createAtom(type: number, position: NumericVector): AtomInterface {
@@ -199,10 +235,14 @@ export function createRandomFloat(
   return result;
 }
 
+export function round(value: number, precision: number): number {
+  return Number(value.toFixed(precision));
+}
+
 export function roundWithStep(value: number, step: number, precision?: number): number {
   const result = Math.round(value / step) * step;
   if (precision !== undefined) {
-    return Number(result.toFixed(precision));
+    return round(result, precision);
   }
   return result;
 }

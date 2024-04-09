@@ -1,12 +1,29 @@
-export type StepSummary = {
+import type { QueueInterface } from './helpers';
+
+export type Summary = {
   ATOMS_COUNT: number;
   LINKS_COUNT: number;
   STEP_DURATION: number;
   STEP_FREQUENCY: number,
 }
 
+export type SummaryAttr = keyof Summary;
+
 export interface StepSummaryManagerInterface {
-  readonly summary: StepSummary;
-  readonly buffer: StepSummary;
+  readonly summary: Summary;
+  readonly buffer: Summary;
   save(): void;
+}
+
+export type QueueSummary = {
+  ATOMS_COUNT: QueueInterface;
+  LINKS_COUNT: QueueInterface;
+  STEP_DURATION: QueueInterface;
+  STEP_FREQUENCY: QueueInterface,
+}
+
+export interface QueueSummaryManagerInterface {
+  readonly summary: QueueSummary;
+  push(step: Summary): void;
+  mean(): Summary;
 }
