@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { provide, ref, type Ref } from 'vue';
 import { useSwitch } from "@/hooks/use-switch";
 import { useConfigStore } from '@/store/config';
-import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/components/config-editor/constants";
+import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from "@/components/config-editor/constants";
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
 import Navbar from "@/components/config-editor/components/containers/navbar.vue";
 import Sidebar from "@/components/config-editor/components/containers/sidebar.vue";
@@ -14,6 +14,7 @@ import RandomizeConfigSection from "@/components/config-editor/components/sectio
 import TypesConfigSection from '@/components/config-editor/components/sections/types-config-section.vue';
 import ViewModeSection from "@/components/config-editor/components/sections/view-mode-section.vue";
 import WorldConfigSection from '@/components/config-editor/components/sections/world-config-section.vue';
+import SummarySection from "@/components/config-editor/components/sections/summary-section.vue";
 
 const configStore = useConfigStore();
 const { worldConfig, typesConfig } = configStore;
@@ -28,12 +29,13 @@ const copyShareLink = () => {
 
 const rightBarModeMap = {
   RANDOMIZE: 1,
+  SUMMARY: 2,
 };
 
 const rightBarMode: Ref<number> = ref(rightBarModeMap.RANDOMIZE);
 
 const toggleRightBar = (mode: number): boolean => {
-  if (mode !== rightBarModeMap.RANDOMIZE || !rightBarVisible.state.value) {
+  if (mode !== rightBarMode.value || !rightBarVisible.state.value) {
     rightBarMode.value = mode;
     rightBarVisible.on();
     return true;
@@ -44,6 +46,7 @@ const toggleRightBar = (mode: number): boolean => {
 };
 
 provide<() => boolean>(PROVIDED_TOGGLE_RANDOMIZE_CONFIG, () => toggleRightBar(rightBarModeMap.RANDOMIZE));
+provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarModeMap.SUMMARY));
 
 </script>
 
@@ -79,6 +82,7 @@ provide<() => boolean>(PROVIDED_TOGGLE_RANDOMIZE_CONFIG, () => toggleRightBar(ri
       <sidebar :visible="rightBarVisible" position="right">
         <template #body>
           <randomize-config-section v-if="rightBarMode === rightBarModeMap.RANDOMIZE" />
+          <summary-section v-if="rightBarMode === rightBarModeMap.SUMMARY" />
         </template>
       </sidebar>
     </template>

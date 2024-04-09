@@ -23,7 +23,8 @@
     "mdb-vue-ui-kit": "^4.1.1",
     "pinia": "^2.0.28",
     "unplugin-vue-macros": "^2.7.9",
-    "vue": "^3.4.15"
+    "vue": "^3.4.15",
+    "smoothie": "^1.36.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

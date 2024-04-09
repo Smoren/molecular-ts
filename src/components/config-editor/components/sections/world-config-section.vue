@@ -1,11 +1,12 @@
 <script setup lang="ts">
 
-import { type Ref, ref, toRefs } from "vue";
+import { inject, type Ref, ref, toRefs } from "vue";
 import { useConfigStore } from '@/store/config';
 import { useSimulationStore } from "@/store/simulation";
 import { usePhysicsStore } from '@/store/physics';
 import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
+import { PROVIDED_TOGGLE_SUMMARY } from "@/components/config-editor/constants";
 
 const physicsStore = usePhysicsStore();
 const { physicModelName } = toRefs(physicsStore);
@@ -41,6 +42,8 @@ const refill = () => {
   }
 };
 
+const toggleSummary = inject<() => boolean>(PROVIDED_TOGGLE_SUMMARY);
+
 </script>
 
 <template>
@@ -55,6 +58,9 @@ const refill = () => {
         </button>
         <button class="btn btn-outline-secondary" @click="refill">
           Refill
+        </button>
+        <button class="btn btn-outline-secondary" @click="toggleSummary">
+          Summary
         </button>
       </div>
       <div>
