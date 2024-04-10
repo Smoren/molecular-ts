@@ -81,8 +81,8 @@ provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarMod
       </sidebar>
       <sidebar :visible="rightBarVisible" position="right">
         <template #body>
-          <randomize-config-section v-if="rightBarMode === rightBarModeMap.RANDOMIZE" />
-          <summary-section v-if="rightBarMode === rightBarModeMap.SUMMARY" />
+          <randomize-config-section v-show="rightBarMode === rightBarModeMap.RANDOMIZE" />
+          <summary-section v-show="rightBarMode === rightBarModeMap.SUMMARY" />
         </template>
       </sidebar>
     </template>

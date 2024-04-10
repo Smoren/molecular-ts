@@ -118,5 +118,6 @@ export const useSimulationStore = defineStore("simulation", () => {
     refillAtoms,
     setPhysicModel,
     isMode,
+    getCurrentSimulation,
   }
 });

@@ -128,7 +128,7 @@ export class Simulation implements SimulationInterface {
     this.queueSummaryManager.push(this.stepSummaryManager.summary);
 
     if (this.step % 30 === 0) {
-      console.log('SUMMARY', this.queueSummaryManager.mean());
+      // console.log('SUMMARY', this.queueSummaryManager.mean());
     }
   }
 
