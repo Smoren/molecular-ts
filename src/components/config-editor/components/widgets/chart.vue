@@ -3,7 +3,6 @@
 import { onMounted, onUnmounted, ref, type Ref } from 'vue';
 import type { ITimeSeriesPresentationOptions } from 'smoothie';
 import { SmoothieChart, TimeSeries } from 'smoothie';
-import type { SummaryAttr } from "@/lib/types/summary";
 
 type TimeSeriesConfig = {
   name: string;
@@ -35,7 +34,7 @@ const interval: Ref<number | undefined> = ref();
 const timeSeries: Ref<Record<string, TimeSeries>> = ref({});
 
 const init = (): void => {
-  chart.streamTo(document.getElementById('chart') as HTMLCanvasElement);
+  chart.streamTo(document.getElementById(`chart-${props.id}`) as HTMLCanvasElement);
 
   for (const key in props.config) {
     const config = props.config[key];
@@ -82,15 +81,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <b>{{ name }}</b>
-  <canvas :id="`chart-${id}`" :width="width" :height="height"></canvas>
+  <h5>{{ name }}</h5>
+  <canvas :id="`chart-${id}`" class="chart" :width="width" :height="height"></canvas>
 </template>
 
 <style scoped lang="scss">
 
 @import "../../assets/config-editor";
 
-#chart {
+.chart {
   width: 100%;
 }
 

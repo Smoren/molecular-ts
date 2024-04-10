@@ -7,34 +7,34 @@ const { getCurrentSimulation } = useSimulationStore();
 
 const timeSeriesConfig = [
   {
-    id: 'atoms-count',
-    name: 'Atoms count',
-    options: {
-      strokeStyle: 'rgb(255, 0, 0)',
-      fillStyle: 'rgba(255, 0, 0, 0.4)',
-      lineWidth: 3,
-    },
-
+    id: 'fps',
+    name: 'FPS',
+    config: {
+      STEP_FREQUENCY: {
+        name: 'FPS',
+        options: {
+          strokeStyle: 'rgb(13, 110, 253)',
+          fillStyle: 'rgba(13, 110, 253, 0.4)',
+          lineWidth: 3,
+        },
+        getter: () => getCurrentSimulation().summary['STEP_FREQUENCY'],
+      },
+    }
   },
   {
     id: 'links-count',
-    name: 'Links count',
-    options: {
-      strokeStyle: 'rgb(0, 255, 0)',
-      fillStyle: 'rgba(0, 255, 0, 0.4)',
-      lineWidth: 3,
-    },
-
-  },
-  {
-    id: 'step-frequency',
-    name: 'FPS',
-    options: {
-      strokeStyle: 'rgb(0, 0, 255)',
-      fillStyle: 'rgba(0, 0, 255, 0.4)',
-      lineWidth: 3,
-    },
-
+    name: 'Links Count',
+    config: {
+      STEP_FREQUENCY: {
+        name: 'Links Count',
+        options: {
+          strokeStyle: 'rgb(13, 110, 253)',
+          fillStyle: 'rgba(13, 110, 253, 0.4)',
+          lineWidth: 3,
+        },
+        getter: () => getCurrentSimulation().summary['LINKS_COUNT'],
+      },
+    }
   },
 ];
 
@@ -47,13 +47,14 @@ const timeSeriesConfig = [
     </template>
     <template #body>
       <br />
-      <div v-for="ch in timeSeriesConfig">
+      <div v-for="config in timeSeriesConfig">
         <chart
-            :id="ch.id"
-            :period="1000"
-            :width="350"
-            :height="300"
-            :config="ch."
+          :id="config.id"
+          :name="config.name"
+          :period="100"
+          :width="350"
+          :height="200"
+          :config="config.config"
         />
       </div>
     </template>
