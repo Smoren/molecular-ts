@@ -100,6 +100,7 @@ export class Simulation implements SimulationInterface {
           this.clusterManager.handleAtom(atom, (lhs, rhs) => {
             this.interactionManager.interactAtomsStep2(lhs, rhs);
           });
+          this.stepSummaryManager.buffer.ATOMS_MEAN_SPEED += atom.speed.abs;
         }
         for (const link of this.linkManager) {
           this.interactionManager.interactLink(link);
@@ -118,6 +119,7 @@ export class Simulation implements SimulationInterface {
 
   private handleStepSummary(): void {
     this.stepSummaryManager.buffer.ATOMS_COUNT = this.atoms.length;
+    this.stepSummaryManager.buffer.ATOMS_MEAN_SPEED /= this.atoms.length;
     this.stepSummaryManager.buffer.LINKS_COUNT = this.linkManager.length;
     this.stepSummaryManager.buffer.STEP_DURATION = Date.now() - this.stepStarted;
     this.stepSummaryManager.buffer.STEP_FREQUENCY = this.getStepFrequency();

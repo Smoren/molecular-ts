@@ -76,7 +76,7 @@ const timeSeriesConfig: ChartConfig[] = [
           :name="config.name"
           :period="100"
           :width="350"
-          :height="200"
+          :height="100"
           :config="config.config"
         />
       </div>
