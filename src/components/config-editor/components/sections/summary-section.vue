@@ -44,6 +44,21 @@ const timeSeriesConfig: ChartConfig[] = [
       },
     }
   },
+  {
+    id: 'atoms-mean-speed',
+    name: 'Atoms Mean Speed',
+    config: {
+      LINKS_COUNT: {
+        name: 'Atoms Mean Speed',
+        options: {
+          strokeStyle: 'rgb(13, 110, 253)',
+          fillStyle: 'rgba(13, 110, 253, 0.4)',
+          lineWidth: 3,
+        },
+        getter: () => getCurrentSimulation().summary['ATOMS_MEAN_SPEED'],
+      },
+    }
+  },
 ];
 
 </script>

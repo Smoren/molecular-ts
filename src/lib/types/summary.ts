@@ -2,6 +2,7 @@ import type { QueueInterface } from './helpers';
 
 export type Summary = {
   ATOMS_COUNT: number;
+  ATOMS_MEAN_SPEED: number;
   LINKS_COUNT: number;
   STEP_DURATION: number;
   STEP_FREQUENCY: number,
@@ -17,6 +18,7 @@ export interface StepSummaryManagerInterface {
 
 export type QueueSummary = {
   ATOMS_COUNT: QueueInterface;
+  ATOMS_MEAN_SPEED: QueueInterface;
   LINKS_COUNT: QueueInterface;
   STEP_DURATION: QueueInterface;
   STEP_FREQUENCY: QueueInterface,

@@ -9,6 +9,7 @@ import { Queue, round } from './helpers';
 
 const createEmptyStepSummary = (): Summary => ({
   ATOMS_COUNT: 0,
+  ATOMS_MEAN_SPEED: 0,
   LINKS_COUNT: 0,
   STEP_DURATION: 0,
   STEP_FREQUENCY: 0,
@@ -47,6 +48,7 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface {
   readonly summary: QueueSummary;
   private readonly roundParams: Summary = {
     ATOMS_COUNT: 0,
+    ATOMS_MEAN_SPEED: 2,
     LINKS_COUNT: 0,
     STEP_DURATION: 2,
     STEP_FREQUENCY: 1,
@@ -55,6 +57,7 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface {
   constructor(maxSize: number) {
     this.summary = {
       ATOMS_COUNT: new Queue(maxSize),
+      ATOMS_MEAN_SPEED: new Queue(maxSize),
       LINKS_COUNT: new Queue(maxSize),
       STEP_DURATION: new Queue(maxSize),
       STEP_FREQUENCY: new Queue(maxSize),
