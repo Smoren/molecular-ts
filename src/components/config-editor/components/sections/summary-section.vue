@@ -10,7 +10,7 @@ const { getCurrentSimulation } = useSimulationStore();
 type ChartConfig = {
   id: string;
   name: string;
-  config: Record<string, TimeSeriesConfig>
+  config: Record<string, TimeSeriesConfig>;
 }
 
 const timeSeriesConfig: ChartConfig[] = [
