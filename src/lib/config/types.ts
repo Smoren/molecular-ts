@@ -193,6 +193,6 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     LINK_GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_TYPE_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
-    LINK_FACTOR_DISTANCE_EXTENDED: false,
+    LINK_FACTOR_DISTANCE_EXTENDED: true,
   };
 }
