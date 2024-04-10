@@ -4,7 +4,7 @@ import { onMounted, onUnmounted, ref, type Ref } from 'vue';
 import type { ITimeSeriesPresentationOptions } from 'smoothie';
 import { SmoothieChart, TimeSeries } from 'smoothie';
 
-type TimeSeriesConfig = {
+export type TimeSeriesConfig = {
   name: string;
   options: ITimeSeriesPresentationOptions;
   getter: () => number;

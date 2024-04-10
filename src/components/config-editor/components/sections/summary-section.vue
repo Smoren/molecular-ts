@@ -2,10 +2,18 @@
 
 import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
 import { useSimulationStore } from '@/store/simulation';
+import type { TimeSeriesConfig } from "@/components/config-editor/components/widgets/chart.vue";
 import Chart from "@/components/config-editor/components/widgets/chart.vue";
+
 const { getCurrentSimulation } = useSimulationStore();
 
-const timeSeriesConfig = [
+type ChartConfig = {
+  id: string;
+  name: string;
+  config: Record<string, TimeSeriesConfig>
+}
+
+const timeSeriesConfig: ChartConfig[] = [
   {
     id: 'fps',
     name: 'FPS',
