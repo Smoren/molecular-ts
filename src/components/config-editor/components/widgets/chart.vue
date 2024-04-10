@@ -3,6 +3,7 @@
 import { onMounted, onUnmounted, ref, type Ref } from 'vue';
 import type { ITimeSeriesPresentationOptions } from 'smoothie';
 import { SmoothieChart, TimeSeries } from 'smoothie';
+import type { SummaryAttr } from "@/lib/types/summary";
 
 type TimeSeriesConfig = {
   name: string;
