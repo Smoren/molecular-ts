@@ -25,7 +25,7 @@ const timeSeriesConfig = [
     id: 'links-count',
     name: 'Links Count',
     config: {
-      STEP_FREQUENCY: {
+      LINKS_COUNT: {
         name: 'Links Count',
         options: {
           strokeStyle: 'rgb(13, 110, 253)',
