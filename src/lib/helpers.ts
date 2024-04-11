@@ -129,35 +129,72 @@ export class GeometryHelper implements GeometryHelperInterface {
   }
 }
 
-export class Queue implements QueueInterface {
+export function arrayUnaryOperation<T>(
+  input: Array<T>,
+  operator: (item: T) => T,
+): Array<T> {
+  const result: Array<T> = [];
+
+  for (const item of input) {
+    result.push(operator(item));
+  }
+
+  return result;
+}
+
+export function arrayBinaryOperation<T>(
+  lhs: Array<T>,
+  rhs: Array<T>,
+  operator: (lhs: T, rhs: T) => T,
+): Array<T> {
+  const result: Array<T> = [];
+  const len = Math.min(lhs.length, rhs.length);
+
+  for (let i=0; i<len; ++i) {
+    result.push(operator(lhs[i], rhs[i]));
+  }
+
+  return result;
+}
+
+export class Queue<T extends number | number[]> implements QueueInterface<T> {
   private readonly maxSize?: number;
-  private storage: number[] = [];
+  private storage: T[] = [];
 
   constructor(maxSize?: number) {
     this.maxSize = maxSize;
   }
 
-  first(): number | undefined {
+  first(): T | undefined {
     return this.storage[0] ?? undefined;
   }
 
-  last(): number | undefined {
+  last(): T | undefined {
     return this.storage[this.storage.length-1] ?? undefined;
   }
 
-  mean(): number | undefined {
-    return this.storage.length > 0
-      ? this.storage.reduce((acc, x) => acc + x, 0) / this.storage.length
-      : undefined;
+  mean(): T | undefined {
+    if (this.storage.length === 0) {
+      return undefined;
+    }
+
+    if (this.storage[0] instanceof Array) {
+      const sum = (this.storage as number[][]).reduce(
+        (acc, x) => arrayBinaryOperation<number>(acc, x, (a, b) => a + b)
+      );
+      return arrayUnaryOperation(sum, (x) => x / this.storage.length) as T;
+    }
+
+    return (this.storage.reduce((acc, x) => acc + (x as number), 0) / this.storage.length) as T;
   }
 
-  pop(): number | undefined {
+  pop(): T | undefined {
     const result = this.storage[0] ?? undefined;
     this.storage = this.storage.slice(1);
     return result;
   }
 
-  push(value: number): void {
+  push(value: T): void {
     if (this.maxSize !== undefined && this.storage.length === this.maxSize) {
       this.pop();
     }

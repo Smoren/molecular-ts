@@ -25,7 +25,7 @@ const timeSeriesConfig: ChartConfig[] = [
           fillStyle: 'rgba(13, 110, 253, 0.4)',
           lineWidth: 3,
         },
-        getter: () => getCurrentSimulation().summary['STEP_FREQUENCY'],
+        getter: () => getCurrentSimulation().summary['STEP_FREQUENCY'][0],
       },
     }
   },
@@ -40,7 +40,7 @@ const timeSeriesConfig: ChartConfig[] = [
           fillStyle: 'rgba(13, 110, 253, 0.4)',
           lineWidth: 3,
         },
-        getter: () => getCurrentSimulation().summary['LINKS_COUNT'],
+        getter: () => getCurrentSimulation().summary['LINKS_COUNT'][0],
       },
     }
   },
@@ -55,7 +55,7 @@ const timeSeriesConfig: ChartConfig[] = [
           fillStyle: 'rgba(13, 110, 253, 0.4)',
           lineWidth: 3,
         },
-        getter: () => getCurrentSimulation().summary['ATOMS_MEAN_SPEED'],
+        getter: () => getCurrentSimulation().summary['ATOMS_MEAN_SPEED'][0],
       },
     }
   },

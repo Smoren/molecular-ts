@@ -18,8 +18,8 @@ export class Simulation implements SimulationInterface {
   private readonly linkManager: LinkManagerInterface;
   private readonly interactionManager: InteractionManagerInterface;
   private readonly clusterManager: ClusterManagerInterface;
-  private readonly stepSummaryManager: StepSummaryManagerInterface;
-  private readonly queueSummaryManager: QueueSummaryManagerInterface;
+  private readonly stepSummaryManager: StepSummaryManagerInterface<number[]>;
+  private readonly queueSummaryManager: QueueSummaryManagerInterface<number[]>;
   private isRunning: boolean = false;
   private step: number;
   private stepStarted: number;
@@ -51,7 +51,7 @@ export class Simulation implements SimulationInterface {
     });
   }
 
-  get summary(): Summary {
+  get summary(): Summary<number[]> {
     return this.queueSummaryManager.mean();
   }
 
@@ -100,7 +100,7 @@ export class Simulation implements SimulationInterface {
           this.clusterManager.handleAtom(atom, (lhs, rhs) => {
             this.interactionManager.interactAtomsStep2(lhs, rhs);
           });
-          this.stepSummaryManager.buffer.ATOMS_MEAN_SPEED += atom.speed.abs;
+          this.stepSummaryManager.buffer.ATOMS_MEAN_SPEED[0] += atom.speed.abs;
         }
         for (const link of this.linkManager) {
           this.interactionManager.interactLink(link);
@@ -118,11 +118,11 @@ export class Simulation implements SimulationInterface {
   }
 
   private handleStepSummary(): void {
-    this.stepSummaryManager.buffer.ATOMS_COUNT = this.atoms.length;
-    this.stepSummaryManager.buffer.ATOMS_MEAN_SPEED /= this.atoms.length;
-    this.stepSummaryManager.buffer.LINKS_COUNT = this.linkManager.length;
-    this.stepSummaryManager.buffer.STEP_DURATION = Date.now() - this.stepStarted;
-    this.stepSummaryManager.buffer.STEP_FREQUENCY = this.getStepFrequency();
+    this.stepSummaryManager.buffer.ATOMS_COUNT[0] = this.atoms.length;
+    this.stepSummaryManager.buffer.ATOMS_MEAN_SPEED[0] /= this.atoms.length;
+    this.stepSummaryManager.buffer.LINKS_COUNT[0] = this.linkManager.length;
+    this.stepSummaryManager.buffer.STEP_DURATION[0] = Date.now() - this.stepStarted;
+    this.stepSummaryManager.buffer.STEP_FREQUENCY[0] = this.getStepFrequency();
     this.stepSummaryManager.save();
     this.stepStarted = Date.now();
     this.step++;
@@ -135,6 +135,6 @@ export class Simulation implements SimulationInterface {
   }
 
   private getStepFrequency(): number {
-    return roundWithStep(1000 / this.stepSummaryManager.buffer.STEP_DURATION, 0.1, 1);
+    return roundWithStep(1000 / this.stepSummaryManager.buffer.STEP_DURATION[0], 0.1, 1);
   }
 }

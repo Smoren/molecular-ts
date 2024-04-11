@@ -24,10 +24,10 @@ export interface GeometryHelperInterface {
   getMassMultiplier(lhs: AtomInterface, rhs: AtomInterface): number;
 }
 
-export interface QueueInterface {
-  push(value: number): void;
-  pop(): number | undefined;
-  first(): number | undefined;
-  last(): number | undefined;
-  mean(): number | undefined;
+export interface QueueInterface<T> {
+  push(value: T): void;
+  pop(): T | undefined;
+  first(): T | undefined;
+  last(): T | undefined;
+  mean(): T | undefined;
 }

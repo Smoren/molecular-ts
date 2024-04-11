@@ -1,31 +1,31 @@
 import type { QueueInterface } from './helpers';
 
-export type Summary = {
-  ATOMS_COUNT: number;
-  ATOMS_MEAN_SPEED: number;
-  LINKS_COUNT: number;
-  STEP_DURATION: number;
-  STEP_FREQUENCY: number,
+export type Summary<T> = {
+  ATOMS_COUNT: T;
+  ATOMS_MEAN_SPEED: T;
+  LINKS_COUNT: T;
+  STEP_DURATION: T;
+  STEP_FREQUENCY: T,
 }
 
-export type SummaryAttr = keyof Summary;
+export type SummaryAttr = keyof Summary<unknown>;
 
-export interface StepSummaryManagerInterface {
-  readonly summary: Summary;
-  readonly buffer: Summary;
+export interface StepSummaryManagerInterface<T> {
+  readonly summary: Summary<T>;
+  readonly buffer: Summary<T>;
   save(): void;
 }
 
-export type QueueSummary = {
-  ATOMS_COUNT: QueueInterface;
-  ATOMS_MEAN_SPEED: QueueInterface;
-  LINKS_COUNT: QueueInterface;
-  STEP_DURATION: QueueInterface;
-  STEP_FREQUENCY: QueueInterface,
+export type QueueSummary<T> = {
+  ATOMS_COUNT: QueueInterface<T>;
+  ATOMS_MEAN_SPEED: QueueInterface<T>;
+  LINKS_COUNT: QueueInterface<T>;
+  STEP_DURATION: QueueInterface<T>;
+  STEP_FREQUENCY: QueueInterface<T>,
 }
 
-export interface QueueSummaryManagerInterface {
-  readonly summary: QueueSummary;
-  push(step: Summary): void;
-  mean(): Summary;
+export interface QueueSummaryManagerInterface<T> {
+  readonly summary: QueueSummary<T>;
+  push(step: Summary<T>): void;
+  mean(): Summary<T>;
 }

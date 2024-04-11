@@ -5,20 +5,20 @@ import type {
   StepSummaryManagerInterface,
   SummaryAttr,
 } from './types/summary';
-import { Queue, round } from './helpers';
+import { arrayUnaryOperation, Queue, round } from './helpers';
 
-const createEmptyStepSummary = (): Summary => ({
-  ATOMS_COUNT: 0,
-  ATOMS_MEAN_SPEED: 0,
-  LINKS_COUNT: 0,
-  STEP_DURATION: 0,
-  STEP_FREQUENCY: 0,
+const createEmptyStepSummary = (): Summary<number[]> => ({
+  ATOMS_COUNT: [0],
+  ATOMS_MEAN_SPEED: [0],
+  LINKS_COUNT: [0],
+  STEP_DURATION: [0],
+  STEP_FREQUENCY: [0],
 });
 
-export class StepSummaryManager implements StepSummaryManagerInterface {
-  readonly buffer: Summary;
-  private readonly _summary: Summary;
-  private readonly _empty: Summary;
+export class StepSummaryManager implements StepSummaryManagerInterface<number[]> {
+  readonly buffer: Summary<number[]>;
+  private readonly _summary: Summary<number[]>;
+  private readonly _empty: Summary<number[]>;
 
   constructor() {
     this.buffer = createEmptyStepSummary();
@@ -26,7 +26,7 @@ export class StepSummaryManager implements StepSummaryManagerInterface {
     this._empty = createEmptyStepSummary();
   }
 
-  get summary(): Summary {
+  get summary(): Summary<number[]> {
     return this.copy(this._summary);
   }
 
@@ -35,18 +35,20 @@ export class StepSummaryManager implements StepSummaryManagerInterface {
     this.copy(this._empty, this.buffer);
   }
 
-  private copy(sourceFrom: Summary, sourceTo?: Summary): Summary {
+  private copy(sourceFrom: Summary<number[]>, sourceTo?: Summary<number[]>): Summary<number[]> {
     sourceTo = sourceTo ?? createEmptyStepSummary();
     for (const key in sourceFrom) {
-      sourceTo[key as SummaryAttr] = sourceFrom[key as SummaryAttr];
+      for (let i=0; i<sourceTo[key as SummaryAttr].length; ++i) {
+        sourceTo[key as SummaryAttr][i] = sourceFrom[key as SummaryAttr][i];
+      }
     }
     return sourceTo;
   }
 }
 
-export class QueueSummaryManager implements QueueSummaryManagerInterface {
-  readonly summary: QueueSummary;
-  private readonly roundParams: Summary = {
+export class QueueSummaryManager implements QueueSummaryManagerInterface<number[]> {
+  readonly summary: QueueSummary<number[]>;
+  private readonly roundParams: Summary<number> = {
     ATOMS_COUNT: 0,
     ATOMS_MEAN_SPEED: 2,
     LINKS_COUNT: 0,
@@ -64,17 +66,19 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface {
     }
   }
 
-  push(step: Summary): void {
+  push(step: Summary<number[]>): void {
     for (const key in step) {
-      this.summary[key as SummaryAttr].push(step[key as SummaryAttr] as number);
+      this.summary[key as SummaryAttr].push(step[key as SummaryAttr]);
     }
   }
 
-  mean(): Summary {
-    const r: Record<string, number> = {};
+  mean(): Summary<number[]> {
+    const r: Record<string, number[]> = {};
     for (const key in this.summary) {
-      r[key] = round(this.summary[key as SummaryAttr].mean() ?? 0, this.roundParams[key as SummaryAttr]);
+      const item = this.summary[key as SummaryAttr];
+      const mean = item.mean() ?? [0];
+      r[key] = arrayUnaryOperation(mean, (x) => round(x, this.roundParams[key as SummaryAttr]))
     }
-    return r as Summary;
+    return r as Summary<number[]>;
   }
 }

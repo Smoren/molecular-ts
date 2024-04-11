@@ -18,7 +18,7 @@ export type SimulationConfig = {
 };
 
 export interface SimulationInterface {
-  readonly summary: Summary;
+  readonly summary: Summary<number[]>;
   start(): void;
   stop(): void;
   refill(initialConfig?: InitialConfig): void;
