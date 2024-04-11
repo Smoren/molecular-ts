@@ -77,12 +77,46 @@ const timeSeriesAtomsTypeMeanSpeedConfig = {
     };
   }),
 }
+const timeSeriesAtomsTypeLinksCountConfig = {
+  id: 'atoms-type-links-count-speed',
+  name: 'Atoms Type Links Count',
+  height: 200,
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color, i) => {
+    const strColor = color.join(', ')
+    return {
+      name: 'Atoms Type Links Count',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+      getter: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_COUNT'][i],
+    };
+  }),
+}
+const timeSeriesAtomsTypeLinksMeanCountConfig = {
+  id: 'atoms-type-links-mean-count-speed',
+  name: 'Atoms Type Links Mean Count',
+  height: 200,
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color, i) => {
+    const strColor = color.join(', ')
+    return {
+      name: 'Atoms Type Links Mean Count',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+      getter: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_MEAN_COUNT'][i],
+    };
+  }),
+}
 
 const timeSeriesConfig: ChartConfig[] = [
   timeSeriesFpsConfig,
   timeSeriesLinksCountConfig,
   timeSeriesAtomsMeanSpeedConfig,
   timeSeriesAtomsTypeMeanSpeedConfig,
+  timeSeriesAtomsTypeLinksCountConfig,
+  timeSeriesAtomsTypeLinksMeanCountConfig,
 ];
 
 </script>
@@ -93,8 +127,8 @@ const timeSeriesConfig: ChartConfig[] = [
       Summary
     </template>
     <template #body>
+      <br />
       <div v-for="config in timeSeriesConfig">
-        <br />
         <chart
           :id="config.id"
           :name="config.name"

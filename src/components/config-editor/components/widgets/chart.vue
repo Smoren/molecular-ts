@@ -91,6 +91,7 @@ onUnmounted(() => {
 
 .chart {
   width: 100%;
+  border: 1px solid #353535;
 }
 
 </style>

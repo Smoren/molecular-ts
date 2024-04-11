@@ -3,17 +3,21 @@ import type {
   QueueSummaryManagerInterface,
   Summary,
   StepSummaryManagerInterface,
-  SummaryAttr, SummaryManagerInterface,
+  SummaryAttr,
+  SummaryManagerInterface,
 } from './types/summary';
 import { arrayBinaryOperation, arrayUnaryOperation, Queue, round, roundWithStep } from './helpers';
-import type { AtomInterface } from './types/atomic';
+import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { TypesConfig, WorldConfig } from './types/config';
+import type { QueueInterface } from "@/lib/types/helpers";
 
 const createEmptyStepSummary = (typesCount: number): Summary<number[]> => ({
   ATOMS_COUNT: [0],
   ATOMS_MEAN_SPEED: [0],
   ATOMS_TYPE_COUNT: Array(typesCount).fill(0),
   ATOMS_TYPE_MEAN_SPEED: Array(typesCount).fill(0),
+  ATOMS_TYPE_LINKS_COUNT: Array(typesCount).fill(0),
+  ATOMS_TYPE_LINKS_MEAN_COUNT: Array(typesCount).fill(0),
   LINKS_COUNT: [0],
   STEP_DURATION: [0],
   STEP_FREQUENCY: [0],
@@ -78,6 +82,8 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
     ATOMS_MEAN_SPEED: 2,
     ATOMS_TYPE_COUNT: 0,
     ATOMS_TYPE_MEAN_SPEED: 2,
+    ATOMS_TYPE_LINKS_COUNT: 1,
+    ATOMS_TYPE_LINKS_MEAN_COUNT: 1,
     LINKS_COUNT: 0,
     STEP_DURATION: 2,
     STEP_FREQUENCY: 1,
@@ -89,6 +95,8 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
       ATOMS_MEAN_SPEED: new Queue(maxSize),
       ATOMS_TYPE_COUNT: new Queue(maxSize),
       ATOMS_TYPE_MEAN_SPEED: new Queue(maxSize),
+      ATOMS_TYPE_LINKS_COUNT: new Queue(maxSize),
+      ATOMS_TYPE_LINKS_MEAN_COUNT: new Queue(maxSize),
       LINKS_COUNT: new Queue(maxSize),
       STEP_DURATION: new Queue(maxSize),
       STEP_FREQUENCY: new Queue(maxSize),
@@ -143,18 +151,22 @@ export class SummaryManager implements SummaryManagerInterface {
     this.stepManager.buffer.ATOMS_TYPE_MEAN_SPEED[atom.type] += speed;
   }
 
+  noticeLink(link: LinkInterface): void {
+    this.stepManager.buffer.LINKS_COUNT[0]++;
+
+    this.stepManager.buffer.ATOMS_TYPE_LINKS_COUNT[link.lhs.type]++;
+    this.stepManager.buffer.ATOMS_TYPE_LINKS_COUNT[link.rhs.type]++;
+  }
+
   startStep(typesConfig: TypesConfig): void {
     this.stepManager.init(typesConfig.FREQUENCIES.length);
   }
 
   finishStep(): void {
-    this.stepManager.buffer.ATOMS_MEAN_SPEED[0] /= this.stepManager.buffer.ATOMS_COUNT[0];
-    this.stepManager.buffer.ATOMS_TYPE_MEAN_SPEED = arrayBinaryOperation(
-      this.stepManager.buffer.ATOMS_TYPE_MEAN_SPEED,
-      this.stepManager.buffer.ATOMS_TYPE_COUNT,
-      (a, b) => a / b,
-    );
-    // TODO binary op for ATOMS_TYPE_MEAN_SPEED
+    this.finishMean('ATOMS_MEAN_SPEED', this.stepManager.buffer.ATOMS_COUNT);
+    this.finishArrayMean('ATOMS_TYPE_MEAN_SPEED', this.stepManager.buffer.ATOMS_TYPE_COUNT);
+    this.stepManager.buffer.ATOMS_TYPE_LINKS_MEAN_COUNT = this.stepManager.buffer.ATOMS_TYPE_LINKS_COUNT;
+    this.finishArrayMean('ATOMS_TYPE_LINKS_MEAN_COUNT', this.stepManager.buffer.ATOMS_TYPE_COUNT);
 
     this.updateFpsMetrics();
     this.stepManager.save();
@@ -162,13 +174,21 @@ export class SummaryManager implements SummaryManagerInterface {
     this._step++;
   }
 
-  setLinksCount(value: number): void {
-    this.stepManager.buffer.LINKS_COUNT[0] = value;
-  }
-
   private updateFpsMetrics(): void {
     this.stepManager.buffer.STEP_DURATION[0] = Date.now() - this.stepStartedAt;
     this.stepManager.buffer.STEP_FREQUENCY[0] = 1000 / this.stepManager.buffer.STEP_DURATION[0];
     this.stepStartedAt = Date.now();
+  }
+
+  private finishMean(valueKey: SummaryAttr, counts: number[]): void {
+    this.stepManager.buffer[valueKey][0] = this.stepManager.buffer[valueKey][0] as number / counts[0];
+  }
+
+  private finishArrayMean(valueKey: SummaryAttr, counts: number[]): void {
+    this.stepManager.buffer[valueKey] = arrayBinaryOperation(
+      this.stepManager.buffer[valueKey] as number[],
+      counts,
+      (a, b) => a / b,
+    );
   }
 }

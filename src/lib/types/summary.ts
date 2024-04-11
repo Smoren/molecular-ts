@@ -1,5 +1,5 @@
 import type { QueueInterface } from './helpers';
-import type { AtomInterface } from './atomic';
+import type { AtomInterface, LinkInterface } from './atomic';
 import type { TypesConfig, WorldConfig } from './config';
 
 export type Summary<T> = {
@@ -7,6 +7,8 @@ export type Summary<T> = {
   ATOMS_MEAN_SPEED: T;
   ATOMS_TYPE_COUNT: T;
   ATOMS_TYPE_MEAN_SPEED: T;
+  ATOMS_TYPE_LINKS_COUNT: T;
+  ATOMS_TYPE_LINKS_MEAN_COUNT: T;
   LINKS_COUNT: T;
   STEP_DURATION: T;
   STEP_FREQUENCY: T,
@@ -27,6 +29,8 @@ export type QueueSummary<T> = {
   ATOMS_TYPE_COUNT: QueueInterface<T>;
   ATOMS_MEAN_SPEED: QueueInterface<T>;
   ATOMS_TYPE_MEAN_SPEED: QueueInterface<T>;
+  ATOMS_TYPE_LINKS_COUNT: QueueInterface<T>;
+  ATOMS_TYPE_LINKS_MEAN_COUNT: QueueInterface<T>
   LINKS_COUNT: QueueInterface<T>;
   STEP_DURATION: QueueInterface<T>;
   STEP_FREQUENCY: QueueInterface<T>,
@@ -43,6 +47,6 @@ export interface SummaryManagerInterface {
   readonly step: number;
   startStep(typesConfig: TypesConfig): void;
   finishStep(): void;
-  setLinksCount(value: number): void;
   noticeAtom(atom: AtomInterface, worldConfig: WorldConfig): void;
+  noticeLink(link: LinkInterface, worldConfig: WorldConfig): void;
 }

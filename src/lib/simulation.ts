@@ -100,25 +100,21 @@ export class Simulation implements SimulationInterface {
         }
         for (const link of this.linkManager) {
           this.interactionManager.interactLink(link);
+          this.summaryManager.noticeLink(link, this.config.worldConfig);
         }
       }
       this.interactionManager.handleTime();
     }
 
     this.drawer.draw(this.atoms, this.linkManager);
-    this.handleStepSummary();
+
+    this.summaryManager.finishStep();
+    if (this.summaryManager.step % 30 === 0) {
+      console.log('SUMMARY', this.summary);
+    }
 
     if (this.isRunning) {
       requestAnimationFrame(() => this.tick());
-    }
-  }
-
-  private handleStepSummary(): void {
-    this.summaryManager.setLinksCount(this.linkManager.length);
-    this.summaryManager.finishStep();
-
-    if (this.summaryManager.step % 30 === 0) {
-      console.log('SUMMARY', this.summary);
     }
   }
 }
