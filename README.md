@@ -45,6 +45,11 @@ npm i
 npm run dev
 ```
 
+## Research
+
+Play with the simulation hyperparameters in the [live demo](https://smoren.github.io/molecular-ts/) and share links
+to interesting worlds obtained in the app in the [special issue](https://github.com/Smoren/molecular-ts/issues/1).
+
 ## Inspiration
 
 This project was inspired by the [ParticleAutomataJS](https://github.com/artemonigiri/ParticleAutomataJS) 
