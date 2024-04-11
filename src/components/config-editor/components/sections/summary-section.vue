@@ -10,6 +10,7 @@ const { getCurrentSimulation } = useSimulationStore();
 type ChartConfig = {
   id: string;
   name: string;
+  data: () => number[];
   width?: number;
   height?: number;
   period?: number;
@@ -19,6 +20,7 @@ type ChartConfig = {
 const timeSeriesFpsConfig: ChartConfig = {
   id: 'fps',
   name: 'FPS',
+  data: () => getCurrentSimulation().summary['STEP_FREQUENCY'],
   config: [
     {
       name: 'FPS',
@@ -27,13 +29,13 @@ const timeSeriesFpsConfig: ChartConfig = {
         fillStyle: 'rgba(13, 110, 253, 0.4)',
         lineWidth: 3,
       },
-      getter: () => getCurrentSimulation().summary['STEP_FREQUENCY'][0],
     },
   ],
 };
 const timeSeriesLinksCountConfig = {
   id: 'links-count',
   name: 'Links Count',
+  data: () => getCurrentSimulation().summary['LINKS_COUNT'],
   config: [
     {
       name: 'Links Count',
@@ -42,13 +44,13 @@ const timeSeriesLinksCountConfig = {
         fillStyle: 'rgba(13, 110, 253, 0.4)',
         lineWidth: 3,
       },
-      getter: () => getCurrentSimulation().summary['LINKS_COUNT'][0],
     },
   ],
 };
 const timeSeriesAtomsMeanSpeedConfig = {
   id: 'atoms-mean-speed',
   name: 'Atoms Mean Speed',
+  data: () => getCurrentSimulation().summary['ATOMS_MEAN_SPEED'],
   config: [
     {
       name: 'Atoms Mean Speed',
@@ -57,7 +59,6 @@ const timeSeriesAtomsMeanSpeedConfig = {
         fillStyle: 'rgba(13, 110, 253, 0.4)',
         lineWidth: 3,
       },
-      getter: () => getCurrentSimulation().summary['ATOMS_MEAN_SPEED'][0],
     },
   ],
 }
@@ -65,6 +66,7 @@ const timeSeriesAtomsTypeMeanSpeedConfig = {
   id: 'atoms-type-mean-speed',
   name: 'Atoms Type Mean Speed',
   height: 200,
+  data: () => getCurrentSimulation().summary['ATOMS_TYPE_MEAN_SPEED'],
   config: getCurrentSimulation().config.typesConfig.COLORS.map((color, i) => {
     const strColor = color.join(', ')
     return {
@@ -73,7 +75,6 @@ const timeSeriesAtomsTypeMeanSpeedConfig = {
         strokeStyle: `rgb(${strColor})`,
         lineWidth: 2,
       },
-      getter: () => getCurrentSimulation().summary['ATOMS_TYPE_MEAN_SPEED'][i],
     };
   }),
 }
@@ -81,6 +82,7 @@ const timeSeriesAtomsTypeLinksCountConfig = {
   id: 'atoms-type-links-count-speed',
   name: 'Atoms Type Links Count',
   height: 200,
+  data: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_COUNT'],
   config: getCurrentSimulation().config.typesConfig.COLORS.map((color, i) => {
     const strColor = color.join(', ')
     return {
@@ -89,7 +91,6 @@ const timeSeriesAtomsTypeLinksCountConfig = {
         strokeStyle: `rgb(${strColor})`,
         lineWidth: 2,
       },
-      getter: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_COUNT'][i],
     };
   }),
 }
@@ -97,6 +98,7 @@ const timeSeriesAtomsTypeLinksMeanCountConfig = {
   id: 'atoms-type-links-mean-count-speed',
   name: 'Atoms Type Links Mean Count',
   height: 200,
+  data: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_MEAN_COUNT'],
   config: getCurrentSimulation().config.typesConfig.COLORS.map((color, i) => {
     const strColor = color.join(', ')
     return {
@@ -105,7 +107,6 @@ const timeSeriesAtomsTypeLinksMeanCountConfig = {
         strokeStyle: `rgb(${strColor})`,
         lineWidth: 2,
       },
-      getter: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_MEAN_COUNT'][i],
     };
   }),
 }
@@ -132,6 +133,7 @@ const timeSeriesConfig: ChartConfig[] = [
         <chart
           :id="config.id"
           :name="config.name"
+          :data="config.data"
           :period="config.period ?? 100"
           :width="config.width ?? 467"
           :height="config.height ?? 100"

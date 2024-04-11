@@ -7,13 +7,13 @@ import { SmoothieChart, TimeSeries } from 'smoothie';
 export type TimeSeriesConfig = {
   name: string;
   options: ITimeSeriesPresentationOptions;
-  getter: () => number;
 }
 
 const props = defineProps<{
   id: string;
   name: string;
   config: TimeSeriesConfig[];
+  data: () => number[];
   period: number;
   width: number;
   height: number;
@@ -46,9 +46,9 @@ const init = (): void => {
 
   interval.value = setInterval(() => {
     const now = Date.now();
+    const data = props.data();
     for (let i=0; i<props.config.length; ++i) {
-      const config = props.config[i];
-      const summary = config.getter();
+      const summary = data[i];
       const series = timeSeries.value[i] as TimeSeries;
       series.append(now, summary);
     }
