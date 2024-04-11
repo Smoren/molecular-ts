@@ -7,23 +7,34 @@ import type {
 } from './types/summary';
 import { arrayUnaryOperation, Queue, round } from './helpers';
 
-const createEmptyStepSummary = (): Summary<number[]> => ({
+const createEmptyStepSummary = (typesCount: number): Summary<number[]> => ({
   ATOMS_COUNT: [0],
   ATOMS_MEAN_SPEED: [0],
+  ATOMS_TYPE_MEAN_SPEED: Array(typesCount).fill(0),
   LINKS_COUNT: [0],
   STEP_DURATION: [0],
   STEP_FREQUENCY: [0],
 });
 
 export class StepSummaryManager implements StepSummaryManagerInterface<number[]> {
-  readonly buffer: Summary<number[]>;
-  private readonly _summary: Summary<number[]>;
-  private readonly _empty: Summary<number[]>;
+  private _buffer: Summary<number[]>;
+  private _typesCount: number;
+  private _summary: Summary<number[]>;
+  private _empty: Summary<number[]>;
 
-  constructor() {
-    this.buffer = createEmptyStepSummary();
-    this._summary = createEmptyStepSummary();
-    this._empty = createEmptyStepSummary();
+  constructor(typesCount: number) {
+    this._typesCount = typesCount;
+    this._buffer = createEmptyStepSummary(typesCount);
+    this._summary = createEmptyStepSummary(typesCount);
+    this._empty = createEmptyStepSummary(typesCount);
+  }
+
+  get typesCount(): number {
+    return this._typesCount;
+  }
+
+  get buffer(): Summary<number[]> {
+    return this._buffer;
   }
 
   get summary(): Summary<number[]> {
@@ -35,8 +46,19 @@ export class StepSummaryManager implements StepSummaryManagerInterface<number[]>
     this.copy(this._empty, this.buffer);
   }
 
+  init(typesCount: number) {
+    if (typesCount === this._typesCount) {
+      return;
+    }
+
+    this._typesCount = typesCount;
+    this._buffer = createEmptyStepSummary(typesCount);
+    this._summary = createEmptyStepSummary(typesCount);
+    this._empty = createEmptyStepSummary(typesCount);
+  }
+
   private copy(sourceFrom: Summary<number[]>, sourceTo?: Summary<number[]>): Summary<number[]> {
-    sourceTo = sourceTo ?? createEmptyStepSummary();
+    sourceTo = sourceTo ?? createEmptyStepSummary(this._typesCount);
     for (const key in sourceFrom) {
       for (let i=0; i<sourceTo[key as SummaryAttr].length; ++i) {
         sourceTo[key as SummaryAttr][i] = sourceFrom[key as SummaryAttr][i];
@@ -51,6 +73,7 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
   private readonly roundParams: Summary<number> = {
     ATOMS_COUNT: 0,
     ATOMS_MEAN_SPEED: 2,
+    ATOMS_TYPE_MEAN_SPEED: 2,
     LINKS_COUNT: 0,
     STEP_DURATION: 2,
     STEP_FREQUENCY: 1,
@@ -60,6 +83,7 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
     this.summary = {
       ATOMS_COUNT: new Queue(maxSize),
       ATOMS_MEAN_SPEED: new Queue(maxSize),
+      ATOMS_TYPE_MEAN_SPEED: new Queue(maxSize),
       LINKS_COUNT: new Queue(maxSize),
       STEP_DURATION: new Queue(maxSize),
       STEP_FREQUENCY: new Queue(maxSize),

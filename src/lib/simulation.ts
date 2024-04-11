@@ -37,7 +37,7 @@ export class Simulation implements SimulationInterface {
       new RulesHelper(this.config.worldConfig, this.config.typesConfig),
     );
     this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
-    this.stepSummaryManager = new StepSummaryManager();
+    this.stepSummaryManager = new StepSummaryManager(this.config.typesConfig.FREQUENCIES.length);
     this.queueSummaryManager = new QueueSummaryManager(30);
     this.step = 0;
     this.stepStarted = Date.now();
