@@ -2,10 +2,10 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { provide, ref, type Ref } from 'vue';
+import { provide, ref } from 'vue';
 import { useSwitch } from "@/hooks/use-switch";
-import { useConfigStore } from '@/store/config';
-import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from "@/components/config-editor/constants";
+import { useConfigStore } from "@/store/config";
+import { useRightBar } from "@/components/config-editor/hooks/use-right-bar";
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
 import Navbar from "@/components/config-editor/components/containers/navbar.vue";
 import Sidebar from "@/components/config-editor/components/containers/sidebar.vue";
@@ -15,35 +15,24 @@ import TypesConfigSection from '@/components/config-editor/components/sections/t
 import ViewModeSection from "@/components/config-editor/components/sections/view-mode-section.vue";
 import WorldConfigSection from '@/components/config-editor/components/sections/world-config-section.vue';
 import SummarySection from "@/components/config-editor/components/sections/summary-section.vue";
+import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from '@/components/config-editor/constants';
 
 const configStore = useConfigStore();
 const { worldConfig, typesConfig } = configStore;
 
 const leftBarVisible = useSwitch(false);
-const rightBarVisible = useSwitch(false);
 const activeAccordionItem = ref('collapse-world');
 
 const copyShareLink = () => {
   navigator.clipboard.writeText(`${location.origin}${location.pathname}#${configStore.exportConfig()}`);
 }
 
-const rightBarModeMap = {
-  RANDOMIZE: 1,
-  SUMMARY: 2,
-};
-
-const rightBarMode: Ref<number> = ref(rightBarModeMap.RANDOMIZE);
-
-const toggleRightBar = (mode: number): boolean => {
-  if (mode !== rightBarMode.value || !rightBarVisible.state.value) {
-    rightBarMode.value = mode;
-    rightBarVisible.on();
-    return true;
-  } else {
-    rightBarVisible.off();
-    return false;
-  }
-};
+const {
+  rightBarVisible,
+  rightBarMode,
+  rightBarModeMap,
+  toggleRightBar,
+} = useRightBar();
 
 provide<() => boolean>(PROVIDED_TOGGLE_RANDOMIZE_CONFIG, () => toggleRightBar(rightBarModeMap.RANDOMIZE));
 provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarModeMap.SUMMARY));
