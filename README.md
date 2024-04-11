@@ -38,17 +38,17 @@ Live demo: https://smoren.github.io/molecular-ts/
 * `2 + click` — add a particle of the second type.
 * ...
 
+## Research
+
+Play with the simulation hyperparameters in the [live demo](https://smoren.github.io/molecular-ts/) and share links
+to interesting worlds obtained in the app in the [special issue](https://github.com/Smoren/molecular-ts/issues/1).
+
 ## Install
 
 ```bash
 npm i
 npm run dev
 ```
-
-## Research
-
-Play with the simulation hyperparameters in the [live demo](https://smoren.github.io/molecular-ts/) and share links
-to interesting worlds obtained in the app in the [special issue](https://github.com/Smoren/molecular-ts/issues/1).
 
 ## Inspiration
 
