@@ -14,7 +14,7 @@ Particles of different types are visualized in different colors. Their propertie
 2. **Gravity coefficient matrix for linked particles** shows whether a particle of one type will attract or repel a particle of another type in the case when they are linked to each other, and with what force.
 3. **Connection limit map** shows the maximum number of links for particles of each type.
 4. **Connection limit matrix** shows the maximum number of connections that particles of each type can have with particles of different types.
-5. **Matrix of influence on neighbors links** shows how particles of each type affect the maximum length of links of neighboring particles of different types.
+5. **Tensor of influence on neighbors links** shows how particles of type A affect the maximum link lengths of particles of type B with particles of type C.
 
 ## Demo
 
