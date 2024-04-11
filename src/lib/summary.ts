@@ -3,13 +3,16 @@ import type {
   QueueSummaryManagerInterface,
   Summary,
   StepSummaryManagerInterface,
-  SummaryAttr,
+  SummaryAttr, SummaryManagerInterface,
 } from './types/summary';
-import { arrayUnaryOperation, Queue, round } from './helpers';
+import { arrayBinaryOperation, arrayUnaryOperation, Queue, round, roundWithStep } from './helpers';
+import type { AtomInterface } from './types/atomic';
+import type { TypesConfig, WorldConfig } from './types/config';
 
 const createEmptyStepSummary = (typesCount: number): Summary<number[]> => ({
   ATOMS_COUNT: [0],
   ATOMS_MEAN_SPEED: [0],
+  ATOMS_TYPE_COUNT: Array(typesCount).fill(0),
   ATOMS_TYPE_MEAN_SPEED: Array(typesCount).fill(0),
   LINKS_COUNT: [0],
   STEP_DURATION: [0],
@@ -73,6 +76,7 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
   private readonly roundParams: Summary<number> = {
     ATOMS_COUNT: 0,
     ATOMS_MEAN_SPEED: 2,
+    ATOMS_TYPE_COUNT: 0,
     ATOMS_TYPE_MEAN_SPEED: 2,
     LINKS_COUNT: 0,
     STEP_DURATION: 2,
@@ -83,6 +87,7 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
     this.summary = {
       ATOMS_COUNT: new Queue(maxSize),
       ATOMS_MEAN_SPEED: new Queue(maxSize),
+      ATOMS_TYPE_COUNT: new Queue(maxSize),
       ATOMS_TYPE_MEAN_SPEED: new Queue(maxSize),
       LINKS_COUNT: new Queue(maxSize),
       STEP_DURATION: new Queue(maxSize),
@@ -104,5 +109,66 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
       r[key] = arrayUnaryOperation(mean, (x) => round(x, this.roundParams[key as SummaryAttr]))
     }
     return r as Summary<number[]>;
+  }
+}
+
+export class SummaryManager implements SummaryManagerInterface {
+  private stepManager: StepSummaryManager;
+  private queueManager: QueueSummaryManager;
+  private stepStartedAt: number;
+  private _step: number;
+
+  constructor(typesCount: number, queueMaxSize: number = 30) {
+    this.stepManager = new StepSummaryManager(typesCount);
+    this.queueManager = new QueueSummaryManager(queueMaxSize);
+    this.stepStartedAt = Date.now();
+    this._step = 0;
+  }
+
+  get summary(): Summary<number[]> {
+    return this.queueManager.mean();
+  }
+
+  get step(): number {
+    return this._step;
+  }
+
+  noticeAtom(atom: AtomInterface, worldConfig: WorldConfig) {
+    const speed = atom.speed.abs * worldConfig.SPEED;
+
+    this.stepManager.buffer.ATOMS_COUNT[0]++;
+    this.stepManager.buffer.ATOMS_MEAN_SPEED[0] += speed;
+
+    this.stepManager.buffer.ATOMS_TYPE_COUNT[atom.type]++;
+    this.stepManager.buffer.ATOMS_TYPE_MEAN_SPEED[atom.type] += speed;
+  }
+
+  startStep(typesConfig: TypesConfig): void {
+    this.stepManager.init(typesConfig.FREQUENCIES.length);
+  }
+
+  finishStep(): void {
+    this.stepManager.buffer.ATOMS_MEAN_SPEED[0] /= this.stepManager.buffer.ATOMS_COUNT[0];
+    this.stepManager.buffer.ATOMS_TYPE_MEAN_SPEED = arrayBinaryOperation(
+      this.stepManager.buffer.ATOMS_TYPE_MEAN_SPEED,
+      this.stepManager.buffer.ATOMS_TYPE_COUNT,
+      (a, b) => a / b,
+    );
+    // TODO binary op for ATOMS_TYPE_MEAN_SPEED
+
+    this.updateFpsMetrics();
+    this.stepManager.save();
+    this.queueManager.push(this.stepManager.summary);
+    this._step++;
+  }
+
+  setLinksCount(value: number): void {
+    this.stepManager.buffer.LINKS_COUNT[0] = value;
+  }
+
+  private updateFpsMetrics(): void {
+    this.stepManager.buffer.STEP_DURATION[0] = Date.now() - this.stepStartedAt;
+    this.stepManager.buffer.STEP_FREQUENCY[0] = 1000 / this.stepManager.buffer.STEP_DURATION[0];
+    this.stepStartedAt = Date.now();
   }
 }

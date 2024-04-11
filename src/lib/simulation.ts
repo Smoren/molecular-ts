@@ -4,25 +4,22 @@ import type { DrawerInterface } from './types/drawer';
 import type { LinkManagerInterface } from './types/helpers';
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
 import type { ClusterManagerInterface } from './types/cluster';
-import type { QueueSummaryManagerInterface, StepSummaryManagerInterface, Summary } from './types/summary';
+import type { Summary, SummaryManagerInterface } from './types/summary';
 import type { InitialConfig } from './types/config';
 import { ClusterManager } from './cluster';
-import { createAtom, LinkManager, roundWithStep, RulesHelper } from './helpers';
+import { createAtom, LinkManager, RulesHelper } from './helpers';
 import { InteractionManager } from './interaction';
-import { QueueSummaryManager, StepSummaryManager } from './summary';
+import { SummaryManager } from './summary';
 
 export class Simulation implements SimulationInterface {
-  private readonly config: SimulationConfig;
+  readonly config: SimulationConfig;
   private atoms: AtomInterface[];
   private readonly drawer: DrawerInterface;
   private readonly linkManager: LinkManagerInterface;
   private readonly interactionManager: InteractionManagerInterface;
   private readonly clusterManager: ClusterManagerInterface;
-  private readonly stepSummaryManager: StepSummaryManagerInterface<number[]>;
-  private readonly queueSummaryManager: QueueSummaryManagerInterface<number[]>;
+  private readonly summaryManager: SummaryManagerInterface;
   private isRunning: boolean = false;
-  private step: number;
-  private stepStarted: number;
 
   constructor(config: SimulationConfig) {
     this.config = config;
@@ -37,10 +34,7 @@ export class Simulation implements SimulationInterface {
       new RulesHelper(this.config.worldConfig, this.config.typesConfig),
     );
     this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
-    this.stepSummaryManager = new StepSummaryManager(this.config.typesConfig.FREQUENCIES.length);
-    this.queueSummaryManager = new QueueSummaryManager(30);
-    this.step = 0;
-    this.stepStarted = Date.now();
+    this.summaryManager = new SummaryManager(this.config.typesConfig.FREQUENCIES.length);
 
     this.drawer.addClickListener((coords, extraKey) => {
       if (extraKey === null || extraKey > this.config.typesConfig.FREQUENCIES.length) {
@@ -52,7 +46,7 @@ export class Simulation implements SimulationInterface {
   }
 
   get summary(): Summary<number[]> {
-    return this.queueSummaryManager.mean();
+    return this.summaryManager.summary;
   }
 
   start() {
@@ -85,6 +79,8 @@ export class Simulation implements SimulationInterface {
   }
 
   private tick() {
+    this.summaryManager.startStep(this.config.typesConfig);
+
     if (this.config.worldConfig.SPEED > 0) {
       for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
         for (const atom of this.atoms) {
@@ -100,7 +96,7 @@ export class Simulation implements SimulationInterface {
           this.clusterManager.handleAtom(atom, (lhs, rhs) => {
             this.interactionManager.interactAtomsStep2(lhs, rhs);
           });
-          this.stepSummaryManager.buffer.ATOMS_MEAN_SPEED[0] += atom.speed.abs;
+          this.summaryManager.noticeAtom(atom, this.config.worldConfig);
         }
         for (const link of this.linkManager) {
           this.interactionManager.interactLink(link);
@@ -118,23 +114,11 @@ export class Simulation implements SimulationInterface {
   }
 
   private handleStepSummary(): void {
-    this.stepSummaryManager.buffer.ATOMS_COUNT[0] = this.atoms.length;
-    this.stepSummaryManager.buffer.ATOMS_MEAN_SPEED[0] /= this.atoms.length;
-    this.stepSummaryManager.buffer.LINKS_COUNT[0] = this.linkManager.length;
-    this.stepSummaryManager.buffer.STEP_DURATION[0] = Date.now() - this.stepStarted;
-    this.stepSummaryManager.buffer.STEP_FREQUENCY[0] = this.getStepFrequency();
-    this.stepSummaryManager.save();
-    this.stepStarted = Date.now();
-    this.step++;
+    this.summaryManager.setLinksCount(this.linkManager.length);
+    this.summaryManager.finishStep();
 
-    this.queueSummaryManager.push(this.stepSummaryManager.summary);
-
-    if (this.step % 30 === 0) {
-      // console.log('SUMMARY', this.queueSummaryManager.mean());
+    if (this.summaryManager.step % 30 === 0) {
+      console.log('SUMMARY', this.summary);
     }
-  }
-
-  private getStepFrequency(): number {
-    return roundWithStep(1000 / this.stepSummaryManager.buffer.STEP_DURATION[0], 0.1, 1);
   }
 }

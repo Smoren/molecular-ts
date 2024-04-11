@@ -18,6 +18,7 @@ export type SimulationConfig = {
 };
 
 export interface SimulationInterface {
+  readonly config: SimulationConfig;
   readonly summary: Summary<number[]>;
   start(): void;
   stop(): void;
