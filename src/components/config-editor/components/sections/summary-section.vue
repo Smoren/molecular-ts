@@ -67,8 +67,8 @@ const timeSeriesAtomsTypeMeanSpeedConfig = {
   name: 'Atoms Type Mean Speed',
   height: 200,
   data: () => getCurrentSimulation().summary['ATOMS_TYPE_MEAN_SPEED'],
-  config: getCurrentSimulation().config.typesConfig.COLORS.map((color, i) => {
-    const strColor = color.join(', ')
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
     return {
       name: 'Atoms Mean Speed',
       options: {
@@ -83,8 +83,8 @@ const timeSeriesAtomsTypeLinksCountConfig = {
   name: 'Atoms Type Links Count',
   height: 200,
   data: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_COUNT'],
-  config: getCurrentSimulation().config.typesConfig.COLORS.map((color, i) => {
-    const strColor = color.join(', ')
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
     return {
       name: 'Atoms Type Links Count',
       options: {
@@ -99,8 +99,8 @@ const timeSeriesAtomsTypeLinksMeanCountConfig = {
   name: 'Atoms Type Links Mean Count',
   height: 200,
   data: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_MEAN_COUNT'],
-  config: getCurrentSimulation().config.typesConfig.COLORS.map((color, i) => {
-    const strColor = color.join(', ')
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
     return {
       name: 'Atoms Type Links Mean Count',
       options: {
