@@ -107,6 +107,9 @@ export class Vector extends Array implements VectorInterface {
   }
 
   normalize(): VectorInterface {
+    if (this.abs === 0) {
+      return this;
+    }
     this.div(this.abs);
     return this;
   }

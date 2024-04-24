@@ -37,8 +37,11 @@ export class PhysicModelV2 implements PhysicModelInterface {
     return (gravityForce + bounceForce) * this.geometry.getMassMultiplier(lhs, rhs);
   }
 
-  getLinkForce(lhs: AtomInterface, rhs: AtomInterface): number {
-    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.geometry.getMassMultiplier(lhs, rhs);
+  getLinkForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
+    const bounceDistance = this.geometry.getAtomsRadiusSum(lhs, rhs);
+    return Number((dist2 >= bounceDistance ** 2))
+      * this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER
+      * this.geometry.getMassMultiplier(lhs, rhs);
   }
 
   getBoundsForce(dist: number): number {
