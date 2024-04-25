@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { provide, ref } from 'vue';
 import { useSwitch } from "@/hooks/use-switch";
-import { useConfigStore } from "@/store/config";
 import { useRightBar } from "@/components/config-editor/hooks/use-right-bar";
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
 import Navbar from "@/components/config-editor/components/containers/navbar.vue";
@@ -16,16 +15,13 @@ import ViewModeSection from "@/components/config-editor/components/sections/view
 import WorldConfigSection from '@/components/config-editor/components/sections/world-config-section.vue';
 import SummarySection from "@/components/config-editor/components/sections/summary-section.vue";
 import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from '@/components/config-editor/constants';
+import ExchangeSection from "@/components/config-editor/components/sections/exchange-section.vue";
+import { useConfigStore } from "@/store/config";
 
 const configStore = useConfigStore();
-const { worldConfig, typesConfig } = configStore;
 
 const leftBarVisible = useSwitch(false);
 const activeAccordionItem = ref('collapse-world');
-
-const copyShareLink = () => {
-  navigator.clipboard.writeText(`${location.origin}${location.pathname}#${configStore.exportConfig()}`);
-}
 
 const {
   rightBarVisible,
@@ -63,9 +59,7 @@ provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarMod
             </MDBAccordionItem>
           </MDBAccordion>
           <br />
-          <button class="btn btn-primary" @click="copyShareLink" style="width: 100%;">
-            Copy configuration share link
-          </button>
+          <exchange-section />
         </template>
       </sidebar>
       <sidebar :visible="rightBarVisible" position="right">

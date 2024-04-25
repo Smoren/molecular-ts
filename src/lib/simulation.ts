@@ -110,7 +110,7 @@ export class Simulation implements SimulationInterface {
 
     this.summaryManager.finishStep();
     if (this.summaryManager.step % 30 === 0) {
-      console.log('SUMMARY', this.summary);
+      // console.log('SUMMARY', this.summary);
     }
 
     if (this.isRunning) {

@@ -20,7 +20,7 @@ const getCanvasStyle = (mode: ViewMode) => {
 const importDataFromHash = () => {
   const hash = window.location.hash.slice(1);
   if (hash) {
-    configStore.importConfig(hash);
+    configStore.importConfigBase64(hash);
   }
 }
 

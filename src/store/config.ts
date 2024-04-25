@@ -99,17 +99,64 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const exportConfig = () => {
-    const config = {
+    return {
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
       typesSymmetricConfig,
     };
-    console.log('export', config);
-    return btoa(JSON.stringify(config));
   }
 
-  const importConfig = (config: string) => {
+  const exportConfigBase64 = () => {
+    return btoa(JSON.stringify(exportConfig()));
+  }
+
+  const importConfig = (config: {
+    worldConfig?: WorldConfig,
+    typesConfig?: TypesConfig,
+    typeSymmetricConfig?: TypesSymmetricConfig,
+  }) => {
     flash.turnOn(FLASH_IMPORT_STARTED);
+    try {
+      if (config.worldConfig !== undefined) {
+        setWorldConfig(config.worldConfig);
+        console.log('worldConfig upd');
+      }
+      if (config.typesConfig !== undefined) {
+        if (config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED === undefined) {
+          config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = false;
+        }
+
+        if (
+            config.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED === undefined ||
+            !config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED
+        ) {
+          config.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED = createDistributedLinkFactorDistance(
+              config.typesConfig.LINK_FACTOR_DISTANCE,
+          );
+        }
+
+        if (config.typesConfig.RADIUS === undefined) {
+          const radius: number[] = [];
+          radius.length = config.typesConfig.FREQUENCIES.length;
+          radius.fill(1);
+          config.typesConfig.RADIUS = radius;
+        }
+
+        console.log('typesConfig upd');
+        setTypesConfig(config.typesConfig);
+      }
+      if (config.typeSymmetricConfig !== undefined) {
+        setTypesSymmetricConfig(config.typeSymmetricConfig);
+        console.log('typesConfig upd');
+      }
+
+      console.log('imported', config);
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  const importConfigBase64 = (config: string) => {
     try {
       const newConfig = JSON.parse(atob(config)) as {
         worldConfig?: WorldConfig,
@@ -117,40 +164,7 @@ export const useConfigStore = defineStore("config", () => {
         typeSymmetricConfig?: TypesSymmetricConfig,
       };
 
-      if (newConfig.worldConfig !== undefined) {
-        setWorldConfig(newConfig.worldConfig);
-        console.log('worldConfig upd');
-      }
-      if (newConfig.typesConfig !== undefined) {
-        if (newConfig.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED === undefined) {
-          newConfig.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = false;
-        }
-
-        if (
-          newConfig.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED === undefined ||
-          !newConfig.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED
-        ) {
-          newConfig.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED = createDistributedLinkFactorDistance(
-            newConfig.typesConfig.LINK_FACTOR_DISTANCE,
-          );
-        }
-
-        if (newConfig.typesConfig.RADIUS === undefined) {
-          const radius: number[] = [];
-          radius.length = newConfig.typesConfig.FREQUENCIES.length;
-          radius.fill(1);
-          newConfig.typesConfig.RADIUS = radius;
-        }
-
-        console.log('typesConfig upd');
-        setTypesConfig(newConfig.typesConfig);
-      }
-      if (newConfig.typeSymmetricConfig !== undefined) {
-        setTypesSymmetricConfig(newConfig.typeSymmetricConfig);
-        console.log('typesConfig upd');
-      }
-
-      console.log('imported', newConfig);
+      importConfig(newConfig);
     } catch (e) {
       console.warn(e);
     }
@@ -299,5 +313,7 @@ export const useConfigStore = defineStore("config", () => {
     appendType,
     exportConfig,
     importConfig,
+    exportConfigBase64,
+    importConfigBase64,
   }
 });
