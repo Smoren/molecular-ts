@@ -21,8 +21,20 @@ const importConfig = () => {
   uploadFile.value?.click();
 }
 
+const formatJsonString = (jsonStr: string) => {
+  const regex = /(\[)([\d\s.,-]+)(])/g;
+  jsonStr = jsonStr.replace(regex, function(_, p1, p2, p3) {
+    let numbersOnly = p2.replace(/\s+/g, ' ');
+    return p1 + numbersOnly + p3;
+  });
+  jsonStr = jsonStr.replace(/\[ /g, '[');
+  jsonStr = jsonStr.replace(/([0-9]) ]/g, '$1]');
+
+  return jsonStr;
+}
+
 const exportJsonFile = (data: Record<string, unknown>, filename: string) => {
-  const jsonStr = JSON.stringify(data, null, 4);
+  let jsonStr = formatJsonString(JSON.stringify(data, null, 4));
 
   let element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(jsonStr));

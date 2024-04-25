@@ -102,7 +102,7 @@ export const useConfigStore = defineStore("config", () => {
     return {
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
-      typesSymmetricConfig,
+      typesSymmetricConfig: typesSymmetricConfig.value,
     };
   }
 
@@ -113,7 +113,7 @@ export const useConfigStore = defineStore("config", () => {
   const importConfig = (config: {
     worldConfig?: WorldConfig,
     typesConfig?: TypesConfig,
-    typeSymmetricConfig?: TypesSymmetricConfig,
+    typesSymmetricConfig?: TypesSymmetricConfig,
   }) => {
     flash.turnOn(FLASH_IMPORT_STARTED);
     try {
@@ -145,9 +145,9 @@ export const useConfigStore = defineStore("config", () => {
         console.log('typesConfig upd');
         setTypesConfig(config.typesConfig);
       }
-      if (config.typeSymmetricConfig !== undefined) {
-        setTypesSymmetricConfig(config.typeSymmetricConfig);
-        console.log('typesConfig upd');
+      if (config.typesSymmetricConfig !== undefined) {
+        setTypesSymmetricConfig(config.typesSymmetricConfig);
+        console.log('typesSymmetricConfig upd');
       }
 
       console.log('imported', config);
