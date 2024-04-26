@@ -36,7 +36,7 @@ export interface RunningStateInterface {
   isRunning: boolean;
 
   start(): void;
-  stop(onStop?: () => void): void;
+  stop(): Promise<void>;
   confirmStart(): void;
   confirmStop(): void;
 }

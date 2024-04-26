@@ -218,16 +218,9 @@ export class RunningState implements RunningStateInterface {
     this._isRunningConfirmed = true;
   }
 
-  stop(onStop?: () => void) {
+  async stop() {
     this._isRunning = false;
-    const wait = setInterval(() => {
-      if (!this._isRunningConfirmed) {
-        clearInterval(wait);
-        if (onStop) {
-          onStop();
-        }
-      }
-    }, 0);
+    await this.waitUntil(() => !this._isRunningConfirmed);
   }
 
   confirmStart() {
@@ -236,6 +229,17 @@ export class RunningState implements RunningStateInterface {
 
   confirmStop() {
     this._isRunningConfirmed = false;
+  }
+
+  private async waitUntil(condition: () => boolean) {
+    return await new Promise(resolve => {
+      const interval = setInterval(() => {
+        if (condition()) {
+          resolve(null);
+          clearInterval(interval);
+        }
+      }, 0);
+    });
   }
 }
 

@@ -56,8 +56,8 @@ export class Simulation implements SimulationInterface {
     this.tick();
   }
 
-  stop(onStop?: () => void) {
-    this.runningState.stop(onStop);
+  async stop() {
+    await this.runningState.stop();
   }
 
   refill(initialConfig?: InitialConfig) {
@@ -80,45 +80,54 @@ export class Simulation implements SimulationInterface {
     this.interactionManager.setPhysicModel(model);
   }
 
-  exportState(): Record<string, unknown> {
-    return {
+  async exportState(): Promise<Record<string, unknown>> {
+    const needToStart = this.runningState.isRunning;
+    await this.stop();
+
+    const result = {
       atoms: this.atoms.map(atom => atom.exportState()),
       links: [...this.linkManager].map(link => link.exportState()),
     };
+
+    if (needToStart) {
+      this.start();
+    }
+
+    return result;
   }
 
-  importState(state: Record<string, unknown>): void {
+  async importState(state: Record<string, unknown>): Promise<void> {
     const needToStart = this.runningState.isRunning;
-    this.stop(() => {
-      this.clear();
+    await this.stop();
 
-      const atoms = state.atoms as Array<Record<string, unknown>>;
-      const links = state.links as Array<number[]>;
+    this.clear();
 
-      this.atoms = atoms.map(atom => createAtom(
-        atom.type as number,
-        atom.position as NumericVector,
-        atom.speed as NumericVector,
-        atom.id as number,
-      ));
+    const atoms = state.atoms as Array<Record<string, unknown>>;
+    const links = state.links as Array<number[]>;
 
-      const atomsMap = new Map<number, AtomInterface>();
-      for (const atom of this.atoms) {
-        atomsMap.set(atom.id, atom);
+    this.atoms = atoms.map(atom => createAtom(
+      atom.type as number,
+      atom.position as NumericVector,
+      atom.speed as NumericVector,
+      atom.id as number,
+    ));
+
+    const atomsMap = new Map<number, AtomInterface>();
+    for (const atom of this.atoms) {
+      atomsMap.set(atom.id, atom);
+    }
+
+    for (const link of links) {
+      if (!atomsMap.has(link[0]) || !atomsMap.has(link[1])) {
+        console.warn(link, atomsMap, atoms);
       }
 
-      for (const link of links) {
-        if (!atomsMap.has(link[0]) || !atomsMap.has(link[1])) {
-          console.warn(link, atomsMap, atoms);
-        }
+      this.linkManager.create(atomsMap.get(link[0])!, atomsMap.get(link[1])!);
+    }
 
-        this.linkManager.create(atomsMap.get(link[0])!, atomsMap.get(link[1])!);
-      }
-
-      if (needToStart) {
-        this.start();
-      }
-    });
+    if (needToStart) {
+      this.start();
+    }
   }
 
   private tick() {

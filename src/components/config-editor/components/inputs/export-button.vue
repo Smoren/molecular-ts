@@ -3,7 +3,7 @@
 const props = defineProps<{
   title: string;
   fileName: string;
-  dataGetter: () => Record<string, unknown>;
+  dataGetter: (() => Record<string, unknown>) | (() => Promise<Record<string, unknown>>);
 }>();
 
 const formatJsonString = (jsonStr: string) => {
@@ -33,8 +33,8 @@ const exportJsonFile = (data: Record<string, unknown>, filename: string) => {
   document.body.removeChild(element);
 }
 
-const exportData = () => {
-  exportJsonFile(props.dataGetter(), props.fileName);
+const exportData = async () => {
+  exportJsonFile(await props.dataGetter(), props.fileName);
 }
 
 </script>

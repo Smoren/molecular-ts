@@ -107,19 +107,19 @@ export const useSimulationStore = defineStore("simulation", () => {
     simulation3d?.setPhysicModel(model);
   }
 
-  const exportState = () => {
+  const exportState = async () => {
     return {
-      '2d': simulation2d?.exportState(),
-      '3d': simulation3d?.exportState(),
+      '2d': await simulation2d?.exportState(),
+      '3d': await simulation3d?.exportState(),
     };
   }
 
-  const importState = (state: Record<string, unknown>) => {
+  const importState = async (state: Record<string, unknown>) => {
     if (state['2d'] && simulation2d) {
-      simulation2d.importState(state['2d'] as Record<string, unknown>);
+      await simulation2d.importState(state['2d'] as Record<string, unknown>);
     }
     if (state['3d'] && simulation3d) {
-      simulation3d.importState(state['3d'] as Record<string, unknown>);
+      await simulation3d.importState(state['3d'] as Record<string, unknown>);
     }
   }
 
