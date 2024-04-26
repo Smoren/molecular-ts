@@ -29,6 +29,14 @@ const exportStateGetter = () => {
   return simulation.exportState();
 }
 
+const onImportStateStart = () => {
+  simulation.clearAtoms();
+}
+
+const importState = (data: Record<string, unknown>) => {
+  simulation.importState(data);
+}
+
 </script>
 
 <template>
@@ -42,7 +50,7 @@ const exportStateGetter = () => {
   </div>
   <br /><br />
   <div class="btn-group" role="group" style="width: 100%">
-    <import-button title="Import state" />
+    <import-button title="Import state" @success="importState" @start="onImportStateStart" />
     <export-button title="Export state" file-name="molecular-state.json" :data-getter="exportStateGetter" />
   </div>
 </template>

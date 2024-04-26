@@ -85,6 +85,10 @@ export class Simulation implements SimulationInterface {
     };
   }
 
+  importState(state: Record<string, unknown>): void {
+    console.log('import state', state);
+  }
+
   private tick() {
     this.summaryManager.startStep(this.config.typesConfig);
 

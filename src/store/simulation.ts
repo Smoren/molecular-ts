@@ -114,6 +114,15 @@ export const useSimulationStore = defineStore("simulation", () => {
     };
   }
 
+  const importState = (state: Record<string, unknown>) => {
+    if (state['2d']) {
+      simulation2d?.importState(state['2d'] as Record<string, unknown>);
+    }
+    if (state['3d']) {
+      simulation3d?.importState(state['3d'] as Record<string, unknown>);
+    }
+  }
+
   watch(() => configStore.viewMode, () => {
     restart();
   });
@@ -127,5 +136,6 @@ export const useSimulationStore = defineStore("simulation", () => {
     isMode,
     getCurrentSimulation,
     exportState,
+    importState,
   }
 });

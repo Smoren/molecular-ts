@@ -26,4 +26,5 @@ export interface SimulationInterface {
   clear(): void;
   setPhysicModel(model: PhysicModelInterface): void;
   exportState: () => Record<string, unknown>;
+  importState: (state: Record<string, unknown>) => void;
 }
