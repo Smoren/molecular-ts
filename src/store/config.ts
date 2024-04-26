@@ -145,7 +145,7 @@ export const useConfigStore = defineStore("config", () => {
         console.log('typesConfig upd');
         setTypesConfig(config.typesConfig);
       }
-      if (config.typesSymmetricConfig !== undefined) {
+      if (config.typesSymmetricConfig !== undefined && config.typesSymmetricConfig.GRAVITY_MATRIX_SYMMETRIC !== undefined) {
         setTypesSymmetricConfig(config.typesSymmetricConfig);
         console.log('typesSymmetricConfig upd');
       }
