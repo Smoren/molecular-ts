@@ -4,13 +4,10 @@ import { useConfigStore } from "@/store/config";
 import { useSimulationStore } from "@/store/simulation";
 import ImportButton from "@/components/config-editor/components/inputs/import-button.vue";
 import ExportButton from "@/components/config-editor/components/inputs/export-button.vue";
+import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 
 const configStore = useConfigStore();
 const simulation = useSimulationStore();
-
-const copyShareLink = () => {
-  navigator.clipboard.writeText(`${location.origin}${location.pathname}#${configStore.exportConfigBase64()}`);
-}
 
 const exportConfigGetter = () => {
   return configStore.exportConfig();
@@ -40,16 +37,20 @@ const importState = (data: Record<string, unknown>) => {
 </script>
 
 <template>
-  <button class="btn btn-primary" @click="copyShareLink" style="width: 100%;">
-    Copy configuration share link
-  </button>
-  <br /><br />
-  <div class="btn-group" role="group" style="width: 100%">
+  <input-header
+    name="Config"
+    tooltip="Export and import world and types config using files."
+  />
+  <div class="btn-group" role="group">
     <import-button title="Import config" @success="importConfig" @start="onImportConfigStart" @error="onImportError" />
     <export-button title="Export config" file-name="molecular-config.json" :data-getter="exportConfigGetter" />
   </div>
   <br /><br />
-  <div class="btn-group" role="group" style="width: 100%">
+  <input-header
+    name="State"
+    tooltip="Export and import atoms and links state using files."
+  />
+  <div class="btn-group" role="group">
     <import-button title="Import state" @success="importState" @error="onImportError" />
     <export-button title="Export state" file-name="molecular-state.json" :data-getter="exportStateGetter" />
   </div>
@@ -58,5 +59,10 @@ const importState = (data: Record<string, unknown>) => {
 <style scoped lang="scss">
 
 @import "../../assets/config-editor.scss";
+
+.btn-group {
+  margin-top: 10px;
+  width: 100%;
+}
 
 </style>

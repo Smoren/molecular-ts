@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { ref, type Ref } from "vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 defineProps<{
   title: string;
@@ -47,14 +48,16 @@ const importFile = () => {
 
 <template>
   <button class="btn btn-outline-secondary" @click="onClick">
+    <font-awesome-icon icon="fa-solid fa-file-import" style="color: #bbb" />
+    &nbsp;
     {{ title }}
   </button>
   <div v-show="false">
     <input
-        type="file"
-        accept="application/json"
-        ref="uploadFile"
-        @change="importFile"
+      type="file"
+      accept="application/json"
+      ref="uploadFile"
+      @change="importFile"
     />
   </div>
 </template>

@@ -17,6 +17,7 @@ import SummarySection from "@/components/config-editor/components/sections/summa
 import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from '@/components/config-editor/constants';
 import ExchangeSection from "@/components/config-editor/components/sections/exchange-section.vue";
 import { useConfigStore } from "@/store/config";
+import LinkSection from "@/components/config-editor/components/sections/link-section.vue";
 
 const configStore = useConfigStore();
 
@@ -57,9 +58,12 @@ provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarMod
             <MDBAccordionItem headerTitle="Initial" collapseId="collapse-initial">
               <initial-config-section />
             </MDBAccordionItem>
+            <MDBAccordionItem headerTitle="Exchange" collapseId="collapse-exchange">
+              <exchange-section />
+            </MDBAccordionItem>
           </MDBAccordion>
           <br />
-          <exchange-section />
+          <link-section />
         </template>
       </sidebar>
       <sidebar :visible="rightBarVisible" position="right">

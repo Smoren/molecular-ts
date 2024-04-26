@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
 const props = defineProps<{
   title: string;
   fileName: string;
@@ -41,6 +43,8 @@ const exportData = async () => {
 
 <template>
   <button class="btn btn-outline-secondary" @click="exportData">
+    <font-awesome-icon icon="fa-solid fa-download" style="color: #bbb" />
+    &nbsp;
     {{ title }}
   </button>
 </template>
