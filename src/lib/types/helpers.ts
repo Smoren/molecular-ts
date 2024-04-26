@@ -31,3 +31,12 @@ export interface QueueInterface<T> {
   last(): T | undefined;
   mean(): T | undefined;
 }
+
+export interface RunningStateInterface {
+  isRunning: boolean;
+
+  start(): void;
+  stop(onStop?: () => void): void;
+  confirmStart(): void;
+  confirmStop(): void;
+}

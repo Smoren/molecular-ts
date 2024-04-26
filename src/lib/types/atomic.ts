@@ -18,11 +18,11 @@ export interface AtomInterface {
   linkDistanceFactor: number;
   linkDistanceFactors: number[];
   cluster?: ClusterInterface;
-  exportState: () => Record<string, unknown>;
+  exportState(): Record<string, unknown>;
 }
 
 export interface LinkInterface {
   lhs: AtomInterface;
   rhs: AtomInterface;
-  exportState: () => number[];
+  exportState(): number[];
 }

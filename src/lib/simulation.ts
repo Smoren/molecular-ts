@@ -1,13 +1,13 @@
 import type { SimulationConfig, SimulationInterface } from './types/simulation';
 import type { AtomInterface } from './types/atomic';
 import type { DrawerInterface } from './types/drawer';
-import type { LinkManagerInterface } from './types/helpers';
+import type { LinkManagerInterface, RunningStateInterface } from './types/helpers';
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
 import type { ClusterManagerInterface } from './types/cluster';
 import type { Summary, SummaryManagerInterface } from './types/summary';
 import type { InitialConfig } from './types/config';
 import { ClusterManager } from './cluster';
-import { createAtom, LinkManager, RulesHelper } from './helpers';
+import { createAtom, LinkManager, RulesHelper, RunningState } from './helpers';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from './summary';
 import type { NumericVector } from './vector/types';
@@ -20,7 +20,7 @@ export class Simulation implements SimulationInterface {
   private readonly interactionManager: InteractionManagerInterface;
   private readonly clusterManager: ClusterManagerInterface;
   private readonly summaryManager: SummaryManagerInterface;
-  private isRunning: boolean = false;
+  private readonly runningState: RunningStateInterface;
 
   constructor(config: SimulationConfig) {
     this.config = config;
@@ -36,6 +36,7 @@ export class Simulation implements SimulationInterface {
     );
     this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
     this.summaryManager = new SummaryManager(this.config.typesConfig.FREQUENCIES.length);
+    this.runningState = new RunningState();
 
     this.drawer.addClickListener((coords, extraKey) => {
       if (extraKey === null || extraKey > this.config.typesConfig.FREQUENCIES.length) {
@@ -51,12 +52,12 @@ export class Simulation implements SimulationInterface {
   }
 
   start() {
-    this.isRunning = true;
+    this.runningState.start();
     this.tick();
   }
 
-  stop() {
-    this.isRunning = false;
+  stop(onStop?: () => void) {
+    this.runningState.stop(onStop);
   }
 
   refill(initialConfig?: InitialConfig) {
@@ -87,28 +88,41 @@ export class Simulation implements SimulationInterface {
   }
 
   importState(state: Record<string, unknown>): void {
-    console.log('import state', state);
+    const needToStart = this.runningState.isRunning;
+    this.stop(() => {
+      this.clear();
 
-    const atoms = state.atoms as Array<Record<string, unknown>>;
-    const links = state.links as Array<number[]>;
+      const atoms = state.atoms as Array<Record<string, unknown>>;
+      const links = state.links as Array<number[]>;
 
-    this.atoms = atoms.map(atom => createAtom(
-      atom.type as number,
-      atom.position as NumericVector,
-      atom.speed as NumericVector
-    ));
+      this.atoms = atoms.map(atom => createAtom(
+        atom.type as number,
+        atom.position as NumericVector,
+        atom.speed as NumericVector,
+        atom.id as number,
+      ));
 
-    const atomsMap = new Map<number, AtomInterface>();
-    for (const atom of this.atoms) {
-      atomsMap.set(atom.id, atom);
-    }
+      const atomsMap = new Map<number, AtomInterface>();
+      for (const atom of this.atoms) {
+        atomsMap.set(atom.id, atom);
+      }
 
-    for (const link of links) {
-      this.linkManager.create(atomsMap.get(link[0])!, atomsMap.get(link[1])!);
-    }
+      for (const link of links) {
+        if (!atomsMap.has(link[0]) || !atomsMap.has(link[1])) {
+          console.warn(link, atomsMap, atoms);
+        }
+
+        this.linkManager.create(atomsMap.get(link[0])!, atomsMap.get(link[1])!);
+      }
+
+      if (needToStart) {
+        this.start();
+      }
+    });
   }
 
   private tick() {
+    this.runningState.confirmStart();
     this.summaryManager.startStep(this.config.typesConfig);
 
     if (this.config.worldConfig.SPEED > 0) {
@@ -143,8 +157,10 @@ export class Simulation implements SimulationInterface {
       // console.log('SUMMARY', this.summary);
     }
 
-    if (this.isRunning) {
+    if (this.runningState.isRunning) {
       requestAnimationFrame(() => this.tick());
+    } else {
+      this.runningState.confirmStop();
     }
   }
 }

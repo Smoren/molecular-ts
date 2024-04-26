@@ -29,8 +29,8 @@ const exportStateGetter = () => {
   return simulation.exportState();
 }
 
-const onImportStateStart = () => {
-  simulation.clearAtoms();
+const onImportError = (e: Error) => {
+  console.warn(e);
 }
 
 const importState = (data: Record<string, unknown>) => {
@@ -45,12 +45,12 @@ const importState = (data: Record<string, unknown>) => {
   </button>
   <br /><br />
   <div class="btn-group" role="group" style="width: 100%">
-    <import-button title="Import config" @success="importConfig" @start="onImportConfigStart" />
+    <import-button title="Import config" @success="importConfig" @start="onImportConfigStart" @error="onImportError" />
     <export-button title="Export config" file-name="molecular-config.json" :data-getter="exportConfigGetter" />
   </div>
   <br /><br />
   <div class="btn-group" role="group" style="width: 100%">
-    <import-button title="Import state" @success="importState" @start="onImportStateStart" />
+    <import-button title="Import state" @success="importState" @error="onImportError" />
     <export-button title="Export state" file-name="molecular-state.json" :data-getter="exportStateGetter" />
   </div>
 </template>

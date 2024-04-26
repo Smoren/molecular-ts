@@ -21,10 +21,10 @@ export interface SimulationInterface {
   readonly config: SimulationConfig;
   readonly summary: Summary<number[]>;
   start(): void;
-  stop(): void;
+  stop(onStop?: () => void): void;
   refill(initialConfig?: InitialConfig): void;
   clear(): void;
   setPhysicModel(model: PhysicModelInterface): void;
-  exportState: () => Record<string, unknown>;
-  importState: (state: Record<string, unknown>) => void;
+  exportState(): Record<string, unknown>;
+  importState(state: Record<string, unknown>): void;
 }

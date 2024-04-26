@@ -3,7 +3,7 @@ import type {
   LinkManagerInterface,
   RulesHelperInterface,
   GeometryHelperInterface,
-  QueueInterface,
+  QueueInterface, RunningStateInterface,
 } from './types/helpers';
 import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector } from './vector/types';
@@ -202,10 +202,56 @@ export class Queue<T extends number | number[]> implements QueueInterface<T> {
   }
 }
 
+export class RunningState implements RunningStateInterface {
+  private _isRunning = false;
+  private _isRunningConfirmed = false;
+
+  get isRunning(): boolean {
+    return this._isRunning;
+  }
+
+  start() {
+    if (this._isRunningConfirmed) {
+      return;
+    }
+    this._isRunning = true;
+    this._isRunningConfirmed = true;
+  }
+
+  stop(onStop?: () => void) {
+    this._isRunning = false;
+    const wait = setInterval(() => {
+      if (!this._isRunningConfirmed) {
+        clearInterval(wait);
+        if (onStop) {
+          onStop();
+        }
+      }
+    }, 0);
+  }
+
+  confirmStart() {
+    this._isRunningConfirmed = true;
+  }
+
+  confirmStop() {
+    this._isRunningConfirmed = false;
+  }
+}
+
 let LAST_ATOM_ID = 0;
 
-export function createAtom(type: number, position: NumericVector, speed?: NumericVector): AtomInterface {
-  return new Atom(LAST_ATOM_ID++, type, position, speed);
+function nextId(id?: number): number {
+  if (id !== undefined) {
+    LAST_ATOM_ID = Math.max(id, LAST_ATOM_ID);
+    return id;
+  }
+
+  return LAST_ATOM_ID++;
+}
+
+export function createAtom(type: number, position: NumericVector, speed?: NumericVector, id?: number): AtomInterface {
+  return new Atom(nextId(id), type, position, speed);
 }
 
 export function normalizeFrequencies(weights: number[]): number[] {
