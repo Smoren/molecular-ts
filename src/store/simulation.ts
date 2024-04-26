@@ -107,6 +107,13 @@ export const useSimulationStore = defineStore("simulation", () => {
     simulation3d?.setPhysicModel(model);
   }
 
+  const exportState = () => {
+    return {
+      '2d': simulation2d?.exportState(),
+      '3d': simulation3d?.exportState(),
+    };
+  }
+
   watch(() => configStore.viewMode, () => {
     restart();
   });
@@ -119,5 +126,6 @@ export const useSimulationStore = defineStore("simulation", () => {
     setPhysicModel,
     isMode,
     getCurrentSimulation,
+    exportState,
   }
 });

@@ -16,13 +16,17 @@ const exportConfigGetter = () => {
   return configStore.exportConfig();
 }
 
-const onImportStart = () => {
+const onImportConfigStart = () => {
   simulation.clearAtoms();
 }
 
 const importConfig = (data: Record<string, unknown>) => {
   configStore.importConfig(data);
   simulation.refillAtoms();
+}
+
+const exportStateGetter = () => {
+  return simulation.exportState();
 }
 
 </script>
@@ -33,8 +37,13 @@ const importConfig = (data: Record<string, unknown>) => {
   </button>
   <br /><br />
   <div class="btn-group" role="group" style="width: 100%">
-    <import-button title="Import config" @success="importConfig" @start="onImportStart" />
+    <import-button title="Import config" @success="importConfig" @start="onImportConfigStart" />
     <export-button title="Export config" file-name="molecular-config.json" :data-getter="exportConfigGetter" />
+  </div>
+  <br /><br />
+  <div class="btn-group" role="group" style="width: 100%">
+    <import-button title="Import state" />
+    <export-button title="Export state" file-name="molecular-state.json" :data-getter="exportStateGetter" />
   </div>
 </template>
 

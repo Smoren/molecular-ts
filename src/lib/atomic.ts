@@ -57,6 +57,15 @@ export class Atom implements AtomInterface {
     this.linkDistanceFactor = 1;
     this.linkDistanceFactors = [];
   }
+
+  exportState(): Record<string, unknown> {
+    return {
+      id: this.id,
+      type: this.type,
+      position: [...this.position],
+      speed: [...this.speed],
+    };
+  }
 }
 
 export class Link implements LinkInterface {
@@ -66,5 +75,9 @@ export class Link implements LinkInterface {
   constructor(lhs: AtomInterface, rhs: AtomInterface) {
     this.lhs = lhs;
     this.rhs = rhs;
+  }
+
+  exportState(): number[] {
+    return [this.lhs.id, this.rhs.id];
   }
 }

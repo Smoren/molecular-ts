@@ -78,6 +78,13 @@ export class Simulation implements SimulationInterface {
     this.interactionManager.setPhysicModel(model);
   }
 
+  exportState(): Record<string, unknown> {
+    return {
+      atoms: this.atoms.map(atom => atom.exportState()),
+      links: [...this.linkManager].map(link => link.exportState()),
+    };
+  }
+
   private tick() {
     this.summaryManager.startStep(this.config.typesConfig);
 

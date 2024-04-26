@@ -25,4 +25,5 @@ export interface SimulationInterface {
   refill(initialConfig?: InitialConfig): void;
   clear(): void;
   setPhysicModel(model: PhysicModelInterface): void;
+  exportState: () => Record<string, unknown>;
 }
