@@ -2,7 +2,7 @@
 
 import { ref, type Ref } from "vue";
 
-const props = defineProps<{
+defineProps<{
   title: string;
 }>();
 
