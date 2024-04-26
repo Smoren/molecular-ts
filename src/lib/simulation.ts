@@ -10,6 +10,7 @@ import { ClusterManager } from './cluster';
 import { createAtom, LinkManager, RulesHelper } from './helpers';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from './summary';
+import type { NumericVector } from './vector/types';
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -87,6 +88,24 @@ export class Simulation implements SimulationInterface {
 
   importState(state: Record<string, unknown>): void {
     console.log('import state', state);
+
+    const atoms = state.atoms as Array<Record<string, unknown>>;
+    const links = state.links as Array<number[]>;
+
+    this.atoms = atoms.map(atom => createAtom(
+      atom.type as number,
+      atom.position as NumericVector,
+      atom.speed as NumericVector
+    ));
+
+    const atomsMap = new Map<number, AtomInterface>();
+    for (const atom of this.atoms) {
+      atomsMap.set(atom.id, atom);
+    }
+
+    for (const link of links) {
+      this.linkManager.create(atomsMap.get(link[0])!, atomsMap.get(link[1])!);
+    }
   }
 
   private tick() {

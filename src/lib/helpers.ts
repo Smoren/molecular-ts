@@ -204,8 +204,8 @@ export class Queue<T extends number | number[]> implements QueueInterface<T> {
 
 let LAST_ATOM_ID = 0;
 
-export function createAtom(type: number, position: NumericVector): AtomInterface {
-  return new Atom(LAST_ATOM_ID++, type, position);
+export function createAtom(type: number, position: NumericVector, speed?: NumericVector): AtomInterface {
+  return new Atom(LAST_ATOM_ID++, type, position, speed);
 }
 
 export function normalizeFrequencies(weights: number[]): number[] {
