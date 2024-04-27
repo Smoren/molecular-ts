@@ -11,7 +11,9 @@ import {
 import { getColorString } from '@/components/config-editor/utils';
 import ConfigMatrix from '@/components/config-editor/components/inputs/config-matrix.vue';
 
-const props = withDefaults(defineProps<{
+const symmetric = defineModel<boolean | undefined>('symmetric');
+
+withDefaults(defineProps<{
   colors: [number, number, number][];
   values: number[][][];
   min?: number;
@@ -44,7 +46,7 @@ const activeTabId = ref('tab-0');
               :colors="colors"
               :step="0.1"
               :min="0"
-              :hide-symmetric="true"
+              v-model:symmetric="symmetric"
             />
           </div>
         </MDBTabPane>

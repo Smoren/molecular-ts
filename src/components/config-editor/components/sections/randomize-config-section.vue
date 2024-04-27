@@ -170,15 +170,14 @@ const randomizeTypesConfig = () => {
             :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS"
           />
           <flag
-              title="Symmetric"
-              v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
-              v-show="!randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
-              style="float: left;"
+            title="Symmetric"
+            v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
+            style="float: left;"
           />
           <flag
-              title="Extended"
-              v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
-              style="float: right;"
+            title="Extended"
+            v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
+            style="float: right;"
           />
         </div>
       </div>
