@@ -27,6 +27,7 @@ const exportStateGetter = () => {
 }
 
 const onImportError = (e: Error) => {
+  alert('Import error: ' + e.message);
   console.warn(e);
 }
 
