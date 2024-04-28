@@ -427,7 +427,7 @@ export function createEmptyTensor(n: number, m: number, k: number, defaultValue:
   return result;
 }
 
-export function concatArrays(lhs: number[], rhs: number[]): number[] {
+export function concatArrays<T>(lhs: T[], rhs: T[]): T[] {
   return [...lhs, ...rhs];
 }
 

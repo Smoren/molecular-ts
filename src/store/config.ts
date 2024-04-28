@@ -8,10 +8,22 @@ import type {
   WorldConfig,
 } from "@/lib/types/config";
 import { createBaseWorldConfig } from "@/lib/config/world";
-import { createBaseTypesConfig, createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/config/types";
+import {
+  createBaseTypesConfig,
+  createColors,
+  createDefaultRandomTypesConfig,
+  createRandomTypesConfig,
+} from "@/lib/config/types";
 import { create3dBaseInitialConfig } from "@/lib/config/initial";
 import { fullCopyObject } from "@/helpers/utils";
-import { createDistributedLinkFactorDistance, distributeLinkFactorDistance, getRandomColor } from "@/lib/helpers";
+import {
+  concatArrays,
+  concatMatrices,
+  concatTensors,
+  createDistributedLinkFactorDistance,
+  distributeLinkFactorDistance,
+  getRandomColor,
+} from "@/lib/helpers";
 import { useFlash } from '@/hooks/use-flash';
 
 export type ViewMode = '2d' | '3d';
@@ -127,11 +139,11 @@ export const useConfigStore = defineStore("config", () => {
         }
 
         if (
-            config.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED === undefined ||
-            !config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED
+          config.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED === undefined ||
+          !config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED
         ) {
           config.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED = createDistributedLinkFactorDistance(
-              config.typesConfig.LINK_FACTOR_DISTANCE,
+            config.typesConfig.LINK_FACTOR_DISTANCE,
           );
         }
 
@@ -276,6 +288,31 @@ export const useConfigStore = defineStore("config", () => {
     // TODO LINK_FACTOR_DISTANCE_EXTENDED
   }
 
+  const addTypesFromConfig = (config: TypesConfig): void => {
+    typesConfig.value.COLORS = createColors(typesConfig.value.COLORS.length + config.COLORS.length);
+    typesConfig.value.RADIUS = concatArrays(typesConfig.value.RADIUS, config.RADIUS);
+    typesConfig.value.FREQUENCIES = concatArrays(typesConfig.value.FREQUENCIES, config.FREQUENCIES);
+
+    typesConfig.value.GRAVITY = concatMatrices(typesConfig.value.GRAVITY, config.GRAVITY);
+    typesConfig.value.LINK_GRAVITY = concatMatrices(typesConfig.value.LINK_GRAVITY, config.LINK_GRAVITY);
+
+    typesConfig.value.LINKS = concatArrays(typesConfig.value.LINKS, config.LINKS);
+    typesConfig.value.TYPE_LINKS = concatMatrices(typesConfig.value.TYPE_LINKS, config.TYPE_LINKS);
+
+    typesConfig.value.LINK_FACTOR_DISTANCE = concatMatrices(
+      typesConfig.value.LINK_FACTOR_DISTANCE,
+      config.LINK_FACTOR_DISTANCE,
+      1,
+    );
+    typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED = concatTensors(
+      typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED,
+      config.LINK_FACTOR_DISTANCE_EXTENDED,
+      1,
+    );
+
+    setTypesConfig(typesConfig.value);
+  }
+
   watch(() => typesConfig.value.LINK_FACTOR_DISTANCE_USE_EXTENDED, (value: boolean) => {
     if (!value || flash.receive(FLASH_IMPORT_STARTED)) {
       return;
@@ -311,6 +348,7 @@ export const useConfigStore = defineStore("config", () => {
     randomizeTypesConfig,
     setDefaultTypesConfig,
     appendType,
+    addTypesFromConfig,
     exportConfig,
     importConfig,
     exportConfigBase64,

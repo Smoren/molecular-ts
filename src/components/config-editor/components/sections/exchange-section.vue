@@ -2,6 +2,7 @@
 
 import { useConfigStore } from "@/store/config";
 import { useSimulationStore } from "@/store/simulation";
+import type { TypesConfig } from "@/lib/types/config";
 import ImportButton from "@/components/config-editor/components/inputs/import-button.vue";
 import ExportButton from "@/components/config-editor/components/inputs/export-button.vue";
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
@@ -22,6 +23,11 @@ const importConfig = (data: Record<string, unknown>) => {
   simulation.refillAtoms();
 }
 
+const addTypesConfig = (data: Record<string, unknown>) => {
+  configStore.addTypesFromConfig(data.typesConfig! as TypesConfig);
+  simulation.refillAtoms();
+}
+
 const exportStateGetter = () => {
   return simulation.exportState();
 }
@@ -39,12 +45,20 @@ const importState = (data: Record<string, unknown>) => {
 
 <template>
   <input-header
-    name="Config"
-    tooltip="Export and import world and types config using files."
+      name="Config"
+      tooltip="Export and import world and types config using files."
   />
   <div class="btn-group" role="group">
     <import-button title="Import config" @success="importConfig" @start="onImportConfigStart" @error="onImportError" />
     <export-button title="Export config" file-name="molecular-config.json" :data-getter="exportConfigGetter" />
+  </div>
+  <br /><br />
+  <input-header
+      name="Config modification"
+      tooltip="Modify types config by adding types from another config."
+  />
+  <div class="btn-group" role="group">
+    <import-button title="Add types from config" @success="addTypesConfig" @start="onImportConfigStart" @error="onImportError" />
   </div>
   <br /><br />
   <input-header

@@ -7,7 +7,7 @@ import {
   randomizeMatrix
 } from "@/lib/helpers";
 
-function createColors(count: number): Array<ColorVector> {
+export function createColors(count: number): Array<ColorVector> {
   const predefined: Array<ColorVector> = [
     [250, 20, 20],
     [200, 140, 100],
