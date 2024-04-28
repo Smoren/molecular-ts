@@ -20,8 +20,10 @@ export type SimulationConfig = {
 export interface SimulationInterface {
   readonly config: SimulationConfig;
   readonly summary: Summary<number[]>;
+  readonly isPaused: boolean;
   start(): void;
   stop(onStop?: () => void): Promise<void>;
+  togglePause(): void;
   refill(initialConfig?: InitialConfig): void;
   clear(): void;
   setPhysicModel(model: PhysicModelInterface): void;

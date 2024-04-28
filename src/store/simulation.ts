@@ -131,6 +131,14 @@ export const useSimulationStore = defineStore("simulation", () => {
     getCurrentSimulation().stop();
   }
 
+  const isPaused = () => {
+    return getCurrentSimulation().isPaused;
+  }
+
+  const togglePause = () => {
+    return getCurrentSimulation().togglePause();
+  }
+
   watch(() => configStore.viewMode, () => {
     restart();
   });
@@ -147,5 +155,7 @@ export const useSimulationStore = defineStore("simulation", () => {
     importState,
     start,
     stop,
+    isPaused,
+    togglePause,
   }
 });

@@ -34,9 +34,10 @@ export interface QueueInterface<T> {
 
 export interface RunningStateInterface {
   isRunning: boolean;
-
+  isPaused: boolean;
   start(): void;
   stop(): Promise<void>;
+  togglePause(): void;
   confirmStart(): void;
   confirmStop(): void;
 }

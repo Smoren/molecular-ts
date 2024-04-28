@@ -51,6 +51,10 @@ export class Simulation implements SimulationInterface {
     return this.summaryManager.summary;
   }
 
+  get isPaused(): boolean {
+    return this.runningState.isPaused;
+  }
+
   start() {
     this.runningState.start();
     this.tick();
@@ -58,6 +62,10 @@ export class Simulation implements SimulationInterface {
 
   async stop() {
     await this.runningState.stop();
+  }
+
+  togglePause() {
+    this.runningState.togglePause();
   }
 
   refill(initialConfig?: InitialConfig) {
@@ -134,7 +142,7 @@ export class Simulation implements SimulationInterface {
     this.runningState.confirmStart();
     this.summaryManager.startStep(this.config.typesConfig);
 
-    if (this.config.worldConfig.SPEED > 0) {
+    if (this.config.worldConfig.SPEED > 0 && !this.runningState.isPaused) {
       for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
         for (const atom of this.atoms) {
           this.interactionManager.clearDistanceFactor(atom);

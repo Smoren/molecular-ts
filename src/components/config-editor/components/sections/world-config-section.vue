@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { inject, type Ref, ref, toRefs } from "vue";
+import { computed, inject, type Ref, ref, toRefs } from "vue";
 import { useConfigStore } from '@/store/config';
 import { useSimulationStore } from "@/store/simulation";
 import { usePhysicsStore } from '@/store/physics';
@@ -13,21 +13,18 @@ const { physicModelName } = toRefs(physicsStore);
 
 const configStore = useConfigStore();
 const worldConfig = configStore.worldConfig;
-const speedBuffer: Ref<number | null> = ref(null);
+
+const simulation = useSimulationStore();
 
 const {
   clearAtoms,
   refillAtoms,
 } = useSimulationStore();
 
+const pausedTitle = ref('Pause');
 const togglePause = () => {
-  if (speedBuffer.value === null) {
-    speedBuffer.value = configStore.worldConfig.SPEED;
-    configStore.worldConfig.SPEED = 0;
-  } else {
-    configStore.worldConfig.SPEED = speedBuffer.value;
-    speedBuffer.value = null;
-  }
+  simulation.togglePause();
+  pausedTitle.value = !simulation.isPaused() ? 'Pause' : 'Resume';
 };
 
 const clear = () => {
@@ -51,7 +48,7 @@ const toggleSummary = inject<() => boolean>(PROVIDED_TOGGLE_SUMMARY);
     <template #body>
       <div class="btn-group" role="group">
         <button class="btn btn-outline-secondary" @click="togglePause">
-          {{  speedBuffer === null ? 'Pause' : 'Resume' }}
+          {{ pausedTitle }}
         </button>
         <button class="btn btn-outline-secondary" @click="clear">
           Clear

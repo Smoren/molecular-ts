@@ -205,9 +205,14 @@ export class Queue<T extends number | number[]> implements QueueInterface<T> {
 export class RunningState implements RunningStateInterface {
   private _isRunning = false;
   private _isRunningConfirmed = false;
+  private _isPaused = false;
 
   get isRunning(): boolean {
     return this._isRunning;
+  }
+
+  get isPaused(): boolean {
+    return this._isPaused;
   }
 
   start() {
@@ -221,6 +226,10 @@ export class RunningState implements RunningStateInterface {
   async stop() {
     this._isRunning = false;
     await this.waitUntil(() => !this._isRunningConfirmed);
+  }
+
+  togglePause() {
+    this._isPaused = !this._isPaused;
   }
 
   confirmStart() {
