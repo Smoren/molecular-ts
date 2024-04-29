@@ -28,6 +28,10 @@ watch(() => configStore.worldConfig.VIEW_MODE, () => {
   initialConfig.value = getActualInitialConfig();
 });
 
+watch(() => configStore.worldConfig, () => {
+  initialConfig.value = getActualInitialConfig();
+}, { deep: true });
+
 const refill = () => {
   if (confirm('Are you sure?')) {
     refillAtoms!();
