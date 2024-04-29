@@ -113,7 +113,6 @@ export const useConfigStore = defineStore("config", () => {
     try {
       if (config.worldConfig !== undefined) {
         setWorldConfig(config.worldConfig);
-        setViewMode(config.worldConfig.VIEW_MODE);
         console.log('worldConfig upd');
       }
       if (config.typesConfig !== undefined) {
