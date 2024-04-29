@@ -1,4 +1,4 @@
-import type { WorldConfig, TypesConfig } from './types/config';
+import type { WorldConfig, TypesConfig, ViewMode } from './types/config';
 import type { LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector, VectorInterface } from './vector/types';
@@ -8,6 +8,7 @@ import { toVector } from './vector';
 import { getViewModeConfig } from './helpers';
 
 export class InteractionManager implements InteractionManagerInterface {
+  private readonly VIEW_MODE: ViewMode;
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly linkManager: LinkManagerInterface;
@@ -16,12 +17,14 @@ export class InteractionManager implements InteractionManagerInterface {
   private time: number;
 
   constructor(
+    viewMode: ViewMode,
     worldConfig: WorldConfig,
     typesConfig: TypesConfig,
     linkManager: LinkManagerInterface,
     physicModel: PhysicModelInterface,
     ruleHelper: RulesHelperInterface,
   ) {
+    this.VIEW_MODE = viewMode;
     this.WORLD_CONFIG = worldConfig;
     this.TYPES_CONFIG = typesConfig;
     this.linkManager = linkManager;
@@ -150,7 +153,7 @@ export class InteractionManager implements InteractionManagerInterface {
   }
 
   private handleBounds(atom: AtomInterface): void {
-    const viewModeConfig = getViewModeConfig(this.WORLD_CONFIG);
+    const viewModeConfig = getViewModeConfig(this.WORLD_CONFIG, this.VIEW_MODE);
     for (let i = 0; i < atom.position.length; ++i) {
       if (atom.position[i] < viewModeConfig.BOUNDS.MIN_POSITION[i]) {
         atom.speed[i] += this.normalizeForce(

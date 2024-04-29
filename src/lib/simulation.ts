@@ -28,6 +28,7 @@ export class Simulation implements SimulationInterface {
     this.drawer = this.config.drawer;
     this.linkManager = new LinkManager();
     this.interactionManager = new InteractionManager(
+      this.config.viewMode,
       this.config.worldConfig,
       this.config.typesConfig,
       this.linkManager,

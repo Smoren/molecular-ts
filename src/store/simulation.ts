@@ -22,44 +22,49 @@ export const useSimulationStore = defineStore("simulation", () => {
   let simulation2d: Simulation | null = null;
   let simulation3d: Simulation | null = null;
 
-  const start3dSimulation = async () => {
-    await simulation2d?.stop();
-    await simulation3d?.stop();
-
-    configStore.setInitialConfig(create3dBaseInitialConfig());
-
+  const init = async () => {
     if (!simulation3d) {
       simulation3d = new Simulation({
+        viewMode: '3d',
         worldConfig: worldConfig,
         typesConfig: typesConfig,
-        initialConfig: initialConfig,
+        initialConfig: create3dBaseInitialConfig(),
         physicModel: createPhysicModel(worldConfig, typesConfig),
         atomsFactory: create3dRandomDistribution,
         drawer: create3dDrawer('canvas3d', configStore.worldConfig, configStore.typesConfig),
       });
     }
 
-    simulation3d.start();
-  };
-
-  const start2dSimulation = async () => {
-    await simulation3d?.stop();
-    await simulation2d?.stop();
-
-    configStore.setInitialConfig(create2dBaseInitialConfig());
-
     if (!simulation2d) {
       simulation2d = new Simulation({
+        viewMode: '2d',
         worldConfig: worldConfig,
         typesConfig: typesConfig,
-        initialConfig: initialConfig,
+        initialConfig: create2dBaseInitialConfig(),
         physicModel: createPhysicModel(worldConfig, typesConfig),
         atomsFactory: create2dRandomDistribution,
         drawer: create2dDrawer('canvas2d', configStore.worldConfig, configStore.typesConfig),
       });
     }
 
-    simulation2d.start();
+    await simulation3d.stop();
+    await simulation2d.stop();
+  }
+
+  const start3dSimulation = async () => {
+    configStore.setInitialConfig(create3dBaseInitialConfig());
+
+    await init();
+
+    simulation3d?.start();
+  };
+
+  const start2dSimulation = async () => {
+    configStore.setInitialConfig(create2dBaseInitialConfig());
+
+    await init();
+
+    simulation2d?.start();
   };
 
   const isMode = (mode: ViewMode) => configStore.worldConfig.VIEW_MODE === mode;

@@ -15,17 +15,17 @@ const exportConfigGetter = () => {
 }
 
 const onImportConfigStart = () => {
-  simulation.clearAtoms();
+  simulation.clearAtoms(true);
 }
 
 const importConfig = (data: Record<string, unknown>) => {
   configStore.importConfig(data);
-  simulation.refillAtoms();
+  simulation.refillAtoms(true);
 }
 
 const addTypesConfig = (data: Record<string, unknown>) => {
   configStore.addTypesFromConfig(data.typesConfig! as TypesConfig);
-  simulation.refillAtoms();
+  simulation.refillAtoms(true);
 }
 
 const exportStateGetter = () => {

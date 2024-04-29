@@ -14,6 +14,7 @@ import type {
   ViewModeConfig,
   WorldConfig,
   TypesConfig,
+  ViewMode,
 } from './types/config';
 import type { PhysicModelConstructor, PhysicModelInterface } from './types/interaction';
 import { Atom, Link } from './atomic';
@@ -488,8 +489,8 @@ export function concatTensors(lhs: number[][][], rhs: number[][][], defaultValue
   return result;
 }
 
-export function getViewModeConfig(worldConfig: WorldConfig): ViewModeConfig {
-  return worldConfig.VIEW_MODE === '3d'
+export function getViewModeConfig(worldConfig: WorldConfig, viewMode?: ViewMode): ViewModeConfig {
+  return (viewMode ?? worldConfig.VIEW_MODE) === '3d'
     ? worldConfig.CONFIG_3D
     : worldConfig.CONFIG_2D;
 }
