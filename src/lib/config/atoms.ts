@@ -1,10 +1,6 @@
 import type { AtomInterface } from '../types/atomic';
 import { createAtom, getIndexByFrequencies } from '../helpers';
-import type {
-  InitialConfig,
-  TypesConfig,
-  WorldConfig,
-} from '../types/config';
+import type { TypesConfig, WorldConfig } from '../types/config';
 
 export function create2dButterfly(): AtomInterface[] {
   const atoms: AtomInterface[] = [];
@@ -39,15 +35,13 @@ export function create3dButterfly(): AtomInterface[] {
 export function create2dRandomDistribution(
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,
-  initialConfig: InitialConfig,
 ): AtomInterface[] {
   const atoms: AtomInterface[] = [];
 
-  for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
+  for (let i = 0; i < worldConfig.CONFIG_2D.INITIAL.ATOMS_COUNT; ++i) {
     const type = getIndexByFrequencies(typesConfig.FREQUENCIES);
-    // const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
-    const minPos = initialConfig.MIN_POSITION;
-    const maxPos = initialConfig.MAX_POSITION;
+    const minPos = worldConfig.CONFIG_2D.INITIAL.MIN_POSITION;
+    const maxPos = worldConfig.CONFIG_2D.INITIAL.MAX_POSITION;
 
     const position = [
       minPos[0] + Math.random() * (maxPos[0] - minPos[0]),
@@ -62,15 +56,13 @@ export function create2dRandomDistribution(
 export function create3dRandomDistribution(
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,
-  initialConfig: InitialConfig,
 ): AtomInterface[] {
   const atoms: AtomInterface[] = [];
 
-  for (let i = 0; i < initialConfig.ATOMS_COUNT; ++i) {
+  for (let i = 0; i < worldConfig.CONFIG_3D.INITIAL.ATOMS_COUNT; ++i) {
     const type = getIndexByFrequencies(typesConfig.FREQUENCIES);
-    // const type = Math.round(Math.random() * (typesConfig.COLORS.length - 1));
-    const minPos = initialConfig.MIN_POSITION;
-    const maxPos = initialConfig.MAX_POSITION;
+    const minPos = worldConfig.CONFIG_3D.INITIAL.MIN_POSITION;
+    const maxPos = worldConfig.CONFIG_3D.INITIAL.MAX_POSITION;
 
     const position = [
       minPos[0] + Math.random() * (maxPos[0] - minPos[0]),

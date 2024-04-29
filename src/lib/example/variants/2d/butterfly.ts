@@ -17,6 +17,7 @@ const INITIAL_CONFIG: InitialConfig = create2dBaseInitialConfig();
 
 export function create2dSimulationButterfly() {
   return new Simulation({
+    viewMode: '2d',
     worldConfig: WORLD_CONFIG,
     typesConfig: TYPES_CONFIG,
     initialConfig: INITIAL_CONFIG,

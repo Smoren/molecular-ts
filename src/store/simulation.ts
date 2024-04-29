@@ -1,4 +1,4 @@
-import { computed, watch } from "vue";
+import { computed } from "vue";
 import { defineStore } from "pinia";
 import type { SimulationInterface } from "@/lib/types/simulation";
 import type { PhysicModelInterface } from '@/lib/types/interaction';
@@ -16,7 +16,6 @@ export const useSimulationStore = defineStore("simulation", () => {
   const {
     worldConfig,
     typesConfig,
-    initialConfig,
   } = configStore.getConfigValues();
 
   let simulation2d: Simulation | null = null;
@@ -96,11 +95,8 @@ export const useSimulationStore = defineStore("simulation", () => {
 
   const refillAtoms = (globally: boolean = false) => {
     if (globally) {
-      const initialConfig2d = isMode('2d') ? configStore.initialConfig : create2dBaseInitialConfig();
-      const initialConfig3d = isMode('3d') ? configStore.initialConfig : create3dBaseInitialConfig();
-
-      simulation2d?.refill(initialConfig2d);
-      simulation3d?.refill(initialConfig3d);
+      simulation2d?.refill();
+      simulation3d?.refill();
     } else {
       getCurrentSimulation().refill();
     }

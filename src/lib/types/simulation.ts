@@ -13,7 +13,6 @@ export type SimulationConfig = {
   atomsFactory: (
     worldConfig: WorldConfig,
     typesConfig: TypesConfig,
-    initialConfig: InitialConfig
   ) => AtomInterface[];
   drawer: DrawerInterface;
 };
@@ -25,7 +24,7 @@ export interface SimulationInterface {
   start(): void;
   stop(onStop?: () => void): Promise<void>;
   togglePause(): void;
-  refill(initialConfig?: InitialConfig): void;
+  refill(): void;
   clear(): void;
   setPhysicModel(model: PhysicModelInterface): void;
   exportState(): Promise<Record<string, unknown>>;

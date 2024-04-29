@@ -5,9 +5,8 @@ import type { LinkManagerInterface, RunningStateInterface } from './types/helper
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
 import type { ClusterManagerInterface } from './types/cluster';
 import type { Summary, SummaryManagerInterface } from './types/summary';
-import type { InitialConfig } from './types/config';
 import { ClusterManager } from './cluster';
-import { createAtom, LinkManager, RulesHelper, RunningState } from './helpers';
+import { createAtom, getViewModeConfig, LinkManager, RulesHelper, RunningState } from './helpers';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from './summary';
 import type { NumericVector } from './vector/types';
@@ -24,7 +23,7 @@ export class Simulation implements SimulationInterface {
 
   constructor(config: SimulationConfig) {
     this.config = config;
-    this.atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig, this.config.initialConfig);
+    this.atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig);
     this.drawer = this.config.drawer;
     this.linkManager = new LinkManager();
     this.interactionManager = new InteractionManager(
@@ -69,12 +68,11 @@ export class Simulation implements SimulationInterface {
     this.runningState.togglePause();
   }
 
-  refill(initialConfig?: InitialConfig) {
+  refill() {
     this.clear();
     this.atoms = this.config.atomsFactory(
       this.config.worldConfig,
       this.config.typesConfig,
-      initialConfig ?? this.config.initialConfig
     );
   }
 

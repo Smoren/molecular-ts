@@ -16,8 +16,14 @@ export type BoundsConfig = {
   MIN_POSITION: NumericVector;
   MAX_POSITION: NumericVector;
 };
+export type InitialConfig = {
+  ATOMS_COUNT: number;
+  MIN_POSITION: NumericVector;
+  MAX_POSITION: NumericVector;
+};
 export type ViewModeConfig = {
   BOUNDS: BoundsConfig;
+  INITIAL: InitialConfig;
 };
 export type TypesConfig = {
   RADIUS: RadiusConfig;
@@ -50,11 +56,6 @@ export type WorldConfig = {
   TEMPERATURE_FUNCTION: (p: NumericVector, t: number) => number;
   CONFIG_2D: ViewModeConfig;
   CONFIG_3D: ViewModeConfig;
-};
-export type InitialConfig = {
-  ATOMS_COUNT: number;
-  MIN_POSITION: NumericVector;
-  MAX_POSITION: NumericVector;
 };
 export type RandomTypesConfig = {
   TYPES_COUNT: number;

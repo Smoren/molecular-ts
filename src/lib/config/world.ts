@@ -23,9 +23,19 @@ export function createBaseWorldConfig(): WorldConfig {
         MIN_POSITION: [0, 0],
         MAX_POSITION: [2500, 2500],
       },
+      INITIAL: {
+        ATOMS_COUNT: 2000,
+        MIN_POSITION: [0, 0],
+        MAX_POSITION: [2500, 2000],
+      },
     },
     CONFIG_3D: {
       BOUNDS: {
+        MIN_POSITION: [0, 0, 0],
+        MAX_POSITION: [500, 500, 500],
+      },
+      INITIAL: {
+        ATOMS_COUNT: 1000,
         MIN_POSITION: [0, 0, 0],
         MAX_POSITION: [500, 500, 500],
       },

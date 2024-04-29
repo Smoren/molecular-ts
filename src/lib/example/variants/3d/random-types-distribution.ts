@@ -41,6 +41,7 @@ const INITIAL_CONFIG: InitialConfig = create3dBaseInitialConfig();
 
 export function create3dSimulationWithRandomTypes() {
   return new Simulation({
+    viewMode: '3d',
     worldConfig: WORLD_CONFIG,
     typesConfig: TYPES_CONFIG,
     initialConfig: INITIAL_CONFIG,
