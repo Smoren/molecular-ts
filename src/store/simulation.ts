@@ -2,8 +2,9 @@ import { computed, watch } from "vue";
 import { defineStore } from "pinia";
 import type { SimulationInterface } from "@/lib/types/simulation";
 import type { PhysicModelInterface } from '@/lib/types/interaction';
+import type { ViewMode } from "@/lib/types/config";
 import { create2dBaseInitialConfig, create3dBaseInitialConfig } from "@/lib/config/initial";
-import { useConfigStore, type ViewMode } from "@/store/config";
+import { useConfigStore } from "@/store/config";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
 import { create2dDrawer } from "@/lib/drawer/2d";
@@ -63,10 +64,10 @@ export const useSimulationStore = defineStore("simulation", () => {
     simulation2d.start();
   };
 
-  const isMode = (mode: ViewMode) => configStore.viewMode === mode;
+  const isMode = (mode: ViewMode) => configStore.worldConfig.VIEW_MODE === mode;
 
   const getCurrentSimulation = (): SimulationInterface => {
-    return (configStore.viewMode === '3d' ? simulation3d : simulation2d) as SimulationInterface;
+    return (configStore.worldConfig.VIEW_MODE === '3d' ? simulation3d : simulation2d) as SimulationInterface;
   }
 
   const simulation = computed<SimulationInterface>(() => {
@@ -74,7 +75,7 @@ export const useSimulationStore = defineStore("simulation", () => {
   });
 
   const restart = () => {
-    if (configStore.viewMode === '3d') {
+    if (configStore.worldConfig.VIEW_MODE === '3d') {
       start3dSimulation();
     } else {
       start2dSimulation();
@@ -139,7 +140,7 @@ export const useSimulationStore = defineStore("simulation", () => {
     return getCurrentSimulation().togglePause();
   }
 
-  watch(() => configStore.viewMode, () => {
+  watch(() => configStore.worldConfig.VIEW_MODE, () => {
     restart();
   });
 

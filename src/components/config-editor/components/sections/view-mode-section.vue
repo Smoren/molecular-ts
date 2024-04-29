@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type { ViewMode } from "@/store/config";
+import type { ViewMode } from "@/lib/types/config";
 
 const modelValue = defineModel<ViewMode>();
 

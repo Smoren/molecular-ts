@@ -26,8 +26,6 @@ import {
 } from "@/lib/helpers";
 import { useFlash } from '@/hooks/use-flash';
 
-export type ViewMode = '2d' | '3d';
-
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
   const typesConfigRaw: TypesConfig = createBaseTypesConfig();
@@ -47,8 +45,6 @@ export const useConfigStore = defineStore("config", () => {
     LINK_TYPE_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
   });
-
-  const viewMode: Ref<ViewMode> = ref('3d');
 
   const getConfigValues = () => {
     return {
@@ -335,7 +331,6 @@ export const useConfigStore = defineStore("config", () => {
   }, { deep: true });
 
   return {
-    viewMode,
     worldConfig,
     typesConfig,
     initialConfig,

@@ -2,6 +2,7 @@ import type { NumericVector } from '../vector/types';
 
 export type ColorVector = [number, number, number];
 export type PhysicModelName = 'v1' | 'v2';
+export type ViewMode = '2d' | '3d';
 
 export type RadiusConfig = number[];
 export type GravityConfig = number[][];
@@ -11,6 +12,10 @@ export type LinkFactorDistanceConfig = number[][];
 export type LinkFactorDistanceExtendedConfig = number[][][];
 export type FrequenciesConfig = number[];
 export type ColorsConfig = Array<ColorVector>;
+export type BoundsConfig = {
+  MIN_POSITION: NumericVector;
+  MAX_POSITION: NumericVector;
+};
 export type TypesConfig = {
   RADIUS: RadiusConfig;
   GRAVITY: GravityConfig;
@@ -24,6 +29,7 @@ export type TypesConfig = {
   COLORS: ColorsConfig;
 };
 export type WorldConfig = {
+  VIEW_MODE: ViewMode;
   PHYSIC_MODEL: PhysicModelName;
   ATOM_RADIUS: number;
   MAX_INTERACTION_RADIUS: number;
@@ -39,8 +45,14 @@ export type WorldConfig = {
   SPEED: number;
   TEMPERATURE_MULTIPLIER: number;
   TEMPERATURE_FUNCTION: (p: NumericVector, t: number) => number;
-  MIN_POSITION: number[];
-  MAX_POSITION: number[];
+  MIN_POSITION: NumericVector;
+  MAX_POSITION: NumericVector;
+  // CONFIG_2D: {
+  //   BOUNDS: BoundsConfig;
+  // },
+  // CONFIG_3D: {
+  //   BOUNDS: BoundsConfig;
+  // }
 };
 export type InitialConfig = {
   ATOMS_COUNT: number;

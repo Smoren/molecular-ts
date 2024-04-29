@@ -1,8 +1,9 @@
 <script setup lang="ts">
 
 import { onMounted } from "vue";
-import { useConfigStore, type ViewMode } from "@/store/config";
+import { useConfigStore } from "@/store/config";
 import { useSimulationStore } from "@/store/simulation";
+import type { ViewMode } from "@/lib/types/config";
 import ConfigEditor from "@/components/config-editor/config-editor.vue";
 
 const configStore = useConfigStore();
