@@ -6,6 +6,7 @@ import type {
   TypesSymmetricConfig,
   TypesConfig,
   WorldConfig,
+  ViewMode,
 } from "@/lib/types/config";
 import { createBaseWorldConfig } from "@/lib/config/world";
 import {
@@ -52,6 +53,11 @@ export const useConfigStore = defineStore("config", () => {
       typesConfig: typesConfigRaw,
       initialConfig: initialConfigRaw,
     }
+  }
+
+  const setViewMode = (viewMode: ViewMode) => {
+    worldConfig.value.VIEW_MODE = viewMode;
+    worldConfigRaw.VIEW_MODE = viewMode;
   }
 
   const setInitialConfigRaw = <T>(newConfig: InitialConfig) => {
@@ -337,6 +343,7 @@ export const useConfigStore = defineStore("config", () => {
     randomTypesConfig,
     typesSymmetricConfig,
     getConfigValues,
+    setViewMode,
     setInitialConfig,
     setTypesConfig,
     setWorldConfig,

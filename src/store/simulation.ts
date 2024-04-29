@@ -22,10 +22,9 @@ export const useSimulationStore = defineStore("simulation", () => {
   let simulation2d: Simulation | null = null;
   let simulation3d: Simulation | null = null;
 
-  const start3dSimulation = () => {
-    if (simulation2d) {
-      simulation2d.stop();
-    }
+  const start3dSimulation = async () => {
+    await simulation2d?.stop();
+    await simulation3d?.stop();
 
     configStore.setInitialConfig(create3dBaseInitialConfig());
 
@@ -43,10 +42,9 @@ export const useSimulationStore = defineStore("simulation", () => {
     simulation3d.start();
   };
 
-  const start2dSimulation = () => {
-    if (simulation3d) {
-      simulation3d.stop();
-    }
+  const start2dSimulation = async () => {
+    await simulation3d?.stop();
+    await simulation2d?.stop();
 
     configStore.setInitialConfig(create2dBaseInitialConfig());
 
@@ -74,11 +72,11 @@ export const useSimulationStore = defineStore("simulation", () => {
     return getCurrentSimulation();
   });
 
-  const restart = () => {
+  const restart = async () => {
     if (configStore.worldConfig.VIEW_MODE === '3d') {
-      start3dSimulation();
+      await start3dSimulation();
     } else {
-      start2dSimulation();
+      await start2dSimulation();
     }
   };
 
@@ -128,8 +126,8 @@ export const useSimulationStore = defineStore("simulation", () => {
     getCurrentSimulation().start();
   }
 
-  const stop = () => {
-    getCurrentSimulation().stop();
+  const stop = async () => {
+    await getCurrentSimulation().stop();
   }
 
   const isPaused = () => {
@@ -140,9 +138,9 @@ export const useSimulationStore = defineStore("simulation", () => {
     return getCurrentSimulation().togglePause();
   }
 
-  watch(() => configStore.worldConfig.VIEW_MODE, () => {
-    restart();
-  });
+  // watch(() => configStore.worldConfig.VIEW_MODE, async () => {
+  //   await restart();
+  // });
 
   return {
     simulation,

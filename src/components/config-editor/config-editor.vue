@@ -47,7 +47,7 @@ provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarMod
           Config
         </template>
         <template #body>
-          <view-mode-section v-model="configStore.worldConfig.VIEW_MODE" />
+          <view-mode-section />
           <MDBAccordion v-model="activeAccordionItem">
             <MDBAccordionItem headerTitle="World" collapseId="collapse-world">
               <world-config-section />
