@@ -163,22 +163,50 @@ const toggleSummary = inject<() => boolean>(PROVIDED_TOGGLE_SUMMARY);
           </tr>
           <tr>
             <td>min</td>
-            <td v-for="(_, index) in worldConfig.MIN_POSITION">
+            <td
+              v-for="(_, index) in worldConfig.CONFIG_2D.BOUNDS.MIN_POSITION"
+              v-if="worldConfig.VIEW_MODE === '2d'"
+            >
               <input
                 :key="index"
                 type="number"
-                v-model="worldConfig.MIN_POSITION[index]"
+                v-model="worldConfig.CONFIG_2D.BOUNDS.MIN_POSITION[index]"
+                step="50"
+              />
+            </td>
+            <td
+              v-for="(_, index) in worldConfig.CONFIG_3D.BOUNDS.MIN_POSITION"
+              v-if="worldConfig.VIEW_MODE === '3d'"
+            >
+              <input
+                :key="index"
+                type="number"
+                v-model="worldConfig.CONFIG_3D.BOUNDS.MIN_POSITION[index]"
                 step="50"
               />
             </td>
           </tr>
           <tr>
             <td>max</td>
-            <td v-for="(_, index) in worldConfig.MAX_POSITION">
+            <td
+              v-for="(_, index) in worldConfig.CONFIG_2D.BOUNDS.MAX_POSITION"
+              v-if="worldConfig.VIEW_MODE === '2d'"
+            >
               <input
                 :key="index"
                 type="number"
-                v-model="worldConfig.MAX_POSITION[index]"
+                v-model="worldConfig.CONFIG_2D.BOUNDS.MAX_POSITION[index]"
+                step="50"
+              />
+            </td>
+            <td
+              v-for="(_, index) in worldConfig.CONFIG_3D.BOUNDS.MAX_POSITION"
+              v-if="worldConfig.VIEW_MODE === '3d'"
+            >
+              <input
+                :key="index"
+                type="number"
+                v-model="worldConfig.CONFIG_3D.BOUNDS.MAX_POSITION[index]"
                 step="50"
               />
             </td>

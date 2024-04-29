@@ -18,8 +18,18 @@ export function createBaseWorldConfig(): WorldConfig {
     PLAYBACK_SPEED: 1,
     SIMPLIFIED_VIEW_MODE: false,
     TEMPERATURE_MULTIPLIER: 0,
-    MIN_POSITION: [0, 0, 0],
-    MAX_POSITION: [2500, 2500, 2500],
+    CONFIG_2D: {
+      BOUNDS: {
+        MIN_POSITION: [0, 0],
+        MAX_POSITION: [2500, 2500],
+      },
+    },
+    CONFIG_3D: {
+      BOUNDS: {
+        MIN_POSITION: [0, 0, 0],
+        MAX_POSITION: [500, 500, 500],
+      },
+    },
     TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {
       return 1;
     },

@@ -16,6 +16,9 @@ export type BoundsConfig = {
   MIN_POSITION: NumericVector;
   MAX_POSITION: NumericVector;
 };
+export type ViewModeConfig = {
+  BOUNDS: BoundsConfig;
+};
 export type TypesConfig = {
   RADIUS: RadiusConfig;
   GRAVITY: GravityConfig;
@@ -45,14 +48,8 @@ export type WorldConfig = {
   SPEED: number;
   TEMPERATURE_MULTIPLIER: number;
   TEMPERATURE_FUNCTION: (p: NumericVector, t: number) => number;
-  MIN_POSITION: NumericVector;
-  MAX_POSITION: NumericVector;
-  // CONFIG_2D: {
-  //   BOUNDS: BoundsConfig;
-  // },
-  // CONFIG_3D: {
-  //   BOUNDS: BoundsConfig;
-  // }
+  CONFIG_2D: ViewModeConfig;
+  CONFIG_3D: ViewModeConfig;
 };
 export type InitialConfig = {
   ATOMS_COUNT: number;

@@ -3,8 +3,9 @@ import type { LinkManagerInterface, RulesHelperInterface } from './types/helpers
 import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector, VectorInterface } from './vector/types';
 import type { InteractionManagerInterface } from './types/interaction';
-import type { PhysicModelInterface } from "./types/interaction";
+import type { PhysicModelInterface } from './types/interaction';
 import { toVector } from './vector';
+import { getViewModeConfig } from './helpers';
 
 export class InteractionManager implements InteractionManagerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
@@ -149,14 +150,15 @@ export class InteractionManager implements InteractionManagerInterface {
   }
 
   private handleBounds(atom: AtomInterface): void {
+    const viewModeConfig = getViewModeConfig(this.WORLD_CONFIG);
     for (let i = 0; i < atom.position.length; ++i) {
-      if (atom.position[i] < this.WORLD_CONFIG.MIN_POSITION[i]) {
+      if (atom.position[i] < viewModeConfig.BOUNDS.MIN_POSITION[i]) {
         atom.speed[i] += this.normalizeForce(
-          this.physicModel.getBoundsForce(this.WORLD_CONFIG.MIN_POSITION[i] - atom.position[i])
+          this.physicModel.getBoundsForce(viewModeConfig.BOUNDS.MIN_POSITION[i] - atom.position[i])
         );
-      } else if (atom.position[i] > this.WORLD_CONFIG.MAX_POSITION[i]) {
+      } else if (atom.position[i] > viewModeConfig.BOUNDS.MAX_POSITION[i]) {
         atom.speed[i] -= this.normalizeForce(
-          this.physicModel.getBoundsForce(atom.position[i] - this.WORLD_CONFIG.MAX_POSITION[i])
+          this.physicModel.getBoundsForce(atom.position[i] - viewModeConfig.BOUNDS.MAX_POSITION[i])
         );
       }
     }
