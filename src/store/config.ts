@@ -1,7 +1,6 @@
 import { type Ref, ref, watch } from "vue";
 import { defineStore } from "pinia";
 import type {
-  InitialConfig,
   RandomTypesConfig,
   TypesSymmetricConfig,
   TypesConfig,
@@ -15,7 +14,6 @@ import {
   createDefaultRandomTypesConfig,
   createRandomTypesConfig,
 } from "@/lib/config/types";
-import { create3dBaseInitialConfig } from "@/lib/config/initial";
 import { fullCopyObject } from "@/helpers/utils";
 import {
   concatArrays,
@@ -30,11 +28,9 @@ import { useFlash } from '@/hooks/use-flash';
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
   const typesConfigRaw: TypesConfig = createBaseTypesConfig();
-  const initialConfigRaw: InitialConfig = create3dBaseInitialConfig();
 
   const worldConfig: Ref<WorldConfig> = ref(fullCopyObject(worldConfigRaw));
   const typesConfig: Ref<TypesConfig> = ref(fullCopyObject(typesConfigRaw));
-  const initialConfig: Ref<InitialConfig> = ref(fullCopyObject(initialConfigRaw));
   const randomTypesConfig: Ref<RandomTypesConfig> = ref(createDefaultRandomTypesConfig(typesConfigRaw.COLORS.length));
 
   const flash = useFlash();
@@ -51,28 +47,12 @@ export const useConfigStore = defineStore("config", () => {
     return {
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
-      initialConfig: initialConfigRaw,
     }
   }
 
   const setViewMode = (viewMode: ViewMode) => {
     worldConfig.value.VIEW_MODE = viewMode;
     worldConfigRaw.VIEW_MODE = viewMode;
-  }
-
-  const setInitialConfigRaw = <T>(newConfig: InitialConfig) => {
-    const buf = fullCopyObject(newConfig);
-    for (const i in newConfig) {
-      (initialConfigRaw[i as keyof InitialConfig] as T) = buf[i as keyof InitialConfig] as T;
-    }
-  }
-
-  const setInitialConfig = <T>(newConfig: InitialConfig) => {
-    const buf = fullCopyObject(newConfig);
-    for (const i in newConfig) {
-      (initialConfig.value[i as keyof InitialConfig] as T) = buf[i as keyof InitialConfig] as T;
-    }
-    setInitialConfigRaw(newConfig);
   }
 
   const setTypesConfigRaw = <T>(newConfig: TypesConfig) => {
@@ -333,19 +313,13 @@ export const useConfigStore = defineStore("config", () => {
     setTypesConfigRaw(newConfig);
   }, { deep: true });
 
-  watch(initialConfig, <T>(newConfig: InitialConfig) => {
-    setInitialConfigRaw(newConfig);
-  }, { deep: true });
-
   return {
     worldConfig,
     typesConfig,
-    initialConfig,
     randomTypesConfig,
     typesSymmetricConfig,
     getConfigValues,
     setViewMode,
-    setInitialConfig,
     setTypesConfig,
     setWorldConfig,
     randomizeTypesConfig,

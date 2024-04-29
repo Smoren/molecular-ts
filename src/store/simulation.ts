@@ -51,18 +51,12 @@ export const useSimulationStore = defineStore("simulation", () => {
   }
 
   const start3dSimulation = async () => {
-    configStore.setInitialConfig(create3dBaseInitialConfig());
-
     await init();
-
     simulation3d?.start();
   };
 
   const start2dSimulation = async () => {
-    configStore.setInitialConfig(create2dBaseInitialConfig());
-
     await init();
-
     simulation2d?.start();
   };
 

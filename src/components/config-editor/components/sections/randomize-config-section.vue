@@ -10,7 +10,7 @@ import Flag from "@/components/config-editor/components/inputs/flag.vue";
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 
 const configStore = useConfigStore();
-const { randomTypesConfig, initialConfig } = configStore;
+const { randomTypesConfig } = configStore;
 
 const {
   clearAtoms,

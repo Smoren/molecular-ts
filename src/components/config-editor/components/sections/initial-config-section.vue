@@ -5,6 +5,9 @@ import { useSimulationStore } from "@/store/simulation";
 import ConfigCoordsBounds from "@/components/config-editor/components/inputs/config-coords-bounds.vue";
 import ConfigSection from "@/components/config-editor/components/containers/config-section.vue";
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
+import type { InitialConfig } from "@/lib/types/config";
+import { ref, type Ref, watch } from "vue";
+import { getViewModeConfig } from "@/lib/helpers";
 
 withDefaults(defineProps<{
   withButtons?: boolean;
@@ -13,11 +16,17 @@ withDefaults(defineProps<{
 });
 
 const configStore = useConfigStore();
-const { initialConfig } = configStore;
+const { refillAtoms } = useSimulationStore();
 
-const {
-  refillAtoms,
-} = useSimulationStore();
+const getActualInitialConfig = () => {
+  return getViewModeConfig(configStore.worldConfig).INITIAL;
+}
+
+const initialConfig: Ref<InitialConfig> = ref(getActualInitialConfig());
+
+watch(() => configStore.worldConfig.VIEW_MODE, () => {
+  initialConfig.value = getActualInitialConfig();
+});
 
 const refill = () => {
   if (confirm('Are you sure?')) {
