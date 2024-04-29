@@ -138,6 +138,12 @@ export const useSimulationStore = defineStore("simulation", () => {
     return getCurrentSimulation().togglePause();
   }
 
+  const setViewMode = async (viewMode: ViewMode) => {
+    await stop();
+    configStore.setViewMode(viewMode);
+    await restart();
+  }
+
   // watch(() => configStore.worldConfig.VIEW_MODE, async () => {
   //   await restart();
   // });
@@ -156,5 +162,6 @@ export const useSimulationStore = defineStore("simulation", () => {
     stop,
     isPaused,
     togglePause,
+    setViewMode,
   }
 });

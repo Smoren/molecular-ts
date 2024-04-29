@@ -14,12 +14,7 @@ watch(() => configStore.worldConfig.VIEW_MODE, () => {
 });
 
 watch(viewMode, async () => {
-  if (configStore.worldConfig.VIEW_MODE === viewMode.value) {
-    return;
-  }
-  await simulation.stop();
-  configStore.setViewMode(viewMode.value);
-  await simulation.restart();
+  await simulation.setViewMode(viewMode.value);
 });
 
 </script>
