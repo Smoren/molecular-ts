@@ -1,6 +1,7 @@
 import type { AtomInterface } from '../types/atomic';
-import { createAtom, getIndexByFrequencies } from '../helpers';
+import { createAtom } from '../helpers';
 import type { TypesConfig, WorldConfig } from '../types/config';
+import { getIndexByFrequencies } from '../math';
 
 export function create2dButterfly(): AtomInterface[] {
   const atoms: AtomInterface[] = [];

@@ -18,7 +18,7 @@ import type {
   ViewMode,
 } from './types/config';
 import type { PhysicModelConstructor, PhysicModelInterface } from './types/interaction';
-import { arrayBinaryOperation, arrayUnaryOperation, roundWithStep } from "./math";
+import { arrayBinaryOperation, arrayUnaryOperation } from './math';
 import { Atom, Link } from './atomic';
 import { PhysicModelV1 } from './physics/v1';
 import { PhysicModelV2 } from './physics/v2';
@@ -243,24 +243,6 @@ export function createAtom(type: number, position: NumericVector, speed?: Numeri
   return new Atom(nextId(id), type, position, speed);
 }
 
-export function normalizeFrequencies(weights: number[]): number[] {
-  const sum = weights.reduce((a, b) => a + b);
-  return weights.map((x) => x / sum);
-}
-
-export function getIndexByFrequencies(frequencies: number[]): number {
-  const normFrequencies = normalizeFrequencies(frequencies);
-  const rand = Math.random();
-  let sum = 0;
-  for (let i=0; i<normFrequencies.length; ++i) {
-    sum += normFrequencies[i];
-    if (rand <= sum) {
-      return i;
-    }
-  }
-  return 0;
-}
-
 function getRandomColorNumber(): number {
   return Math.round(Math.random()*255);
 }
@@ -277,65 +259,10 @@ export function getRandomColor(): [number, number, number] {
   return [r, g, b];
 }
 
-function applyMedian(from: number, until: number, median?: number): [number, number] {
-  if (median === undefined) {
-    return [from, until];
-  }
-
-  if (Math.random() > 0.5) {
-    return [median, until];
-  }
-
-  return [from, median];
-}
-
-export function createRandomInteger([from, until, median]: [number, number, number?]): number {
-  [from, until] = applyMedian(from, until, median);
-  return Math.round(Math.random() * (until - from) + from);
-}
-
-export function createRandomFloat(
-  [from, until, median, step]: [number, number, number?, number?],
-  precision?: number,
-): number {
-  [from, until] = applyMedian(from, until, median);
-
-  let result = Math.random() * (until - from) + from;
-  if (step !== undefined && step !== 0) {
-    result = roundWithStep(result, step, precision);
-  }
-  return result;
-}
-
-type NumberFactory = ((bounds: [number, number, number?, number?], precision?: number) => number) |
-  ((bounds: [number, number, number?], precision?: number) => number);
-
-export function randomizeMatrix(
-  count: number,
-  bounds: [number, number, number?, number?] | [number, number, number?],
-  numberFactory: NumberFactory,
-  symmetric: boolean = false,
-  precision?: number,
-): number[][] {
-  const result: number[][] = [];
-  for (let i=0; i<count; ++i) {
-    result.push([]);
-    for (let j=0; j<count; ++j) {
-      if (symmetric && i > j) {
-        result[i].push(result[j][i]);
-      } else {
-        result[i].push(numberFactory(bounds as [number, number], precision));
-      }
-    }
-  }
-  return result;
-}
-
 export function createPhysicModel(
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,
 ): PhysicModelInterface {
-  console.log('createPhysicModel', worldConfig.PHYSIC_MODEL);
   if (worldConfig.PHYSIC_MODEL === undefined) {
     return new PhysicModelV1(worldConfig, typesConfig);
   }

@@ -1,12 +1,15 @@
 import type { ColorVector, RandomTypesConfig, TypesConfig } from '../types/config';
 import {
-  createRandomFloat,
-  createRandomInteger,
   createDistributedLinkFactorDistance,
   getRandomColor,
-  randomizeMatrix,
 } from '../helpers';
-import { setMatrixMainDiagonal, setTensorMainDiagonal } from '../math';
+import {
+  createRandomFloat,
+  createRandomInteger,
+  randomizeMatrix,
+  setMatrixMainDiagonal,
+  setTensorMainDiagonal,
+} from '../math';
 
 export function createColors(count: number): Array<ColorVector> {
   const predefined: Array<ColorVector> = [

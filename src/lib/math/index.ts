@@ -21,6 +21,12 @@ import {
   createEmptyMatrix,
   createEmptyTensor,
 } from './factories';
+import {
+  createRandomInteger,
+  createRandomFloat,
+  randomizeMatrix,
+  getIndexByFrequencies,
+} from './random';
 
 export {
   Vector,
@@ -28,6 +34,10 @@ export {
   toVector,
   createEmptyMatrix,
   createEmptyTensor,
+  createRandomInteger,
+  createRandomFloat,
+  randomizeMatrix,
+  getIndexByFrequencies,
   isEqual,
   getEpsilon,
   changeEpsilon,
