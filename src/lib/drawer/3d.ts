@@ -189,7 +189,7 @@ export class Drawer3d implements DrawerInterface {
       ],
       updatable: true,
       radius: radius,
-      tessellation: 4,
+      tessellation: 6,
     }, this.scene);
   }
 
