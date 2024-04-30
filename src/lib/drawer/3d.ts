@@ -61,7 +61,7 @@ export class Drawer3d implements DrawerInterface {
     this.initEventHandlers();
   }
 
-  draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
+  draw(atoms: Array<AtomInterface>, links: LinkManagerInterface): void {
     for (const atom of atoms) {
       const radius = this.TYPES_CONFIG.RADIUS[atom.type];
       const drawObject = this.getAtomDrawObject(atom);

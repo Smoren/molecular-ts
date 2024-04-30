@@ -165,7 +165,7 @@ export class ClusterManager implements ClusterManagerInterface {
           }
         }
       }
-    } else if (atom.position.length === 1) {
+    } else if (atom.position.length === 2) {
       const cc = this.map.handleAtom(atom);
       for (let i=cc.coords[0]-1; i<=cc.coords[0]+1; ++i) {
         for (let j=cc.coords[1]-1; j<=cc.coords[1]+1; ++j) {

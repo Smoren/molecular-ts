@@ -11,7 +11,7 @@ export interface ViewConfigInterface {
 export type MouseClickListenerCallback = (coords: VectorInterface, extraKey: number | null) => void;
 
 export interface DrawerInterface {
-  draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void;
+  draw(atoms: Array<AtomInterface>, links: LinkManagerInterface): void;
   clear(): void;
   addClickListener(callback: MouseClickListenerCallback): void;
 }

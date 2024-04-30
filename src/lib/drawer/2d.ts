@@ -59,11 +59,11 @@ export class Drawer2d implements DrawerInterface {
     this.initEventHandlers();
   }
 
-  public draw(atoms: Iterable<AtomInterface>, links: LinkManagerInterface): void {
+  public draw(atoms: Array<AtomInterface>, links: LinkManagerInterface): void {
     this.clear();
     this.context.save();
-    this.context.translate(...this.viewConfig.offset as [number, number]);
-    this.context.scale(...this.viewConfig.scale as [number, number]);
+    this.context.translate(this.viewConfig.offset[0], this.viewConfig.offset[1]);
+    this.context.scale(this.viewConfig.scale[0], this.viewConfig.scale[1]);
 
     for (const link of links) {
       this.drawLine(
@@ -74,7 +74,8 @@ export class Drawer2d implements DrawerInterface {
       );
     }
 
-    for (const atom of atoms) {
+    for (let i=0; i<atoms.length; ++i) {
+      const atom = atoms[i];
       this.drawCircle(
         atom.position,
         this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS,
@@ -98,7 +99,7 @@ export class Drawer2d implements DrawerInterface {
   private drawCircle(position: NumericVector, radius: number, color: ColorVector) {
     this.context.beginPath();
     this.context.fillStyle = `rgb(${color.join(', ')})`;
-    this.context.ellipse(...position as [number, number], radius, radius, 0, 0, 2 * Math.PI);
+    this.context.ellipse(position[0], position[1], radius, radius, 0, 0, 2 * Math.PI);
     this.context.fill();
     this.context.closePath();
   }
@@ -117,9 +118,9 @@ export class Drawer2d implements DrawerInterface {
     const lhsColor = this.TYPES_CONFIG.COLORS[link.lhs.type];
     const rhsColor = this.TYPES_CONFIG.COLORS[link.rhs.type];
     return [
-      (lhsColor[0]+rhsColor[0])/2,
-      (lhsColor[1]+rhsColor[1])/2,
-      (lhsColor[2]+rhsColor[2])/2,
+      Math.round((lhsColor[0]+rhsColor[0])/2),
+      Math.round((lhsColor[1]+rhsColor[1])/2),
+      Math.round((lhsColor[2]+rhsColor[2])/2),
     ];
   }
 
