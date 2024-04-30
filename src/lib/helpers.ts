@@ -18,10 +18,10 @@ import type {
   ViewMode,
 } from './types/config';
 import type { PhysicModelConstructor, PhysicModelInterface } from './types/interaction';
+import { arrayBinaryOperation, arrayUnaryOperation, roundWithStep } from "./math";
 import { Atom, Link } from './atomic';
 import { PhysicModelV1 } from './physics/v1';
 import { PhysicModelV2 } from './physics/v2';
-import { arrayBinaryOperation, arrayUnaryOperation } from "./math";
 
 class LinkPool implements LinksPoolInterface {
   private storage: LinkInterface[] = [];
@@ -303,18 +303,6 @@ export function createRandomFloat(
   let result = Math.random() * (until - from) + from;
   if (step !== undefined && step !== 0) {
     result = roundWithStep(result, step, precision);
-  }
-  return result;
-}
-
-export function round(value: number, precision: number): number {
-  return Number(value.toFixed(precision));
-}
-
-export function roundWithStep(value: number, step: number, precision?: number): number {
-  const result = Math.round(value / step) * step;
-  if (precision !== undefined) {
-    return round(result, precision);
   }
   return result;
 }

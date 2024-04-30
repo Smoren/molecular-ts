@@ -1,5 +1,11 @@
 import { Vector, createVector, toVector } from './vector';
-import { isEqual, getEpsilon, changeEpsilon } from './helpers';
+import {
+  isEqual,
+  getEpsilon,
+  changeEpsilon,
+  round,
+  roundWithStep,
+} from './helpers';
 import {
   arrayUnaryOperation,
   arrayBinaryOperation,
@@ -24,4 +30,6 @@ export {
   concatTensors,
   setMatrixMainDiagonal,
   setTensorMainDiagonal,
+  round,
+  roundWithStep,
 };
