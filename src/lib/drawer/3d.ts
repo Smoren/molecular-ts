@@ -209,7 +209,6 @@ export class Drawer3d implements DrawerInterface {
   }
 
   private addAtomToMap(atom: AtomInterface): Mesh {
-    // eslint-disable-next-line new-cap
     const drawObject = this.createAtomMesh(
       this.WORLD_CONFIG.ATOM_RADIUS,
       atom.position,
@@ -229,7 +228,6 @@ export class Drawer3d implements DrawerInterface {
   }
 
   private addLinkToMap(link: LinkInterface): Mesh {
-    // eslint-disable-next-line new-cap
     const drawObject = this.createLinkMesh(link.lhs.position, link.rhs.position, link);
     this.linksMap.set(link, drawObject);
 
