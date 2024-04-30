@@ -121,6 +121,13 @@ export class Vector extends Array implements VectorInterface {
     return this;
   }
 
+  set(values: NumericVector): VectorInterface {
+    for (let i=0; i<values.length; ++i) {
+      this[i] = values[i];
+    }
+    return this;
+  }
+
   clone(): VectorInterface {
     return new Vector(this);
   }

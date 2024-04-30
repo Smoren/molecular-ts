@@ -4,7 +4,7 @@ import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector, VectorInterface } from './math/types';
 import type { InteractionManagerInterface } from './types/interaction';
 import type { PhysicModelInterface } from './types/interaction';
-import { toVector } from './math';
+import { Vector } from './math';
 import { getViewModeConfig } from './helpers';
 
 export class InteractionManager implements InteractionManagerInterface {
@@ -15,6 +15,7 @@ export class InteractionManager implements InteractionManagerInterface {
   private readonly ruleHelper: RulesHelperInterface;
   private physicModel: PhysicModelInterface;
   private time: number;
+  private bufVector: VectorInterface = new Vector([0, 0]);
 
   constructor(
     viewMode: ViewMode,
@@ -52,7 +53,7 @@ export class InteractionManager implements InteractionManagerInterface {
   }
 
   interactLink(link: LinkInterface): void {
-    const distVector = toVector(this.getDistVector(link.lhs, link.rhs));
+    const distVector = this.bufVector.set(this.getDistVector(link.lhs, link.rhs));
     const dist2 = this.getDist2(distVector);
 
     if (

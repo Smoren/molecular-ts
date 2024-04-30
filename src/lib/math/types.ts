@@ -97,6 +97,11 @@ export interface VectorInterface extends NumericVector {
   random(): VectorInterface;
 
   /**
+   * Sets vector values
+   */
+  set(values: NumericVector): VectorInterface;
+
+  /**
    * Clones vector
    */
   clone(): VectorInterface;

@@ -9,6 +9,7 @@ import { toVector } from './math';
 
 class BondMap implements BondMapInterface {
   private storage: Record<number, AtomInterface> = {};
+  private typesCount: Record<number, number> = {};
   private count: number = 0;
 
   get length(): number {
@@ -16,11 +17,7 @@ class BondMap implements BondMapInterface {
   }
 
   lengthOf(type: number): number {
-    let result = 0;
-    for (const id in this.storage) { // eslint-disable-line guard-for-in
-      result += +((this.storage[id].type) === type);
-    }
-    return result;
+    return this.typesCount[type] ?? 0;
   }
 
   has(atom: AtomInterface): boolean {
@@ -29,11 +26,16 @@ class BondMap implements BondMapInterface {
 
   add(atom: AtomInterface): void {
     this.storage[atom.id] = atom;
+    if (this.typesCount[atom.type] === undefined) {
+      this.typesCount[atom.type] = 0;
+    }
+    this.typesCount[atom.type]++;
     this.count++;
   }
 
   delete(atom: AtomInterface): void {
     delete this.storage[atom.id];
+    this.typesCount[atom.type]--;
     this.count--;
   }
 }
