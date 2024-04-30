@@ -169,16 +169,28 @@ const randomizeTypesConfig = () => {
             :step="0.1"
             :values="randomTypesConfig.LINK_FACTOR_DISTANCE_BOUNDS"
           />
-          <flag
-            title="Symmetric"
-            v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
-            style="float: left;"
-          />
-          <flag
-            title="Extended"
-            v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
-            style="float: right;"
-          />
+          <div class="grid-wrapper">
+            <div>
+              <flag
+                title="Symmetric"
+                v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
+              />
+            </div>
+            <div>
+              <flag
+                title="Ignore self type"
+                v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE"
+                style="text-align: center;"
+              />
+            </div>
+            <div>
+              <flag
+                title="Extended"
+                v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
+                style="text-align: right;"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -202,4 +214,13 @@ const randomizeTypesConfig = () => {
   margin-right: 5px;
 }
 
+.grid-wrapper {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grid-wrapper > div {
+  flex: 1 1;
+}
 </style>

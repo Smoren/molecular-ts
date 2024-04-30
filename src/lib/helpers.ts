@@ -489,6 +489,20 @@ export function concatTensors(lhs: number[][][], rhs: number[][][], defaultValue
   return result;
 }
 
+export function setMatrixMainDiagonal<T>(matrix: T[][], value: T): T[][] {
+  for (let i=0; i<matrix.length; ++i) {
+    matrix[i][i] = value;
+  }
+  return matrix;
+}
+
+export function setTensorMainDiagonal<T>(tensor: T[][][], value: T): T[][][] {
+  for (let i=0; i<tensor.length; ++i) {
+    tensor[i][i][i] = value;
+  }
+  return tensor;
+}
+
 export function getViewModeConfig(worldConfig: WorldConfig, viewMode?: ViewMode): ViewModeConfig {
   return (viewMode ?? worldConfig.VIEW_MODE) === '3d'
     ? worldConfig.CONFIG_3D

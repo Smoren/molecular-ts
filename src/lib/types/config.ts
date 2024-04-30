@@ -81,6 +81,7 @@ export type RandomTypesConfig = {
   LINK_TYPE_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_DISTANCE_EXTENDED: boolean;
+  LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: boolean;
 };
 export type TypesSymmetricConfig = {
   GRAVITY_MATRIX_SYMMETRIC: boolean;

@@ -4,7 +4,9 @@ import {
   createRandomInteger,
   createDistributedLinkFactorDistance,
   getRandomColor,
-  randomizeMatrix
+  randomizeMatrix,
+  setMatrixMainDiagonal,
+  setTensorMainDiagonal,
 } from "@/lib/helpers";
 
 export function createColors(count: number): Array<ColorVector> {
@@ -90,6 +92,7 @@ export function createRandomTypesConfig({
   LINK_TYPE_MATRIX_SYMMETRIC,
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
   LINK_FACTOR_DISTANCE_EXTENDED,
+  LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE,
 }: RandomTypesConfig): TypesConfig {
   const precision = 8;
 
@@ -140,6 +143,10 @@ export function createRandomTypesConfig({
     precision,
   );
 
+  if (LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE) {
+    setMatrixMainDiagonal(linkFactorDistance, 1);
+  }
+
   let linkFactorDistanceExtended: number[][][] | undefined;
 
   if (LINK_FACTOR_DISTANCE_EXTENDED) {
@@ -152,6 +159,10 @@ export function createRandomTypesConfig({
         LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
         precision,
       ));
+    }
+
+    if (LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE) {
+      setTensorMainDiagonal(linkFactorDistanceExtended, 1);
     }
   }
 
@@ -194,5 +205,6 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     LINK_TYPE_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_EXTENDED: true,
+    LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: true,
   };
 }
