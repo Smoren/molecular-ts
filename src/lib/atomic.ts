@@ -21,12 +21,12 @@ class BondMap implements BondMapInterface {
   }
 
   has(atom: AtomInterface): boolean {
-    return this.storage[atom.id] !== undefined;
+    return this.storage.hasOwnProperty(atom.id);
   }
 
   add(atom: AtomInterface): void {
     this.storage[atom.id] = atom;
-    if (this.typesCount[atom.type] === undefined) {
+    if (!this.typesCount.hasOwnProperty(atom.type)) {
       this.typesCount[atom.type] = 0;
     }
     this.typesCount[atom.type]++;

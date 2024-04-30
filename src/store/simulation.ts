@@ -30,7 +30,7 @@ export const useSimulationStore = defineStore("simulation", () => {
         initialConfig: create3dBaseInitialConfig(),
         physicModel: createPhysicModel(worldConfig, typesConfig),
         atomsFactory: create3dRandomDistribution,
-        drawer: create3dDrawer('canvas3d', configStore.worldConfig, configStore.typesConfig),
+        drawer: create3dDrawer('canvas3d', worldConfig, typesConfig),
       });
     }
 
@@ -42,7 +42,7 @@ export const useSimulationStore = defineStore("simulation", () => {
         initialConfig: create2dBaseInitialConfig(),
         physicModel: createPhysicModel(worldConfig, typesConfig),
         atomsFactory: create2dRandomDistribution,
-        drawer: create2dDrawer('canvas2d', configStore.worldConfig, configStore.typesConfig),
+        drawer: create2dDrawer('canvas2d', worldConfig, typesConfig),
       });
     }
 

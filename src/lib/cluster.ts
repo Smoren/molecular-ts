@@ -107,7 +107,7 @@ class ClusterMap implements ClusterMapInterface {
 
     for (let i=0; i<clusterCoords.length-1; ++i) {
       const coord = clusterCoords[i];
-      if (result[coord] === undefined) {
+      if (!result.hasOwnProperty(coord)) {
         result[coord] = [];
       }
 
@@ -116,7 +116,7 @@ class ClusterMap implements ClusterMapInterface {
 
     const lastCoord = clusterCoords[clusterCoords.length-1];
 
-    if (result[lastCoord] === undefined) {
+    if (!result.hasOwnProperty(lastCoord)) {
       result[lastCoord] = new Cluster([...clusterCoords]);
     }
 
