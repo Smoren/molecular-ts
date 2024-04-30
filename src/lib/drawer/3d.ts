@@ -175,7 +175,7 @@ export class Drawer3d implements DrawerInterface {
       ],
       updatable: true,
       radius: radius,
-      tessellation: 8,
+      tessellation: 4,
     }, this.scene);
 
     const color = this.getLinkColor(link);
