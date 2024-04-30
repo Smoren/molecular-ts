@@ -5,9 +5,8 @@ import {
   createDistributedLinkFactorDistance,
   getRandomColor,
   randomizeMatrix,
-  setMatrixMainDiagonal,
-  setTensorMainDiagonal,
-} from "@/lib/helpers";
+} from '../helpers';
+import { setMatrixMainDiagonal, setTensorMainDiagonal } from '../math';
 
 export function createColors(count: number): Array<ColorVector> {
   const predefined: Array<ColorVector> = [

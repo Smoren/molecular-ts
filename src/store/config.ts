@@ -16,14 +16,12 @@ import {
 } from "@/lib/config/types";
 import { fullCopyObject } from "@/helpers/utils";
 import {
-  concatArrays,
-  concatMatrices,
-  concatTensors,
   createDistributedLinkFactorDistance,
   distributeLinkFactorDistance,
   getRandomColor,
 } from "@/lib/helpers";
 import { useFlash } from '@/hooks/use-flash';
+import { concatArrays, concatMatrices, concatTensors } from "@/lib/math";
 
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
