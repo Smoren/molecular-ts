@@ -1,4 +1,4 @@
-import type { NumericVector } from '../vector/types';
+import type { NumericVector } from '../math/types';
 
 export type ColorVector = [number, number, number];
 export type PhysicModelName = 'v1' | 'v2';

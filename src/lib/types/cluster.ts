@@ -1,5 +1,5 @@
 import type { AtomInterface } from './atomic';
-import type { NumericVector } from '../vector/types';
+import type { NumericVector } from '../math/types';
 
 export interface ClusterInterface extends Iterable<AtomInterface> {
   length: number;

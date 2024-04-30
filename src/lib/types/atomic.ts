@@ -1,4 +1,4 @@
-import type { VectorInterface } from '../vector/types';
+import type { VectorInterface } from '../math/types';
 import type { ClusterInterface } from "./cluster";
 
 export interface BondMapInterface {

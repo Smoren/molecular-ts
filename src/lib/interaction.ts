@@ -1,10 +1,10 @@
 import type { WorldConfig, TypesConfig, ViewMode } from './types/config';
 import type { LinkManagerInterface, RulesHelperInterface } from './types/helpers';
 import type { AtomInterface, LinkInterface } from './types/atomic';
-import type { NumericVector, VectorInterface } from './vector/types';
+import type { NumericVector, VectorInterface } from './math/types';
 import type { InteractionManagerInterface } from './types/interaction';
 import type { PhysicModelInterface } from './types/interaction';
-import { toVector } from './vector';
+import { toVector } from './math';
 import { getViewModeConfig } from './helpers';
 
 export class InteractionManager implements InteractionManagerInterface {

@@ -16,9 +16,9 @@ import {
   StandardMaterial,
   MeshBuilder,
 } from 'babylonjs';
-import type { NumericVector } from '../vector/types';
+import type { NumericVector } from '../math/types';
 import type { LinkManagerInterface } from '../types/helpers';
-import { createVector } from '../vector';
+import { createVector } from '../math';
 
 export class Drawer3d implements DrawerInterface {
   private readonly WORLD_CONFIG: WorldConfig;

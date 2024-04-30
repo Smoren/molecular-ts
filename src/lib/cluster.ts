@@ -1,5 +1,5 @@
 import type { AtomInterface } from './types/atomic';
-import type { NumericVector } from './vector/types';
+import type { NumericVector } from './math/types';
 import type { ClusterInterface, ClusterManagerInterface, ClusterMapInterface } from './types/cluster';
 
 function incPoint(aPoint: NumericVector, aCenterPoint: NumericVector, aDim: number): boolean {

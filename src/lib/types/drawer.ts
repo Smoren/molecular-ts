@@ -1,4 +1,4 @@
-import type { NumericVector, VectorInterface } from '../vector/types';
+import type { NumericVector, VectorInterface } from '../math/types';
 import type { AtomInterface } from './atomic';
 import type { LinkManagerInterface } from './helpers';
 import type { TypesConfig, WorldConfig } from './config';

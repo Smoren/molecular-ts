@@ -1,5 +1,5 @@
-import { createVector } from '../vector';
-import type { NumericVector } from '../vector/types';
+import { createVector } from '../math';
+import type { NumericVector } from '../math/types';
 import type {
   Drawer2dConfigInterface,
   DrawerInterface,

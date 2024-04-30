@@ -6,10 +6,10 @@ import type { InteractionManagerInterface, PhysicModelInterface } from './types/
 import type { ClusterManagerInterface } from './types/cluster';
 import type { Summary, SummaryManagerInterface } from './types/summary';
 import { ClusterManager } from './cluster';
-import { createAtom, getViewModeConfig, LinkManager, RulesHelper, RunningState } from './helpers';
+import { createAtom, LinkManager, RulesHelper, RunningState } from './helpers';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from './summary';
-import type { NumericVector } from './vector/types';
+import type { NumericVector } from './math/types';
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;

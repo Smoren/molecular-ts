@@ -3,10 +3,11 @@ import type {
   LinkManagerInterface,
   RulesHelperInterface,
   GeometryHelperInterface,
-  QueueInterface, RunningStateInterface,
+  QueueInterface,
+  RunningStateInterface,
 } from './types/helpers';
 import type { AtomInterface, LinkInterface } from './types/atomic';
-import type { NumericVector } from './vector/types';
+import type { NumericVector } from './math/types';
 import type {
   LinkFactorDistanceConfig,
   LinkFactorDistanceExtendedConfig,
