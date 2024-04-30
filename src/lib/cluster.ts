@@ -103,8 +103,6 @@ class ClusterMap implements ClusterMapInterface {
   }
 
   public getCluster(clusterCoords: NumericVector): ClusterInterface {
-    let result: Array<unknown> = this.map;
-
     if (clusterCoords.length === 2) {
       const map = this.map as Cluster[][];
       if (
@@ -123,6 +121,8 @@ class ClusterMap implements ClusterMapInterface {
         return map[clusterCoords[0]][clusterCoords[1]][clusterCoords[2]];
       }
     }
+
+    let result: Array<unknown> = this.map;
 
     for (let i=0; i<clusterCoords.length-1; ++i) {
       const coord = clusterCoords[i];
