@@ -105,6 +105,25 @@ class ClusterMap implements ClusterMapInterface {
   public getCluster(clusterCoords: NumericVector): ClusterInterface {
     let result: Array<unknown> = this.map;
 
+    if (clusterCoords.length === 2) {
+      const map = this.map as Cluster[][];
+      if (
+        map[clusterCoords[0]] !== undefined &&
+        map[clusterCoords[0]][clusterCoords[1]] !== undefined
+      ) {
+        return map[clusterCoords[0]][clusterCoords[1]];
+      }
+    } else if (clusterCoords.length === 3) {
+      const map = this.map as Cluster[][][];
+      if (
+        map[clusterCoords[0]] !== undefined &&
+        map[clusterCoords[0]][clusterCoords[1]] !== undefined &&
+        map[clusterCoords[0]][clusterCoords[1]][clusterCoords[2]] !== undefined
+      ) {
+        return map[clusterCoords[0]][clusterCoords[1]][clusterCoords[2]];
+      }
+    }
+
     for (let i=0; i<clusterCoords.length-1; ++i) {
       const coord = clusterCoords[i];
       if (!result.hasOwnProperty(coord)) {
