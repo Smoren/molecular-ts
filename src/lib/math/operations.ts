@@ -1,4 +1,4 @@
-import {createEmptyMatrix, createEmptyTensor} from "@/lib/helpers";
+import { createEmptyMatrix, createEmptyTensor } from "./factories";
 
 export function arrayUnaryOperation<T>(
   input: Array<T>,

@@ -1,4 +1,4 @@
-import { Vector, createVector, toVector } from './vector';
+import { Vector } from './vector';
 import {
   isEqual,
   getEpsilon,
@@ -15,11 +15,19 @@ import {
   setMatrixMainDiagonal,
   setTensorMainDiagonal,
 } from './operations';
+import {
+  createVector,
+  toVector,
+  createEmptyMatrix,
+  createEmptyTensor,
+} from './factories';
 
 export {
   Vector,
   createVector,
   toVector,
+  createEmptyMatrix,
+  createEmptyTensor,
   isEqual,
   getEpsilon,
   changeEpsilon,

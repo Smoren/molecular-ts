@@ -125,21 +125,3 @@ export class Vector extends Array implements VectorInterface {
     return new Vector(this);
   }
 }
-
-/**
- * Creates new vector
- * @public
- * @param coords - coordinates of new vector
- */
-export function createVector(coords: NumericVector): VectorInterface {
-  return new Vector(coords);
-}
-
-/**
- * Converts instance to vector if it's an array
- * @public
- * @param coords - coords as vector or an array
- */
-export function toVector(coords: NumericVector): VectorInterface {
-  return (coords instanceof Vector) ? coords : createVector(coords);
-}

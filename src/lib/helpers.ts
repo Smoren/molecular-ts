@@ -374,32 +374,6 @@ export function distributeLinkFactorDistance(
   }
 }
 
-export function createEmptyMatrix(n: number, m: number, defaultValue: number = 0): number[][] {
-  const result: number[][] = [];
-  result.length = n;
-  for (let i=0; i<n; ++i) {
-    result[i] = [];
-    result[i].length = m;
-    result[i].fill(defaultValue);
-  }
-  return result;
-}
-
-export function createEmptyTensor(n: number, m: number, k: number, defaultValue: number = 0): number[][][] {
-  const result: number[][][] = [];
-  result.length = n;
-  for (let i=0; i<n; ++i) {
-    result[i] = [];
-    result[i].length = m;
-    for (let j=0; j<m; ++j) {
-      result[i][j] = [];
-      result[i][j].length = k;
-      result[i][j].fill(defaultValue);
-    }
-  }
-  return result;
-}
-
 export function getViewModeConfig(worldConfig: WorldConfig, viewMode?: ViewMode): ViewModeConfig {
   return (viewMode ?? worldConfig.VIEW_MODE) === '3d'
     ? worldConfig.CONFIG_3D
