@@ -125,8 +125,11 @@ export class Drawer3d implements DrawerInterface {
   }
 
   private createAtomMesh(radius: number, coords: NumericVector, color: NumericVector): Mesh {
-    // eslint-disable-next-line new-cap
-    const atomMesh = Mesh.CreateSphere('origin', 10, radius*2, this.scene);
+    const atomMesh = MeshBuilder.CreateSphere('atom', {
+      segments: 8,
+      diameter: radius * 2,
+      updatable: false,
+    }, this.scene);
     atomMesh.position.x = coords[0];
     atomMesh.position.y = coords[1];
     atomMesh.position.z = coords[2];
@@ -138,6 +141,7 @@ export class Drawer3d implements DrawerInterface {
     material.freeze();
 
     atomMesh.material = material;
+    atomMesh.freezeNormals();
     atomMesh.isPickable = false;
     atomMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION;
 
@@ -156,27 +160,10 @@ export class Drawer3d implements DrawerInterface {
     this.bufVectors[1].z = rhsCoords[2];
 
     if (mesh) {
-      // eslint-disable-next-line new-cap
-      return MeshBuilder.CreateTube('tube', {
-        path: [
-          this.bufVectors[0],
-          this.bufVectors[1],
-        ],
-        radius: radius,
-        instance: mesh,
-      }, this.scene);
+      return this.createLinkMeshFromInstance(this.bufVectors, radius, mesh);
     }
 
-    // eslint-disable-next-line new-cap
-    const newMesh = MeshBuilder.CreateTube('tube', {
-      path: [
-        this.bufVectors[0],
-        this.bufVectors[1],
-      ],
-      updatable: true,
-      radius: radius,
-      tessellation: 4,
-    }, this.scene);
+    const newMesh = this.createNewLinkMesh(this.bufVectors, radius);
 
     const color = this.getLinkColor(link);
     const material = new StandardMaterial('material', this.scene);
@@ -186,10 +173,35 @@ export class Drawer3d implements DrawerInterface {
     material.freeze();
 
     newMesh.material = material;
+    newMesh.receiveShadows = false;
+    newMesh.freezeWorldMatrix();
     newMesh.isPickable = false;
-    newMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION_THEN_BSPHERE_ONLY;
+    newMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION;
 
     return newMesh;
+  }
+
+  private createNewLinkMesh(path: Vector3[], radius: number): Mesh {
+    return MeshBuilder.CreateTube('tube', {
+      path: [
+        path[0],
+        path[1],
+      ],
+      updatable: true,
+      radius: radius,
+      tessellation: 4,
+    }, this.scene);
+  }
+
+  private createLinkMeshFromInstance(path: Vector3[], radius: number, mesh: Mesh): Mesh {
+    return MeshBuilder.CreateTube('tube', {
+      path: [
+        path[0],
+        path[1],
+      ],
+      radius: radius,
+      instance: mesh,
+    }, this.scene);
   }
 
   private getAtomDrawObject(atom: AtomInterface): Mesh {
