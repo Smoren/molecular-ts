@@ -56,7 +56,7 @@ provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarMod
               <types-config-section />
             </MDBAccordionItem>
             <MDBAccordionItem headerTitle="Initial" collapseId="collapse-initial">
-              <initial-config-section />
+              <initial-config-section :with-title="false" />
             </MDBAccordionItem>
             <MDBAccordionItem headerTitle="Exchange" collapseId="collapse-exchange">
               <exchange-section />

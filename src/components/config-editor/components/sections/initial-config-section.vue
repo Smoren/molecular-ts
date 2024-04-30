@@ -11,8 +11,10 @@ import { getViewModeConfig } from "@/lib/helpers";
 
 withDefaults(defineProps<{
   withButtons?: boolean;
+  withTitle?: boolean;
 }>(), {
   withButtons: true,
+  withTitle: true,
 });
 
 const configStore = useConfigStore();
@@ -42,7 +44,7 @@ const refill = () => {
 
 <template>
   <config-section>
-    <template #title>
+    <template #title v-if="withTitle">
       Initial Params
     </template>
     <template #body>
