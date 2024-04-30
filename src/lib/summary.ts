@@ -6,9 +6,10 @@ import type {
   SummaryAttr,
   SummaryManagerInterface,
 } from './types/summary';
-import { arrayBinaryOperation, arrayUnaryOperation, Queue, round } from './helpers';
+import { Queue, round } from './helpers';
 import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { TypesConfig, WorldConfig } from './types/config';
+import { arrayBinaryOperation, arrayUnaryOperation } from './math';
 
 const createEmptyStepSummary = (typesCount: number): Summary<number[]> => ({
   ATOMS_COUNT: [0],
