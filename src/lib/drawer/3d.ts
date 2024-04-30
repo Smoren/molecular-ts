@@ -124,8 +124,8 @@ export class Drawer3d implements DrawerInterface {
     return light;
   }
 
-  private createAtomMesh(radius: number, coords: NumericVector, color: NumericVector): Mesh {
-    const atomMesh = MeshBuilder.CreateSphere('atom', {
+  private createAtomMesh(radius: number, coords: NumericVector, color: NumericVector, id: number): Mesh {
+    const atomMesh = MeshBuilder.CreateSphere(`atom_${id}`, {
       segments: 8,
       diameter: radius * 2,
       updatable: false,
@@ -163,7 +163,7 @@ export class Drawer3d implements DrawerInterface {
       return this.createLinkMeshFromInstance(this.bufVectors, radius, mesh);
     }
 
-    const newMesh = this.createNewLinkMesh(this.bufVectors, radius);
+    const newMesh = this.createNewLinkMesh(this.bufVectors, radius, link.id);
 
     const color = this.getLinkColor(link);
     const material = new StandardMaterial('material', this.scene);
@@ -181,8 +181,8 @@ export class Drawer3d implements DrawerInterface {
     return newMesh;
   }
 
-  private createNewLinkMesh(path: Vector3[], radius: number): Mesh {
-    return MeshBuilder.CreateTube('tube', {
+  private createNewLinkMesh(path: Vector3[], radius: number, id: string): Mesh {
+    return MeshBuilder.CreateTube(`link_${id}`, {
       path: [
         path[0],
         path[1],
@@ -194,7 +194,7 @@ export class Drawer3d implements DrawerInterface {
   }
 
   private createLinkMeshFromInstance(path: Vector3[], radius: number, mesh: Mesh): Mesh {
-    return MeshBuilder.CreateTube('tube', {
+    return MeshBuilder.CreateTube(mesh.name, {
       path: [
         path[0],
         path[1],
@@ -213,6 +213,7 @@ export class Drawer3d implements DrawerInterface {
       this.WORLD_CONFIG.ATOM_RADIUS,
       atom.position,
       this.TYPES_CONFIG.COLORS[atom.type],
+      atom.id,
     );
     this.atomsMap.set(atom, drawObject);
 

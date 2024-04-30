@@ -22,6 +22,7 @@ export interface AtomInterface {
 }
 
 export interface LinkInterface {
+  id: string;
   lhs: AtomInterface;
   rhs: AtomInterface;
   exportState(): number[];

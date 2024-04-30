@@ -79,6 +79,10 @@ export class Link implements LinkInterface {
     this.rhs = rhs;
   }
 
+  get id(): string {
+    return `${this.lhs.id}-${this.rhs.id}`;
+  }
+
   exportState(): number[] {
     return [this.lhs.id, this.rhs.id];
   }
