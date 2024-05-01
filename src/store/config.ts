@@ -217,11 +217,11 @@ export const useConfigStore = defineStore("config", () => {
   const randomizeTypesConfig = (skipSubMatricesOnCross?: number) => {
     const newConfig = createRandomTypesConfig(randomTypesConfig.value);
 
-    if (!randomTypesConfig.value.USE_FREQUENCY_BOUNDS) {
+    if (!randomTypesConfig.value.USE_FREQUENCY_BOUNDS || skipSubMatricesOnCross !== undefined) {
       copyConfigListValue(typesConfigRaw.FREQUENCIES, newConfig.FREQUENCIES, 1);
     }
 
-    if (!randomTypesConfig.value.USE_RADIUS_BOUNDS) {
+    if (!randomTypesConfig.value.USE_RADIUS_BOUNDS || skipSubMatricesOnCross !== undefined) {
       copyConfigListValue(typesConfigRaw.RADIUS, newConfig.RADIUS, 1);
     }
 
@@ -233,7 +233,7 @@ export const useConfigStore = defineStore("config", () => {
       copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0, skipSubMatricesOnCross);
     }
 
-    if (!randomTypesConfig.value.USE_LINK_BOUNDS) {
+    if (!randomTypesConfig.value.USE_LINK_BOUNDS || skipSubMatricesOnCross !== undefined) {
       copyConfigListValue(typesConfigRaw.LINKS, newConfig.LINKS, 0);
     }
 

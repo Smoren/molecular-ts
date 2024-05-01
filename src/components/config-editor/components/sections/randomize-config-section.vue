@@ -63,7 +63,7 @@ const randomizeTypesConfig = () => {
         <input type="number" min="0" step="1" v-model="randomTypesConfig.TYPES_COUNT" />
       </div>
 
-      <div>
+      <div v-show="!ignoreSubMatricesOnCross">
         <input-header
           name="Radius"
           tooltip="Radius of each type of particles."
@@ -80,7 +80,7 @@ const randomizeTypesConfig = () => {
         </div>
       </div>
 
-      <div>
+      <div v-show="!ignoreSubMatricesOnCross">
         <input-header
           name="Frequencies"
           tooltip="Ratio of the number of particles that will be generated on refill."
@@ -133,7 +133,7 @@ const randomizeTypesConfig = () => {
         </div>
       </div>
 
-      <div>
+      <div v-show="!ignoreSubMatricesOnCross">
         <input-header
           name="Links Count"
           tooltip="Connection limit map shows the maximum number of links for particles of each type."
