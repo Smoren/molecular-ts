@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, inject, type Ref, ref, toRefs } from "vue";
+import { computed, inject, type Ref, ref, toRefs, watch } from "vue";
 import { useConfigStore } from '@/store/config';
 import { useSimulationStore } from "@/store/simulation";
 import { usePhysicsStore } from '@/store/physics';
@@ -21,12 +21,6 @@ const {
   refillAtoms,
 } = useSimulationStore();
 
-const pausedTitle = ref('Pause');
-const togglePause = () => {
-  simulation.togglePause();
-  pausedTitle.value = !simulation.isPaused() ? 'Pause' : 'Resume';
-};
-
 const clear = () => {
   if (confirm('Are you sure?')) {
     clearAtoms!();
@@ -40,6 +34,19 @@ const refill = () => {
 };
 
 const toggleSummary = inject<() => boolean>(PROVIDED_TOGGLE_SUMMARY);
+
+const pausedTitle = ref('Pause');
+const updatePausedTitle = () => {
+  pausedTitle.value = simulation.isPaused() ? 'Resume' : 'Pause';
+}
+const togglePause = () => {
+  simulation.togglePause();
+  updatePausedTitle();
+};
+
+watch(() => configStore.worldConfig.VIEW_MODE, () => {
+  updatePausedTitle();
+});
 
 </script>
 
