@@ -69,7 +69,6 @@ const linkInfluenceConfigDescription = computed(() => {
         <button class="btn btn-outline-secondary" @click="toggleRandomizeConfig">Randomize</button>
         <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button>
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
-        <!-- TODO fix and on. -->
         <button class="btn btn-outline-secondary" @click="configStore.appendType">Add type</button>
       </div>
       <div>
