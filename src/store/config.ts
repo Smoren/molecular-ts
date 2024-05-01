@@ -13,12 +13,12 @@ import {
   createColors,
   createDefaultRandomTypesConfig,
   createRandomTypesConfig,
+  createSingleTypeConfig,
 } from "@/lib/config/types";
 import { fullCopyObject } from "@/helpers/utils";
 import {
   createDistributedLinkFactorDistance,
   distributeLinkFactorDistance,
-  getRandomColor,
 } from "@/lib/helpers";
 import { useFlash } from '@/hooks/use-flash';
 import { concatArrays, concatMatrices, concatTensors } from "@/lib/math";
@@ -247,27 +247,6 @@ export const useConfigStore = defineStore("config", () => {
       }
   }
 
-  const appendType = () => {
-    typesConfig.value.COLORS.push(getRandomColor());
-    typesConfig.value.RADIUS.push(1);
-    typesConfig.value.FREQUENCIES.push(1);
-    typesConfig.value.LINKS.push(0);
-
-    typesConfig.value.GRAVITY.forEach((item) => item.push(0));
-    typesConfig.value.GRAVITY.push(Array(typesConfig.value.COLORS.length).fill(0));
-
-    typesConfig.value.LINK_GRAVITY.forEach((item) => item.push(0));
-    typesConfig.value.LINK_GRAVITY.push(Array(typesConfig.value.COLORS.length).fill(0));
-
-    typesConfig.value.TYPE_LINKS.forEach((item) => item.push(0));
-    typesConfig.value.TYPE_LINKS.push(Array(typesConfig.value.COLORS.length).fill(0));
-
-    typesConfig.value.LINK_FACTOR_DISTANCE.forEach((item) => item.push(1));
-    typesConfig.value.LINK_FACTOR_DISTANCE.push(Array(typesConfig.value.COLORS.length).fill(1));
-
-    // TODO LINK_FACTOR_DISTANCE_EXTENDED
-  }
-
   const addTypesFromConfig = (config: TypesConfig): void => {
     typesConfig.value.COLORS = createColors(typesConfig.value.COLORS.length + config.COLORS.length);
     typesConfig.value.RADIUS = concatArrays(typesConfig.value.RADIUS, config.RADIUS);
@@ -291,6 +270,11 @@ export const useConfigStore = defineStore("config", () => {
     );
 
     setTypesConfig(typesConfig.value);
+  }
+
+  const appendType = () => {
+    const newTypeConfig = createSingleTypeConfig();
+    addTypesFromConfig(newTypeConfig);
   }
 
   watch(() => typesConfig.value.LINK_FACTOR_DISTANCE_USE_EXTENDED, (value: boolean) => {

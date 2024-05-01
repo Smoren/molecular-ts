@@ -74,9 +74,24 @@ export function createBaseTypesConfig(): TypesConfig {
     ],
     LINK_FACTOR_DISTANCE: linkFactorDistance,
     LINK_FACTOR_DISTANCE_EXTENDED: createDistributedLinkFactorDistance(linkFactorDistance),
-    LINK_FACTOR_DISTANCE_USE_EXTENDED: false,
+    LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
     FREQUENCIES: [1, 1, 1, 1, 1, 0.05],
     COLORS: createColors(6),
+  };
+}
+
+export function createSingleTypeConfig(): TypesConfig {
+  return {
+    RADIUS: [1],
+    FREQUENCIES: [1],
+    COLORS: createColors(1),
+    GRAVITY: [[0]],
+    LINK_GRAVITY: [[0]],
+    LINKS: [0],
+    TYPE_LINKS: [[0]],
+    LINK_FACTOR_DISTANCE: [[1]],
+    LINK_FACTOR_DISTANCE_EXTENDED: [[[1]]],
+    LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
   };
 }
 
