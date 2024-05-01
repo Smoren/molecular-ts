@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, inject, type Ref, ref, toRefs, watch } from "vue";
+import { inject, ref, toRefs, watch } from "vue";
 import { useConfigStore } from '@/store/config';
 import { useSimulationStore } from "@/store/simulation";
 import { usePhysicsStore } from '@/store/physics';
