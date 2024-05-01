@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed } from "vue";
+import { computed, type Ref, ref } from "vue";
 import { useConfigStore } from "@/store/config";
 import { useSimulationStore } from "@/store/simulation";
 import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
@@ -22,17 +22,24 @@ const needRefill = computed((): boolean => {
     randomTypesConfig.USE_FREQUENCY_BOUNDS;
 });
 
+const ignoreSubMatricesOnCross: Ref<boolean> = ref(false);
+const ignoreSubMatricesOnCrossValue: Ref<number | undefined> = ref(3);
+
 const randomizeTypesConfig = () => {
   if (!confirm('Are you sure?')) {
     return;
   }
 
+  const crossValue = ignoreSubMatricesOnCross.value
+    ? ignoreSubMatricesOnCrossValue.value
+    : undefined;
+
   if (needRefill.value) {
     clearAtoms!(true);
-    configStore.randomizeTypesConfig();
+    configStore.randomizeTypesConfig(crossValue);
     refillAtoms!(true);
   } else {
-    configStore.randomizeTypesConfig();
+    configStore.randomizeTypesConfig(crossValue);
   }
 };
 
@@ -193,7 +200,18 @@ const randomizeTypesConfig = () => {
           </div>
         </div>
       </div>
-
+      <div>
+        <flag
+          title="Ignore submatrices on cross"
+          v-model="ignoreSubMatricesOnCross"
+        />
+        <input
+          v-show="ignoreSubMatricesOnCross"
+          type="number"
+          v-model="ignoreSubMatricesOnCrossValue"
+          placeholder="Cross position"
+        />
+      </div>
       <div v-if="needRefill">
         <br />
         <initial-config-section :with-buttons="false" />
