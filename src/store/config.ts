@@ -225,23 +225,33 @@ export const useConfigStore = defineStore("config", () => {
       copyConfigListValue(typesConfigRaw.RADIUS, newConfig.RADIUS, 1);
     }
 
-    if (!randomTypesConfig.value.USE_GRAVITY_BOUNDS || skipSubMatricesOnCross !== undefined) {
-      copyConfigMatrixValue(typesConfigRaw.GRAVITY, newConfig.GRAVITY, 0, skipSubMatricesOnCross);
-    }
-
-    if (!randomTypesConfig.value.USE_LINK_GRAVITY_BOUNDS || skipSubMatricesOnCross !== undefined) {
-      copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0, skipSubMatricesOnCross);
-    }
-
     if (!randomTypesConfig.value.USE_LINK_BOUNDS || skipSubMatricesOnCross !== undefined) {
       copyConfigListValue(typesConfigRaw.LINKS, newConfig.LINKS, 0);
     }
 
-    if (!randomTypesConfig.value.USE_LINK_TYPE_BOUNDS || skipSubMatricesOnCross !== undefined) {
+    if (!randomTypesConfig.value.USE_GRAVITY_BOUNDS) {
+      copyConfigMatrixValue(typesConfigRaw.GRAVITY, newConfig.GRAVITY, 0);
+    } else if (skipSubMatricesOnCross !== undefined) {
+      copyConfigMatrixValue(typesConfigRaw.GRAVITY, newConfig.GRAVITY, 0, skipSubMatricesOnCross);
+    }
+
+    if (!randomTypesConfig.value.USE_LINK_GRAVITY_BOUNDS) {
+      copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0);
+    } else if (skipSubMatricesOnCross !== undefined) {
+      copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0, skipSubMatricesOnCross);
+    }
+
+    if (!randomTypesConfig.value.USE_LINK_TYPE_BOUNDS) {
+      copyConfigMatrixValue(typesConfigRaw.TYPE_LINKS, newConfig.TYPE_LINKS, 0);
+    } else if (skipSubMatricesOnCross !== undefined) {
       copyConfigMatrixValue(typesConfigRaw.TYPE_LINKS, newConfig.TYPE_LINKS, 0, skipSubMatricesOnCross);
     }
 
-    if (!randomTypesConfig.value.USE_LINK_FACTOR_DISTANCE_BOUNDS || skipSubMatricesOnCross !== undefined) {
+    if (!randomTypesConfig.value.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
+      copyConfigMatrixValue(typesConfigRaw.LINK_FACTOR_DISTANCE, newConfig.LINK_FACTOR_DISTANCE, 1);
+      copyConfigTensorValue(typesConfigRaw.LINK_FACTOR_DISTANCE_EXTENDED, newConfig.LINK_FACTOR_DISTANCE_EXTENDED, 1);
+      newConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = typesConfigRaw.LINK_FACTOR_DISTANCE_USE_EXTENDED;
+    } else if (skipSubMatricesOnCross !== undefined) {
       copyConfigMatrixValue(
         typesConfigRaw.LINK_FACTOR_DISTANCE,
         newConfig.LINK_FACTOR_DISTANCE,
@@ -254,7 +264,6 @@ export const useConfigStore = defineStore("config", () => {
         1,
         skipSubMatricesOnCross,
       );
-      newConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = typesConfigRaw.LINK_FACTOR_DISTANCE_USE_EXTENDED;
     }
 
     flash.turnOn(FLASH_IMPORT_STARTED);
