@@ -56,7 +56,7 @@ export class CompoundsAnalyzer {
   get itemLengthByTypesSummary(): [number, number, number][] {
     const types = new Set<number>(
       this.compounds
-        .map((set) => [...set].map((atom) => atom.type))
+        .map((atoms) => [...atoms].map((atom) => atom.type))
         .reduce((acc, x) => [...acc, ...x], [])
     );
     return [
