@@ -50,7 +50,22 @@ export class CompoundsAnalyzer {
   }
 
   get itemLengthSummary(): [number, number, number] {
-    const result = this.compounds
+    return this.getItemLengthSummary(this.compounds);
+  }
+
+  get itemLengthByTypesSummary(): [number, number, number][] {
+    const types = new Set<number>(
+      this.compounds
+        .map((set) => [...set].map((atom) => atom.type))
+        .reduce((acc, x) => [...acc, ...x], [])
+    );
+    return [
+      // TODO
+    ]
+  }
+
+  private getItemLengthSummary(compounds: Array<Set<AtomInterface>>): [number, number, number] {
+    const result = compounds
       .map((set) => set.size)
       .reduce((acc, x) => {
         return [
