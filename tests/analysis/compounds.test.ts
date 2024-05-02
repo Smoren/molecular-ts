@@ -8,25 +8,37 @@ describe.each([
 ] as Array<[
   LinkInterface[],
   Set<AtomInterface>[],
-  [number, number, number],
+  number,
+  number[],
+  [number, number, number, number],
+  [number, number, number, number][],
 ]>)(
   'Compounds Collector Test',
   (
     links: LinkInterface[],
     compoundsExpected: Set<AtomInterface>[],
-    itemSizeSummaryExpected: [number, number, number],
+    lengthExpected: number,
+    lengthByTypesExpected: number[],
+    itemSizeSummaryExpected: [number, number, number, number],
+    itemSizeSummaryByTypesExpected: [number, number, number, number][],
   ) => {
     it('', () => {
       const collector = new CompoundsCollector();
-      const analyzer = new CompoundsAnalyzer(collector.getCompounds());
+      collector.handLinks(links);
 
-      for (const link of links) {
-        collector.handleLink(link);
-      }
+      const analyzer = new CompoundsAnalyzer(collector.getCompounds());
 
       const compoundsActual = collector.getCompounds();
       expectSameArraysOfSets(compoundsActual, compoundsExpected);
-      expect(analyzer.itemLengthSummary).toEqual(itemSizeSummaryExpected);
+
+      expect(analyzer.length).toEqual(lengthExpected);
+      expect(analyzer.lengthByTypes).toEqual(lengthByTypesExpected);
+
+      const itemLengthSummary = analyzer.itemLengthSummary;
+      expect(itemLengthSummary).toEqual(itemSizeSummaryExpected);
+
+      const itemLengthByTypesSummary = analyzer.itemLengthByTypesSummary;
+      expect(itemLengthByTypesSummary).toEqual(itemSizeSummaryByTypesExpected);
     });
   },
 );
@@ -34,18 +46,25 @@ describe.each([
 function dataProviderForCompounds(): Array<[
   LinkInterface[],
   Set<AtomInterface>[],
-  [number, number, number],
+  number,
+  number[],
+  [number, number, number, number],
+  [number, number, number, number][],
 ]> {
-  const linkData: Array<[number[][], number[][], [number, number, number]]> = [
+  const linkData: Array<[number[], number[][], number[][], number, number[], [number, number, number, number], [number, number, number, number][]]> = [
     [
+      [0, 0, 1, 1, 2, 2, 0],
       [[0, 1], [0, 2], [2, 3], [5, 6]],
       [[0, 1, 2, 3], [5, 6]],
-      [2, 4, 3],
+      2,
+      [2, 1, 1],
+      [2, 2, 4, 3],
+      [[2, 2, 4, 3], [1, 4, 4, 4], [1, 2, 2, 2]],
     ],
   ];
 
-  return linkData.map(([linksData, compoundsData, ...others]) => [
-    ...prepareCompoundsData(linksData, compoundsData),
+  return linkData.map(([atomTypes, linksData, compoundsData, ...others]) => [
+    ...prepareCompoundsData(atomTypes, linksData, compoundsData),
     ...others,
   ]);
 }

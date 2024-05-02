@@ -4,6 +4,12 @@ export class CompoundsCollector {
   private atomCompoundsMap: Map<AtomInterface, number> = new Map();
   private compounds: Array<Set<AtomInterface>> = [];
 
+  public handLinks(links: LinkInterface[]): void {
+    for (const link of links) {
+      this.handleLink(link);
+    }
+  }
+
   public handleLink(link: LinkInterface): void {
     const compoundId = this.getCompoundId(link);
 
@@ -39,48 +45,67 @@ export class CompoundsCollector {
 }
 
 export class CompoundsAnalyzer {
-  private compounds: Array<Set<AtomInterface>> = [];
+  private readonly compounds: Array<Set<AtomInterface>>;
+  private readonly typesMap: Array<Set<AtomInterface>[]>;
 
   constructor(compounds: Array<Set<AtomInterface>>) {
     this.compounds = compounds;
+    this.typesMap = this.groupCompoundsByTypes();
   }
 
   get length(): number {
     return this.compounds.length;
   }
 
-  get itemLengthSummary(): [number, number, number] {
+  get lengthByTypes(): number[] {
+    return this.typesMap.map((compounds) => compounds.length);
+  }
+
+  get itemLengthSummary(): [number, number, number, number] {
     return this.getItemLengthSummary(this.compounds);
   }
 
-  get itemLengthByTypesSummary(): [number, number, number][] {
-    const typesMap: Record<number, Set<AtomInterface>> = new Set();
-
-    for (const atoms of this.compounds) {
-      const types = new Set([...atoms].map((atom) => atom.type));
-      for (const type of types) {
-        if (!typesMap[type] === undefined) {
-          typesMap[type] = new Set();
-        }
-        for (const atom of atoms) {
-          typesMap[type].add(atom);
-        }
-      }
-    }
+  get itemLengthByTypesSummary(): [number, number, number, number][] {
+    return this.typesMap.map((compounds) => this.getItemLengthSummary(compounds));
   }
 
-  private getItemLengthSummary(compounds: Array<Set<AtomInterface>>): [number, number, number] {
+  private groupCompoundsByTypes(): Array<Set<AtomInterface>[]> {
+    const typesMap: Record<number, Set<AtomInterface>[]> = {};
+
+    for (const compound of this.compounds) {
+      const types = new Set([...compound].map((atom) => atom.type));
+      for (const type of types) {
+        if (typesMap[type] === undefined) {
+          typesMap[type] = [];
+        }
+        typesMap[type].push(compound);
+      }
+    }
+
+    const types = Object.keys(typesMap).map((key) => Number(key));
+    const maxType = Math.max(...types);
+    const result: Array<Set<AtomInterface>[]> = Array.from({ length: maxType+1 }, () => []);
+
+    for (const type of types) {
+      result[type] = typesMap[type];
+    }
+
+    return result;
+  }
+
+  private getItemLengthSummary(compounds: Array<Set<AtomInterface>>): [number, number, number, number] {
     const result = compounds
-      .map((set) => set.size)
+      .map((compound) => compound.size)
       .reduce((acc, x) => {
         return [
-          acc[0] < x ? acc[0] : x,
-          acc[1] > x ? acc[1] : x,
-          acc[2] + x,
+          acc[0] + 1,
+          acc[1] < x ? acc[1] : x,
+          acc[2] > x ? acc[2] : x,
+          acc[3] + x,
         ];
-      }, [Infinity, -Infinity, 0]) as [number, number, number];
+      }, [0, Infinity, -Infinity, 0]) as [number, number, number, number];
 
-    result[2] = result[2] / this.compounds.length;
+    result[3] = result[3] / compounds.length;
     return result;
   }
 }
