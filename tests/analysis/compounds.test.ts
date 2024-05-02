@@ -27,8 +27,6 @@ describe.each([
       const compoundsActual = collector.getCompounds();
       expectSameArraysOfSets(compoundsActual, compoundsExpected);
       expect(analyzer.itemLengthSummary).toEqual(itemSizeSummaryExpected);
-
-      expect(true).toBe(true);
     });
   },
 );
