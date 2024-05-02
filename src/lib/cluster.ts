@@ -56,7 +56,7 @@ class Cluster implements ClusterInterface {
 }
 
 class ClusterMap implements ClusterMapInterface {
-  map: Cluster[][] | Cluster[][][] = [];
+  map: Map<number, Cluster> = new Map();
   quantum: number;
   phase: number;
 
@@ -84,7 +84,7 @@ class ClusterMap implements ClusterMapInterface {
   }
 
   clear(): void {
-    this.map = [];
+    this.map.clear();
   }
 
   public handleAtom(atom: AtomInterface): ClusterInterface {
@@ -103,43 +103,15 @@ class ClusterMap implements ClusterMapInterface {
   }
 
   public getCluster(clusterCoords: NumericVector): ClusterInterface {
-    if (clusterCoords.length === 2) {
-      const map = this.map as Cluster[][];
-      if (
-        map[clusterCoords[0]] !== undefined &&
-        map[clusterCoords[0]][clusterCoords[1]] !== undefined
-      ) {
-        return map[clusterCoords[0]][clusterCoords[1]];
-      }
-    } else if (clusterCoords.length === 3) {
-      const map = this.map as Cluster[][][];
-      if (
-        map[clusterCoords[0]] !== undefined &&
-        map[clusterCoords[0]][clusterCoords[1]] !== undefined &&
-        map[clusterCoords[0]][clusterCoords[1]][clusterCoords[2]] !== undefined
-      ) {
-        return map[clusterCoords[0]][clusterCoords[1]][clusterCoords[2]];
-      }
+    const key = clusterCoords.length === 3
+      ? clusterCoords[0] * 10000 + clusterCoords[1] * 100000000 + clusterCoords[2]
+      : clusterCoords[0] * 10000 + clusterCoords[1];
+
+    if (!this.map.has(key)) {
+      this.map.set(key, new Cluster([...clusterCoords]));
     }
 
-    let result: Array<unknown> = this.map;
-
-    for (let i=0; i<clusterCoords.length-1; ++i) {
-      const coord = clusterCoords[i];
-      if (!result.hasOwnProperty(coord)) {
-        result[coord] = [];
-      }
-
-      result = result[coord] as Array<unknown>;
-    }
-
-    const lastCoord = clusterCoords[clusterCoords.length-1];
-
-    if (!result.hasOwnProperty(lastCoord)) {
-      result[lastCoord] = new Cluster([...clusterCoords]);
-    }
-
-    return result[lastCoord] as Cluster;
+    return this.map.get(key) as Cluster;
   }
 
   private getClusterByAtom(atom: AtomInterface): ClusterInterface {
