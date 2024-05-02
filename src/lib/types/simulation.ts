@@ -3,6 +3,7 @@ import type { AtomInterface } from './atomic';
 import type { DrawerInterface } from './drawer';
 import type { PhysicModelInterface } from './interaction';
 import type { Summary } from './summary';
+import type { Compound } from '@/lib/types/analysis';
 
 export type SimulationConfig = {
   viewMode: ViewMode;
@@ -29,4 +30,5 @@ export interface SimulationInterface {
   setPhysicModel(model: PhysicModelInterface): void;
   exportState(): Promise<Record<string, unknown>>;
   importState(state: Record<string, unknown>): Promise<void>;
+  exportCompounds(): Compound[];
 }

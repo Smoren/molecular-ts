@@ -1,10 +1,11 @@
 import type { AtomInterface, LinkInterface } from '../types/atomic';
+import type { Compound, CompoundsAnalyzerInterface, CompoundsCollectorInterface } from '../types/analysis';
 
-export class CompoundsCollector {
+export class CompoundsCollector implements CompoundsCollectorInterface {
   private atomCompoundsMap: Map<AtomInterface, number> = new Map();
-  private compounds: Array<Set<AtomInterface>> = [];
+  private compounds: Array<Compound> = [];
 
-  public handLinks(links: LinkInterface[]): void {
+  public handleLinks(links: Iterable<LinkInterface>): void {
     for (const link of links) {
       this.handleLink(link);
     }
@@ -20,7 +21,7 @@ export class CompoundsCollector {
     this.compounds[compoundId].add(link.rhs);
   }
 
-  getCompounds(): Array<Set<AtomInterface>> {
+  getCompounds(): Array<Compound> {
     return this.compounds;
   }
 
@@ -44,11 +45,11 @@ export class CompoundsCollector {
   }
 }
 
-export class CompoundsAnalyzer {
-  private readonly compounds: Array<Set<AtomInterface>>;
-  private readonly typesMap: Array<Set<AtomInterface>[]>;
+export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
+  private readonly compounds: Array<Compound>;
+  private readonly typesMap: Array<Compound[]>;
 
-  constructor(compounds: Array<Set<AtomInterface>>) {
+  constructor(compounds: Array<Compound>) {
     this.compounds = compounds;
     this.typesMap = this.groupCompoundsByTypes();
   }
@@ -69,8 +70,8 @@ export class CompoundsAnalyzer {
     return this.typesMap.map((compounds) => this.getItemLengthSummary(compounds));
   }
 
-  private groupCompoundsByTypes(): Array<Set<AtomInterface>[]> {
-    const typesMap: Record<number, Set<AtomInterface>[]> = {};
+  private groupCompoundsByTypes(): Array<Compound[]> {
+    const typesMap: Record<number, Compound[]> = {};
 
     for (const compound of this.compounds) {
       const types = new Set([...compound].map((atom) => atom.type));
@@ -84,7 +85,7 @@ export class CompoundsAnalyzer {
 
     const types = Object.keys(typesMap).map((key) => Number(key));
     const maxType = Math.max(...types);
-    const result: Array<Set<AtomInterface>[]> = Array.from({ length: maxType+1 }, () => []);
+    const result: Array<Compound[]> = Array.from({ length: maxType+1 }, () => []);
 
     for (const type of types) {
       result[type] = typesMap[type];
@@ -93,7 +94,7 @@ export class CompoundsAnalyzer {
     return result;
   }
 
-  private getItemLengthSummary(compounds: Array<Set<AtomInterface>>): [number, number, number, number] {
+  private getItemLengthSummary(compounds: Array<Compound>): [number, number, number, number] {
     const result = compounds
       .map((compound) => compound.size)
       .reduce((acc, x) => {

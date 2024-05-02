@@ -10,6 +10,8 @@ import { createAtom, LinkManager, RulesHelper, RunningState } from './helpers';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from './summary';
 import type { NumericVector } from './math/types';
+import type { Compound } from '@/lib/types/analysis';
+import { CompoundsCollector } from '@/lib/analysis/compounds';
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -135,6 +137,12 @@ export class Simulation implements SimulationInterface {
     if (needToStart) {
       this.start();
     }
+  }
+
+  exportCompounds(): Compound[] {
+    const collector = new CompoundsCollector()
+    collector.handleLinks(this.linkManager);
+    return collector.getCompounds();
   }
 
   private tick() {

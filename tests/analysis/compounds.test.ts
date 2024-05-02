@@ -24,7 +24,7 @@ describe.each([
   ) => {
     it('', () => {
       const collector = new CompoundsCollector();
-      collector.handLinks(links);
+      collector.handleLinks(links);
 
       const analyzer = new CompoundsAnalyzer(collector.getCompounds());
 
