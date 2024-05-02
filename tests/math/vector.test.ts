@@ -1,5 +1,5 @@
-import type { NumericVector } from "../src/lib/math/types";
-import { createVector, toVector } from "../src/lib/math";
+import type { NumericVector } from "../../src/lib/math/types";
+import { createVector, toVector } from "../../src/lib/math";
 
 import { describe, expect, it } from '@jest/globals'
 
