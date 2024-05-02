@@ -22,16 +22,16 @@ const needRefill = computed((): boolean => {
     randomTypesConfig.USE_FREQUENCY_BOUNDS;
 });
 
-const ignoreSubMatricesOnCross: Ref<boolean> = ref(false);
-const ignoreSubMatricesOnCrossValue: Ref<number | undefined> = ref(3);
+const useIgnoreSubMatricesBoundaryIndex: Ref<boolean> = ref(false);
+const ignoreSubMatricesBoundaryIndex: Ref<number | undefined> = ref(3);
 
 const randomizeTypesConfig = () => {
   if (!confirm('Are you sure?')) {
     return;
   }
 
-  const crossValue = ignoreSubMatricesOnCross.value
-    ? ignoreSubMatricesOnCrossValue.value
+  const crossValue = useIgnoreSubMatricesBoundaryIndex.value
+    ? ignoreSubMatricesBoundaryIndex.value
     : undefined;
 
   if (needRefill.value) {
@@ -63,7 +63,7 @@ const randomizeTypesConfig = () => {
         <input type="number" min="0" step="1" v-model="randomTypesConfig.TYPES_COUNT" />
       </div>
 
-      <div v-show="!ignoreSubMatricesOnCross">
+      <div v-show="!useIgnoreSubMatricesBoundaryIndex">
         <input-header
           name="Radius"
           tooltip="Radius of each type of particles."
@@ -80,7 +80,7 @@ const randomizeTypesConfig = () => {
         </div>
       </div>
 
-      <div v-show="!ignoreSubMatricesOnCross">
+      <div v-show="!useIgnoreSubMatricesBoundaryIndex">
         <input-header
           name="Frequencies"
           tooltip="Ratio of the number of particles that will be generated on refill."
@@ -133,7 +133,7 @@ const randomizeTypesConfig = () => {
         </div>
       </div>
 
-      <div v-show="!ignoreSubMatricesOnCross">
+      <div v-show="!useIgnoreSubMatricesBoundaryIndex">
         <input-header
           name="Links Count"
           tooltip="Connection limit map shows the maximum number of links for particles of each type."
@@ -202,13 +202,13 @@ const randomizeTypesConfig = () => {
       </div>
       <div>
         <flag
-          title="Ignore submatrices on cross"
-          v-model="ignoreSubMatricesOnCross"
+          title="Leave submatrices unchanged on boundary index"
+          v-model="useIgnoreSubMatricesBoundaryIndex"
         />
         <input
-          v-show="ignoreSubMatricesOnCross"
+          v-show="useIgnoreSubMatricesBoundaryIndex"
           type="number"
-          v-model="ignoreSubMatricesOnCrossValue"
+          v-model="ignoreSubMatricesBoundaryIndex"
           placeholder="Cross position"
         />
       </div>

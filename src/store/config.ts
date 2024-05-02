@@ -172,13 +172,13 @@ export const useConfigStore = defineStore("config", () => {
     copyFrom: unknown[][],
     copyTo: unknown[][],
     defaultValue: number,
-    skipSubMatricesOnCross?: number,
+    skipSubMatricesBoundaryIndex?: number,
   ) => {
     for (let i=0; i<copyTo.length; ++i) {
       for (let j=0; j<copyTo[i].length; ++j) {
-        if (skipSubMatricesOnCross !== undefined) {
-          if (i < skipSubMatricesOnCross && j >= skipSubMatricesOnCross) continue;
-          if (i >= skipSubMatricesOnCross && j < skipSubMatricesOnCross) continue;
+        if (skipSubMatricesBoundaryIndex !== undefined) {
+          if (i < skipSubMatricesBoundaryIndex && j >= skipSubMatricesBoundaryIndex) continue;
+          if (i >= skipSubMatricesBoundaryIndex && j < skipSubMatricesBoundaryIndex) continue;
         }
 
         if (copyFrom[i] === undefined) {
@@ -194,15 +194,15 @@ export const useConfigStore = defineStore("config", () => {
     copyFrom: unknown[][][],
     copyTo: unknown[][][],
     defaultValue: number,
-    skipSubMatricesOnCross?: number,
+    skipSubMatricesBoundaryIndex?: number,
   ) => {
     for (let i=0; i<copyTo.length; ++i) {
       for (let j=0; j<copyTo[i].length; ++j) {
         for (let k=0; k<copyTo[i][j].length; ++k) {
           if (
-            skipSubMatricesOnCross !== undefined &&
-            !(i < skipSubMatricesOnCross && j < skipSubMatricesOnCross && k < skipSubMatricesOnCross) &&
-            !(i >= skipSubMatricesOnCross && j >= skipSubMatricesOnCross && k >= skipSubMatricesOnCross)
+            skipSubMatricesBoundaryIndex !== undefined &&
+            !(i < skipSubMatricesBoundaryIndex && j < skipSubMatricesBoundaryIndex && k < skipSubMatricesBoundaryIndex) &&
+            !(i >= skipSubMatricesBoundaryIndex && j >= skipSubMatricesBoundaryIndex && k >= skipSubMatricesBoundaryIndex)
           ) continue;
           if (copyFrom[i] === undefined || copyFrom[i][j] === undefined) {
             copyTo[i][j][k] = defaultValue;
@@ -214,55 +214,55 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
-  const randomizeTypesConfig = (skipSubMatricesOnCross?: number) => {
+  const randomizeTypesConfig = (skipSubMatricesBoundaryIndex?: number) => {
     const newConfig = createRandomTypesConfig(randomTypesConfig.value);
 
-    if (!randomTypesConfig.value.USE_FREQUENCY_BOUNDS || skipSubMatricesOnCross !== undefined) {
+    if (!randomTypesConfig.value.USE_FREQUENCY_BOUNDS || skipSubMatricesBoundaryIndex !== undefined) {
       copyConfigListValue(typesConfigRaw.FREQUENCIES, newConfig.FREQUENCIES, 1);
     }
 
-    if (!randomTypesConfig.value.USE_RADIUS_BOUNDS || skipSubMatricesOnCross !== undefined) {
+    if (!randomTypesConfig.value.USE_RADIUS_BOUNDS || skipSubMatricesBoundaryIndex !== undefined) {
       copyConfigListValue(typesConfigRaw.RADIUS, newConfig.RADIUS, 1);
     }
 
-    if (!randomTypesConfig.value.USE_LINK_BOUNDS || skipSubMatricesOnCross !== undefined) {
+    if (!randomTypesConfig.value.USE_LINK_BOUNDS || skipSubMatricesBoundaryIndex !== undefined) {
       copyConfigListValue(typesConfigRaw.LINKS, newConfig.LINKS, 0);
     }
 
     if (!randomTypesConfig.value.USE_GRAVITY_BOUNDS) {
       copyConfigMatrixValue(typesConfigRaw.GRAVITY, newConfig.GRAVITY, 0);
-    } else if (skipSubMatricesOnCross !== undefined) {
-      copyConfigMatrixValue(typesConfigRaw.GRAVITY, newConfig.GRAVITY, 0, skipSubMatricesOnCross);
+    } else if (skipSubMatricesBoundaryIndex !== undefined) {
+      copyConfigMatrixValue(typesConfigRaw.GRAVITY, newConfig.GRAVITY, 0, skipSubMatricesBoundaryIndex);
     }
 
     if (!randomTypesConfig.value.USE_LINK_GRAVITY_BOUNDS) {
       copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0);
-    } else if (skipSubMatricesOnCross !== undefined) {
-      copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0, skipSubMatricesOnCross);
+    } else if (skipSubMatricesBoundaryIndex !== undefined) {
+      copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0, skipSubMatricesBoundaryIndex);
     }
 
     if (!randomTypesConfig.value.USE_LINK_TYPE_BOUNDS) {
       copyConfigMatrixValue(typesConfigRaw.TYPE_LINKS, newConfig.TYPE_LINKS, 0);
-    } else if (skipSubMatricesOnCross !== undefined) {
-      copyConfigMatrixValue(typesConfigRaw.TYPE_LINKS, newConfig.TYPE_LINKS, 0, skipSubMatricesOnCross);
+    } else if (skipSubMatricesBoundaryIndex !== undefined) {
+      copyConfigMatrixValue(typesConfigRaw.TYPE_LINKS, newConfig.TYPE_LINKS, 0, skipSubMatricesBoundaryIndex);
     }
 
     if (!randomTypesConfig.value.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
       copyConfigMatrixValue(typesConfigRaw.LINK_FACTOR_DISTANCE, newConfig.LINK_FACTOR_DISTANCE, 1);
       copyConfigTensorValue(typesConfigRaw.LINK_FACTOR_DISTANCE_EXTENDED, newConfig.LINK_FACTOR_DISTANCE_EXTENDED, 1);
       newConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = typesConfigRaw.LINK_FACTOR_DISTANCE_USE_EXTENDED;
-    } else if (skipSubMatricesOnCross !== undefined) {
+    } else if (skipSubMatricesBoundaryIndex !== undefined) {
       copyConfigMatrixValue(
         typesConfigRaw.LINK_FACTOR_DISTANCE,
         newConfig.LINK_FACTOR_DISTANCE,
         1,
-        skipSubMatricesOnCross,
+        skipSubMatricesBoundaryIndex,
       );
       copyConfigTensorValue(
         typesConfigRaw.LINK_FACTOR_DISTANCE_EXTENDED,
         newConfig.LINK_FACTOR_DISTANCE_EXTENDED,
         1,
-        skipSubMatricesOnCross,
+        skipSubMatricesBoundaryIndex,
       );
     }
 
