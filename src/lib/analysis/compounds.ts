@@ -37,3 +37,30 @@ export class CompoundsCollector {
     return this.compounds.length;
   }
 }
+
+export class CompoundsAnalyzer {
+  private compounds: Array<Set<AtomInterface>> = [];
+
+  constructor(compounds: Array<Set<AtomInterface>>) {
+    this.compounds = compounds;
+  }
+
+  get length(): number {
+    return this.compounds.length;
+  }
+
+  get itemLengthSummary(): [number, number, number] {
+    const result = this.compounds
+      .map((set) => set.size)
+      .reduce((acc, x) => {
+        return [
+          acc[0] < x ? acc[0] : x,
+          acc[1] > x ? acc[1] : x,
+          acc[2] + x,
+        ];
+      }, [Infinity, -Infinity, 0]) as [number, number, number];
+
+    result[2] = result[2] / this.compounds.length;
+    return result;
+  }
+}
