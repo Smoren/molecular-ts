@@ -1,37 +1,35 @@
-import type { NumericVector } from "../../src/lib/math/types";
-import { createVector, toVector } from "../../src/lib/math";
-
 import { describe, expect, it } from '@jest/globals'
-import { AtomInterface, LinkInterface } from "../../src/lib/types/atomic";
-import { createAtom } from "../../src/lib/helpers";
-import { Link } from "../../src/lib/atomic";
+import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
+import { CompoundsCollector } from '../../src/lib/analysis/compounds';
+import { expectSameArraysOfSets, prepareCompoundsData } from './helpers';
 
 describe.each([
-  ...dataProviderForAbs(),
-] as Array<[NumericVector, number]>)(
-  'Vector abs test',
-  (input: NumericVector, expected: number) => {
+  ...dataProviderForCompounds(),
+] as Array<[LinkInterface[], Set<AtomInterface>[]]>)(
+  'Compounds Collector Test',
+  (links: LinkInterface[], expected: Set<AtomInterface>[]) => {
     it('', () => {
-      expect(toVector(input).abs).toEqual(expected);
+      const collector = new CompoundsCollector();
+
+      for (const link of links) {
+        collector.handleLink(link);
+      }
+
+      const actual = collector.getCompounds();
+      expectSameArraysOfSets(actual, expected);
+
+      expect(true).toBe(true);
     });
   },
 );
 
-function dataProviderForAbs(): Array<LinkInterface[]> {
-  const linkData = [
-    [3, [[0, 1], [0, 2]]],
+function dataProviderForCompounds(): Array<[LinkInterface[], Set<AtomInterface>[]]> {
+  const linkData: Array<[number[][], number[][]]> = [
+    [
+      [[0, 1], [0, 2], [2, 3], [5, 6]],
+      [[0, 1, 2, 3], [5, 6]],
+    ],
   ];
 
-  return linkData.map(([count, linkIdPairs]) => {
-    const atoms: AtomInterface[] = [];
-    for (let i = 0; i < count; ++i) {
-      atoms.push(createAtom(1, [0, 0], undefined, i));
-    }
-    const links: LinkInterface[] = [];
-    for (const [lhsId, rhsId] of linkIdPairs as number[][]) {
-      links.push(new Link(atoms[lhsId], atoms[rhsId]));
-    }
-
-    return links;
-  });
+  return linkData.map(([linksData, compoundsData]) => prepareCompoundsData(linksData, compoundsData));
 }

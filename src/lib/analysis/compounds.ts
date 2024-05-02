@@ -14,6 +14,10 @@ export class CompoundsCollector {
     this.compounds[compoundId].add(link.rhs);
   }
 
+  getCompounds(): Array<Set<AtomInterface>> {
+    return this.compounds;
+  }
+
   private getCompoundId(link: LinkInterface): number {
     if (this.atomCompoundsMap.has(link.lhs)) {
       return this.atomCompoundsMap.get(link.lhs) as number;
