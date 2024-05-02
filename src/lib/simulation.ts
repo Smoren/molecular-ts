@@ -139,6 +139,21 @@ export class Simulation implements SimulationInterface {
 
   private tick() {
     this.runningState.confirmStart();
+
+    this.step();
+
+    if (this.summaryManager.step % 30 === 0) {
+      // console.log('SUMMARY', this.summary);
+    }
+
+    if (this.runningState.isRunning) {
+      requestAnimationFrame(() => this.tick());
+    } else {
+      this.runningState.confirmStop();
+    }
+  }
+
+  private step() {
     this.summaryManager.startStep(this.config.typesConfig);
 
     if (this.config.worldConfig.SPEED > 0 && !this.runningState.isPaused) {
@@ -169,14 +184,5 @@ export class Simulation implements SimulationInterface {
     this.drawer.draw(this.atoms, this.linkManager);
 
     this.summaryManager.finishStep();
-    if (this.summaryManager.step % 30 === 0) {
-      // console.log('SUMMARY', this.summary);
-    }
-
-    if (this.runningState.isRunning) {
-      requestAnimationFrame(() => this.tick());
-    } else {
-      this.runningState.confirmStop();
-    }
   }
 }
