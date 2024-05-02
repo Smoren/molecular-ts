@@ -54,14 +54,19 @@ export class CompoundsAnalyzer {
   }
 
   get itemLengthByTypesSummary(): [number, number, number][] {
-    const types = new Set<number>(
-      this.compounds
-        .map((atoms) => [...atoms].map((atom) => atom.type))
-        .reduce((acc, x) => [...acc, ...x], [])
-    );
-    return [
-      // TODO
-    ]
+    const typesMap: Record<number, Set<AtomInterface>> = new Set();
+
+    for (const atoms of this.compounds) {
+      const types = new Set([...atoms].map((atom) => atom.type));
+      for (const type of types) {
+        if (!typesMap[type] === undefined) {
+          typesMap[type] = new Set();
+        }
+        for (const atom of atoms) {
+          typesMap[type].add(atom);
+        }
+      }
+    }
   }
 
   private getItemLengthSummary(compounds: Array<Set<AtomInterface>>): [number, number, number] {
