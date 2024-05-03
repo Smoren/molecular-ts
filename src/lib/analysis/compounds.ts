@@ -108,7 +108,9 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
         ];
       }, [Infinity, -Infinity, 0]) as [number, number, number];
 
-    result[2] = result[2] / compounds.length;
+    result[2] = sizes.length > 0
+      ? result[2] / compounds.length
+      : 0;
 
     const median = sizes.length > 0
       ? sizes[Math.floor(sizes.length / 2)]
