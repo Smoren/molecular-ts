@@ -7,6 +7,7 @@ import { createCompoundsSummary, expectSameArraysOfSets, prepareCompoundsData } 
 describe.each([
   ...dataProviderForCompounds(),
 ] as Array<[
+  AtomInterface[],
   LinkInterface[],
   Set<AtomInterface>[],
   number,
@@ -16,6 +17,7 @@ describe.each([
 ]>)(
   'Compounds Collector Test',
   (
+    atoms: AtomInterface[],
     links: LinkInterface[],
     compoundsExpected: Set<AtomInterface>[],
     lengthExpected: number,
@@ -27,7 +29,7 @@ describe.each([
       const collector = new CompoundsCollector();
       collector.handleLinks(links);
 
-      const analyzer = new CompoundsAnalyzer(collector.getCompounds());
+      const analyzer = new CompoundsAnalyzer(collector.getCompounds(), atoms);
 
       const compoundsActual = collector.getCompounds();
       expectSameArraysOfSets(compoundsActual, compoundsExpected);
@@ -45,6 +47,7 @@ describe.each([
 );
 
 function dataProviderForCompounds(): Array<[
+  AtomInterface[],
   LinkInterface[],
   Set<AtomInterface>[],
   number,

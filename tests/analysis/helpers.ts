@@ -23,9 +23,13 @@ function createCompounds(atoms: AtomInterface[], compoundsData: number[][]): Set
   return compoundsData.map(compound => new Set(atoms.filter((atom) => compound.includes(atom.id))));
 }
 
-export function prepareCompoundsData(atomTypes: number[], linksData: number[][], compoundsData: number[][]): [LinkInterface[], Set<AtomInterface>[]] {
+export function prepareCompoundsData(
+  atomTypes: number[],
+  linksData: number[][],
+  compoundsData: number[][],
+): [AtomInterface[], LinkInterface[], Set<AtomInterface>[]] {
   const [atoms, links] = createAtomsAndLinks(atomTypes, linksData);
-  return [links, createCompounds(atoms, compoundsData)];
+  return [atoms, links, createCompounds(atoms, compoundsData)];
 }
 
 export function expectSameArraysOfSets(actual: Set<AtomInterface>[], expected: Set<AtomInterface>[]) {

@@ -52,11 +52,15 @@ export class CompoundsCollector implements CompoundsCollectorInterface {
 
 export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
   private readonly compounds: Array<Compound>;
-  private readonly typesMap: Array<Compound[]>;
+  private readonly compoundsTypesMap: Array<Compound[]>;
+  private readonly atoms: Array<AtomInterface>;
+  private readonly atomsTypesMap: Array<AtomInterface[]>;
 
-  constructor(compounds: Array<Compound>) {
+  constructor(compounds: Array<Compound>, atoms: Array<AtomInterface>) {
     this.compounds = compounds;
-    this.typesMap = this.groupCompoundsByTypes();
+    this.atoms = atoms;
+    this.compoundsTypesMap = this.groupCompoundsByTypes();
+    this.atomsTypesMap = this.groupAtomsByTypes();
   }
 
   get length(): number {
@@ -64,7 +68,7 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
   }
 
   get lengthByTypes(): number[] {
-    return this.typesMap.map((compounds) => compounds.length);
+    return this.compoundsTypesMap.map((compounds) => compounds.length);
   }
 
   get itemLengthSummary(): CompoundsSummary {
@@ -72,7 +76,7 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
   }
 
   get itemLengthByTypesSummary(): CompoundsSummary[] {
-    return this.typesMap.map((compounds) => this.getItemLengthSummary(compounds));
+    return this.compoundsTypesMap.map((compounds) => this.getItemLengthSummary(compounds));
   }
 
   private groupCompoundsByTypes(): Array<Compound[]> {
@@ -88,15 +92,20 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
       }
     }
 
-    const types = Object.keys(typesMap).map((key) => Number(key));
-    const maxType = Math.max(...types);
-    const result: Array<Compound[]> = Array.from({ length: maxType+1 }, () => []);
+    return this.convertMapToArray(typesMap);
+  }
 
-    for (const type of types) {
-      result[type] = typesMap[type];
+  private groupAtomsByTypes(): Array<AtomInterface[]> {
+    const typesMap: Record<number, AtomInterface[]> = {};
+
+    for (const atom of this.atoms) {
+      if (typesMap[atom.type] === undefined) {
+        typesMap[atom.type] = [];
+      }
+      typesMap[atom.type].push(atom);
     }
 
-    return result;
+    return this.convertMapToArray(typesMap);
   }
 
   private getItemLengthSummary(compounds: Array<Compound>): CompoundsSummary {
@@ -129,5 +138,17 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
       mean: result[2],
       median,
     }
+  }
+
+  private convertMapToArray<T>(map: Record<number, T[]>): Array<T[]> {
+    const types = Object.keys(map).map((key) => Number(key));
+    const maxType = Math.max(...types);
+    const result: Array<T[]> = Array.from({ length: maxType+1 }, () => []);
+
+    for (const type of types) {
+      result[type] = map[type];
+    }
+
+    return result;
   }
 }
