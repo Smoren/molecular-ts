@@ -3,6 +3,7 @@ import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
 import type { CompoundsSummary } from "../../src/lib/types/analysis";
 import { CompoundsAnalyzer, CompoundsCollector } from '../../src/lib/analysis/compounds';
 import { createCompoundsSummary, expectSameArraysOfSets, prepareCompoundsData } from './helpers';
+import { round } from "../../src/lib/math";
 
 describe.each([
   ...dataProviderForCompounds(),
@@ -55,6 +56,8 @@ function dataProviderForCompounds(): Array<[
   CompoundsSummary,
   CompoundsSummary[],
 ]> {
+  const s = createCompoundsSummary;
+  const r = (value: number) => round(value, 4);
   const linkData: Array<[
     number[],
     number[][],
@@ -70,11 +73,11 @@ function dataProviderForCompounds(): Array<[
       [[0, 1, 2, 3], [5, 6]],
       2,
       [2, 1, 1],
-      createCompoundsSummary([2, 2, 4, 3, 4]),
+      s(2, r(2/7), 2, 4, 3, 4),
       [
-        createCompoundsSummary([2, 2, 4, 3, 4]),
-        createCompoundsSummary([1, 4, 4, 4, 4]),
-        createCompoundsSummary([1, 2, 2, 2, 2]),
+        s(2, r(2/3), 2, 4, 3, 4),
+        s(1, r(1/2), 4, 4, 4, 4),
+        s(1, r(1/2), 2, 2, 2, 2),
       ],
     ],
   ];

@@ -39,13 +39,20 @@ export function expectSameArraysOfSets(actual: Set<AtomInterface>[], expected: S
   }
 }
 
-export function createCompoundsSummary(data: [number, number, number, number, number]): CompoundsSummary {
+export function createCompoundsSummary(
+  size: number,
+  frequency: number,
+  min: number,
+  max: number,
+  mean: number,
+  median: number,
+): CompoundsSummary {
   return {
-    size: data[0],
-    frequency: data[0],
-    min: data[1],
-    max: data[2],
-    mean: data[3],
-    median: data[4],
+    size: size,
+    frequency: frequency,
+    min: min,
+    max: max,
+    mean: mean,
+    median: median,
   }
 }

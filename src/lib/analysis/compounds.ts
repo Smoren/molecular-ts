@@ -5,6 +5,7 @@ import type {
   CompoundsCollectorInterface,
   CompoundsSummary,
 } from '../types/analysis';
+import { round } from "../math";
 
 export class CompoundsCollector implements CompoundsCollectorInterface {
   private atomCompoundsMap: Map<AtomInterface, number> = new Map();
@@ -72,11 +73,14 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
   }
 
   get itemLengthSummary(): CompoundsSummary {
-    return this.getItemLengthSummary(this.compounds);
+    return this.getItemLengthSummary(this.compounds, this.atoms);
   }
 
   get itemLengthByTypesSummary(): CompoundsSummary[] {
-    return this.compoundsTypesMap.map((compounds) => this.getItemLengthSummary(compounds));
+    return this.compoundsTypesMap.map((compounds, type) => this.getItemLengthSummary(
+      compounds,
+      this.atomsTypesMap[type],
+    ));
   }
 
   private groupCompoundsByTypes(): Array<Compound[]> {
@@ -108,7 +112,7 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
     return this.convertMapToArray(typesMap);
   }
 
-  private getItemLengthSummary(compounds: Array<Compound>): CompoundsSummary {
+  private getItemLengthSummary(compounds: Array<Compound>, atoms: Array<AtomInterface>): CompoundsSummary {
     const sizes = compounds
       .map((compound) => compound.size)
       .sort((a, b) => a - b);
@@ -131,8 +135,8 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
       : 0;
 
     return {
-      size: sizes.length,
-      frequency: compounds.length, // TODO
+      size: compounds.length,
+      frequency: round(compounds.length / atoms.length, 4),
       min: result[0],
       max: result[1],
       mean: result[2],
