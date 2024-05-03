@@ -10,8 +10,8 @@ describe.each([
   Set<AtomInterface>[],
   number,
   number[],
-  [number, number, number, number],
-  [number, number, number, number][],
+  [number, number, number, number, number],
+  [number, number, number, number, number][],
 ]>)(
   'Compounds Collector Test',
   (
@@ -19,8 +19,8 @@ describe.each([
     compoundsExpected: Set<AtomInterface>[],
     lengthExpected: number,
     lengthByTypesExpected: number[],
-    itemSizeSummaryExpected: [number, number, number, number],
-    itemSizeSummaryByTypesExpected: [number, number, number, number][],
+    itemSizeSummaryExpected: [number, number, number, number, number],
+    itemSizeSummaryByTypesExpected: [number, number, number, number, number][],
   ) => {
     it('', () => {
       const collector = new CompoundsCollector();
@@ -48,18 +48,26 @@ function dataProviderForCompounds(): Array<[
   Set<AtomInterface>[],
   number,
   number[],
-  [number, number, number, number],
-  [number, number, number, number][],
+  [number, number, number, number, number],
+  [number, number, number, number, number][],
 ]> {
-  const linkData: Array<[number[], number[][], number[][], number, number[], [number, number, number, number], [number, number, number, number][]]> = [
+  const linkData: Array<[
+    number[],
+    number[][],
+    number[][],
+    number,
+    number[],
+    [number, number, number, number, number],
+    [number, number, number, number, number][]
+  ]> = [
     [
       [0, 0, 1, 1, 2, 2, 0],
       [[0, 1], [0, 2], [2, 3], [5, 6]],
       [[0, 1, 2, 3], [5, 6]],
       2,
       [2, 1, 1],
-      [2, 2, 4, 3],
-      [[2, 2, 4, 3], [1, 4, 4, 4], [1, 2, 2, 2]],
+      [2, 2, 4, 3, 4],
+      [[2, 2, 4, 3, 4], [1, 4, 4, 4, 4], [1, 2, 2, 2, 2]],
     ],
   ];
 

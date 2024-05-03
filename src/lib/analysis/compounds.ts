@@ -102,17 +102,18 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
     const result = sizes
       .reduce((acc, x) => {
         return [
-          acc[0] < x ? acc[0] : x,
-          acc[1] > x ? acc[1] : x,
-          acc[2] + x,
+          acc[0] < x ? acc[0] : x, // min
+          acc[1] > x ? acc[1] : x, // max
+          acc[2] + x,              // mean
         ];
       }, [Infinity, -Infinity, 0]) as [number, number, number];
+
+    result[2] = result[2] / compounds.length;
 
     const median = sizes.length > 0
       ? sizes[Math.floor(sizes.length / 2)]
       : 0;
 
-    result[2] = result[2] / compounds.length;
     return [sizes.length, ...result, median];
   }
 }
