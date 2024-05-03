@@ -1,7 +1,8 @@
 import { describe, expect, it } from '@jest/globals'
 import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
+import type { CompoundsSummary } from "../../src/lib/types/analysis";
 import { CompoundsAnalyzer, CompoundsCollector } from '../../src/lib/analysis/compounds';
-import { expectSameArraysOfSets, prepareCompoundsData } from './helpers';
+import { createCompoundsSummary, expectSameArraysOfSets, prepareCompoundsData } from './helpers';
 
 describe.each([
   ...dataProviderForCompounds(),
@@ -10,8 +11,8 @@ describe.each([
   Set<AtomInterface>[],
   number,
   number[],
-  [number, number, number, number, number],
-  [number, number, number, number, number][],
+  CompoundsSummary,
+  CompoundsSummary[],
 ]>)(
   'Compounds Collector Test',
   (
@@ -19,8 +20,8 @@ describe.each([
     compoundsExpected: Set<AtomInterface>[],
     lengthExpected: number,
     lengthByTypesExpected: number[],
-    itemSizeSummaryExpected: [number, number, number, number, number],
-    itemSizeSummaryByTypesExpected: [number, number, number, number, number][],
+    itemSizeSummaryExpected: CompoundsSummary,
+    itemSizeSummaryByTypesExpected: CompoundsSummary[],
   ) => {
     it('', () => {
       const collector = new CompoundsCollector();
@@ -48,8 +49,8 @@ function dataProviderForCompounds(): Array<[
   Set<AtomInterface>[],
   number,
   number[],
-  [number, number, number, number, number],
-  [number, number, number, number, number][],
+  CompoundsSummary,
+  CompoundsSummary[],
 ]> {
   const linkData: Array<[
     number[],
@@ -57,8 +58,8 @@ function dataProviderForCompounds(): Array<[
     number[][],
     number,
     number[],
-    [number, number, number, number, number],
-    [number, number, number, number, number][]
+    CompoundsSummary,
+    CompoundsSummary[]
   ]> = [
     [
       [0, 0, 1, 1, 2, 2, 0],
@@ -66,8 +67,12 @@ function dataProviderForCompounds(): Array<[
       [[0, 1, 2, 3], [5, 6]],
       2,
       [2, 1, 1],
-      [2, 2, 4, 3, 4],
-      [[2, 2, 4, 3, 4], [1, 4, 4, 4, 4], [1, 2, 2, 2, 2]],
+      createCompoundsSummary([2, 2, 4, 3, 4]),
+      [
+        createCompoundsSummary([2, 2, 4, 3, 4]),
+        createCompoundsSummary([1, 4, 4, 4, 4]),
+        createCompoundsSummary([1, 2, 2, 2, 2]),
+      ],
     ],
   ];
 

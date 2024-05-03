@@ -1,5 +1,10 @@
 import type { AtomInterface, LinkInterface } from '../types/atomic';
-import type { Compound, CompoundsAnalyzerInterface, CompoundsCollectorInterface } from '../types/analysis';
+import type {
+  Compound,
+  CompoundsAnalyzerInterface,
+  CompoundsCollectorInterface,
+  CompoundsSummary,
+} from '../types/analysis';
 
 export class CompoundsCollector implements CompoundsCollectorInterface {
   private atomCompoundsMap: Map<AtomInterface, number> = new Map();
@@ -62,11 +67,11 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
     return this.typesMap.map((compounds) => compounds.length);
   }
 
-  get itemLengthSummary(): [number, number, number, number, number] {
+  get itemLengthSummary(): CompoundsSummary {
     return this.getItemLengthSummary(this.compounds);
   }
 
-  get itemLengthByTypesSummary(): [number, number, number, number, number][] {
+  get itemLengthByTypesSummary(): CompoundsSummary[] {
     return this.typesMap.map((compounds) => this.getItemLengthSummary(compounds));
   }
 
@@ -94,7 +99,7 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
     return result;
   }
 
-  private getItemLengthSummary(compounds: Array<Compound>): [number, number, number, number, number] {
+  private getItemLengthSummary(compounds: Array<Compound>): CompoundsSummary {
     const sizes = compounds
       .map((compound) => compound.size)
       .sort((a, b) => a - b);
@@ -116,6 +121,13 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
       ? sizes[Math.floor(sizes.length / 2)]
       : 0;
 
-    return [sizes.length, ...result, median];
+    return {
+      size: sizes.length,
+      frequency: compounds.length, // TODO
+      min: result[0],
+      max: result[1],
+      mean: result[2],
+      median,
+    }
   }
 }

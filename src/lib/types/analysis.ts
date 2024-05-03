@@ -1,4 +1,4 @@
-import type { AtomInterface, LinkInterface } from '@/lib/types/atomic';
+import type { AtomInterface, LinkInterface } from '../types/atomic';
 
 export type Compound = Set<AtomInterface>;
 
@@ -8,6 +8,7 @@ export type CompoundsSummary = {
   min: number;
   max: number;
   mean: number;
+  median: number;
 }
 
 export interface CompoundsCollectorInterface {
@@ -19,6 +20,6 @@ export interface CompoundsCollectorInterface {
 export interface CompoundsAnalyzerInterface {
   length: number;
   lengthByTypes: number[];
-  itemLengthSummary: [number, number, number, number, number];
-  itemLengthByTypesSummary: [number, number, number, number, number][];
+  itemLengthSummary: CompoundsSummary;
+  itemLengthByTypesSummary: CompoundsSummary[];
 }
