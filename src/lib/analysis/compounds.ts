@@ -62,11 +62,11 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
     return this.typesMap.map((compounds) => compounds.length);
   }
 
-  get itemLengthSummary(): [number, number, number, number] {
+  get itemLengthSummary(): [number, number, number, number, number] {
     return this.getItemLengthSummary(this.compounds);
   }
 
-  get itemLengthByTypesSummary(): [number, number, number, number][] {
+  get itemLengthByTypesSummary(): [number, number, number, number, number][] {
     return this.typesMap.map((compounds) => this.getItemLengthSummary(compounds));
   }
 
@@ -94,19 +94,25 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
     return result;
   }
 
-  private getItemLengthSummary(compounds: Array<Compound>): [number, number, number, number] {
-    const result = compounds
+  private getItemLengthSummary(compounds: Array<Compound>): [number, number, number, number, number] {
+    const sizes = compounds
       .map((compound) => compound.size)
+      .sort((a, b) => a - b);
+
+    const result = sizes
       .reduce((acc, x) => {
         return [
-          acc[0] + 1,
-          acc[1] < x ? acc[1] : x,
-          acc[2] > x ? acc[2] : x,
-          acc[3] + x,
+          acc[0] < x ? acc[0] : x,
+          acc[1] > x ? acc[1] : x,
+          acc[2] + x,
         ];
-      }, [0, Infinity, -Infinity, 0]) as [number, number, number, number];
+      }, [Infinity, -Infinity, 0]) as [number, number, number];
 
-    result[3] = result[3] / compounds.length;
-    return result;
+    const median = sizes.length > 0
+      ? sizes[Math.floor(sizes.length / 2)]
+      : 0;
+
+    result[2] = result[2] / compounds.length;
+    return [sizes.length, ...result, median];
   }
 }
