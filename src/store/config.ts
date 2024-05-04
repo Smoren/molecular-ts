@@ -269,7 +269,10 @@ export const useConfigStore = defineStore("config", () => {
     flash.turnOn(FLASH_IMPORT_STARTED);
     setTypesConfig(newConfig);
     setTypesConfigRaw(newConfig);
-    setSymmetricTypesConfig(randomTypesConfig.value);
+
+    if (skipSubMatricesBoundaryIndex === undefined) {
+      setSymmetricTypesConfig(randomTypesConfig.value);
+    }
   }
 
   const setDefaultTypesConfig = <T>() => {
