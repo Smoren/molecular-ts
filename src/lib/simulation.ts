@@ -66,6 +66,39 @@ export class Simulation implements SimulationInterface {
     await this.runningState.stop();
   }
 
+  step() {
+    this.summaryManager.startStep(this.config.typesConfig);
+
+    if (this.config.worldConfig.SPEED > 0 && !this.runningState.isPaused) {
+      for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
+        for (const atom of this.atoms) {
+          this.interactionManager.clearDistanceFactor(atom);
+          this.interactionManager.moveAtom(atom);
+        }
+        for (const atom of this.atoms) {
+          this.clusterManager.handleAtom(atom, (lhs, rhs) => {
+            this.interactionManager.interactAtomsStep1(lhs, rhs);
+          });
+        }
+        for (const atom of this.atoms) {
+          this.clusterManager.handleAtom(atom, (lhs, rhs) => {
+            this.interactionManager.interactAtomsStep2(lhs, rhs);
+          });
+          this.summaryManager.noticeAtom(atom, this.config.worldConfig);
+        }
+        for (const link of this.linkManager) {
+          this.interactionManager.interactLink(link);
+          this.summaryManager.noticeLink(link, this.config.worldConfig);
+        }
+      }
+      this.interactionManager.handleTime();
+    }
+
+    this.drawer.draw(this.atoms, this.linkManager);
+
+    this.summaryManager.finishStep();
+  }
+
   togglePause() {
     this.runningState.togglePause();
   }
@@ -159,38 +192,5 @@ export class Simulation implements SimulationInterface {
     } else {
       this.runningState.confirmStop();
     }
-  }
-
-  private step() {
-    this.summaryManager.startStep(this.config.typesConfig);
-
-    if (this.config.worldConfig.SPEED > 0 && !this.runningState.isPaused) {
-      for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
-        for (const atom of this.atoms) {
-          this.interactionManager.clearDistanceFactor(atom);
-          this.interactionManager.moveAtom(atom);
-        }
-        for (const atom of this.atoms) {
-          this.clusterManager.handleAtom(atom, (lhs, rhs) => {
-            this.interactionManager.interactAtomsStep1(lhs, rhs);
-          });
-        }
-        for (const atom of this.atoms) {
-          this.clusterManager.handleAtom(atom, (lhs, rhs) => {
-            this.interactionManager.interactAtomsStep2(lhs, rhs);
-          });
-          this.summaryManager.noticeAtom(atom, this.config.worldConfig);
-        }
-        for (const link of this.linkManager) {
-          this.interactionManager.interactLink(link);
-          this.summaryManager.noticeLink(link, this.config.worldConfig);
-        }
-      }
-      this.interactionManager.handleTime();
-    }
-
-    this.drawer.draw(this.atoms, this.linkManager);
-
-    this.summaryManager.finishStep();
   }
 }

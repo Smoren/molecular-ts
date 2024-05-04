@@ -24,6 +24,7 @@ export interface SimulationInterface {
   readonly isPaused: boolean;
   start(): void;
   stop(onStop?: () => void): Promise<void>;
+  step(): void;
   togglePause(): void;
   refill(): void;
   clear(): void;
