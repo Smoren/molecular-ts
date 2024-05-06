@@ -142,7 +142,7 @@ export class SummaryManager implements SummaryManagerInterface {
   }
 
   noticeAtom(atom: AtomInterface, worldConfig: WorldConfig) {
-    const speed = atom.speed.abs * worldConfig.SPEED;
+    const speed = atom.speed.abs;
 
     this.stepManager.buffer.ATOMS_COUNT[0]++;
     this.stepManager.buffer.ATOMS_MEAN_SPEED[0] += speed;
