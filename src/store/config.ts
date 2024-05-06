@@ -38,7 +38,7 @@ export const useConfigStore = defineStore("config", () => {
     GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_TYPE_MATRIX_SYMMETRIC: false,
-    LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
   });
 
   const getConfigValues = () => {
