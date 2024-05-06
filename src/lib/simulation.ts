@@ -74,6 +74,7 @@ export class Simulation implements SimulationInterface {
         for (const atom of this.atoms) {
           this.interactionManager.clearDistanceFactor(atom);
           this.interactionManager.moveAtom(atom);
+          this.summaryManager.noticeAtom(atom, this.config.worldConfig);
         }
         for (const atom of this.atoms) {
           this.clusterManager.handleAtom(atom, (lhs, rhs) => {
@@ -84,7 +85,6 @@ export class Simulation implements SimulationInterface {
           this.clusterManager.handleAtom(atom, (lhs, rhs) => {
             this.interactionManager.interactAtomsStep2(lhs, rhs);
           });
-          this.summaryManager.noticeAtom(atom, this.config.worldConfig);
         }
         for (const link of this.linkManager) {
           this.interactionManager.interactLink(link);
