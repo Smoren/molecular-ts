@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, type Ref, ref } from "vue";
+import { computed, type Ref, ref, watch } from "vue";
 import { useConfigStore } from "@/store/config";
 import { useSimulationStore } from "@/store/simulation";
 import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
@@ -10,7 +10,7 @@ import Flag from "@/components/config-editor/components/inputs/flag.vue";
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 
 const configStore = useConfigStore();
-const { randomTypesConfig } = configStore;
+const { randomTypesConfig, typesConfig } = configStore;
 
 const {
   clearAtoms,
@@ -24,6 +24,12 @@ const needRefill = computed((): boolean => {
 
 const useIgnoreSubMatricesBoundaryIndex: Ref<boolean> = ref(false);
 const ignoreSubMatricesBoundaryIndex: Ref<number | undefined> = ref(3);
+
+watch(useIgnoreSubMatricesBoundaryIndex, () => {
+  if (useIgnoreSubMatricesBoundaryIndex.value) {
+    randomTypesConfig.TYPES_COUNT = typesConfig.FREQUENCIES.length;
+  }
+});
 
 const randomizeTypesConfig = () => {
   if (!confirm('Are you sure?')) {
