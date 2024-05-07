@@ -6,6 +6,7 @@ import { provide, ref } from 'vue';
 import { useSwitch } from "@/hooks/use-switch";
 import { useRightBar } from "@/components/config-editor/hooks/use-right-bar";
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
+import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from '@/components/config-editor/constants';
 import Navbar from "@/components/config-editor/components/containers/navbar.vue";
 import Sidebar from "@/components/config-editor/components/containers/sidebar.vue";
 import InitialConfigSection from "@/components/config-editor/components/sections/initial-config-section.vue";
@@ -14,12 +15,8 @@ import TypesConfigSection from '@/components/config-editor/components/sections/t
 import ViewModeSection from "@/components/config-editor/components/sections/view-mode-section.vue";
 import WorldConfigSection from '@/components/config-editor/components/sections/world-config-section.vue';
 import SummarySection from "@/components/config-editor/components/sections/summary-section.vue";
-import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from '@/components/config-editor/constants';
 import ExchangeSection from "@/components/config-editor/components/sections/exchange-section.vue";
-import { useConfigStore } from "@/store/config";
 import LinkSection from "@/components/config-editor/components/sections/link-section.vue";
-
-const configStore = useConfigStore();
 
 const leftBarVisible = useSwitch(false);
 const activeAccordionItem = ref('collapse-world');
