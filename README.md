@@ -1,4 +1,4 @@
-# Molecular simulation
+# MolecuLarva — Molecular Simulation
 
 This project is an experiment that visualizes the behavior of particles
 in two-dimensional and three-dimensional space:
