@@ -1,6 +1,6 @@
 import type { AtomInterface, LinkInterface } from './atomic';
 import type { TypesConfig, WorldConfig } from './config';
-import type { GeometryHelperInterface } from '@/lib/types/helpers';
+import type { GeometryHelperInterface } from '../types/helpers';
 
 export interface InteractionManagerInterface {
   handleTime(): void;

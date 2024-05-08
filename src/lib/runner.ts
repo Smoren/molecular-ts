@@ -1,4 +1,4 @@
-import type { SimulationInterface } from "@/lib/types/simulation";
+import type { SimulationInterface } from './types/simulation';
 
 export class Runner {
   private readonly _simulation: SimulationInterface;

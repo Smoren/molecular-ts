@@ -5,7 +5,7 @@ import type {
   CompoundsCollectorInterface,
   CompoundsSummary,
 } from '../types/analysis';
-import { round } from "../math";
+import { round } from '../math';
 
 export class CompoundsCollector implements CompoundsCollectorInterface {
   private atomCompoundsMap: Map<AtomInterface, number> = new Map();

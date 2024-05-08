@@ -1,6 +1,6 @@
-import type { TypesConfig, WorldConfig } from "../types/config";
-import type { AtomInterface } from "../types/atomic";
-import type { PhysicModelInterface } from "../types/interaction";
+import type { TypesConfig, WorldConfig } from '../types/config';
+import type { AtomInterface } from '../types/atomic';
+import type { PhysicModelInterface } from '../types/interaction';
 import { GeometryHelper } from '../helpers';
 
 export class PhysicModelV2 implements PhysicModelInterface {
