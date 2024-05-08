@@ -17,9 +17,11 @@ const {
   refillAtoms,
 } = useSimulationStore();
 
+const forceRefill = ref(false);
+
 const needRefill = computed((): boolean => {
   return randomTypesConfig.TYPES_COUNT !== configStore.typesConfig.COLORS.length ||
-    randomTypesConfig.USE_FREQUENCY_BOUNDS;
+    randomTypesConfig.USE_FREQUENCY_BOUNDS || forceRefill.value;
 });
 
 const useIgnoreSubMatricesBoundaryIndex: Ref<boolean> = ref(false);
@@ -216,6 +218,12 @@ const randomizeTypesConfig = () => {
           type="number"
           v-model="ignoreSubMatricesBoundaryIndex"
           placeholder="Cross position"
+        />
+      </div>
+      <div>
+        <flag
+          title="Force refill"
+          v-model="forceRefill"
         />
       </div>
       <div v-if="needRefill">
