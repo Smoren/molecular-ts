@@ -10,8 +10,8 @@ import { createAtom, LinkManager, RulesHelper, RunningState } from './helpers';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from './summary';
 import type { NumericVector } from './math/types';
-import type { Compound } from '@/lib/types/analysis';
-import { CompoundsCollector } from '@/lib/analysis/compounds';
+import type { Compound } from './types/analysis';
+import { CompoundsCollector } from './analysis/compounds';
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
