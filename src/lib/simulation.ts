@@ -16,8 +16,8 @@ import { CompoundsCollector } from './analysis/compounds';
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
   private atoms: AtomInterface[];
+  private readonly links: LinkManagerInterface;
   private readonly drawer: DrawerInterface;
-  private readonly linkManager: LinkManagerInterface;
   private readonly interactionManager: InteractionManagerInterface;
   private readonly clusterManager: ClusterManagerInterface;
   private readonly summaryManager: SummaryManagerInterface;
@@ -27,12 +27,12 @@ export class Simulation implements SimulationInterface {
     this.config = config;
     this.atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig);
     this.drawer = this.config.drawer;
-    this.linkManager = new LinkManager();
+    this.links = new LinkManager();
     this.interactionManager = new InteractionManager(
       this.config.viewMode,
       this.config.worldConfig,
       this.config.typesConfig,
-      this.linkManager,
+      this.links,
       this.config.physicModel,
       new RulesHelper(this.config.worldConfig, this.config.typesConfig),
     );
@@ -86,7 +86,7 @@ export class Simulation implements SimulationInterface {
             this.interactionManager.interactAtomsStep2(lhs, rhs);
           });
         }
-        for (const link of this.linkManager) {
+        for (const link of this.links) {
           this.interactionManager.interactLink(link);
           this.summaryManager.noticeLink(link, this.config.worldConfig);
         }
@@ -94,7 +94,7 @@ export class Simulation implements SimulationInterface {
       this.interactionManager.handleTime();
     }
 
-    this.drawer.draw(this.atoms, this.linkManager);
+    this.drawer.draw(this.atoms, this.links);
 
     this.summaryManager.finishStep();
   }
@@ -114,7 +114,7 @@ export class Simulation implements SimulationInterface {
   clear() {
     this.atoms.length = 0;
     this.clusterManager.clear();
-    this.linkManager.clear();
+    this.links.clear();
     this.drawer.clear();
   }
 
@@ -128,7 +128,7 @@ export class Simulation implements SimulationInterface {
 
     const result = {
       atoms: this.atoms.map(atom => atom.exportState()),
-      links: [...this.linkManager].map(link => link.exportState()),
+      links: [...this.links].map(link => link.exportState()),
     };
 
     if (needToStart) {
@@ -164,7 +164,7 @@ export class Simulation implements SimulationInterface {
         console.warn(link, atomsMap, atoms);
       }
 
-      this.linkManager.create(atomsMap.get(link[0])!, atomsMap.get(link[1])!);
+      this.links.create(atomsMap.get(link[0])!, atomsMap.get(link[1])!);
     }
 
     if (needToStart) {
@@ -174,7 +174,7 @@ export class Simulation implements SimulationInterface {
 
   exportCompounds(): Compound[] {
     const collector = new CompoundsCollector()
-    collector.handleLinks(this.linkManager);
+    collector.handleLinks(this.links);
     return collector.getCompounds();
   }
 
