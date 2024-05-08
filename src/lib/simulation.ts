@@ -71,27 +71,8 @@ export class Simulation implements SimulationInterface {
 
     if (this.config.worldConfig.SPEED > 0 && !this.runningState.isPaused) {
       for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
-        for (const atom of this.atoms) {
-          this.interactionManager.clearDistanceFactor(atom);
-          this.interactionManager.moveAtom(atom);
-          this.summaryManager.noticeAtom(atom, this.config.worldConfig);
-        }
-        for (const atom of this.atoms) {
-          this.clusterManager.handleAtom(atom, (lhs, rhs) => {
-            this.interactionManager.interactAtomsStep1(lhs, rhs);
-          });
-        }
-        for (const atom of this.atoms) {
-          this.clusterManager.handleAtom(atom, (lhs, rhs) => {
-            this.interactionManager.interactAtomsStep2(lhs, rhs);
-          });
-        }
-        for (const link of this.links) {
-          this.interactionManager.interactLink(link);
-          this.summaryManager.noticeLink(link, this.config.worldConfig);
-        }
+        this.interact();
       }
-      this.interactionManager.handleTime();
     }
 
     this.drawer.draw(this.atoms, this.links);
@@ -176,6 +157,29 @@ export class Simulation implements SimulationInterface {
     const collector = new CompoundsCollector()
     collector.handleLinks(this.links);
     return collector.getCompounds();
+  }
+
+  private interact(): void {
+    for (const atom of this.atoms) {
+      this.interactionManager.clearDistanceFactor(atom);
+      this.interactionManager.moveAtom(atom);
+      this.summaryManager.noticeAtom(atom, this.config.worldConfig);
+    }
+    for (const atom of this.atoms) {
+      this.clusterManager.handleAtom(atom, (lhs, rhs) => {
+        this.interactionManager.interactAtomsStep1(lhs, rhs);
+      });
+    }
+    for (const atom of this.atoms) {
+      this.clusterManager.handleAtom(atom, (lhs, rhs) => {
+        this.interactionManager.interactAtomsStep2(lhs, rhs);
+      });
+    }
+    for (const link of this.links) {
+      this.interactionManager.interactLink(link);
+      this.summaryManager.noticeLink(link, this.config.worldConfig);
+    }
+    this.interactionManager.handleTime();
   }
 
   private tick() {
