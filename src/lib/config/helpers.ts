@@ -1,6 +1,6 @@
 import { createRandomTypesConfig } from './types';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
-import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
+import { makeMatrixSymmetric, makeTensorSymmetric } from '../math/operations';
 
 export function copyConfigListValue(copyFrom: unknown[], copyTo: unknown[], defaultValue: number) {
   for (const i in copyTo as Array<unknown>) {
