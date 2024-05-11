@@ -12,7 +12,6 @@ import {
   createBaseTypesConfig,
   createColors,
   createDefaultRandomTypesConfig,
-  createRandomTypesConfig,
   createSingleTypeConfig,
 } from "@/lib/config/types";
 import { fullCopyObject } from "@/helpers/utils";
@@ -22,6 +21,8 @@ import {
 } from "@/lib/helpers";
 import { useFlash } from '@/hooks/use-flash';
 import { concatArrays, concatMatrices, concatTensors } from "@/lib/math";
+import { randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/helpers';
+import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
 
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
@@ -162,109 +163,12 @@ export const useConfigStore = defineStore("config", () => {
     }
   }
 
-  const copyConfigListValue = (copyFrom: unknown[], copyTo: unknown[], defaultValue: number) => {
-    for (const i in copyTo as Array<unknown>) {
-      copyTo[i] = copyFrom[i] ?? defaultValue;
-    }
-  }
-
-  const copyConfigMatrixValue = (
-    copyFrom: unknown[][],
-    copyTo: unknown[][],
-    defaultValue: number,
-    skipSubMatricesBoundaryIndex?: number,
-  ) => {
-    for (let i=0; i<copyTo.length; ++i) {
-      for (let j=0; j<copyTo[i].length; ++j) {
-        if (skipSubMatricesBoundaryIndex !== undefined) {
-          if (i < skipSubMatricesBoundaryIndex && j >= skipSubMatricesBoundaryIndex) continue;
-          if (i >= skipSubMatricesBoundaryIndex && j < skipSubMatricesBoundaryIndex) continue;
-        }
-
-        if (copyFrom[i] === undefined) {
-          copyTo[i][j] = defaultValue;
-        } else {
-          copyTo[i][j] = copyFrom[i][j] ?? defaultValue;
-        }
-      }
-    }
-  }
-
-  const copyConfigTensorValue = (
-    copyFrom: unknown[][][],
-    copyTo: unknown[][][],
-    defaultValue: number,
-    skipSubMatricesBoundaryIndex?: number,
-  ) => {
-    for (let i=0; i<copyTo.length; ++i) {
-      for (let j=0; j<copyTo[i].length; ++j) {
-        for (let k=0; k<copyTo[i][j].length; ++k) {
-          if (
-            skipSubMatricesBoundaryIndex !== undefined &&
-            !(i < skipSubMatricesBoundaryIndex && j < skipSubMatricesBoundaryIndex && k < skipSubMatricesBoundaryIndex) &&
-            !(i >= skipSubMatricesBoundaryIndex && j >= skipSubMatricesBoundaryIndex && k >= skipSubMatricesBoundaryIndex)
-          ) continue;
-          if (copyFrom[i] === undefined || copyFrom[i][j] === undefined) {
-            copyTo[i][j][k] = defaultValue;
-          } else {
-            copyTo[i][j][k] = copyFrom[i][j][k] ?? defaultValue;
-          }
-        }
-      }
-    }
-  }
-
   const randomizeTypesConfig = (skipSubMatricesBoundaryIndex?: number) => {
-    const newConfig = createRandomTypesConfig(randomTypesConfig.value);
-
-    if (!randomTypesConfig.value.USE_FREQUENCY_BOUNDS || skipSubMatricesBoundaryIndex !== undefined) {
-      copyConfigListValue(typesConfigRaw.FREQUENCIES, newConfig.FREQUENCIES, 1);
-    }
-
-    if (!randomTypesConfig.value.USE_RADIUS_BOUNDS || skipSubMatricesBoundaryIndex !== undefined) {
-      copyConfigListValue(typesConfigRaw.RADIUS, newConfig.RADIUS, 1);
-    }
-
-    if (!randomTypesConfig.value.USE_LINK_BOUNDS || skipSubMatricesBoundaryIndex !== undefined) {
-      copyConfigListValue(typesConfigRaw.LINKS, newConfig.LINKS, 0);
-    }
-
-    if (!randomTypesConfig.value.USE_GRAVITY_BOUNDS) {
-      copyConfigMatrixValue(typesConfigRaw.GRAVITY, newConfig.GRAVITY, 0);
-    } else if (skipSubMatricesBoundaryIndex !== undefined) {
-      copyConfigMatrixValue(typesConfigRaw.GRAVITY, newConfig.GRAVITY, 0, skipSubMatricesBoundaryIndex);
-    }
-
-    if (!randomTypesConfig.value.USE_LINK_GRAVITY_BOUNDS) {
-      copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0);
-    } else if (skipSubMatricesBoundaryIndex !== undefined) {
-      copyConfigMatrixValue(typesConfigRaw.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0, skipSubMatricesBoundaryIndex);
-    }
-
-    if (!randomTypesConfig.value.USE_LINK_TYPE_BOUNDS) {
-      copyConfigMatrixValue(typesConfigRaw.TYPE_LINKS, newConfig.TYPE_LINKS, 0);
-    } else if (skipSubMatricesBoundaryIndex !== undefined) {
-      copyConfigMatrixValue(typesConfigRaw.TYPE_LINKS, newConfig.TYPE_LINKS, 0, skipSubMatricesBoundaryIndex);
-    }
-
-    if (!randomTypesConfig.value.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
-      copyConfigMatrixValue(typesConfigRaw.LINK_FACTOR_DISTANCE, newConfig.LINK_FACTOR_DISTANCE, 1);
-      copyConfigTensorValue(typesConfigRaw.LINK_FACTOR_DISTANCE_EXTENDED, newConfig.LINK_FACTOR_DISTANCE_EXTENDED, 1);
-      newConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = typesConfigRaw.LINK_FACTOR_DISTANCE_USE_EXTENDED;
-    } else if (skipSubMatricesBoundaryIndex !== undefined) {
-      copyConfigMatrixValue(
-        typesConfigRaw.LINK_FACTOR_DISTANCE,
-        newConfig.LINK_FACTOR_DISTANCE,
-        1,
-        skipSubMatricesBoundaryIndex,
-      );
-      copyConfigTensorValue(
-        typesConfigRaw.LINK_FACTOR_DISTANCE_EXTENDED,
-        newConfig.LINK_FACTOR_DISTANCE_EXTENDED,
-        1,
-        skipSubMatricesBoundaryIndex,
-      );
-    }
+    const newConfig = partlyRandomizeTypesConfig(
+      randomTypesConfig.value,
+      typesConfigRaw,
+      skipSubMatricesBoundaryIndex,
+    );
 
     flash.turnOn(FLASH_IMPORT_STARTED);
     setTypesConfig(newConfig);
@@ -273,6 +177,8 @@ export const useConfigStore = defineStore("config", () => {
     if (skipSubMatricesBoundaryIndex === undefined) {
       setSymmetricTypesConfig(randomTypesConfig.value);
     }
+
+    applySymmetricTypesConfig();
   }
 
   const setDefaultTypesConfig = <T>() => {
@@ -285,9 +191,25 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const setSymmetricTypesConfig = (config: RandomTypesConfig) => {
-      for (const key in typesSymmetricConfig.value) {
-        typesSymmetricConfig.value[key as keyof TypesSymmetricConfig] = config[key as keyof TypesSymmetricConfig];
-      }
+    for (const key in typesSymmetricConfig.value) {
+      typesSymmetricConfig.value[key as keyof TypesSymmetricConfig] = config[key as keyof TypesSymmetricConfig];
+    }
+  }
+
+  const applySymmetricTypesConfig = () => {
+    if (typesSymmetricConfig.value.GRAVITY_MATRIX_SYMMETRIC) {
+      makeMatrixSymmetric(typesConfig.value.GRAVITY);
+    }
+    if (typesSymmetricConfig.value.LINK_GRAVITY_MATRIX_SYMMETRIC) {
+      makeMatrixSymmetric(typesConfig.value.LINK_GRAVITY);
+    }
+    if (typesSymmetricConfig.value.LINK_TYPE_MATRIX_SYMMETRIC) {
+      makeMatrixSymmetric(typesConfig.value.TYPE_LINKS);
+    }
+    if (typesSymmetricConfig.value.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC) {
+      makeMatrixSymmetric(typesConfig.value.LINK_FACTOR_DISTANCE);
+      makeTensorSymmetric(typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED);
+    }
   }
 
   const addTypesFromConfig = (config: TypesConfig): void => {
@@ -328,11 +250,11 @@ export const useConfigStore = defineStore("config", () => {
     distributeLinkFactorDistance(typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED, typesConfig.value.LINK_FACTOR_DISTANCE);
   });
 
-  watch(worldConfig, <T>(newConfig: WorldConfig) => {
+  watch(worldConfig, (newConfig: WorldConfig) => {
     setWorldConfigRaw(newConfig);
   }, { deep: true });
 
-  watch(typesConfig, <T>(newConfig: TypesConfig) => {
+  watch(typesConfig, (newConfig: TypesConfig) => {
     setTypesConfigRaw(newConfig);
   }, { deep: true });
 

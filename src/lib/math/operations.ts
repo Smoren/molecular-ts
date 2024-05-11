@@ -92,3 +92,19 @@ export function setTensorMainDiagonal<T>(tensor: T[][][], value: T): T[][][] {
     }
     return tensor;
 }
+
+export function makeMatrixSymmetric<T>(matrix: T[][]): T[][] {
+    for (let i=0; i<matrix.length; ++i) {
+        for (let j=0; j<i; ++j) {
+            matrix[i][j] = matrix[j][i];
+        }
+    }
+    return matrix;
+}
+
+export function makeTensorSymmetric<T>(tensor: T[][][]): T[][][] {
+    for (let i=0; i<tensor.length; ++i) {
+        makeMatrixSymmetric(tensor[i]);
+    }
+    return tensor;
+}
