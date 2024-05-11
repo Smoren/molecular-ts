@@ -88,7 +88,7 @@ export function randomizeTypesConfig(
   if (!randomTypesConfig.USE_LINK_GRAVITY_BOUNDS) {
     copyConfigMatrixValue(oldConfig.LINK_GRAVITY, newConfig.LINK_GRAVITY, 0);
   } else {
-    if (randomTypesConfig.LINK_TYPE_MATRIX_SYMMETRIC) {
+    if (randomTypesConfig.LINK_GRAVITY_MATRIX_SYMMETRIC) {
       makeMatrixSymmetric(newConfig.LINK_GRAVITY);
     }
     if (skipSubMatricesBoundaryIndex !== undefined) {
