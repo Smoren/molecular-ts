@@ -1,6 +1,13 @@
-import { createRandomTypesConfig } from './types';
+import { createColors, createRandomTypesConfig } from './types';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
-import { makeMatrixSymmetric, makeTensorSymmetric } from '../math/operations';
+import {
+  concatArrays,
+  concatMatrices,
+  concatTensors,
+  makeMatrixSymmetric,
+  makeTensorSymmetric,
+} from '../math/operations';
+import { fullCopyObject } from '@/helpers/utils';
 
 export function copyConfigListValue(copyFrom: unknown[], copyTo: unknown[], defaultValue: number) {
   for (const i in copyTo as Array<unknown>) {
@@ -133,4 +140,31 @@ export function randomizeTypesConfig(
   }
 
   return newConfig;
+}
+
+export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesConfig {
+  const result = fullCopyObject(lhs);
+
+  result.COLORS = createColors(lhs.COLORS.length + rhs.COLORS.length);
+  result.RADIUS = concatArrays(lhs.RADIUS, rhs.RADIUS);
+  result.FREQUENCIES = concatArrays(lhs.FREQUENCIES, rhs.FREQUENCIES);
+
+  result.GRAVITY = concatMatrices(lhs.GRAVITY, rhs.GRAVITY);
+  result.LINK_GRAVITY = concatMatrices(lhs.LINK_GRAVITY, rhs.LINK_GRAVITY);
+
+  result.LINKS = concatArrays(lhs.LINKS, rhs.LINKS);
+  result.TYPE_LINKS = concatMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS);
+
+  result.LINK_FACTOR_DISTANCE = concatMatrices(
+    lhs.LINK_FACTOR_DISTANCE,
+    rhs.LINK_FACTOR_DISTANCE,
+    1,
+  );
+  result.LINK_FACTOR_DISTANCE_EXTENDED = concatTensors(
+    lhs.LINK_FACTOR_DISTANCE_EXTENDED,
+    rhs.LINK_FACTOR_DISTANCE_EXTENDED,
+    1,
+  );
+
+  return result;
 }

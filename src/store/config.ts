@@ -10,7 +10,6 @@ import type {
 import { createBaseWorldConfig } from "@/lib/config/world";
 import {
   createBaseTypesConfig,
-  createColors,
   createDefaultRandomTypesConfig,
   createSingleTypeConfig,
 } from "@/lib/config/types";
@@ -20,8 +19,7 @@ import {
   distributeLinkFactorDistance,
 } from "@/lib/helpers";
 import { useFlash } from '@/hooks/use-flash';
-import { concatArrays, concatMatrices, concatTensors } from "@/lib/math";
-import { randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/helpers';
+import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/helpers';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
 
 export const useConfigStore = defineStore("config", () => {
@@ -191,8 +189,17 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const setSymmetricTypesConfig = (config: RandomTypesConfig) => {
-    for (const key in typesSymmetricConfig.value) {
-      typesSymmetricConfig.value[key as keyof TypesSymmetricConfig] = config[key as keyof TypesSymmetricConfig];
+    if (config.USE_GRAVITY_BOUNDS) {
+      typesSymmetricConfig.value.GRAVITY_MATRIX_SYMMETRIC = config.GRAVITY_MATRIX_SYMMETRIC;
+    }
+    if (config.USE_LINK_GRAVITY_BOUNDS) {
+      typesSymmetricConfig.value.LINK_GRAVITY_MATRIX_SYMMETRIC = config.LINK_GRAVITY_MATRIX_SYMMETRIC;
+    }
+    if (config.USE_LINK_TYPE_BOUNDS) {
+      typesSymmetricConfig.value.LINK_TYPE_MATRIX_SYMMETRIC = config.LINK_TYPE_MATRIX_SYMMETRIC;
+    }
+    if (config.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
+      typesSymmetricConfig.value.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC = config.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC;
     }
   }
 
@@ -213,28 +220,8 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const addTypesFromConfig = (config: TypesConfig): void => {
-    typesConfig.value.COLORS = createColors(typesConfig.value.COLORS.length + config.COLORS.length);
-    typesConfig.value.RADIUS = concatArrays(typesConfig.value.RADIUS, config.RADIUS);
-    typesConfig.value.FREQUENCIES = concatArrays(typesConfig.value.FREQUENCIES, config.FREQUENCIES);
-
-    typesConfig.value.GRAVITY = concatMatrices(typesConfig.value.GRAVITY, config.GRAVITY);
-    typesConfig.value.LINK_GRAVITY = concatMatrices(typesConfig.value.LINK_GRAVITY, config.LINK_GRAVITY);
-
-    typesConfig.value.LINKS = concatArrays(typesConfig.value.LINKS, config.LINKS);
-    typesConfig.value.TYPE_LINKS = concatMatrices(typesConfig.value.TYPE_LINKS, config.TYPE_LINKS);
-
-    typesConfig.value.LINK_FACTOR_DISTANCE = concatMatrices(
-      typesConfig.value.LINK_FACTOR_DISTANCE,
-      config.LINK_FACTOR_DISTANCE,
-      1,
-    );
-    typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED = concatTensors(
-      typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED,
-      config.LINK_FACTOR_DISTANCE_EXTENDED,
-      1,
-    );
-
-    setTypesConfig(typesConfig.value);
+    const newConfig = concatTypesConfigs(typesConfig.value, config);
+    setTypesConfig(newConfig);
   }
 
   const appendType = () => {
