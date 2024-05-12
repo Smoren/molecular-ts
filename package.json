@@ -9,7 +9,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "test": "jest",
-    "tool": "tsx src/scripts/tool.ts"
+    "tool": "tsx --require=@nextools/suppress-experimental-warnings src/scripts/tool.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -22,12 +22,14 @@
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
     "mdb-vue-ui-kit": "^4.1.1",
+    "multiprocess-pool": "^1.4.5",
     "pinia": "^2.0.28",
     "smoothie": "^1.36.1",
     "unplugin-vue-macros": "^2.7.9",
     "vue": "^3.4.15"
   },
   "devDependencies": {
+    "@nextools/suppress-experimental-warnings": "^0.1.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^18.19.33",
     "@vitejs/plugin-vue": "^4.0.0",

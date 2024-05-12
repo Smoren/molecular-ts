@@ -1,6 +1,8 @@
+type Route = ((...args: string[]) => void) | ((...args: string[]) => Promise<void>);
+
 export class Router {
   private DEFAULT_ACTION = 'default';
-  private readonly actions: Map<string, (...args: string[]) => void> = new Map();
+  private readonly actions: Map<string, Route> = new Map();
   private beforeRun: (action: string, args: string[]) => void = () => {};
 
   constructor() {
@@ -14,7 +16,7 @@ export class Router {
     return this;
   }
 
-  add(action: string, callback: (...args: string[]) => void) {
+  add(action: string, callback: Route) {
     this.actions.set(action, callback);
   }
 

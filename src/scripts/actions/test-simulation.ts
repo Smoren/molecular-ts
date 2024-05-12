@@ -8,8 +8,8 @@ import { createDummyDrawer } from '@/lib/drawer/dummy';
 import { Runner } from '@/lib/runner';
 import { CompoundsAnalyzer } from '@/lib/analysis/compounds';
 
-export const actionTest = (...args: string[]) => {
-  console.log('[START] test action', args);
+export const actionTestSimulation = (...args: string[]) => {
+  console.log('[START] test simulation action', args);
 
   const worldConfig = createBaseWorldConfig();
   const typesConfig = createBaseTypesConfig();
