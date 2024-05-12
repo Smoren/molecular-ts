@@ -19,7 +19,7 @@ import {
   distributeLinkFactorDistance,
 } from "@/lib/helpers";
 import { useFlash } from '@/hooks/use-flash';
-import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/helpers';
+import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/types';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
 
 export const useConfigStore = defineStore("config", () => {
