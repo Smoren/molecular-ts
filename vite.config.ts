@@ -1,6 +1,6 @@
 import path from "path";
 import { defineConfig } from "vite";
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from 'node:url';
 import VueMacros from "unplugin-vue-macros/vite";
 import Vue from "@vitejs/plugin-vue";
 
@@ -17,5 +17,6 @@ export default defineConfig({
       "@": fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  publicDir: 'public',
   base: '/molecular-ts/'
 });
