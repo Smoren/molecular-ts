@@ -16,8 +16,8 @@ import { CompoundsCollector } from './analysis/compounds';
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
-  private atoms: AtomInterface[];
-  private readonly links: LinkManagerInterface;
+  private _atoms: AtomInterface[];
+  private readonly _links: LinkManagerInterface;
   private readonly drawer: DrawerInterface;
   private readonly interactionManager: InteractionManagerInterface;
   private readonly clusterManager: ClusterManagerInterface;
@@ -26,14 +26,14 @@ export class Simulation implements SimulationInterface {
 
   constructor(config: SimulationConfig) {
     this.config = config;
-    this.atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig);
+    this._atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig);
+    this._links = new LinkManager();
     this.drawer = this.config.drawer;
-    this.links = new LinkManager();
     this.interactionManager = new InteractionManager(
       this.config.viewMode,
       this.config.worldConfig,
       this.config.typesConfig,
-      this.links,
+      this._links,
       this.config.physicModel,
       new RulesHelper(this.config.worldConfig, this.config.typesConfig),
     );
@@ -46,8 +46,16 @@ export class Simulation implements SimulationInterface {
         return;
       }
       console.log('atom added');
-      this.atoms.push(createAtom(extraKey-1, coords));
+      this._atoms.push(createAtom(extraKey-1, coords));
     });
+  }
+
+  get atoms(): AtomInterface[] {
+    return this._atoms;
+  }
+
+  get links(): LinkManagerInterface {
+    return this._links;
   }
 
   get summary(): Summary<number[]> {
@@ -76,7 +84,7 @@ export class Simulation implements SimulationInterface {
       }
     }
 
-    this.drawer.draw(this.atoms, this.links);
+    this.drawer.draw(this._atoms, this._links);
 
     this.summaryManager.finishStep();
   }
@@ -87,16 +95,16 @@ export class Simulation implements SimulationInterface {
 
   refill() {
     this.clear();
-    this.atoms = this.config.atomsFactory(
+    this._atoms = this.config.atomsFactory(
       this.config.worldConfig,
       this.config.typesConfig,
     );
   }
 
   clear() {
-    this.atoms.length = 0;
+    this._atoms.length = 0;
     this.clusterManager.clear();
-    this.links.clear();
+    this._links.clear();
     this.drawer.clear();
   }
 
@@ -109,8 +117,8 @@ export class Simulation implements SimulationInterface {
     await this.stop();
 
     const result = {
-      atoms: this.atoms.map(atom => atom.exportState()),
-      links: [...this.links].map(link => link.exportState()),
+      atoms: this._atoms.map(atom => atom.exportState()),
+      links: [...this._links].map(link => link.exportState()),
     };
 
     if (needToStart) {
@@ -129,7 +137,7 @@ export class Simulation implements SimulationInterface {
     const atoms = state.atoms as Array<Record<string, unknown>>;
     const links = state.links as Array<number[]>;
 
-    this.atoms = atoms.map(atom => createAtom(
+    this._atoms = atoms.map(atom => createAtom(
       atom.type as number,
       atom.position as NumericVector,
       atom.speed as NumericVector,
@@ -137,7 +145,7 @@ export class Simulation implements SimulationInterface {
     ));
 
     const atomsMap = new Map<number, AtomInterface>();
-    for (const atom of this.atoms) {
+    for (const atom of this._atoms) {
       atomsMap.set(atom.id, atom);
     }
 
@@ -146,7 +154,7 @@ export class Simulation implements SimulationInterface {
         console.warn(link, atomsMap, atoms);
       }
 
-      this.links.create(atomsMap.get(link[0])!, atomsMap.get(link[1])!);
+      this._links.create(atomsMap.get(link[0])!, atomsMap.get(link[1])!);
     }
 
     if (needToStart) {
@@ -156,27 +164,27 @@ export class Simulation implements SimulationInterface {
 
   exportCompounds(): Compound[] {
     const collector = new CompoundsCollector()
-    collector.handleLinks(this.links);
+    collector.handleLinks(this._links);
     return collector.getCompounds();
   }
 
   private interact(): void {
-    for (const atom of this.atoms) {
+    for (const atom of this._atoms) {
       this.interactionManager.clearDistanceFactor(atom);
       this.interactionManager.moveAtom(atom);
       this.summaryManager.noticeAtom(atom, this.config.worldConfig);
     }
-    for (const atom of this.atoms) {
+    for (const atom of this._atoms) {
       this.clusterManager.handleAtom(atom, (lhs, rhs) => {
         this.interactionManager.interactAtomsStep1(lhs, rhs);
       });
     }
-    for (const atom of this.atoms) {
+    for (const atom of this._atoms) {
       this.clusterManager.handleAtom(atom, (lhs, rhs) => {
         this.interactionManager.interactAtomsStep2(lhs, rhs);
       });
     }
-    for (const link of this.links) {
+    for (const link of this._links) {
       this.interactionManager.interactLink(link);
       this.summaryManager.noticeLink(link, this.config.worldConfig);
     }

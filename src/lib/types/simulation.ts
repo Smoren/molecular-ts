@@ -3,6 +3,7 @@ import type { AtomInterface } from './atomic';
 import type { DrawerInterface } from './drawer';
 import type { PhysicModelInterface } from './interaction';
 import type { Summary, Compound } from './analysis';
+import type { LinkManagerInterface } from '@/lib/types/helpers';
 
 export type SimulationConfig = {
   viewMode: ViewMode;
@@ -19,6 +20,8 @@ export type SimulationConfig = {
 
 export interface SimulationInterface {
   readonly config: SimulationConfig;
+  readonly atoms: AtomInterface[];
+  readonly links: LinkManagerInterface;
   readonly summary: Summary<number[]>;
   readonly isPaused: boolean;
   start(): void;
