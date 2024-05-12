@@ -7,7 +7,7 @@
       "@/*": ["./src/*"]
     },
     "lib": ["es2017", "dom"],
-    "types": ["unplugin-vue-macros/macros-global"]
+    "types": ["unplugin-vue-macros/macros-global", "node"]
   },
 
   "references": [

@@ -30,7 +30,7 @@ const chart = new SmoothieChart({
   labels: {fillStyle: 'rgb(255, 255, 255)'}
 });
 
-const interval: Ref<number | undefined> = ref();
+const interval: Ref<ReturnType<typeof setTimeout> | undefined> = ref();
 const timeSeries: Ref<TimeSeries[]> = ref([]);
 
 const init = (): void => {

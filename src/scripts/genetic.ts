@@ -8,6 +8,8 @@ import { createBaseTypesConfig } from '@/lib/config/types';
 import { createDummyDrawer } from '@/lib/drawer/dummy';
 import { CompoundsAnalyzer } from '@/lib/analysis/compounds';
 
+console.log(process.argv.slice(2));
+
 const worldConfig = createBaseWorldConfig();
 const typesConfig = createBaseTypesConfig();
 const initialConfig = create2dBaseInitialConfig();
