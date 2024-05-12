@@ -9,7 +9,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "test": "jest",
-    "tool": "tsx --require=@nextools/suppress-experimental-warnings src/scripts/tool.ts"
+    "tool": "tsx --no-warnings src/scripts/tool.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -29,7 +29,6 @@
     "vue": "^3.4.15"
   },
   "devDependencies": {
-    "@nextools/suppress-experimental-warnings": "^0.1.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^18.19.33",
     "@vitejs/plugin-vue": "^4.0.0",

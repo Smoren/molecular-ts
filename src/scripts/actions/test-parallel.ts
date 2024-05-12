@@ -14,8 +14,8 @@ function task(x: number) {
 export const actionTestParallel = async (...args: string[]) => {
   console.log('[START] test parallel action', args);
 
-  const pool = new Pool(20);  // spawns 4 child processes to complete your jobs
-  const result = await pool.map([1, 2, 3, 4, 5, 6, 7, 8, 9], task);
+  const pool = new Pool(20);
+  const result = await pool.map([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150], task);
   console.log(result);
 
   pool.close();

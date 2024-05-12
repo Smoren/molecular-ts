@@ -1,10 +1,10 @@
 import { createBaseWorldConfig } from '@/lib/config/world';
 import { createBaseTypesConfig } from '@/lib/config/types';
 import { create2dBaseInitialConfig } from '@/lib/config/initial';
-import { Simulation } from '@/lib/simulation';
 import { createPhysicModel } from '@/lib/utils/functions';
 import { create2dRandomDistribution } from '@/lib/config/atoms';
 import { createDummyDrawer } from '@/lib/drawer/dummy';
+import { Simulation } from '@/lib/simulation';
 import { Runner } from '@/lib/runner';
 import { CompoundsAnalyzer } from '@/lib/analysis/compounds';
 
