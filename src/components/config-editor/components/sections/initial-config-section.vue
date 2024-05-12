@@ -7,7 +7,7 @@ import ConfigSection from "@/components/config-editor/components/containers/conf
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 import type { InitialConfig } from "@/lib/types/config";
 import { ref, type Ref, watch } from "vue";
-import { getViewModeConfig } from "@/lib/helpers";
+import { getViewModeConfig } from "@/lib/utils/functions";
 
 withDefaults(defineProps<{
   withButtons?: boolean;

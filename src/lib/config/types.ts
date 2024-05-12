@@ -1,8 +1,9 @@
 import type { ColorVector, RandomTypesConfig, TypesConfig } from '../types/config';
 import {
-  createDistributedLinkFactorDistance, fullCopyObject,
+  createDistributedLinkFactorDistance,
   getRandomColor,
-} from '../helpers';
+  fullCopyObject,
+} from '../utils/functions';
 import {
   concatArrays, concatMatrices, concatTensors,
   createRandomFloat,

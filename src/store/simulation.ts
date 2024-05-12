@@ -8,7 +8,7 @@ import { useConfigStore } from "@/store/config";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
 import { create2dDrawer } from "@/lib/drawer/2d";
-import { createPhysicModel } from '@/lib/helpers';
+import { createPhysicModel } from '@/lib/utils/functions';
 import { Simulation } from "@/lib/simulation";
 
 export const useSimulationStore = defineStore("simulation", () => {

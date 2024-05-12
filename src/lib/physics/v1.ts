@@ -1,7 +1,7 @@
 import type { TypesConfig, WorldConfig } from '../types/config';
 import type { AtomInterface } from '../types/atomic';
 import type { PhysicModelInterface } from '../types/interaction';
-import { GeometryHelper } from '../helpers';
+import { GeometryHelper } from '../utils/structs';
 
 export class PhysicModelV1 implements PhysicModelInterface {
   public readonly geometry: GeometryHelper;

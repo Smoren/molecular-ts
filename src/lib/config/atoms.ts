@@ -1,5 +1,5 @@
 import type { AtomInterface } from '../types/atomic';
-import { createAtom } from '../helpers';
+import { createAtom } from '../utils/functions';
 import type { TypesConfig, WorldConfig } from '../types/config';
 import { getIndexByFrequencies } from '../math';
 

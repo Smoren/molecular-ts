@@ -6,7 +6,8 @@ import type { InteractionManagerInterface, PhysicModelInterface } from './types/
 import type { ClusterManagerInterface } from './types/cluster';
 import type { Summary, SummaryManagerInterface } from './types/analysis';
 import { ClusterManager } from './cluster';
-import { createAtom, LinkManager, RulesHelper, RunningState } from './helpers';
+import { createAtom } from './utils/functions';
+import { LinkManager, RulesHelper, RunningState } from './utils/structs';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from './analysis/summary';
 import type { NumericVector } from './math/types';

@@ -6,7 +6,7 @@ import type {
   SummaryAttr,
   SummaryManagerInterface,
 } from '../types/analysis';
-import { Queue } from '../helpers';
+import { Queue } from '../utils/structs';
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type { TypesConfig, WorldConfig } from '../types/config';
 import { arrayBinaryOperation, arrayUnaryOperation, round } from '../math';

@@ -11,7 +11,7 @@ import ConfigList from '@/components/config-editor/components/inputs/config-list
 import InputHeader from "@/components/config-editor/components/base/input-header.vue";
 import Flag from "@/components/config-editor/components/inputs/flag.vue";
 import ConfigTensor from "@/components/config-editor/components/inputs/config-tensor.vue";
-import { distributeLinkFactorDistance } from '@/lib/helpers';
+import { distributeLinkFactorDistance } from '@/lib/utils/functions';
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;

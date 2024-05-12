@@ -1,7 +1,7 @@
 import { expect } from '@jest/globals'
 import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
 import type { CompoundsSummary } from "../../src/lib/types/analysis";
-import { createAtom } from '../../src/lib/helpers';
+import { createAtom } from '../../src/lib/utils/functions';
 import { Link } from '../../src/lib/atomic';
 
 function createAtomsAndLinks(atomTypes: number[], linksData: number[][]): [AtomInterface[], LinkInterface[]] {

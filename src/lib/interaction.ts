@@ -5,7 +5,7 @@ import type { NumericVector, VectorInterface } from './math/types';
 import type { InteractionManagerInterface } from './types/interaction';
 import type { PhysicModelInterface } from './types/interaction';
 import { Vector } from './math';
-import { getViewModeConfig } from './helpers';
+import { getViewModeConfig } from './utils/functions';
 
 export class InteractionManager implements InteractionManagerInterface {
   private readonly VIEW_MODE: ViewMode;

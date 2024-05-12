@@ -13,11 +13,11 @@ import {
   createDefaultRandomTypesConfig,
   createSingleTypeConfig,
 } from "@/lib/config/types";
-import { fullCopyObject } from "@/lib/helpers";
+import { fullCopyObject } from "@/lib/utils/functions";
 import {
   createDistributedLinkFactorDistance,
   distributeLinkFactorDistance,
-} from "@/lib/helpers";
+} from "@/lib/utils/functions";
 import { useFlash } from '@/hooks/use-flash';
 import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/types';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
