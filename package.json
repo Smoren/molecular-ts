@@ -9,7 +9,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "test": "jest",
-    "genetic": "tsx src/scripts/genetic.ts"
+    "tool": "tsx src/scripts/tool.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
