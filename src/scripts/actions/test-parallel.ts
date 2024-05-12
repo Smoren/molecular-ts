@@ -1,10 +1,10 @@
 import { Pool } from "multiprocess-pool";
 
-function integrateTask([id, funcName, [a, b], columns]: [number, string, [number, number], number]): number {
+function integrateTask([id, funcName, [a, b], columns]: [number, keyof typeof Math, [number, number], number]): number {
   console.log(`-> task ${id} started`);
   const ts = Date.now();
 
-  const func = Math[funcName as keyof typeof Math] as (x: number) => number;
+  const func = Math[funcName] as (x: number) => number;
   const step = (b - a) / columns;
   let integral = 0;
 
