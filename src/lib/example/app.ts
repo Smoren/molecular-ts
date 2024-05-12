@@ -1,5 +1,5 @@
-import { MODE } from '@/lib/config/initial';
-import { startSimulation } from "./choice";
+import { MODE } from '../config/initial';
+import { startSimulation } from './choice';
 
 const DIMENSIONS = 3;
 const CURRENT_MODE = MODE.CONST_TYPES;

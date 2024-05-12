@@ -2,8 +2,7 @@ import type { InitialConfig, TypesConfig, WorldConfig, ViewMode } from './config
 import type { AtomInterface } from './atomic';
 import type { DrawerInterface } from './drawer';
 import type { PhysicModelInterface } from './interaction';
-import type { Summary } from './summary';
-import type { Compound } from '@/lib/types/analysis';
+import type { Summary, Compound } from './analysis';
 
 export type SimulationConfig = {
   viewMode: ViewMode;

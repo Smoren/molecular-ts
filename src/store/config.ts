@@ -13,7 +13,7 @@ import {
   createDefaultRandomTypesConfig,
   createSingleTypeConfig,
 } from "@/lib/config/types";
-import { fullCopyObject } from "@/helpers/utils";
+import { fullCopyObject } from "@/lib/helpers";
 import {
   createDistributedLinkFactorDistance,
   distributeLinkFactorDistance,

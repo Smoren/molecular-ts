@@ -4,12 +4,12 @@ import type {
   WorldConfig,
 } from "../../../types/config";
 import { create2dDrawer } from "../../../drawer/2d";
-import { createBaseTypesConfig } from "@/lib/config/types";
-import { createBaseWorldConfig } from "@/lib/config/world";
-import { create2dBaseInitialConfig } from "@/lib/config/initial";
-import { create2dRandomDistribution } from "@/lib/config/atoms";
+import { createBaseTypesConfig } from "../../../config/types";
+import { createBaseWorldConfig } from "../../../config/world";
+import { create2dBaseInitialConfig } from "../../../config/initial";
+import { create2dRandomDistribution } from "../../../config/atoms";
 import { Simulation } from "../../../simulation";
-import { PhysicModelV1 } from "@/lib/physics/v1";
+import { PhysicModelV1 } from "../../../physics/v1";
 
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
 const TYPES_CONFIG: TypesConfig = createBaseTypesConfig();

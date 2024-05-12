@@ -5,11 +5,11 @@ import type {
   StepSummaryManagerInterface,
   SummaryAttr,
   SummaryManagerInterface,
-} from './types/summary';
-import { Queue } from './helpers';
-import type { AtomInterface, LinkInterface } from './types/atomic';
-import type { TypesConfig, WorldConfig } from './types/config';
-import { arrayBinaryOperation, arrayUnaryOperation, round } from './math';
+} from '../types/analysis';
+import { Queue } from '../helpers';
+import type { AtomInterface, LinkInterface } from '../types/atomic';
+import type { TypesConfig, WorldConfig } from '../types/config';
+import { arrayBinaryOperation, arrayUnaryOperation, round } from '../math';
 
 const createEmptyStepSummary = (typesCount: number): Summary<number[]> => ({
   ATOMS_COUNT: [0],

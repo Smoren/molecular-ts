@@ -228,6 +228,8 @@ export class RunningState implements RunningStateInterface {
   }
 }
 
+export const fullCopyObject = <T extends Record<string, any>>(obj: T) => JSON.parse(JSON.stringify(obj)) as T;
+
 let LAST_ATOM_ID = 0;
 
 function nextId(id?: number): number {

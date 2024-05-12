@@ -7,7 +7,7 @@ import {
   makeMatrixSymmetric,
   makeTensorSymmetric,
 } from '../math/operations';
-import { fullCopyObject } from '@/helpers/utils';
+import { fullCopyObject } from "../helpers";
 
 export function copyConfigListValue(copyFrom: unknown[], copyTo: unknown[], defaultValue: number) {
   for (const i in copyTo as Array<unknown>) {

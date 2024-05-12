@@ -5,7 +5,7 @@ import { create3dSimulationButterfly } from './variants/3d/butterfly';
 import { create3dSimulationWithConstTypes } from './variants/3d/const-types-distribution';
 import { create3dSimulationWithRandomTypes } from './variants/3d/random-types-distribution';
 import type { Simulation } from '../simulation';
-import { MODE } from '@/lib/config/initial';
+import { MODE } from '../config/initial';
 
 export function create2dSimulation(mode: number): Simulation {
   if (mode === MODE.BUTTERFLY) {
