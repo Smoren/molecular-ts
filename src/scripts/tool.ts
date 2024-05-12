@@ -7,30 +7,21 @@ import { createBaseWorldConfig } from '@/lib/config/world';
 import { createBaseTypesConfig } from '@/lib/config/types';
 import { createDummyDrawer } from '@/lib/drawer/dummy';
 import { CompoundsAnalyzer } from '@/lib/analysis/compounds';
+import { Router } from '@/scripts/lib/router';
 
-function router() {
-  const action = process.argv[2] ?? 'default';
-  const args = process.argv.slice(3);
+const router = new Router();
 
-  switch (action) {
-    case 'test':
-      testAction(...args);
-      break;
-    case 'default':
-      defaultAction();
-      break;
-    default:
-      console.error(`Unknown action: ${action}`);
-      defaultAction();
-      break;
-  }
-}
+router.onBeforeRun((action) => {
+  console.log('');
+  console.log('***********************');
+  console.log('** COMMAND LINE TOOL **');
+  console.log('***********************');
+  console.log('');
+  console.log(`Action to run: "${action}"`);
+  console.log('');
+})
 
-function defaultAction() {
-  console.log('Actions available:', ['test']);
-}
-
-function testAction(...args: string[]) {
+router.add('test', (...args: string[]) => {
   console.log('[START] test action', args);
 
   const worldConfig = createBaseWorldConfig();
@@ -58,6 +49,6 @@ function testAction(...args: string[]) {
   console.log(compounds.itemLengthByTypesSummary);
 
   console.log('[FINISH]');
-}
+});
 
-router();
+router.run(process.argv.slice(2));
