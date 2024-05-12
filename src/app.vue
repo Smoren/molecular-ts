@@ -8,11 +8,7 @@ import ConfigEditor from "@/components/config-editor/config-editor.vue";
 
 const configStore = useConfigStore();
 
-const {
-  simulation,
-  restart,
-  isMode,
-} = useSimulationStore();
+const { restart, isMode } = useSimulationStore();
 
 const getCanvasStyle = (mode: ViewMode) => {
   return { display: isMode(mode) ? 'block' : 'none' };
