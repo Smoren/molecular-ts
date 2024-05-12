@@ -7,4 +7,4 @@ const router = createRouter();
 router.add('test-simulation', actionTestSimulation);
 router.add('test-parallel', actionTestParallel);
 
-router.run(process.argv.slice(2));
+router.run(process.argv);

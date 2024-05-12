@@ -21,6 +21,7 @@ export class Router {
   }
 
   run(args: string[]) {
+    args = args.slice(2);
     const action = args[0] ?? this.DEFAULT_ACTION;
     const optionalArgs = args.slice(1);
 
