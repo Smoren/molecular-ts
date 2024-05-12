@@ -1,15 +1,7 @@
-import { Router } from '@/scripts/lib/router';
 import { actionTest } from '@/scripts/actions/test';
+import { createRouter } from '@/scripts/lib/helpers';
 
-const router = new Router();
-
-router.onBeforeRun(() => {
-  console.log('');
-  console.log('***********************');
-  console.log('** COMMAND LINE TOOL **');
-  console.log('***********************');
-  console.log('');
-})
+const router = createRouter();
 
 router.add('test', actionTest);
 
