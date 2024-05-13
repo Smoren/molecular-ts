@@ -1,12 +1,10 @@
 import type {
-  InitialConfig,
   TypesConfig,
   WorldConfig,
 } from "../../../types/config";
 import { create2dDrawer } from "../../../drawer/2d";
 import { createRandomTypesConfig } from "../../../config/types";
 import { createBaseWorldConfig } from "../../../config/world";
-import { create2dBaseInitialConfig } from "../../../config/initial";
 import { create2dRandomDistribution } from "../../../config/atoms";
 import { Simulation } from "../../../simulation";
 import { PhysicModelV1 } from "../../../physics/v1";
@@ -38,14 +36,12 @@ const TYPES_CONFIG: TypesConfig = createRandomTypesConfig({
   LINK_FACTOR_DISTANCE_EXTENDED: true,
   LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: true,
 });
-const INITIAL_CONFIG: InitialConfig = create2dBaseInitialConfig();
 
 export function create2dSimulationWithRandomTypes() {
   return new Simulation({
     viewMode: '2d',
     worldConfig: WORLD_CONFIG,
     typesConfig: TYPES_CONFIG,
-    initialConfig: INITIAL_CONFIG,
     physicModel: new PhysicModelV1(WORLD_CONFIG, TYPES_CONFIG),
     atomsFactory: create2dRandomDistribution,
     drawer: create2dDrawer('canvas', WORLD_CONFIG, TYPES_CONFIG),

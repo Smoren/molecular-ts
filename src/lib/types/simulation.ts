@@ -9,7 +9,6 @@ export type SimulationConfig = {
   viewMode: ViewMode;
   worldConfig: WorldConfig;
   typesConfig: TypesConfig;
-  initialConfig: InitialConfig;
   physicModel: PhysicModelInterface;
   atomsFactory: (
     worldConfig: WorldConfig,

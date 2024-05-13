@@ -3,7 +3,6 @@ import { defineStore } from "pinia";
 import type { SimulationInterface } from "@/lib/types/simulation";
 import type { PhysicModelInterface } from '@/lib/types/interaction';
 import type { ViewMode } from "@/lib/types/config";
-import { create2dBaseInitialConfig, create3dBaseInitialConfig } from "@/lib/config/initial";
 import { useConfigStore } from "@/web/store/config";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
@@ -27,7 +26,6 @@ export const useSimulationStore = defineStore("simulation", () => {
         viewMode: '3d',
         worldConfig: worldConfig,
         typesConfig: typesConfig,
-        initialConfig: create3dBaseInitialConfig(),
         physicModel: createPhysicModel(worldConfig, typesConfig),
         atomsFactory: create3dRandomDistribution,
         drawer: create3dDrawer('canvas3d', worldConfig, typesConfig),
@@ -39,7 +37,6 @@ export const useSimulationStore = defineStore("simulation", () => {
         viewMode: '2d',
         worldConfig: worldConfig,
         typesConfig: typesConfig,
-        initialConfig: create2dBaseInitialConfig(),
         physicModel: createPhysicModel(worldConfig, typesConfig),
         atomsFactory: create2dRandomDistribution,
         drawer: create2dDrawer('canvas2d', worldConfig, typesConfig),

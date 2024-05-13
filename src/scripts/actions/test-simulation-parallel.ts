@@ -1,15 +1,16 @@
 import os from 'os';
 import { Pool } from "multiprocess-pool";
-import type { InitialConfig, TypesConfig, WorldConfig } from '@/lib/types/config';
+import type { TypesConfig, WorldConfig } from '@/lib/types/config';
 import { createBaseWorldConfig } from '@/lib/config/world';
 import { createBaseTypesConfig } from '@/lib/config/types';
-import { create2dBaseInitialConfig } from '@/lib/config/initial';
 
 export const simulationTask = async (
-  [id, worldConfig, typesConfig, initialConfig, steps]: [number, WorldConfig, TypesConfig, InitialConfig, number],
+  [id, worldConfig, typesConfig, steps]: [number, WorldConfig, TypesConfig, number],
 ) => {
   console.log(`-> task ${id} started`);
   const ts = Date.now();
+
+  console.log('initial', worldConfig);
 
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
@@ -25,7 +26,6 @@ export const simulationTask = async (
     viewMode: '2d',
     worldConfig: worldConfig,
     typesConfig: typesConfig,
-    initialConfig: initialConfig,
     physicModel: createPhysicModel(worldConfig, typesConfig),
     atomsFactory: create2dRandomDistribution,
     drawer: createDummyDrawer(),
@@ -50,18 +50,19 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
 
   const worldConfig = createBaseWorldConfig();
   const typesConfig = createBaseTypesConfig();
-  const initialConfig = create2dBaseInitialConfig();
   const stepsCount = 300;
 
+  worldConfig.CONFIG_2D.INITIAL.ATOMS_COUNT = 1000;
+
   const inputs = [
-    [1, worldConfig, typesConfig, initialConfig, stepsCount],
-    [2, worldConfig, typesConfig, initialConfig, stepsCount],
-    [3, worldConfig, typesConfig, initialConfig, stepsCount],
-    [4, worldConfig, typesConfig, initialConfig, stepsCount],
-    [5, worldConfig, typesConfig, initialConfig, stepsCount],
-    [6, worldConfig, typesConfig, initialConfig, stepsCount],
-    [7, worldConfig, typesConfig, initialConfig, stepsCount],
-    [8, worldConfig, typesConfig, initialConfig, stepsCount],
+    [1, worldConfig, typesConfig, stepsCount],
+    [2, worldConfig, typesConfig, stepsCount],
+    [3, worldConfig, typesConfig, stepsCount],
+    [4, worldConfig, typesConfig, stepsCount],
+    [5, worldConfig, typesConfig, stepsCount],
+    [6, worldConfig, typesConfig, stepsCount],
+    [7, worldConfig, typesConfig, stepsCount],
+    [8, worldConfig, typesConfig, stepsCount],
   ];
 
   const cpuCount = os.cpus().length;
