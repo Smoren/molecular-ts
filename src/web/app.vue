@@ -3,8 +3,8 @@
 import { onMounted } from "vue";
 import { useConfigStore } from "@/web/store/config";
 import { useSimulationStore } from "@/web/store/simulation";
-import type { ViewMode } from "@/lib/types/config";
 import ConfigEditor from "@/web/components/config-editor/config-editor.vue";
+import type { ViewMode } from "@/lib/types/config";
 
 const configStore = useConfigStore();
 
