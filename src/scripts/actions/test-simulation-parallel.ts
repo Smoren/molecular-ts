@@ -65,16 +65,10 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
     MAX_POSITION: maxPosition,
   };
 
-  const inputs = [
-    [1, worldConfig, typesConfig, stepsCount],
-    [2, worldConfig, typesConfig, stepsCount],
-    [3, worldConfig, typesConfig, stepsCount],
-    [4, worldConfig, typesConfig, stepsCount],
-    [5, worldConfig, typesConfig, stepsCount],
-    [6, worldConfig, typesConfig, stepsCount],
-    [7, worldConfig, typesConfig, stepsCount],
-    [8, worldConfig, typesConfig, stepsCount],
-  ];
+  const inputs = [];
+  for (let i = 0; i < 100; i++) {
+    inputs.push([i+1, worldConfig, typesConfig, stepsCount]);
+  }
 
   const cpuCount = os.cpus().length;
   console.log('CPUs:', cpuCount);
