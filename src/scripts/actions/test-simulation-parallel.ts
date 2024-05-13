@@ -1,23 +1,25 @@
+import os from 'os';
 import { Pool } from "multiprocess-pool";
+import type { InitialConfig, TypesConfig, WorldConfig } from '@/lib/types/config';
+import { createBaseWorldConfig } from '@/lib/config/world';
+import { createBaseTypesConfig } from '@/lib/config/types';
+import { create2dBaseInitialConfig } from '@/lib/config/initial';
 
-export const simulationTask = async (id: number) => {
+export const simulationTask = async (
+  [id, worldConfig, typesConfig, initialConfig, steps]: [number, WorldConfig, TypesConfig, InitialConfig, number],
+) => {
   console.log(`-> task ${id} started`);
   const ts = Date.now();
 
+  worldConfig.TEMPERATURE_FUNCTION = () => 1;
+
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');
-  const { createBaseWorldConfig } = await import(`${dirName}/lib/config/world`);
-  const { createBaseTypesConfig } = await import(`${dirName}/lib/config/types`);
-  const { create2dBaseInitialConfig } = await import(`${dirName}/lib/config/initial`);
   const { createPhysicModel } = await import(`${dirName}/lib/utils/functions`);
   const { create2dRandomDistribution } = await import(`${dirName}/lib/config/atoms`);
   const { createDummyDrawer } = await import(`${dirName}/lib/drawer/dummy`);
   const { Simulation } = await import(`${dirName}/lib/simulation`);
   const { Runner } = await import(`${dirName}/lib/runner`);
   const { CompoundsAnalyzer } = await import(`${dirName}/lib/analysis/compounds`);
-
-  const worldConfig = createBaseWorldConfig();
-  const typesConfig = createBaseTypesConfig();
-  const initialConfig = create2dBaseInitialConfig();
 
   const sim = new Simulation({
     viewMode: '2d',
@@ -30,27 +32,42 @@ export const simulationTask = async (id: number) => {
   });
 
   const runner = new Runner(sim);
-  runner.runSteps(500);
-
-  // console.log(sim.summary);
+  runner.runSteps(steps);
 
   const compounds = new CompoundsAnalyzer(sim.exportCompounds(), sim.atoms);
-  // console.log(compounds.lengthByTypes);
-  // console.log(compounds.itemLengthSummary);
-  // console.log(compounds.itemLengthByTypesSummary);
 
   console.log(`<- task ${id} finished in ${Date.now() - ts} ms`);
 
-  return compounds.lengthByTypes;
+  return {
+    world: sim.summary,
+    compounds: compounds.summary,
+  };
 }
 
-export const actionTestParallelSimulation = async (...args: string[]) => {
+export const actionTestSimulationParallel = async (...args: string[]) => {
   console.log('[START] test parallel simulation action', args);
   const ts = Date.now();
 
-  const inputs = [1, 2, 3, 4, 5, 6, 7, 8];
+  const worldConfig = createBaseWorldConfig();
+  const typesConfig = createBaseTypesConfig();
+  const initialConfig = create2dBaseInitialConfig();
+  const stepsCount = 300;
 
-  const pool = new Pool(20);
+  const inputs = [
+    [1, worldConfig, typesConfig, initialConfig, stepsCount],
+    [2, worldConfig, typesConfig, initialConfig, stepsCount],
+    [3, worldConfig, typesConfig, initialConfig, stepsCount],
+    [4, worldConfig, typesConfig, initialConfig, stepsCount],
+    [5, worldConfig, typesConfig, initialConfig, stepsCount],
+    [6, worldConfig, typesConfig, initialConfig, stepsCount],
+    [7, worldConfig, typesConfig, initialConfig, stepsCount],
+    [8, worldConfig, typesConfig, initialConfig, stepsCount],
+  ];
+
+  const cpuCount = os.cpus().length;
+  console.log('CPUs:', cpuCount);
+
+  const pool = new Pool(cpuCount);
   const result = await pool.map(inputs, simulationTask);
   console.log(result);
 

@@ -1,7 +1,7 @@
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type {
   Compound,
-  CompoundsAnalyzerInterface,
+  CompoundsAnalyzerSummary,
   CompoundsCollectorInterface,
   CompoundsSummary,
 } from '../types/analysis';
@@ -51,7 +51,7 @@ export class CompoundsCollector implements CompoundsCollectorInterface {
   }
 }
 
-export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
+export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
   private readonly compounds: Array<Compound>;
   private readonly compoundsTypesMap: Array<Compound[]>;
   private readonly atoms: Array<AtomInterface>;
@@ -81,6 +81,15 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerInterface {
       compounds,
       this.atomsTypesMap[type],
     ));
+  }
+
+  get summary(): CompoundsAnalyzerSummary {
+    return {
+      length: this.length,
+      lengthByTypes: this.lengthByTypes,
+      itemLengthSummary: this.itemLengthSummary,
+      itemLengthByTypesSummary: this.itemLengthByTypesSummary,
+    }
   }
 
   private groupCompoundsByTypes(): Array<Compound[]> {

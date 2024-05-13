@@ -68,7 +68,7 @@ export interface CompoundsCollectorInterface {
   getCompounds(): Array<Compound>;
 }
 
-export interface CompoundsAnalyzerInterface {
+export type CompoundsAnalyzerSummary = {
   length: number;
   lengthByTypes: number[];
   itemLengthSummary: CompoundsSummary;
