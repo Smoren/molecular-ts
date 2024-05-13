@@ -45,7 +45,7 @@ export const simulationTask = async (id: number) => {
 }
 
 export const actionTestParallelSimulation = async (...args: string[]) => {
-  console.log('[START] test parallel action', args);
+  console.log('[START] test parallel simulation action', args);
   const ts = Date.now();
 
   const inputs = [1, 2, 3, 4, 5, 6, 7, 8];
