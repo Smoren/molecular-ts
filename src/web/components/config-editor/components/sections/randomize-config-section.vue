@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
 import { computed, type Ref, ref, watch } from "vue";
-import { useConfigStore } from "@/store/config";
-import { useSimulationStore } from "@/store/simulation";
-import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
-import ConfigBounds from "@/components/config-editor/components/inputs/config-bounds.vue";
-import InitialConfigSection from "@/components/config-editor/components/sections/initial-config-section.vue";
-import Flag from "@/components/config-editor/components/inputs/flag.vue";
-import InputHeader from "@/components/config-editor/components/base/input-header.vue";
+import { useConfigStore } from "@/web/store/config";
+import { useSimulationStore } from "@/web/store/simulation";
+import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
+import ConfigBounds from "@/web/components/config-editor/components/inputs/config-bounds.vue";
+import InitialConfigSection from "@/web/components/config-editor/components/sections/initial-config-section.vue";
+import Flag from "@/web/components/config-editor/components/inputs/flag.vue";
+import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
 
 const configStore = useConfigStore();
 const { randomTypesConfig, typesConfig } = configStore;

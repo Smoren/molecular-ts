@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
 import { onMounted } from "vue";
-import { useConfigStore } from "@/store/config";
-import { useSimulationStore } from "@/store/simulation";
+import { useConfigStore } from "@/web/store/config";
+import { useSimulationStore } from "@/web/store/simulation";
 import type { ViewMode } from "@/lib/types/config";
-import ConfigEditor from "@/components/config-editor/config-editor.vue";
+import ConfigEditor from "@/web/components/config-editor/config-editor.vue";
 
 const configStore = useConfigStore();
 

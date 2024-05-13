@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
-import { useConfigStore } from "@/store/config";
-import { useSimulationStore } from "@/store/simulation";
+import { useConfigStore } from "@/web/store/config";
+import { useSimulationStore } from "@/web/store/simulation";
 import type { TypesConfig } from "@/lib/types/config";
-import ImportButton from "@/components/config-editor/components/inputs/import-button.vue";
-import ExportButton from "@/components/config-editor/components/inputs/export-button.vue";
-import InputHeader from "@/components/config-editor/components/base/input-header.vue";
+import ImportButton from "@/web/components/config-editor/components/inputs/import-button.vue";
+import ExportButton from "@/web/components/config-editor/components/inputs/export-button.vue";
+import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
 
 const configStore = useConfigStore();
 const simulation = useSimulationStore();

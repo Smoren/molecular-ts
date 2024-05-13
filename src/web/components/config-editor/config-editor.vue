@@ -3,20 +3,20 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { provide, ref } from 'vue';
-import { useSwitch } from "@/hooks/use-switch";
-import { useRightBar } from "@/components/config-editor/hooks/use-right-bar";
+import { useSwitch } from "@/web/hooks/use-switch";
+import { useRightBar } from "@/web/components/config-editor/hooks/use-right-bar";
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
-import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from '@/components/config-editor/constants';
-import Navbar from "@/components/config-editor/components/containers/navbar.vue";
-import Sidebar from "@/components/config-editor/components/containers/sidebar.vue";
-import InitialConfigSection from "@/components/config-editor/components/sections/initial-config-section.vue";
-import RandomizeConfigSection from "@/components/config-editor/components/sections/randomize-config-section.vue";
-import TypesConfigSection from '@/components/config-editor/components/sections/types-config-section.vue';
-import ViewModeSection from "@/components/config-editor/components/sections/view-mode-section.vue";
-import WorldConfigSection from '@/components/config-editor/components/sections/world-config-section.vue';
-import SummarySection from "@/components/config-editor/components/sections/summary-section.vue";
-import ExchangeSection from "@/components/config-editor/components/sections/exchange-section.vue";
-import LinkSection from "@/components/config-editor/components/sections/link-section.vue";
+import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from '@/web/components/config-editor/constants';
+import Navbar from "@/web/components/config-editor/components/containers/navbar.vue";
+import Sidebar from "@/web/components/config-editor/components/containers/sidebar.vue";
+import InitialConfigSection from "@/web/components/config-editor/components/sections/initial-config-section.vue";
+import RandomizeConfigSection from "@/web/components/config-editor/components/sections/randomize-config-section.vue";
+import TypesConfigSection from '@/web/components/config-editor/components/sections/types-config-section.vue';
+import ViewModeSection from "@/web/components/config-editor/components/sections/view-mode-section.vue";
+import WorldConfigSection from '@/web/components/config-editor/components/sections/world-config-section.vue';
+import SummarySection from "@/web/components/config-editor/components/sections/summary-section.vue";
+import ExchangeSection from "@/web/components/config-editor/components/sections/exchange-section.vue";
+import LinkSection from "@/web/components/config-editor/components/sections/link-section.vue";
 
 const leftBarVisible = useSwitch(false);
 const activeAccordionItem = ref('collapse-world');

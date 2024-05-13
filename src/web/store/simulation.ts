@@ -4,7 +4,7 @@ import type { SimulationInterface } from "@/lib/types/simulation";
 import type { PhysicModelInterface } from '@/lib/types/interaction';
 import type { ViewMode } from "@/lib/types/config";
 import { create2dBaseInitialConfig, create3dBaseInitialConfig } from "@/lib/config/initial";
-import { useConfigStore } from "@/store/config";
+import { useConfigStore } from "@/web/store/config";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
 import { create2dDrawer } from "@/lib/drawer/2d";

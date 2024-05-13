@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { ref } from "vue";
-import { useConfigStore } from "@/store/config";
+import { useConfigStore } from "@/web/store/config";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const configStore = useConfigStore();

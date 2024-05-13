@@ -7,7 +7,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 library.add(fas, far);
 
 import App from "./app.vue";
-import "./assets/main.css";
+import "@/web/assets/main.css";
 
 const app = createApp(App);
 

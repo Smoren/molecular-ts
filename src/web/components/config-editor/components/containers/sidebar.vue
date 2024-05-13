@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type { SwitchInterface } from "@/hooks/use-switch";
+import type { SwitchInterface } from "@/web/hooks/use-switch";
 import { computed } from "vue";
 
 const props = defineProps<{

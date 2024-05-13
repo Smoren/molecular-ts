@@ -1,5 +1,5 @@
 import { ref, type Ref } from 'vue';
-import { useSwitch } from '@/hooks/use-switch';
+import { useSwitch } from '@/web/hooks/use-switch';
 
 export const useRightBar = () => {
   const rightBarVisible = useSwitch(false);

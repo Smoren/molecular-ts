@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import { getColorString } from '@/components/config-editor/utils';
+import { getColorString } from '@/web/components/config-editor/utils';
 import { onMounted, watch } from "vue";
-import Tooltip from "@/components/config-editor/components/base/tooltip.vue";
+import Tooltip from "@/web/components/config-editor/components/base/tooltip.vue";
 
 const symmetric = defineModel<boolean | undefined>('symmetric');
 

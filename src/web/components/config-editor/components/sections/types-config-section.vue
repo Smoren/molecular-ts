@@ -1,16 +1,16 @@
 <script setup lang="ts">
 
 import { computed, inject, watch } from "vue";
-import { useConfigStore } from '@/store/config';
-import { useSimulationStore } from "@/store/simulation";
+import { useConfigStore } from '@/web/store/config';
+import { useSimulationStore } from "@/web/store/simulation";
 import { createBaseTypesConfig } from "@/lib/config/types";
-import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/components/config-editor/constants";
-import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
-import ConfigMatrix from '@/components/config-editor/components/inputs/config-matrix.vue';
-import ConfigList from '@/components/config-editor/components/inputs/config-list.vue';
-import InputHeader from "@/components/config-editor/components/base/input-header.vue";
-import Flag from "@/components/config-editor/components/inputs/flag.vue";
-import ConfigTensor from "@/components/config-editor/components/inputs/config-tensor.vue";
+import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/web/components/config-editor/constants";
+import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
+import ConfigMatrix from '@/web/components/config-editor/components/inputs/config-matrix.vue';
+import ConfigList from '@/web/components/config-editor/components/inputs/config-list.vue';
+import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
+import Flag from "@/web/components/config-editor/components/inputs/flag.vue";
+import ConfigTensor from "@/web/components/config-editor/components/inputs/config-tensor.vue";
 import { distributeLinkFactorDistance } from '@/lib/utils/functions';
 
 const configStore = useConfigStore();

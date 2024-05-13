@@ -2,8 +2,8 @@
 
 import { ref, type Ref, watch } from "vue";
 import type { ViewMode } from "@/lib/types/config";
-import { useConfigStore } from "@/store/config";
-import { useSimulationStore } from "@/store/simulation";
+import { useConfigStore } from "@/web/store/config";
+import { useSimulationStore } from "@/web/store/simulation";
 
 const configStore = useConfigStore();
 const simulation = useSimulationStore();

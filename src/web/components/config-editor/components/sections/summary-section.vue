@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import ConfigSection from '@/components/config-editor/components/containers/config-section.vue';
-import { useSimulationStore } from '@/store/simulation';
-import type { TimeSeriesConfig } from "@/components/config-editor/components/widgets/chart.vue";
-import Chart from "@/components/config-editor/components/widgets/chart.vue";
+import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
+import { useSimulationStore } from '@/web/store/simulation';
+import type { TimeSeriesConfig } from "@/web/components/config-editor/components/widgets/chart.vue";
+import Chart from "@/web/components/config-editor/components/widgets/chart.vue";
 
 const { getCurrentSimulation } = useSimulationStore();
 
