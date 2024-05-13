@@ -10,8 +10,6 @@ export const simulationTask = async (
   console.log(`-> task ${id} started`);
   const ts = Date.now();
 
-  console.log('initial', worldConfig);
-
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');
@@ -50,9 +48,22 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
 
   const worldConfig = createBaseWorldConfig();
   const typesConfig = createBaseTypesConfig();
-  const stepsCount = 300;
 
-  worldConfig.CONFIG_2D.INITIAL.ATOMS_COUNT = 1000;
+  const stepsCount = 300;
+  const atomsCount = 500;
+  const minPosition = [0, 0];
+  const maxPosition = [1000, 1000];
+
+  worldConfig.CONFIG_2D.INITIAL = {
+    ATOMS_COUNT: atomsCount,
+    MIN_POSITION: minPosition,
+    MAX_POSITION: maxPosition,
+  };
+
+  worldConfig.CONFIG_2D.BOUNDS = {
+    MIN_POSITION: minPosition,
+    MAX_POSITION: maxPosition,
+  };
 
   const inputs = [
     [1, worldConfig, typesConfig, stepsCount],
