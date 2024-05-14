@@ -97,3 +97,17 @@ export type TotalSummary = {
   WORLD: WorldSummary<number[]>;
   COMPOUNDS: CompoundsAnalyzerSummary;
 }
+
+export type TotalSummaryWeights = {
+  ATOMS_MEAN_SPEED: number;
+  ATOMS_TYPE_MEAN_SPEED: number;
+  ATOMS_TYPE_LINKS_MEAN_COUNT: number;
+  LINKS_CREATED_MEAN: number;
+  LINKS_DELETED_MEAN: number;
+  LINKS_TYPE_CREATED_MEAN: number;
+  LINKS_TYPE_DELETED_MEAN: number;
+  COMPOUNDS_PER_ATOM: number;
+  COMPOUNDS_PER_ATOM_BY_TYPES: number;
+  COMPOUND_LENGTH_SUMMARY: CompoundsSummary;
+  COMPOUND_LENGTH_BY_TYPES_SUMMARY: CompoundsSummary;
+}

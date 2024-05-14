@@ -14,6 +14,13 @@ import {
   concatTensors,
   setMatrixMainDiagonal,
   setTensorMainDiagonal,
+  makeMatrixSymmetric,
+  makeTensorSymmetric,
+  sortedNumbers,
+  weighArray,
+  weighMatrix,
+  normalizeArray,
+  normalizeMatrixColumns,
 } from './operations';
 import {
   createVector,
@@ -48,6 +55,13 @@ export {
   concatTensors,
   setMatrixMainDiagonal,
   setTensorMainDiagonal,
+  makeMatrixSymmetric,
+  makeTensorSymmetric,
+  sortedNumbers,
+  weighArray,
+  weighMatrix,
+  normalizeArray,
+  normalizeMatrixColumns,
   round,
   roundWithStep,
 };

@@ -3,6 +3,9 @@ import { Pool } from "multiprocess-pool";
 import type { TypesConfig, WorldConfig } from '@/lib/types/config';
 import { createBaseWorldConfig } from '@/lib/config/world';
 import { createBaseTypesConfig } from '@/lib/config/types';
+import type { TotalSummary } from "@/lib/types/analysis";
+import { weighTotalSummary } from "@/lib/analysis/helpers";
+import { normalizeMatrixColumns } from "@/lib/math";
 
 export const simulationTask = async (
   [id, worldConfig, typesConfig, steps]: [number, WorldConfig, TypesConfig, number],
@@ -34,12 +37,14 @@ export const simulationTask = async (
 
   const compounds = new CompoundsAnalyzer(sim.exportCompounds(), sim.atoms);
 
+  const totalSummary: TotalSummary = {
+    WORLD: sim.summary,
+    COMPOUNDS: compounds.summary,
+  };
+
   console.log(`<- task ${id} finished in ${Date.now() - ts} ms`);
 
-  return {
-    world: sim.summary,
-    compounds: compounds.summary,
-  };
+  return totalSummary;
 }
 
 export const actionTestSimulationParallel = async (...args: string[]) => {
@@ -74,10 +79,12 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
   console.log('CPUs:', cpuCount);
 
   const pool = new Pool(cpuCount);
-  const result = await pool.map(inputs, simulationTask);
-  console.log(result);
-
+  const summaries: TotalSummary[] = await pool.map(inputs, simulationTask);
   pool.close();
+
+  const rawMatrix = summaries.map((summary) => weighTotalSummary(summary));
+  const normalizedMatrix = normalizeMatrixColumns(rawMatrix);
+  console.log(normalizedMatrix);
 
   console.log(`[FINISH] in ${Date.now() - ts} ms`);
 }

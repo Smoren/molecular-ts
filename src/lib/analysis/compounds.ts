@@ -56,10 +56,12 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
   private readonly compoundsTypesMap: Array<Compound[]>;
   private readonly atoms: Array<AtomInterface>;
   private readonly atomsTypesMap: Array<AtomInterface[]>;
+  private readonly typesCount: number;
 
   constructor(compounds: Array<Compound>, atoms: Array<AtomInterface>) {
     this.compounds = compounds;
     this.atoms = atoms;
+    this.typesCount = Math.max(...atoms.map((atom) => atom.type)) + 1;
     this.compoundsTypesMap = this.groupCompoundsByTypes();
     this.atomsTypesMap = this.groupAtomsByTypes();
   }
@@ -155,8 +157,7 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
 
   private convertMapToArray<T>(map: Record<number, T[]>): Array<T[]> {
     const types = Object.keys(map).map((key) => Number(key));
-    const maxType = Math.max(...types);
-    const result: Array<T[]> = Array.from({ length: maxType+1 }, () => []);
+    const result: Array<T[]> = Array.from({ length: this.typesCount }, () => []);
 
     for (const type of types) {
       result[type] = map[type];
