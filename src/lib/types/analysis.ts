@@ -10,6 +10,14 @@ export type Summary<T> = {
   ATOMS_TYPE_LINKS_COUNT: T;
   ATOMS_TYPE_LINKS_MEAN_COUNT: T;
   LINKS_COUNT: T;
+  LINKS_CREATED: T;
+  LINKS_DELETED: T;
+  LINKS_CREATED_MEAN: T;
+  LINKS_DELETED_MEAN: T;
+  LINKS_TYPE_CREATED: T;
+  LINKS_TYPE_DELETED: T;
+  LINKS_TYPE_CREATED_MEAN: T;
+  LINKS_TYPE_DELETED_MEAN: T;
   STEP_DURATION: T;
   STEP_FREQUENCY: T,
 }
@@ -32,6 +40,14 @@ export type QueueSummary<T> = {
   ATOMS_TYPE_LINKS_COUNT: QueueInterface<T>;
   ATOMS_TYPE_LINKS_MEAN_COUNT: QueueInterface<T>
   LINKS_COUNT: QueueInterface<T>;
+  LINKS_CREATED: QueueInterface<T>;
+  LINKS_DELETED: QueueInterface<T>;
+  LINKS_CREATED_MEAN: QueueInterface<T>;
+  LINKS_DELETED_MEAN: QueueInterface<T>;
+  LINKS_TYPE_CREATED: QueueInterface<T>;
+  LINKS_TYPE_DELETED: QueueInterface<T>;
+  LINKS_TYPE_CREATED_MEAN: QueueInterface<T>;
+  LINKS_TYPE_DELETED_MEAN: QueueInterface<T>;
   STEP_DURATION: QueueInterface<T>;
   STEP_FREQUENCY: QueueInterface<T>,
 }

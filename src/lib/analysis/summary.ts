@@ -18,6 +18,14 @@ const createEmptyStepSummary = (typesCount: number): Summary<number[]> => ({
   ATOMS_TYPE_MEAN_SPEED: Array(typesCount).fill(0),
   ATOMS_TYPE_LINKS_COUNT: Array(typesCount).fill(0),
   ATOMS_TYPE_LINKS_MEAN_COUNT: Array(typesCount).fill(0),
+  LINKS_CREATED: [0],
+  LINKS_DELETED: [0],
+  LINKS_CREATED_MEAN: [0],
+  LINKS_DELETED_MEAN: [0],
+  LINKS_TYPE_CREATED: Array(typesCount).fill(0),
+  LINKS_TYPE_DELETED: Array(typesCount).fill(0),
+  LINKS_TYPE_CREATED_MEAN: Array(typesCount).fill(0),
+  LINKS_TYPE_DELETED_MEAN: Array(typesCount).fill(0),
   LINKS_COUNT: [0],
   STEP_DURATION: [0],
   STEP_FREQUENCY: [0],
@@ -85,6 +93,14 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
     ATOMS_TYPE_LINKS_COUNT: 1,
     ATOMS_TYPE_LINKS_MEAN_COUNT: 1,
     LINKS_COUNT: 0,
+    LINKS_CREATED: 0,
+    LINKS_DELETED: 0,
+    LINKS_CREATED_MEAN: 2,
+    LINKS_DELETED_MEAN: 2,
+    LINKS_TYPE_CREATED: 0,
+    LINKS_TYPE_DELETED: 0,
+    LINKS_TYPE_CREATED_MEAN: 2,
+    LINKS_TYPE_DELETED_MEAN: 2,
     STEP_DURATION: 2,
     STEP_FREQUENCY: 1,
   }
@@ -98,6 +114,14 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
       ATOMS_TYPE_LINKS_COUNT: new Queue(maxSize),
       ATOMS_TYPE_LINKS_MEAN_COUNT: new Queue(maxSize),
       LINKS_COUNT: new Queue(maxSize),
+      LINKS_CREATED: new Queue(maxSize),
+      LINKS_DELETED: new Queue(maxSize),
+      LINKS_CREATED_MEAN: new Queue(maxSize),
+      LINKS_DELETED_MEAN: new Queue(maxSize),
+      LINKS_TYPE_CREATED: new Queue(maxSize),
+      LINKS_TYPE_DELETED: new Queue(maxSize),
+      LINKS_TYPE_CREATED_MEAN: new Queue(maxSize),
+      LINKS_TYPE_DELETED_MEAN: new Queue(maxSize),
       STEP_DURATION: new Queue(maxSize),
       STEP_FREQUENCY: new Queue(maxSize),
     }
@@ -159,11 +183,17 @@ export class SummaryManager implements SummaryManagerInterface {
   }
 
   noticeLinkCreated(link: LinkInterface): void {
-    // TODO: implement
+    this.stepManager.buffer.LINKS_CREATED[0]++;
+
+    this.stepManager.buffer.LINKS_TYPE_CREATED[link.lhs.type]++;
+    this.stepManager.buffer.LINKS_TYPE_CREATED[link.rhs.type]++;
   }
 
   noticeLinkDeleted(link: LinkInterface): void {
-    // TODO: implement
+    this.stepManager.buffer.LINKS_DELETED[0]++;
+
+    this.stepManager.buffer.LINKS_TYPE_DELETED[link.lhs.type]++;
+    this.stepManager.buffer.LINKS_TYPE_DELETED[link.rhs.type]++;
   }
 
   startStep(typesConfig: TypesConfig): void {
@@ -175,6 +205,11 @@ export class SummaryManager implements SummaryManagerInterface {
     this.finishArrayMean('ATOMS_TYPE_MEAN_SPEED', this.stepManager.buffer.ATOMS_TYPE_COUNT);
     this.stepManager.buffer.ATOMS_TYPE_LINKS_MEAN_COUNT = this.stepManager.buffer.ATOMS_TYPE_LINKS_COUNT;
     this.finishArrayMean('ATOMS_TYPE_LINKS_MEAN_COUNT', this.stepManager.buffer.ATOMS_TYPE_COUNT);
+
+    this.finishMean('LINKS_CREATED_MEAN', this.stepManager.buffer.LINKS_CREATED);
+    this.finishMean('LINKS_DELETED_MEAN', this.stepManager.buffer.LINKS_DELETED);
+    this.finishArrayMean('LINKS_TYPE_CREATED_MEAN', this.stepManager.buffer.LINKS_TYPE_CREATED);
+    this.finishArrayMean('LINKS_TYPE_DELETED_MEAN', this.stepManager.buffer.LINKS_TYPE_DELETED);
 
     this.updateFpsMetrics();
     this.stepManager.save();
