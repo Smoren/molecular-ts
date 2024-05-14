@@ -257,9 +257,7 @@ const timeSeriesConfigMean: ChartConfig[] = [
       Summary
     </template>
     <template #body>
-      <div>
-        <flag title="Mean" v-model="showMean" />
-      </div>
+      <br />
       <div v-for="config in timeSeriesConfigBase">
         <chart
           :id="config.id"
@@ -271,7 +269,10 @@ const timeSeriesConfigMean: ChartConfig[] = [
           :config="config.config"
         />
       </div>
-      <div v-for="config in timeSeriesConfigCount" v-if="!showMean">
+      <div>
+        <flag title="Mean Mode" v-model="showMean" />
+      </div>
+      <div v-for="config in timeSeriesConfigCount" v-show="!showMean">
         <chart
           :id="config.id"
           :name="config.name"
@@ -282,7 +283,7 @@ const timeSeriesConfigMean: ChartConfig[] = [
           :config="config.config"
         />
       </div>
-      <div v-for="config in timeSeriesConfigMean" v-else>
+      <div v-for="config in timeSeriesConfigMean" v-show="showMean">
         <chart
           :id="config.id"
           :name="config.name"
