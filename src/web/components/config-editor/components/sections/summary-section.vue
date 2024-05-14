@@ -1,11 +1,15 @@
 <script setup lang="ts">
 
+import { computed, type ComputedRef, ref, type Ref } from 'vue';
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
 import { useSimulationStore } from '@/web/store/simulation';
 import type { TimeSeriesConfig } from "@/web/components/config-editor/components/widgets/chart.vue";
 import Chart from "@/web/components/config-editor/components/widgets/chart.vue";
+import Flag from '@/web/components/config-editor/components/inputs/flag.vue';
 
 const { getCurrentSimulation } = useSimulationStore();
+
+const showMean: Ref<boolean> = ref(false);
 
 type ChartConfig = {
   id: string;
@@ -225,17 +229,22 @@ const timeSeriesLinksTypeDeletedMeanConfig = {
   }),
 }
 
-const timeSeriesConfig: ChartConfig[] = [
+const timeSeriesConfigBase: ChartConfig[] = [
   timeSeriesFpsConfig,
-  timeSeriesLinksCountConfig,
   timeSeriesAtomsMeanSpeedConfig,
-  timeSeriesAtomsTypeMeanSpeedConfig,
+  timeSeriesLinksCountConfig,
+];
+
+const timeSeriesConfigCount: ChartConfig[] = [
   timeSeriesAtomsTypeLinksCountConfig,
-  timeSeriesAtomsTypeLinksMeanCountConfig,
   timeSeriesLinksCreatedDeletedConfig,
-  timeSeriesLinksCreatedDeletedMeanConfig,
   timeSeriesLinksTypeCreatedConfig,
   timeSeriesLinksTypeDeletedConfig,
+];
+
+const timeSeriesConfigMean: ChartConfig[] = [
+  timeSeriesAtomsTypeLinksMeanCountConfig,
+  timeSeriesLinksCreatedDeletedMeanConfig,
   timeSeriesLinksTypeCreatedMeanConfig,
   timeSeriesLinksTypeDeletedMeanConfig,
 ];
@@ -248,8 +257,32 @@ const timeSeriesConfig: ChartConfig[] = [
       Summary
     </template>
     <template #body>
-      <br />
-      <div v-for="config in timeSeriesConfig">
+      <div>
+        <flag title="Mean" v-model="showMean" />
+      </div>
+      <div v-for="config in timeSeriesConfigBase">
+        <chart
+          :id="config.id"
+          :name="config.name"
+          :data="config.data"
+          :period="config.period ?? 100"
+          :width="config.width ?? 467"
+          :height="config.height ?? 100"
+          :config="config.config"
+        />
+      </div>
+      <div v-for="config in timeSeriesConfigCount" v-if="!showMean">
+        <chart
+          :id="config.id"
+          :name="config.name"
+          :data="config.data"
+          :period="config.period ?? 100"
+          :width="config.width ?? 467"
+          :height="config.height ?? 100"
+          :config="config.config"
+        />
+      </div>
+      <div v-for="config in timeSeriesConfigMean" v-else>
         <chart
           :id="config.id"
           :name="config.name"
