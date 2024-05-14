@@ -49,6 +49,8 @@ export interface SummaryManagerInterface {
   finishStep(): void;
   noticeAtom(atom: AtomInterface, worldConfig: WorldConfig): void;
   noticeLink(link: LinkInterface, worldConfig: WorldConfig): void;
+  noticeLinkCreated(link: LinkInterface, worldConfig: WorldConfig): void;
+  noticeLinkDeleted(link: LinkInterface, worldConfig: WorldConfig): void;
 }
 
 export type Compound = Set<AtomInterface>;

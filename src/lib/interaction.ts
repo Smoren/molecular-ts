@@ -6,6 +6,7 @@ import type { InteractionManagerInterface } from './types/interaction';
 import type { PhysicModelInterface } from './types/interaction';
 import { Vector } from './math';
 import { getViewModeConfig } from './utils/functions';
+import type { SummaryManagerInterface } from '@/lib/types/analysis';
 
 export class InteractionManager implements InteractionManagerInterface {
   private readonly VIEW_MODE: ViewMode;
@@ -13,6 +14,7 @@ export class InteractionManager implements InteractionManagerInterface {
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly linkManager: LinkManagerInterface;
   private readonly ruleHelper: RulesHelperInterface;
+  private readonly summaryManager: SummaryManagerInterface;
   private physicModel: PhysicModelInterface;
   private time: number;
   private bufVector: VectorInterface = new Vector([0, 0]);
@@ -24,6 +26,7 @@ export class InteractionManager implements InteractionManagerInterface {
     linkManager: LinkManagerInterface,
     physicModel: PhysicModelInterface,
     ruleHelper: RulesHelperInterface,
+    summaryManager: SummaryManagerInterface
   ) {
     this.VIEW_MODE = viewMode;
     this.WORLD_CONFIG = worldConfig;
@@ -31,6 +34,7 @@ export class InteractionManager implements InteractionManagerInterface {
     this.linkManager = linkManager;
     this.physicModel = physicModel;
     this.ruleHelper = ruleHelper;
+    this.summaryManager = summaryManager;
     this.time = 0;
   }
 
@@ -61,6 +65,7 @@ export class InteractionManager implements InteractionManagerInterface {
       || this.ruleHelper.isLinkRedundant(link.lhs, link.rhs)
     ) {
       this.linkManager.delete(link);
+      this.summaryManager.noticeLinkDeleted(link, this.WORLD_CONFIG);
     }
 
     if (dist2 > this.physicModel.geometry.getAtomsRadiusSum(link.lhs, link.rhs)) {
@@ -106,7 +111,8 @@ export class InteractionManager implements InteractionManagerInterface {
       this.ruleHelper.canLink(lhs, rhs) &&
       dist2 <= (this.WORLD_CONFIG.MAX_LINK_RADIUS * this.getDistanceFactor(lhs, rhs) * this.getDistanceFactor(rhs, lhs)) ** 2
     ) {
-      this.linkManager.create(lhs, rhs);
+      const link = this.linkManager.create(lhs, rhs);
+      this.summaryManager.noticeLinkCreated(link, this.WORLD_CONFIG);
     }
   }
 

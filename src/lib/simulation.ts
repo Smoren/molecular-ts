@@ -29,6 +29,7 @@ export class Simulation implements SimulationInterface {
     this._atoms = this.config.atomsFactory(this.config.worldConfig, this.config.typesConfig);
     this._links = new LinkManager();
     this.drawer = this.config.drawer;
+    this.summaryManager = new SummaryManager(this.config.typesConfig.FREQUENCIES.length);
     this.interactionManager = new InteractionManager(
       this.config.viewMode,
       this.config.worldConfig,
@@ -36,9 +37,9 @@ export class Simulation implements SimulationInterface {
       this._links,
       this.config.physicModel,
       new RulesHelper(this.config.worldConfig, this.config.typesConfig),
+      this.summaryManager,
     );
     this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
-    this.summaryManager = new SummaryManager(this.config.typesConfig.FREQUENCIES.length);
     this.runningState = new RunningState();
 
     this.drawer.addClickListener((coords, extraKey) => {

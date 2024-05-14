@@ -158,6 +158,14 @@ export class SummaryManager implements SummaryManagerInterface {
     this.stepManager.buffer.ATOMS_TYPE_LINKS_COUNT[link.rhs.type]++;
   }
 
+  noticeLinkCreated(link: LinkInterface): void {
+    // TODO: implement
+  }
+
+  noticeLinkDeleted(link: LinkInterface): void {
+    // TODO: implement
+  }
+
   startStep(typesConfig: TypesConfig): void {
     this.stepManager.init(typesConfig.FREQUENCIES.length);
   }
