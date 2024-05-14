@@ -111,6 +111,120 @@ const timeSeriesAtomsTypeLinksMeanCountConfig = {
   }),
 }
 
+const timeSeriesLinksCreatedDeletedConfig = {
+  id: 'links-created-deleted',
+  name: 'New links / Deleted links',
+  height: 200,
+  data: () => [getCurrentSimulation().summary['LINKS_CREATED'][0], getCurrentSimulation().summary['LINKS_DELETED'][0]],
+  config: [
+    {
+      name: 'New links',
+      options: {
+        strokeStyle: 'rgb(0, 255, 0)',
+        lineWidth: 3,
+      },
+    },
+    {
+      name: 'Deleted links',
+      options: {
+        strokeStyle: 'rgb(255, 0, 0)',
+        lineWidth: 3,
+      },
+    },
+  ],
+}
+
+const timeSeriesLinksCreatedDeletedMeanConfig = {
+  id: 'links-created-deleted-mean',
+  name: 'New links / Deleted links Mean',
+  height: 200,
+  data: () => [getCurrentSimulation().summary['LINKS_CREATED_MEAN'][0], getCurrentSimulation().summary['LINKS_DELETED_MEAN'][0]],
+  config: [
+    {
+      name: 'New links',
+      options: {
+        strokeStyle: 'rgb(0, 255, 0)',
+        lineWidth: 3,
+      },
+    },
+    {
+      name: 'Deleted links',
+      options: {
+        strokeStyle: 'rgb(255, 0, 0)',
+        lineWidth: 3,
+      },
+    },
+  ],
+}
+
+const timeSeriesLinksTypeCreatedConfig = {
+  id: 'links-types-created',
+  name: 'Links Types Created',
+  height: 200,
+  data: () => getCurrentSimulation().summary['LINKS_TYPE_CREATED'],
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
+    return {
+      name: 'Links Types Created',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+    };
+  }),
+}
+
+const timeSeriesLinksTypeDeletedConfig = {
+  id: 'links-types-deleted',
+  name: 'Links Types Deleted',
+  height: 200,
+  data: () => getCurrentSimulation().summary['LINKS_TYPE_DELETED'],
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
+    return {
+      name: 'Links Types Deleted',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+    };
+  }),
+}
+
+const timeSeriesLinksTypeCreatedMeanConfig = {
+  id: 'links-types-created-mean',
+  name: 'Links Types Created Mean',
+  height: 200,
+  data: () => getCurrentSimulation().summary['LINKS_TYPE_CREATED_MEAN'],
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
+    return {
+      name: 'Links Types Created Mean',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+    };
+  }),
+}
+
+const timeSeriesLinksTypeDeletedMeanConfig = {
+  id: 'links-types-deleted-mean',
+  name: 'Links Types Deleted Mean',
+  height: 200,
+  data: () => getCurrentSimulation().summary['LINKS_TYPE_DELETED_MEAN'],
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
+    return {
+      name: 'Links Types Deleted Mean',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+    };
+  }),
+}
+
 const timeSeriesConfig: ChartConfig[] = [
   timeSeriesFpsConfig,
   timeSeriesLinksCountConfig,
@@ -118,6 +232,12 @@ const timeSeriesConfig: ChartConfig[] = [
   timeSeriesAtomsTypeMeanSpeedConfig,
   timeSeriesAtomsTypeLinksCountConfig,
   timeSeriesAtomsTypeLinksMeanCountConfig,
+  timeSeriesLinksCreatedDeletedConfig,
+  timeSeriesLinksCreatedDeletedMeanConfig,
+  timeSeriesLinksTypeCreatedConfig,
+  timeSeriesLinksTypeDeletedConfig,
+  timeSeriesLinksTypeCreatedMeanConfig,
+  timeSeriesLinksTypeDeletedMeanConfig,
 ];
 
 </script>

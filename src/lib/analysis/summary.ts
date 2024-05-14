@@ -93,14 +93,14 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
     ATOMS_TYPE_LINKS_COUNT: 1,
     ATOMS_TYPE_LINKS_MEAN_COUNT: 1,
     LINKS_COUNT: 0,
-    LINKS_CREATED: 0,
-    LINKS_DELETED: 0,
-    LINKS_CREATED_MEAN: 2,
-    LINKS_DELETED_MEAN: 2,
-    LINKS_TYPE_CREATED: 0,
-    LINKS_TYPE_DELETED: 0,
-    LINKS_TYPE_CREATED_MEAN: 2,
-    LINKS_TYPE_DELETED_MEAN: 2,
+    LINKS_CREATED: 4,
+    LINKS_DELETED: 4,
+    LINKS_CREATED_MEAN: 4,
+    LINKS_DELETED_MEAN: 4,
+    LINKS_TYPE_CREATED: 4,
+    LINKS_TYPE_DELETED: 4,
+    LINKS_TYPE_CREATED_MEAN: 4,
+    LINKS_TYPE_DELETED_MEAN: 4,
     STEP_DURATION: 2,
     STEP_FREQUENCY: 1,
   }
@@ -203,13 +203,19 @@ export class SummaryManager implements SummaryManagerInterface {
   finishStep(): void {
     this.finishMean('ATOMS_MEAN_SPEED', this.stepManager.buffer.ATOMS_COUNT);
     this.finishArrayMean('ATOMS_TYPE_MEAN_SPEED', this.stepManager.buffer.ATOMS_TYPE_COUNT);
+
     this.stepManager.buffer.ATOMS_TYPE_LINKS_MEAN_COUNT = this.stepManager.buffer.ATOMS_TYPE_LINKS_COUNT;
     this.finishArrayMean('ATOMS_TYPE_LINKS_MEAN_COUNT', this.stepManager.buffer.ATOMS_TYPE_COUNT);
 
-    this.finishMean('LINKS_CREATED_MEAN', this.stepManager.buffer.LINKS_CREATED);
-    this.finishMean('LINKS_DELETED_MEAN', this.stepManager.buffer.LINKS_DELETED);
-    this.finishArrayMean('LINKS_TYPE_CREATED_MEAN', this.stepManager.buffer.LINKS_TYPE_CREATED);
-    this.finishArrayMean('LINKS_TYPE_DELETED_MEAN', this.stepManager.buffer.LINKS_TYPE_DELETED);
+    this.stepManager.buffer.LINKS_CREATED_MEAN = [...this.stepManager.buffer.LINKS_CREATED];
+    this.stepManager.buffer.LINKS_DELETED_MEAN = [...this.stepManager.buffer.LINKS_DELETED];
+    this.finishMean('LINKS_CREATED_MEAN', this.stepManager.buffer.ATOMS_COUNT);
+    this.finishMean('LINKS_DELETED_MEAN', this.stepManager.buffer.ATOMS_COUNT);
+
+    this.stepManager.buffer.LINKS_TYPE_CREATED_MEAN = [...this.stepManager.buffer.LINKS_TYPE_CREATED];
+    this.stepManager.buffer.LINKS_TYPE_DELETED_MEAN = [...this.stepManager.buffer.LINKS_TYPE_DELETED];
+    this.finishArrayMean('LINKS_TYPE_CREATED_MEAN', this.stepManager.buffer.ATOMS_TYPE_COUNT);
+    this.finishArrayMean('LINKS_TYPE_DELETED_MEAN', this.stepManager.buffer.ATOMS_TYPE_COUNT);
 
     this.updateFpsMetrics();
     this.stepManager.save();
