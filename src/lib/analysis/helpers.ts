@@ -1,5 +1,5 @@
-import type { TotalSummary } from '@/lib/types/analysis';
-import { arrayUnaryOperation } from "@/lib/math";
+import type { TotalSummary } from '../types/analysis';
+import { arrayUnaryOperation } from '../math';
 
 function prepareArray<T extends number>(input: T[], sort: boolean): T[] {
   if (!sort) {
