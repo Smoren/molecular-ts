@@ -2,7 +2,7 @@ import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type { QueueInterface } from '../types/helpers';
 import type { TypesConfig, WorldConfig } from '../types/config';
 
-export type Summary<T> = {
+export type WorldSummary<T> = {
   ATOMS_COUNT: T;
   ATOMS_MEAN_SPEED: T;
   ATOMS_TYPE_COUNT: T;
@@ -22,11 +22,11 @@ export type Summary<T> = {
   STEP_FREQUENCY: T,
 }
 
-export type SummaryAttr = keyof Summary<unknown>;
+export type SummaryAttr = keyof WorldSummary<unknown>;
 
 export interface StepSummaryManagerInterface<T> {
-  readonly summary: Summary<T>;
-  readonly buffer: Summary<T>;
+  readonly summary: WorldSummary<T>;
+  readonly buffer: WorldSummary<T>;
   readonly typesCount: number;
   init(typesCount: number): void;
   save(): void;
@@ -54,12 +54,12 @@ export type QueueSummary<T> = {
 
 export interface QueueSummaryManagerInterface<T> {
   readonly summary: QueueSummary<T>;
-  push(step: Summary<T>): void;
-  mean(): Summary<T>;
+  push(step: WorldSummary<T>): void;
+  mean(): WorldSummary<T>;
 }
 
 export interface SummaryManagerInterface {
-  readonly summary: Summary<number[]>;
+  readonly summary: WorldSummary<number[]>;
   readonly step: number;
   startStep(typesConfig: TypesConfig): void;
   finishStep(): void;
@@ -87,8 +87,13 @@ export interface CompoundsCollectorInterface {
 }
 
 export type CompoundsAnalyzerSummary = {
-  length: number;
-  lengthByTypes: number[];
+  size: number;
+  sizeByTypes: number[];
   itemLengthSummary: CompoundsSummary;
   itemLengthByTypesSummary: CompoundsSummary[];
+}
+
+export type TotalSummary = {
+  WORLD: WorldSummary<number[]>;
+  COMPOUNDS: CompoundsAnalyzerSummary;
 }

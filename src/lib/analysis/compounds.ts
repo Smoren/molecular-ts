@@ -64,11 +64,11 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     this.atomsTypesMap = this.groupAtomsByTypes();
   }
 
-  get length(): number {
+  get size(): number {
     return this.compounds.length;
   }
 
-  get lengthByTypes(): number[] {
+  get sizeByTypes(): number[] {
     return this.compoundsTypesMap.map((compounds) => compounds.length);
   }
 
@@ -85,8 +85,8 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
 
   get summary(): CompoundsAnalyzerSummary {
     return {
-      length: this.length,
-      lengthByTypes: this.lengthByTypes,
+      size: this.size,
+      sizeByTypes: this.sizeByTypes,
       itemLengthSummary: this.itemLengthSummary,
       itemLengthByTypesSummary: this.itemLengthByTypesSummary,
     }

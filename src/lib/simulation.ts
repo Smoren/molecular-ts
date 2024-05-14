@@ -4,7 +4,7 @@ import type { DrawerInterface } from './types/drawer';
 import type { LinkManagerInterface, RunningStateInterface } from './types/helpers';
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
 import type { ClusterManagerInterface } from './types/cluster';
-import type { Summary, SummaryManagerInterface } from './types/analysis';
+import type { WorldSummary, SummaryManagerInterface } from './types/analysis';
 import { ClusterManager } from './cluster';
 import { createAtom } from './utils/functions';
 import { LinkManager, RulesHelper, RunningState } from './utils/structs';
@@ -59,7 +59,7 @@ export class Simulation implements SimulationInterface {
     return this._links;
   }
 
-  get summary(): Summary<number[]> {
+  get summary(): WorldSummary<number[]> {
     return this.summaryManager.summary;
   }
 

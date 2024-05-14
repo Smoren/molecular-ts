@@ -1,7 +1,7 @@
 import type {
   QueueSummary,
   QueueSummaryManagerInterface,
-  Summary,
+  WorldSummary,
   StepSummaryManagerInterface,
   SummaryAttr,
   SummaryManagerInterface,
@@ -11,7 +11,7 @@ import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type { TypesConfig, WorldConfig } from '../types/config';
 import { arrayBinaryOperation, arrayUnaryOperation, round } from '../math';
 
-const createEmptyStepSummary = (typesCount: number): Summary<number[]> => ({
+const createEmptyStepSummary = (typesCount: number): WorldSummary<number[]> => ({
   ATOMS_COUNT: [0],
   ATOMS_MEAN_SPEED: [0],
   ATOMS_TYPE_COUNT: Array(typesCount).fill(0),
@@ -32,10 +32,10 @@ const createEmptyStepSummary = (typesCount: number): Summary<number[]> => ({
 });
 
 export class StepSummaryManager implements StepSummaryManagerInterface<number[]> {
-  private _buffer: Summary<number[]>;
+  private _buffer: WorldSummary<number[]>;
   private _typesCount: number;
-  private _summary: Summary<number[]>;
-  private _empty: Summary<number[]>;
+  private _summary: WorldSummary<number[]>;
+  private _empty: WorldSummary<number[]>;
 
   constructor(typesCount: number) {
     this._typesCount = typesCount;
@@ -48,11 +48,11 @@ export class StepSummaryManager implements StepSummaryManagerInterface<number[]>
     return this._typesCount;
   }
 
-  get buffer(): Summary<number[]> {
+  get buffer(): WorldSummary<number[]> {
     return this._buffer;
   }
 
-  get summary(): Summary<number[]> {
+  get summary(): WorldSummary<number[]> {
     return this.copy(this._summary);
   }
 
@@ -72,7 +72,7 @@ export class StepSummaryManager implements StepSummaryManagerInterface<number[]>
     this._empty = createEmptyStepSummary(typesCount);
   }
 
-  private copy(sourceFrom: Summary<number[]>, sourceTo?: Summary<number[]>): Summary<number[]> {
+  private copy(sourceFrom: WorldSummary<number[]>, sourceTo?: WorldSummary<number[]>): WorldSummary<number[]> {
     sourceTo = sourceTo ?? createEmptyStepSummary(this._typesCount);
     for (const key in sourceFrom) {
       for (let i=0; i<sourceTo[key as SummaryAttr].length; ++i) {
@@ -85,7 +85,7 @@ export class StepSummaryManager implements StepSummaryManagerInterface<number[]>
 
 export class QueueSummaryManager implements QueueSummaryManagerInterface<number[]> {
   readonly summary: QueueSummary<number[]>;
-  private readonly roundParams: Summary<number> = {
+  private readonly roundParams: WorldSummary<number> = {
     ATOMS_COUNT: 0,
     ATOMS_MEAN_SPEED: 2,
     ATOMS_TYPE_COUNT: 0,
@@ -127,20 +127,20 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
     }
   }
 
-  push(step: Summary<number[]>): void {
+  push(step: WorldSummary<number[]>): void {
     for (const key in step) {
       this.summary[key as SummaryAttr].push(step[key as SummaryAttr]);
     }
   }
 
-  mean(): Summary<number[]> {
+  mean(): WorldSummary<number[]> {
     const r: Record<string, number[]> = {};
     for (const key in this.summary) {
       const item = this.summary[key as SummaryAttr];
       const mean = item.mean() ?? [0];
       r[key] = arrayUnaryOperation(mean, (x) => round(x, this.roundParams[key as SummaryAttr]))
     }
-    return r as Summary<number[]>;
+    return r as WorldSummary<number[]>;
   }
 }
 
@@ -157,7 +157,7 @@ export class SummaryManager implements SummaryManagerInterface {
     this._step = 0;
   }
 
-  get summary(): Summary<number[]> {
+  get summary(): WorldSummary<number[]> {
     return this.queueManager.mean();
   }
 
