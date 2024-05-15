@@ -214,8 +214,8 @@ export class SummaryManager implements SummaryManagerInterface {
 
     this.stepManager.buffer.LINKS_TYPE_CREATED_MEAN = [...this.stepManager.buffer.LINKS_TYPE_CREATED];
     this.stepManager.buffer.LINKS_TYPE_DELETED_MEAN = [...this.stepManager.buffer.LINKS_TYPE_DELETED];
-    this.finishArrayMean('LINKS_TYPE_CREATED_MEAN', this.stepManager.buffer.ATOMS_TYPE_LINKS_COUNT);
-    this.finishArrayMean('LINKS_TYPE_DELETED_MEAN', this.stepManager.buffer.ATOMS_TYPE_LINKS_COUNT);
+    this.finishArrayMean('LINKS_TYPE_CREATED_MEAN', this.stepManager.buffer.ATOMS_TYPE_COUNT);
+    this.finishArrayMean('LINKS_TYPE_DELETED_MEAN', this.stepManager.buffer.ATOMS_TYPE_COUNT);
 
     this.updateFpsMetrics();
     this.stepManager.save();
