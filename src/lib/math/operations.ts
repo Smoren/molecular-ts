@@ -1,6 +1,4 @@
 import { createEmptyMatrix, createEmptyTensor } from './factories';
-import { isEqual } from "@/lib/math/helpers";
-import { fullCopyObject } from "@/lib/utils/functions";
 
 export function arrayUnaryOperation<T>(
   input: Array<T>,
@@ -128,38 +126,4 @@ export function weighMatrix(
   rowModifier?: (row: number[]) => number[],
 ): number[][] {
   return input.map((item) => weighArray((rowModifier ?? ((row) => row))(item), weight));
-}
-
-export function normalizeArray(input: number[]): number[] {
-  const result = fullCopyObject(input);
-
-  if (result.length === 0) {
-    return result;
-  }
-
-  const min = Math.min(...result);
-  const max = Math.max(...result);
-
-  if (isEqual(min, max)) {
-    return isEqual(min, 0) ? result.map(() => 0) : result.map(() => 1);
-  }
-
-  return result.map((x) => (x - min) / (max - min));
-}
-
-export function normalizeMatrixColumns(input: number[][]): number[][] {
-  const result = fullCopyObject(input);
-
-  if (result.length === 0) {
-    return result;
-  }
-
-  for (let i = 0; i < result[0].length; i++) {
-    const columnNormalized = normalizeArray(result.map((row) => row[i]));
-    for (let j = 0; j < result.length; j++) {
-      result[j][i] = columnNormalized[j];
-    }
-  }
-
-  return result;
 }

@@ -19,9 +19,12 @@ import {
   sortedNumbers,
   weighArray,
   weighMatrix,
+} from './operations';
+import {
   normalizeArray,
   normalizeMatrixColumns,
-} from './operations';
+  normalizeMatrixColumnsUnion,
+} from './normalization';
 import {
   createVector,
   toVector,
@@ -66,6 +69,7 @@ export {
   weighMatrix,
   normalizeArray,
   normalizeMatrixColumns,
+  normalizeMatrixColumnsUnion,
   round,
   roundWithStep,
 };
