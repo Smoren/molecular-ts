@@ -30,7 +30,9 @@ describe.each([
       const collector = new CompoundsCollector();
       collector.handleLinks(links);
 
-      const analyzer = new CompoundsAnalyzer(collector.getCompounds(), atoms);
+      const atomTypesCount = (new Set(atoms.map(atom => atom.type))).size;
+
+      const analyzer = new CompoundsAnalyzer(collector.getCompounds(), atoms, atomTypesCount);
 
       const compoundsActual = collector.getCompounds();
       expectSameArraysOfSets(compoundsActual, compoundsExpected);

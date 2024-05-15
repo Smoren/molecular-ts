@@ -31,6 +31,28 @@ export function createTransparentWeights(): TotalSummaryWeights {
   };
 }
 
+export function getSummaryMatrixGroupIndexes(typesCount: number): number[][] {
+  const groups = [
+    0,
+    createFilledArray(typesCount, 1),
+    createFilledArray(typesCount, 2),
+    3,
+    4,
+    createFilledArray(typesCount, 5),
+    createFilledArray(typesCount, 6),
+    7,
+    createFilledArray(typesCount, 8),
+    [9, 10, 11, 12, 13],
+    repeatArrayValues([14, 15, 16, 17, 18], typesCount),
+  ].flat(Infinity) as number[];
+
+  const groupIndexes: number[][] = Array.from({ length: Math.max(...groups) + 1 }, () => []);
+  for (let i = 0; i < groups.length; i++) {
+    groupIndexes[groups[i]].push(i);
+  }
+  return groupIndexes;
+}
+
 export function convertWeightsToMatrixRow(weights: TotalSummaryWeights, typesCount: number): number[] {
   return [
     weights.ATOMS_MEAN_SPEED,

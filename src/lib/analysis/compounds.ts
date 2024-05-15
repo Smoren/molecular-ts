@@ -54,14 +54,14 @@ export class CompoundsCollector implements CompoundsCollectorInterface {
 export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
   private readonly compounds: Array<Compound>;
   private readonly compoundsTypesMap: Array<Compound[]>;
+  private readonly typesCount: number;
   private readonly atoms: Array<AtomInterface>;
   private readonly atomsTypesMap: Array<AtomInterface[]>;
-  private readonly typesCount: number;
 
-  constructor(compounds: Array<Compound>, atoms: Array<AtomInterface>) {
+  constructor(compounds: Array<Compound>, atoms: Array<AtomInterface>, typesCount: number) {
     this.compounds = compounds;
     this.atoms = atoms;
-    this.typesCount = Math.max(...atoms.map((atom) => atom.type)) + 1;
+    this.typesCount = typesCount;
     this.compoundsTypesMap = this.groupCompoundsByTypes();
     this.atomsTypesMap = this.groupAtomsByTypes();
   }
