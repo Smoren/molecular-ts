@@ -47,14 +47,7 @@ export function convertWeightsToMatrixRow(weights: TotalSummaryWeights, typesCou
   ]
 }
 
-export function weighTotalSummary(
-  summary: TotalSummary,
-  weights?: TotalSummaryWeights,
-  rowModifier?: (row: number[]) => number[],
-): number[] {
-  weights = weights ?? createTransparentWeights();
-  rowModifier = rowModifier ?? ((row) => row);
-
+export function convertSummaryToMatrix(summary: TotalSummary): number[] {
   const compoundsPerAtom = summary.COMPOUNDS.size / summary.WORLD.ATOMS_COUNT[0];
   const compoundsPerAtomByTypes = summary.COMPOUNDS.sizeByTypes.map((x) => x / summary.WORLD.ATOMS_COUNT[0]);
   const compoundLengthSummary = Object.values(summary.COMPOUNDS.itemLengthSummary);
@@ -63,16 +56,16 @@ export function weighTotalSummary(
   );
 
   return [
-    weighArray(rowModifier(summary.WORLD.ATOMS_MEAN_SPEED), weights.ATOMS_MEAN_SPEED),
-    weighArray(rowModifier(summary.WORLD.ATOMS_TYPE_MEAN_SPEED), weights.ATOMS_TYPE_MEAN_SPEED),
-    weighArray(rowModifier(summary.WORLD.ATOMS_TYPE_LINKS_MEAN_COUNT), weights.ATOMS_TYPE_LINKS_MEAN_COUNT),
-    weighArray(rowModifier(summary.WORLD.LINKS_CREATED_MEAN), weights.LINKS_CREATED_MEAN),
-    weighArray(rowModifier(summary.WORLD.LINKS_DELETED_MEAN), weights.LINKS_DELETED_MEAN),
-    weighArray(rowModifier(summary.WORLD.LINKS_TYPE_CREATED_MEAN), weights.LINKS_TYPE_CREATED_MEAN),
-    weighArray(rowModifier(summary.WORLD.LINKS_TYPE_DELETED_MEAN), weights.LINKS_TYPE_DELETED_MEAN),
-    weighArray(rowModifier([compoundsPerAtom]), weights.COMPOUNDS_PER_ATOM),
-    weighArray(rowModifier(compoundsPerAtomByTypes), weights.COMPOUNDS_PER_ATOM_BY_TYPES),
-    weighArray(rowModifier(compoundLengthSummary), Object.values(weights.COMPOUND_LENGTH_SUMMARY)),
-    weighMatrix(compoundLengthByTypesSummary, Object.values(weights.COMPOUND_LENGTH_BY_TYPES_SUMMARY), rowModifier),
+    summary.WORLD.ATOMS_MEAN_SPEED,
+    summary.WORLD.ATOMS_TYPE_MEAN_SPEED,
+    summary.WORLD.ATOMS_TYPE_LINKS_MEAN_COUNT,
+    summary.WORLD.LINKS_CREATED_MEAN,
+    summary.WORLD.LINKS_DELETED_MEAN,
+    // summary.WORLD.LINKS_TYPE_CREATED_MEAN,
+    // summary.WORLD.LINKS_TYPE_DELETED_MEAN,
+    compoundsPerAtom,
+    compoundsPerAtomByTypes,
+    compoundLengthSummary,
+    compoundLengthByTypesSummary,
   ].flat(Infinity) as number[];
 }

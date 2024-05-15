@@ -137,9 +137,9 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
         ];
       }, [Infinity, -Infinity, 0]) as [number, number, number];
 
-    result[2] = sizes.length > 0
-      ? result[2] / compounds.length
-      : 0;
+    result[0] = sizes.length > 0 ? result[0] : 0;
+    result[1] = sizes.length > 0 ? result[1] : 0;
+    result[2] = sizes.length > 0 ? result[2] / compounds.length : 0;
 
     const median = sizes.length > 0
       ? sizes[Math.floor(sizes.length / 2)]
