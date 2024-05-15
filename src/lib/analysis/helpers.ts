@@ -42,17 +42,17 @@ export function convertWeightsToMatrixRow(weights: TotalSummaryWeights, typesCou
     createFilledArray(typesCount, weights.LINKS_TYPE_DELETED_MEAN),
     weights.COMPOUNDS_PER_ATOM,
     createFilledArray(typesCount, weights.COMPOUNDS_PER_ATOM_BY_TYPES),
-    Object.values(weights.COMPOUND_LENGTH_SUMMARY),
-    repeatArrayValues(Object.values(weights.COMPOUND_LENGTH_BY_TYPES_SUMMARY), typesCount),
+    Object.values(weights.COMPOUND_LENGTH_SUMMARY).slice(1),
+    repeatArrayValues(Object.values(weights.COMPOUND_LENGTH_BY_TYPES_SUMMARY).slice(1), typesCount),
   ].flat(Infinity) as number[];
 }
 
 export function convertSummaryToMatrix(summary: TotalSummary): number[] {
   const compoundsPerAtom = summary.COMPOUNDS.size / summary.WORLD.ATOMS_COUNT[0];
   const compoundsPerAtomByTypes = summary.COMPOUNDS.sizeByTypes.map((x) => x / summary.WORLD.ATOMS_COUNT[0]);
-  const compoundLengthSummary = Object.values(summary.COMPOUNDS.itemLengthSummary);
+  const compoundLengthSummary = Object.values(summary.COMPOUNDS.itemLengthSummary).slice(1);
   const compoundLengthByTypesSummary = summary.COMPOUNDS.itemLengthByTypesSummary.map(
-    (item) => Object.values(item),
+    (item) => Object.values(item).slice(1),
   );
 
   return [
