@@ -5,10 +5,10 @@ import { createBaseWorldConfig } from '@/lib/config/world';
 import { createBaseTypesConfig } from '@/lib/config/types';
 import type { TotalSummary } from "@/lib/types/analysis";
 import {
-  convertWeightsToMatrixRow,
+  convertWeightsToSummaryMatrixRow,
   createTransparentWeights,
-  convertSummaryToMatrix,
-  getSummaryMatrixGroupIndexes
+  convertSummaryToSummaryMatrixRow,
+  getSummaryMatrixGroupIndexes, normalizeSummaryMatrix
 } from "@/lib/analysis/helpers";
 import { normalizeMatrixColumns } from "@/lib/math";
 
@@ -58,6 +58,7 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
 
   const worldConfig = createBaseWorldConfig();
   const typesConfig = createBaseTypesConfig();
+  const typesCount = typesConfig.FREQUENCIES.length;
 
   const stepsCount = 300;
   const atomsCount = 500;
@@ -87,12 +88,12 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
   const summaries: TotalSummary[] = await pool.map(inputs, simulationTask);
   pool.close();
 
-  const rawMatrix = summaries.map((summary) => convertSummaryToMatrix(summary));
-  const normalizedMatrix = normalizeMatrixColumns(rawMatrix);
-  const indexes = getSummaryMatrixGroupIndexes(typesConfig.FREQUENCIES.length);
-  const weights = convertWeightsToMatrixRow(createTransparentWeights(), typesConfig.FREQUENCIES.length);
+  const rawMatrix = summaries.map((summary) => convertSummaryToSummaryMatrixRow(summary));
+  const normalizedMatrix = normalizeSummaryMatrix(rawMatrix, typesCount);
+  const indexes = getSummaryMatrixGroupIndexes(typesCount);
+  const weights = convertWeightsToSummaryMatrixRow(createTransparentWeights(), typesCount);
 
-  console.log(indexes);
+  console.log(normalizedMatrix);
 
   console.log(rawMatrix[0].length);
   console.log(weights.length);

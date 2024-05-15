@@ -1,5 +1,6 @@
 import type { TotalSummary, TotalSummaryWeights } from '../types/analysis';
-import { createFilledArray, repeatArrayValues } from '../math';
+import { createFilledArray, normalizeMatrixColumnsUnion, repeatArrayValues } from '../math';
+import { fullCopyObject } from "@/lib/utils/functions";
 
 export function createTransparentWeights(): TotalSummaryWeights {
   return {
@@ -53,7 +54,7 @@ export function getSummaryMatrixGroupIndexes(typesCount: number): number[][] {
   return groupIndexes;
 }
 
-export function convertWeightsToMatrixRow(weights: TotalSummaryWeights, typesCount: number): number[] {
+export function convertWeightsToSummaryMatrixRow(weights: TotalSummaryWeights, typesCount: number): number[] {
   return [
     weights.ATOMS_MEAN_SPEED,
     createFilledArray(typesCount, weights.ATOMS_TYPE_MEAN_SPEED),
@@ -69,7 +70,7 @@ export function convertWeightsToMatrixRow(weights: TotalSummaryWeights, typesCou
   ].flat(Infinity) as number[];
 }
 
-export function convertSummaryToMatrix(summary: TotalSummary): number[] {
+export function convertSummaryToSummaryMatrixRow(summary: TotalSummary): number[] {
   const compoundsPerAtom = summary.COMPOUNDS.size / summary.WORLD.ATOMS_COUNT[0];
   const compoundsPerAtomByTypes = summary.COMPOUNDS.sizeByTypes.map((x) => x / summary.WORLD.ATOMS_COUNT[0]);
   const compoundLengthSummary = Object.values(summary.COMPOUNDS.itemLengthSummary).slice(1);
@@ -90,4 +91,15 @@ export function convertSummaryToMatrix(summary: TotalSummary): number[] {
     compoundLengthSummary,
     compoundLengthByTypesSummary,
   ].flat(Infinity) as number[];
+}
+
+export function normalizeSummaryMatrix(matrix: number[][], typesCount: number): number[][] {
+  const result = fullCopyObject(matrix);
+  const groupIndexes = getSummaryMatrixGroupIndexes(typesCount);
+
+  for (const group of groupIndexes) {
+    normalizeMatrixColumnsUnion(result, group, true);
+  }
+
+  return result;
 }

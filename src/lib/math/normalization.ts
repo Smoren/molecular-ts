@@ -12,7 +12,7 @@ export function normalizeArray(input: number[], inplace: boolean = false): numbe
   const max = Math.max(...result);
 
   if (isEqual(min, max)) {
-    return isEqual(min, 0) ? result.map(() => 0) : result.map(() => 1);
+    return result.map(() => 0.5);
   }
 
   return result.map((x) => (x - min) / (max - min));
@@ -60,7 +60,11 @@ export function normalizeMatrixColumnsUnion(matrix: number[][], columns: number[
 
   for (const column of columns) {
     for (let i = 0; i < result.length; i++) {
-      result[i][column] = (result[i][column] - min) / (max - min);
+      if (isEqual(min, max)) {
+        result[i][column] = 0.5;
+      } else {
+        result[i][column] = (result[i][column] - min) / (max - min);
+      }
     }
   }
 
