@@ -1,5 +1,5 @@
 import type { TotalSummary, TotalSummaryWeights } from '../types/analysis';
-import { createFilledArray, repeatArrayValues, sortedNumbers, weighArray, weighMatrix } from '../math';
+import { createFilledArray, repeatArrayValues } from '../math';
 
 export function createTransparentWeights(): TotalSummaryWeights {
   return {
