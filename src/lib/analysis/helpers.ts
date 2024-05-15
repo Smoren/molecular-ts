@@ -1,7 +1,7 @@
 import type { TotalSummary, TotalSummaryWeights } from '../types/analysis';
-import { sortedNumbers, weighArray, weighMatrix } from '../math';
+import { createFilledArray, repeatArrayValues, sortedNumbers, weighArray, weighMatrix } from '../math';
 
-function createTransparentWeights(): TotalSummaryWeights {
+export function createTransparentWeights(): TotalSummaryWeights {
   return {
     ATOMS_MEAN_SPEED: 1,
     ATOMS_TYPE_MEAN_SPEED: 1,
@@ -29,6 +29,22 @@ function createTransparentWeights(): TotalSummaryWeights {
       median: 1,
     },
   };
+}
+
+export function convertWeightsToMatrixRow(weights: TotalSummaryWeights, typesCount: number): number[] {
+  return [
+    weights.ATOMS_MEAN_SPEED,
+    ...createFilledArray(typesCount, weights.ATOMS_TYPE_MEAN_SPEED),
+    ...createFilledArray(typesCount, weights.ATOMS_TYPE_LINKS_MEAN_COUNT),
+    weights.LINKS_CREATED_MEAN,
+    weights.LINKS_DELETED_MEAN,
+    ...createFilledArray(typesCount, weights.LINKS_TYPE_CREATED_MEAN),
+    ...createFilledArray(typesCount, weights.LINKS_TYPE_DELETED_MEAN),
+    weights.COMPOUNDS_PER_ATOM,
+    ...createFilledArray(typesCount, weights.COMPOUNDS_PER_ATOM_BY_TYPES),
+    ...Object.values(weights.COMPOUND_LENGTH_SUMMARY),
+    ...repeatArrayValues(Object.values(weights.COMPOUND_LENGTH_BY_TYPES_SUMMARY), typesCount),
+  ]
 }
 
 export function weighTotalSummary(

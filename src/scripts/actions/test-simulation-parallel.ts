@@ -4,7 +4,7 @@ import type { TypesConfig, WorldConfig } from '@/lib/types/config';
 import { createBaseWorldConfig } from '@/lib/config/world';
 import { createBaseTypesConfig } from '@/lib/config/types';
 import type { TotalSummary } from "@/lib/types/analysis";
-import { weighTotalSummary } from "@/lib/analysis/helpers";
+import { convertWeightsToMatrixRow, createTransparentWeights, weighTotalSummary } from "@/lib/analysis/helpers";
 import { normalizeMatrixColumns } from "@/lib/math";
 
 export const simulationTask = async (
@@ -84,7 +84,9 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
 
   const rawMatrix = summaries.map((summary) => weighTotalSummary(summary));
   const normalizedMatrix = normalizeMatrixColumns(rawMatrix);
-  console.log(normalizedMatrix);
+  console.log(rawMatrix);
+  console.log(rawMatrix[0].length);
+  console.log(convertWeightsToMatrixRow(createTransparentWeights(), 6).length);
 
   console.log(`[FINISH] in ${Date.now() - ts} ms`);
 }

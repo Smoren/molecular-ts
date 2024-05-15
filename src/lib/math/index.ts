@@ -25,8 +25,10 @@ import {
 import {
   createVector,
   toVector,
+  createFilledArray,
   createEmptyMatrix,
   createEmptyTensor,
+  repeatArrayValues,
 } from './factories';
 import {
   createRandomInteger,
@@ -39,10 +41,12 @@ export {
   Vector,
   createVector,
   toVector,
+  createFilledArray,
   createEmptyMatrix,
   createEmptyTensor,
   createRandomInteger,
   createRandomFloat,
+  repeatArrayValues,
   randomizeMatrix,
   getIndexByFrequencies,
   isEqual,

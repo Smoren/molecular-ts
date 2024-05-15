@@ -19,6 +19,10 @@ export function toVector(coords: NumericVector): VectorInterface {
   return (coords instanceof Vector) ? coords : createVector(coords);
 }
 
+export function createFilledArray(length: number, value: number): number[] {
+  return Array.from({ length }, () => value);
+}
+
 export function createEmptyMatrix(n: number, m: number, defaultValue: number = 0): number[][] {
   const result: number[][] = [];
   result.length = n;
@@ -41,6 +45,14 @@ export function createEmptyTensor(n: number, m: number, k: number, defaultValue:
       result[i][j].length = k;
       result[i][j].fill(defaultValue);
     }
+  }
+  return result;
+}
+
+export function repeatArrayValues(value: number[], repetitions: number): number[] {
+  const result = [];
+  for (let i = 0; i < repetitions; ++i) {
+    result.push(...value);
   }
   return result;
 }
