@@ -237,7 +237,7 @@ export class SummaryManager implements SummaryManagerInterface {
     this.stepManager.buffer[valueKey] = arrayBinaryOperation(
       this.stepManager.buffer[valueKey] as number[],
       counts,
-      (a, b) => a / b,
+      (a, b) => b > 0 ? a / b : 0,
     );
   }
 }

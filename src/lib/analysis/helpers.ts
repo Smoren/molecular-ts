@@ -34,17 +34,17 @@ export function createTransparentWeights(): TotalSummaryWeights {
 export function convertWeightsToMatrixRow(weights: TotalSummaryWeights, typesCount: number): number[] {
   return [
     weights.ATOMS_MEAN_SPEED,
-    ...createFilledArray(typesCount, weights.ATOMS_TYPE_MEAN_SPEED),
-    ...createFilledArray(typesCount, weights.ATOMS_TYPE_LINKS_MEAN_COUNT),
+    createFilledArray(typesCount, weights.ATOMS_TYPE_MEAN_SPEED),
+    createFilledArray(typesCount, weights.ATOMS_TYPE_LINKS_MEAN_COUNT),
     weights.LINKS_CREATED_MEAN,
     weights.LINKS_DELETED_MEAN,
-    ...createFilledArray(typesCount, weights.LINKS_TYPE_CREATED_MEAN),
-    ...createFilledArray(typesCount, weights.LINKS_TYPE_DELETED_MEAN),
+    createFilledArray(typesCount, weights.LINKS_TYPE_CREATED_MEAN),
+    createFilledArray(typesCount, weights.LINKS_TYPE_DELETED_MEAN),
     weights.COMPOUNDS_PER_ATOM,
-    ...createFilledArray(typesCount, weights.COMPOUNDS_PER_ATOM_BY_TYPES),
-    ...Object.values(weights.COMPOUND_LENGTH_SUMMARY),
-    ...repeatArrayValues(Object.values(weights.COMPOUND_LENGTH_BY_TYPES_SUMMARY), typesCount),
-  ]
+    createFilledArray(typesCount, weights.COMPOUNDS_PER_ATOM_BY_TYPES),
+    Object.values(weights.COMPOUND_LENGTH_SUMMARY),
+    repeatArrayValues(Object.values(weights.COMPOUND_LENGTH_BY_TYPES_SUMMARY), typesCount),
+  ].flat(Infinity) as number[];
 }
 
 export function convertSummaryToMatrix(summary: TotalSummary): number[] {
@@ -61,8 +61,8 @@ export function convertSummaryToMatrix(summary: TotalSummary): number[] {
     summary.WORLD.ATOMS_TYPE_LINKS_MEAN_COUNT,
     summary.WORLD.LINKS_CREATED_MEAN,
     summary.WORLD.LINKS_DELETED_MEAN,
-    // summary.WORLD.LINKS_TYPE_CREATED_MEAN,
-    // summary.WORLD.LINKS_TYPE_DELETED_MEAN,
+    summary.WORLD.LINKS_TYPE_CREATED_MEAN,
+    summary.WORLD.LINKS_TYPE_DELETED_MEAN,
     compoundsPerAtom,
     compoundsPerAtomByTypes,
     compoundLengthSummary,
