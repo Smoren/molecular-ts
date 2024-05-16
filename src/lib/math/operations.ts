@@ -127,3 +127,18 @@ export function weighMatrix(
 ): number[][] {
   return input.map((item) => weighArray((rowModifier ?? ((row) => row))(item), weight));
 }
+
+export function averageMatrixColumns(input: number[][]): number[] {
+  if (input.length === 0) {
+    return [];
+  }
+  const result = [];
+  for (let i = 0; i < input[0].length; ++i) {
+    let sum = 0;
+    for (let j = 0; j < input.length; ++j) {
+      sum += input[j][i];
+    }
+    result[i] = sum / input.length;
+  }
+  return result;
+}

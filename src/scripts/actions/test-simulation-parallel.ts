@@ -7,13 +7,12 @@ import type { TotalSummary } from "@/lib/types/analysis";
 import {
   convertWeightsToSummaryMatrixRow,
   createTransparentWeights,
-  convertSummaryToSummaryMatrixRow,
-  getSummaryMatrixGroupIndexes, normalizeSummaryMatrix
+  getSummaryMatrixGroupIndexes,
+  normalizeSummaryMatrix,
 } from "@/lib/analysis/helpers";
-import { normalizeMatrixColumns } from "@/lib/math";
 
 export const simulationTask = async (
-  [id, worldConfig, typesConfig, steps]: [number, WorldConfig, TypesConfig, number],
+  [id, worldConfig, typesConfig, steps]: [number, WorldConfig, TypesConfig, number[]],
 ) => {
   console.log(`-> task ${id} started`);
   const ts = Date.now();
@@ -27,6 +26,8 @@ export const simulationTask = async (
   const { Simulation } = await import(`${dirName}/lib/simulation`);
   const { Runner } = await import(`${dirName}/lib/runner`);
   const { CompoundsAnalyzer } = await import(`${dirName}/lib/analysis/compounds`);
+  const { convertSummaryToSummaryMatrixRow } = await import(`${dirName}/lib/analysis/helpers`);
+  const { averageMatrixColumns } = await import(`${dirName}/lib/math/operations`);
 
   const sim = new Simulation({
     viewMode: '2d',
@@ -38,18 +39,23 @@ export const simulationTask = async (
   });
 
   const runner = new Runner(sim);
-  runner.runSteps(steps);
+  const summaryMatrix: number[][] = [];
 
-  const compounds = new CompoundsAnalyzer(sim.exportCompounds(), sim.atoms, typesConfig.FREQUENCIES.length);
+  for (const stepsCount of steps) {
+    runner.runSteps(stepsCount);
 
-  const totalSummary: TotalSummary = {
-    WORLD: sim.summary,
-    COMPOUNDS: compounds.summary,
-  };
+    const compounds = new CompoundsAnalyzer(sim.exportCompounds(), sim.atoms, typesConfig.FREQUENCIES.length);
+    const totalSummary: TotalSummary = {
+      WORLD: sim.summary,
+      COMPOUNDS: compounds.summary,
+    };
+    const rawMatrix = convertSummaryToSummaryMatrixRow(totalSummary);
+    summaryMatrix.push(rawMatrix);
+  }
 
   console.log(`<- task ${id} finished in ${Date.now() - ts} ms`);
 
-  return totalSummary;
+  return averageMatrixColumns(summaryMatrix);
 }
 
 export const actionTestSimulationParallel = async (...args: string[]) => {
@@ -60,7 +66,7 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
   const typesConfig = createBaseTypesConfig();
   const typesCount = typesConfig.FREQUENCIES.length;
 
-  const stepsCount = 300;
+  const stepsCount = [300, 5, 5, 5, 5];
   const atomsCount = 500;
   const minPosition = [0, 0];
   const maxPosition = [1000, 1000];
@@ -85,17 +91,16 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
   console.log('CPUs:', cpuCount);
 
   const pool = new Pool(cpuCount);
-  const summaries: TotalSummary[] = await pool.map(inputs, simulationTask);
+  const summaries: number[][] = await pool.map(inputs, simulationTask);
   pool.close();
 
-  const rawMatrix = summaries.map((summary) => convertSummaryToSummaryMatrixRow(summary));
-  const normalizedMatrix = normalizeSummaryMatrix(rawMatrix, typesCount);
+  const normalizedMatrix = normalizeSummaryMatrix(summaries, typesCount);
   const indexes = getSummaryMatrixGroupIndexes(typesCount);
   const weights = convertWeightsToSummaryMatrixRow(createTransparentWeights(), typesCount);
 
   console.log(normalizedMatrix);
 
-  console.log(rawMatrix[0].length);
+  console.log(summaries[0].length);
   console.log(weights.length);
   console.log(indexes.flat(1).length);
 
