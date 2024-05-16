@@ -1,4 +1,5 @@
 import { createEmptyMatrix, createEmptyTensor } from './factories';
+import type { Tensor } from './types';
 
 export function arrayUnaryOperation<T>(
   input: Array<T>,
@@ -25,6 +26,32 @@ export function arrayBinaryOperation<T>(
     result.push(operator(lhs[i], rhs[i]));
   }
 
+  return result;
+}
+
+export function tensorUnaryOperation<T>(operand: Tensor<T>, operation: (x: T) => T): Tensor<T> {
+  const result: Tensor<T> = [];
+  for (const item of operand) {
+    if (item instanceof Array) {
+      result.push(tensorUnaryOperation(item, operation));
+    } else {
+      result.push(operation(item));
+    }
+  }
+  return result;
+}
+
+export function tensorBinaryOperation<T>(lhs: Tensor<T>, rhs: Tensor<T>, operation: (x: T, y: T) => T): Tensor<T> {
+  const result: Tensor<T> = [];
+  for (let i = 0; i < lhs.length; ++i) {
+    const lhsItem = lhs[i];
+    const rhsItem = rhs[i];
+    if (lhsItem instanceof Array) {
+      result.push(tensorBinaryOperation(lhsItem, rhsItem as Tensor<T>, operation));
+    } else {
+      result.push(operation(lhsItem, rhsItem as T));
+    }
+  }
   return result;
 }
 

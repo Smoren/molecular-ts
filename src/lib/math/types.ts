@@ -10,6 +10,14 @@ export type NumericVector = Array<number>;
  */
 export type ImmutableNumericVector = ReadonlyArray<number>;
 
+type TensorItem<T> = T | TensorItem<T>[];
+
+/**
+ * Multi-dimensional tensor
+ * @public
+ */
+export type Tensor<T> = TensorItem<T>[];
+
 /**
  * Interface of vector
  */
