@@ -166,7 +166,7 @@ watch(() => configStore.worldConfig.VIEW_MODE, () => {
             <td></td>
             <td>x</td>
             <td>y</td>
-            <td>z</td>
+            <td v-if="worldConfig.VIEW_MODE === '3d'">z</td>
           </tr>
           <tr>
             <td>min</td>
