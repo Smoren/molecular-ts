@@ -91,6 +91,8 @@ export type CompoundsAnalyzerSummary = {
   sizeByTypes: number[];
   itemLengthSummary: CompoundsSummary;
   itemLengthByTypesSummary: CompoundsSummary[];
+  itemSpeedSummary: CompoundsSummary;
+  itemSpeedByTypesSummary: CompoundsSummary[];
 }
 
 export type TotalSummary = {

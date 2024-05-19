@@ -85,12 +85,24 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     ));
   }
 
+  get itemSpeedSummary(): CompoundsSummary {
+    return this.getItemSpeedSummary(this.compounds);
+  }
+
+  get itemSpeedByTypesSummary(): CompoundsSummary[] {
+    return this.compoundsTypesMap.map((compounds, type) => this.getItemSpeedSummary(
+      compounds,
+    ));
+  }
+
   get summary(): CompoundsAnalyzerSummary {
     return {
       size: this.size,
       sizeByTypes: this.sizeByTypes,
       itemLengthSummary: this.itemLengthSummary,
       itemLengthByTypesSummary: this.itemLengthByTypesSummary,
+      itemSpeedSummary: this.itemSpeedSummary,
+      itemSpeedByTypesSummary: this.itemSpeedByTypesSummary,
     }
   }
 
@@ -124,11 +136,19 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
   }
 
   private getItemLengthSummary(compounds: Array<Compound>, atoms: Array<AtomInterface>): CompoundsSummary {
-    const sizes = compounds
-      .map((compound) => compound.size)
-      .sort((a, b) => a - b);
+    const sizes = compounds.map((compound) => compound.size);
+    return this.extractSummary(sizes, atoms.length);
+  }
 
-    const result = sizes
+  private getItemSpeedSummary(compounds: Array<Compound>): CompoundsSummary {
+    const speeds = compounds.map((compound) => this.getCompoundSpeed(compound));
+    return this.extractSummary(speeds);
+  }
+
+  private extractSummary(values: number[], totalLength: number = 0): CompoundsSummary {
+    values = values.sort((a, b) => a - b);
+
+    const result = values
       .reduce((acc, x) => {
         return [
           acc[0] < x ? acc[0] : x, // min
@@ -137,22 +157,31 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
         ];
       }, [Infinity, -Infinity, 0]) as [number, number, number];
 
-    result[0] = sizes.length > 0 ? result[0] : 0;
-    result[1] = sizes.length > 0 ? result[1] : 0;
-    result[2] = sizes.length > 0 ? result[2] / compounds.length : 0;
+    result[0] = values.length > 0 ? result[0] : 0;
+    result[1] = values.length > 0 ? result[1] : 0;
+    result[2] = values.length > 0 ? result[2] / values.length : 0;
 
-    const median = sizes.length > 0
-      ? sizes[Math.floor(sizes.length / 2)]
+    const median = values.length > 0
+      ? values[Math.floor(values.length / 2)]
+      : 0;
+
+    const frequency = totalLength > 0
+      ? round(values.length / totalLength, 4)
       : 0;
 
     return {
-      size: compounds.length,
-      frequency: round(compounds.length / atoms.length, 4),
+      size: values.length,
+      frequency: frequency,
       min: result[0],
       max: result[1],
       mean: result[2],
       median,
     }
+  }
+
+  private getCompoundSpeed(compound: Compound): number {
+    const speeds = [...compound].map((atom) => atom.speed.abs);
+    return speeds.reduce((acc, x) => acc + x, 0) / compound.size;
   }
 
   private convertMapToArray<T>(map: Record<number, T[]>): Array<T[]> {
