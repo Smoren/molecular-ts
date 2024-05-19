@@ -29,6 +29,22 @@ export function createTransparentWeights(): TotalSummaryWeights {
       mean: 1,
       median: 1,
     },
+    COMPOUND_SPEED_SUMMARY: {
+      size: 1,
+      frequency: 1,
+      min: 1,
+      max: 1,
+      mean: 1,
+      median: 1,
+    },
+    COMPOUND_SPEED_BY_TYPES_SUMMARY: {
+      size: 1,
+      frequency: 1,
+      min: 1,
+      max: 1,
+      mean: 1,
+      median: 1,
+    },
   };
 }
 
@@ -45,6 +61,8 @@ export function getSummaryMatrixGroupIndexes(typesCount: number): number[][] {
     createFilledArray(typesCount, 8),
     [9, 10, 11, 12, 13],
     repeatArrayValues([14, 15, 16, 17, 18], typesCount),
+    [19, 20, 21, 22],
+    repeatArrayValues([23, 24, 25, 26], typesCount),
   ].flat(Infinity) as number[];
 
   const groupIndexes: number[][] = Array.from({ length: Math.max(...groups) + 1 }, () => []);
@@ -67,6 +85,8 @@ export function convertWeightsToSummaryMatrixRow(weights: TotalSummaryWeights, t
     createFilledArray(typesCount, weights.COMPOUNDS_PER_ATOM_BY_TYPES),
     Object.values(weights.COMPOUND_LENGTH_SUMMARY).slice(1),
     repeatArrayValues(Object.values(weights.COMPOUND_LENGTH_BY_TYPES_SUMMARY).slice(1), typesCount),
+    Object.values(weights.COMPOUND_SPEED_SUMMARY).slice(2),
+    repeatArrayValues(Object.values(weights.COMPOUND_SPEED_BY_TYPES_SUMMARY).slice(2), typesCount),
   ].flat(Infinity) as number[];
 }
 
@@ -76,6 +96,10 @@ export function convertSummaryToSummaryMatrixRow(summary: TotalSummary): number[
   const compoundLengthSummary = Object.values(summary.COMPOUNDS.itemLengthSummary).slice(1);
   const compoundLengthByTypesSummary = summary.COMPOUNDS.itemLengthByTypesSummary.map(
     (item) => Object.values(item).slice(1),
+  );
+  const compoundSpeedSummary = Object.values(summary.COMPOUNDS.itemSpeedSummary).slice(2);
+  const compoundSpeedByTypesSummary = summary.COMPOUNDS.itemSpeedByTypesSummary.map(
+    (item) => Object.values(item).slice(2),
   );
 
   return [
@@ -90,6 +114,8 @@ export function convertSummaryToSummaryMatrixRow(summary: TotalSummary): number[
     compoundsPerAtomByTypes,
     compoundLengthSummary,
     compoundLengthByTypesSummary,
+    compoundSpeedSummary,
+    compoundSpeedByTypesSummary,
   ].flat(Infinity) as number[];
 }
 

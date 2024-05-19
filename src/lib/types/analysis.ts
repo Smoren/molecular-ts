@@ -112,4 +112,6 @@ export type TotalSummaryWeights = {
   COMPOUNDS_PER_ATOM_BY_TYPES: number;
   COMPOUND_LENGTH_SUMMARY: CompoundsSummary;
   COMPOUND_LENGTH_BY_TYPES_SUMMARY: CompoundsSummary;
+  COMPOUND_SPEED_SUMMARY: CompoundsSummary;
+  COMPOUND_SPEED_BY_TYPES_SUMMARY: CompoundsSummary;
 }

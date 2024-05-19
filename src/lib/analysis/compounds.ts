@@ -5,7 +5,7 @@ import type {
   CompoundsCollectorInterface,
   CompoundsSummary,
 } from '../types/analysis';
-import { round } from '../math';
+import { createFilledArray, createVector, round } from '../math';
 
 export class CompoundsCollector implements CompoundsCollectorInterface {
   private atomCompoundsMap: Map<AtomInterface, number> = new Map();
@@ -180,8 +180,13 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
   }
 
   private getCompoundSpeed(compound: Compound): number {
-    const speeds = [...compound].map((atom) => atom.speed.abs);
-    return speeds.reduce((acc, x) => acc + x, 0) / compound.size;
+    if (compound.size === 0) {
+      return 0;
+    }
+
+    const speedVectors = [...compound].map((atom) => atom.speed);
+    const zeroVector = createVector(createFilledArray(speedVectors[0].length, 0));
+    return speedVectors.reduce((acc, vector) => acc.add(vector), zeroVector).abs / compound.size;
   }
 
   private convertMapToArray<T>(map: Record<number, T[]>): Array<T[]> {
