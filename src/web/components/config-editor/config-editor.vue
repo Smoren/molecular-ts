@@ -39,7 +39,7 @@ provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarMod
       Molecular TS
     </template>
     <template #body>
-      <sidebar :visible="leftBarVisible" position="left">
+      <sidebar :visible="leftBarVisible" position="left" style="overflow: hidden; resize: horizontal;">
         <template #title>
           Config
         </template>
