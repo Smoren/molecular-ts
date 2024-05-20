@@ -186,7 +186,7 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
 
     const speedVectors = [...compound].map((atom) => atom.speed);
     const zeroVector = createVector(createFilledArray(speedVectors[0].length, 0));
-    return speedVectors.reduce((acc, vector) => acc.add(vector), zeroVector).abs / compound.size;
+    return speedVectors.reduce((acc, vector) => acc.add(vector), zeroVector).div(compound.size).abs;
   }
 
   private convertMapToArray<T>(map: Record<number, T[]>): Array<T[]> {
