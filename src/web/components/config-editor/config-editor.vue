@@ -36,7 +36,7 @@ provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarMod
 <template>
   <navbar :on-burger-click="leftBarVisible.on">
     <template #title>
-      Molecular TS
+      MolecuLarva
     </template>
     <template #body>
       <sidebar :visible="leftBarVisible" position="left" style="overflow: hidden; resize: horizontal;">
