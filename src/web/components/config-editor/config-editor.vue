@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+const logo = new URL('./assets/logo.png', import.meta.url).href
 
 import { provide, ref } from 'vue';
 import { useSwitch } from "@/web/hooks/use-switch";
@@ -37,7 +38,7 @@ provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarMod
   <navbar :on-burger-click="leftBarVisible.on">
     <template #title>
       MolecuLarva
-      <img src="/molecular-ts/logo.png" alt="MolecuLarva" style="height: 30px; margin-left: 10px; margin-right: -10px">
+      <img :src="logo" alt="MolecuLarva" style="height: 30px; margin-left: 10px; margin-right: -10px">
     </template>
     <template #body>
       <sidebar :visible="leftBarVisible" position="left" style="overflow: hidden; resize: horizontal;">
