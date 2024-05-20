@@ -1,4 +1,4 @@
-import type { WorldConfig } from '../types/config';
+import type { BoundsConfig, InitialConfig, WorldConfig } from '../types/config';
 import type { NumericVector } from '../math/types';
 
 export function createBaseWorldConfig(): WorldConfig {
@@ -42,6 +42,37 @@ export function createBaseWorldConfig(): WorldConfig {
     },
     TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {
       return 1;
+    },
+  };
+}
+
+export function createWorldConfig2d(initialConfig: InitialConfig): WorldConfig {
+  return {
+    ...createBaseWorldConfig(),
+    VIEW_MODE: '2d',
+    CONFIG_2D: {
+      ...createBaseWorldConfig().CONFIG_2D,
+      INITIAL: initialConfig,
+      BOUNDS: {
+        MIN_POSITION: initialConfig.MIN_POSITION,
+        MAX_POSITION: initialConfig.MAX_POSITION,
+      },
+    },
+  };
+}
+
+
+export function createWorldConfig3d(initialConfig: InitialConfig): WorldConfig {
+  return {
+    ...createBaseWorldConfig(),
+    VIEW_MODE: '3d',
+    CONFIG_3D: {
+      ...createBaseWorldConfig().CONFIG_3D,
+      INITIAL: initialConfig,
+      BOUNDS: {
+        MIN_POSITION: initialConfig.MIN_POSITION,
+        MAX_POSITION: initialConfig.MAX_POSITION,
+      },
     },
   };
 }

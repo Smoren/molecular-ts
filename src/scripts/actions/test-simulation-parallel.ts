@@ -1,7 +1,7 @@
 import os from 'os';
 import { Pool } from "multiprocess-pool";
 import type { TypesConfig, WorldConfig } from '@/lib/types/config';
-import { createBaseWorldConfig } from '@/lib/config/world';
+import { createWorldConfig2d } from '@/lib/config/world';
 import { createBaseTypesConfig } from '@/lib/config/types';
 import {
   convertWeightsToSummaryMatrixRow,
@@ -32,25 +32,20 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
   console.log('[START] test parallel simulation action', args);
   const ts = Date.now();
 
-  const worldConfig = createBaseWorldConfig();
-  const typesConfig = createBaseTypesConfig();
-  const typesCount = typesConfig.FREQUENCIES.length;
-
   const stepsCount = [300, 5, 5, 5, 5];
   const atomsCount = 500;
   const minPosition = [0, 0];
   const maxPosition = [1000, 1000];
 
-  worldConfig.CONFIG_2D.INITIAL = {
+  const initialConfig = {
     ATOMS_COUNT: atomsCount,
     MIN_POSITION: minPosition,
     MAX_POSITION: maxPosition,
   };
 
-  worldConfig.CONFIG_2D.BOUNDS = {
-    MIN_POSITION: minPosition,
-    MAX_POSITION: maxPosition,
-  };
+  const worldConfig = createWorldConfig2d(initialConfig);
+  const typesConfig = createBaseTypesConfig();
+  const typesCount = typesConfig.FREQUENCIES.length;
 
   const inputs = [];
   for (let i = 0; i < 10; i++) {
@@ -70,6 +65,7 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
 
   console.log(normalizedMatrix);
 
+  console.log(weights);
   console.log(summaries[0].length);
   console.log(weights.length);
   console.log(indexes.flat(1).length);
