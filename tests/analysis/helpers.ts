@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
-import type { CompoundsSummary } from "../../src/lib/types/analysis";
+import type { StatSummary } from "../../src/lib/types/analysis";
 import { createAtom } from '../../src/lib/utils/functions';
 import { Link } from '../../src/lib/atomic';
 
@@ -46,7 +46,7 @@ export function createCompoundsSummary(
   max: number,
   mean: number,
   median: number,
-): CompoundsSummary {
+): StatSummary {
   return {
     size: size,
     frequency: frequency,

@@ -3,7 +3,7 @@ import type {
   Compound,
   CompoundsAnalyzerSummary,
   CompoundsCollectorInterface,
-  CompoundsSummary,
+  StatSummary,
 } from '../types/analysis';
 import { createFilledArray, createVector, round } from '../math';
 
@@ -74,22 +74,22 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     return this.compoundsTypesMap.map((compounds) => compounds.length);
   }
 
-  get itemLengthSummary(): CompoundsSummary {
+  get itemLengthSummary(): StatSummary {
     return this.getItemLengthSummary(this.compounds, this.atoms);
   }
 
-  get itemLengthByTypesSummary(): CompoundsSummary[] {
+  get itemLengthByTypesSummary(): StatSummary[] {
     return this.compoundsTypesMap.map((compounds, type) => this.getItemLengthSummary(
       compounds,
       this.atomsTypesMap[type],
     ));
   }
 
-  get itemSpeedSummary(): CompoundsSummary {
+  get itemSpeedSummary(): StatSummary {
     return this.getItemSpeedSummary(this.compounds);
   }
 
-  get itemSpeedByTypesSummary(): CompoundsSummary[] {
+  get itemSpeedByTypesSummary(): StatSummary[] {
     return this.compoundsTypesMap.map((compounds, type) => this.getItemSpeedSummary(
       compounds,
     ));
@@ -135,17 +135,17 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     return this.convertMapToArray(typesMap);
   }
 
-  private getItemLengthSummary(compounds: Array<Compound>, atoms: Array<AtomInterface>): CompoundsSummary {
+  private getItemLengthSummary(compounds: Array<Compound>, atoms: Array<AtomInterface>): StatSummary {
     const sizes = compounds.map((compound) => compound.size);
     return this.extractSummary(sizes, atoms.length);
   }
 
-  private getItemSpeedSummary(compounds: Array<Compound>): CompoundsSummary {
+  private getItemSpeedSummary(compounds: Array<Compound>): StatSummary {
     const speeds = compounds.map((compound) => this.getCompoundSpeed(compound));
     return this.extractSummary(speeds);
   }
 
-  private extractSummary(values: number[], totalLength: number = 0): CompoundsSummary {
+  private extractSummary(values: number[], totalLength: number = 0): StatSummary {
     values = values.sort((a, b) => a - b);
 
     const result = values

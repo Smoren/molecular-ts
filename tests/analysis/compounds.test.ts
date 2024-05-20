@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
 import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
-import type { CompoundsSummary } from "../../src/lib/types/analysis";
+import type { StatSummary } from "../../src/lib/types/analysis";
 import { CompoundsAnalyzer, CompoundsCollector } from '../../src/lib/analysis/compounds';
 import { createCompoundsSummary, expectSameArraysOfSets, prepareCompoundsData } from './helpers';
 import { round } from "../../src/lib/math";
@@ -13,8 +13,8 @@ describe.each([
   Set<AtomInterface>[],
   number,
   number[],
-  CompoundsSummary,
-  CompoundsSummary[],
+  StatSummary,
+  StatSummary[],
 ]>)(
   'Compounds Collector Test',
   (
@@ -23,8 +23,8 @@ describe.each([
     compoundsExpected: Set<AtomInterface>[],
     lengthExpected: number,
     lengthByTypesExpected: number[],
-    itemSizeSummaryExpected: CompoundsSummary,
-    itemSizeSummaryByTypesExpected: CompoundsSummary[],
+    itemSizeSummaryExpected: StatSummary,
+    itemSizeSummaryByTypesExpected: StatSummary[],
   ) => {
     it('', () => {
       const collector = new CompoundsCollector();
@@ -55,8 +55,8 @@ function dataProviderForCompounds(): Array<[
   Set<AtomInterface>[],
   number,
   number[],
-  CompoundsSummary,
-  CompoundsSummary[],
+  StatSummary,
+  StatSummary[],
 ]> {
   const s = createCompoundsSummary;
   const r = (value: number) => round(value, 4);
@@ -66,8 +66,8 @@ function dataProviderForCompounds(): Array<[
     number[][],
     number,
     number[],
-    CompoundsSummary,
-    CompoundsSummary[]
+    StatSummary,
+    StatSummary[]
   ]> = [
     [
       [0, 0, 1, 1, 2, 2, 0],

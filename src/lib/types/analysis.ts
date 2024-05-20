@@ -71,7 +71,7 @@ export interface SummaryManagerInterface {
 
 export type Compound = Set<AtomInterface>;
 
-export type CompoundsSummary = {
+export type StatSummary = {
   size: number;
   frequency: number;
   min: number;
@@ -89,10 +89,10 @@ export interface CompoundsCollectorInterface {
 export type CompoundsAnalyzerSummary = {
   size: number;
   sizeByTypes: number[];
-  itemLengthSummary: CompoundsSummary;
-  itemLengthByTypesSummary: CompoundsSummary[];
-  itemSpeedSummary: CompoundsSummary;
-  itemSpeedByTypesSummary: CompoundsSummary[];
+  itemLengthSummary: StatSummary;
+  itemLengthByTypesSummary: StatSummary[];
+  itemSpeedSummary: StatSummary;
+  itemSpeedByTypesSummary: StatSummary[];
 }
 
 export type TotalSummary = {
@@ -110,8 +110,8 @@ export type TotalSummaryWeights = {
   LINKS_TYPE_DELETED_MEAN: number;
   COMPOUNDS_PER_ATOM: number;
   COMPOUNDS_PER_ATOM_BY_TYPES: number;
-  COMPOUND_LENGTH_SUMMARY: CompoundsSummary;
-  COMPOUND_LENGTH_BY_TYPES_SUMMARY: CompoundsSummary;
-  COMPOUND_SPEED_SUMMARY: CompoundsSummary;
-  COMPOUND_SPEED_BY_TYPES_SUMMARY: CompoundsSummary;
+  COMPOUND_LENGTH_SUMMARY: StatSummary;
+  COMPOUND_LENGTH_BY_TYPES_SUMMARY: StatSummary;
+  COMPOUND_SPEED_SUMMARY: StatSummary;
+  COMPOUND_SPEED_BY_TYPES_SUMMARY: StatSummary;
 }
