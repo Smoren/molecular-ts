@@ -1,6 +1,13 @@
 import type { TotalSummary, TotalSummaryWeights } from '../types/analysis';
+import type { TypesConfig, WorldConfig } from '../types/config';
+import { Simulation } from '../simulation';
+import { Runner } from '../runner';
+import { CompoundsAnalyzer } from '../analysis/compounds';
 import { createFilledArray, normalizeMatrixColumnsUnion, repeatArrayValues } from '../math';
-import { fullCopyObject } from "@/lib/utils/functions";
+import { createPhysicModel, fullCopyObject } from '../utils/functions';
+import { create2dRandomDistribution } from '../config/atoms';
+import { averageMatrixColumns } from '../math/operations';
+import { createDummyDrawer } from '../drawer/dummy';
 
 export function createTransparentWeights(): TotalSummaryWeights {
   return {
@@ -128,4 +135,32 @@ export function normalizeSummaryMatrix(matrix: number[][], typesCount: number): 
   }
 
   return result;
+}
+
+export function testSimulation(worldConfig: WorldConfig, typesConfig: TypesConfig, steps: number[]): number[] {
+  const sim = new Simulation({
+    viewMode: '2d',
+    worldConfig: worldConfig,
+    typesConfig: typesConfig,
+    physicModel: createPhysicModel(worldConfig, typesConfig),
+    atomsFactory: create2dRandomDistribution,
+    drawer: createDummyDrawer(),
+  });
+
+  const runner = new Runner(sim);
+  const summaryMatrix: number[][] = [];
+
+  for (const stepsCount of steps) {
+    runner.runSteps(stepsCount);
+
+    const compounds = new CompoundsAnalyzer(sim.exportCompounds(), sim.atoms, typesConfig.FREQUENCIES.length);
+    const totalSummary: TotalSummary = {
+      WORLD: sim.summary,
+      COMPOUNDS: compounds.summary,
+    };
+    const rawMatrix = convertSummaryToSummaryMatrixRow(totalSummary);
+    summaryMatrix.push(rawMatrix);
+  }
+
+  return averageMatrixColumns(summaryMatrix);
 }

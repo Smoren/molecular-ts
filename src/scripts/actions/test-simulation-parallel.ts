@@ -3,7 +3,6 @@ import { Pool } from "multiprocess-pool";
 import type { TypesConfig, WorldConfig } from '@/lib/types/config';
 import { createBaseWorldConfig } from '@/lib/config/world';
 import { createBaseTypesConfig } from '@/lib/config/types';
-import type { TotalSummary } from "@/lib/types/analysis";
 import {
   convertWeightsToSummaryMatrixRow,
   createTransparentWeights,
@@ -20,42 +19,13 @@ export const simulationTask = async (
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');
-  const { createPhysicModel } = await import(`${dirName}/lib/utils/functions`);
-  const { create2dRandomDistribution } = await import(`${dirName}/lib/config/atoms`);
-  const { createDummyDrawer } = await import(`${dirName}/lib/drawer/dummy`);
-  const { Simulation } = await import(`${dirName}/lib/simulation`);
-  const { Runner } = await import(`${dirName}/lib/runner`);
-  const { CompoundsAnalyzer } = await import(`${dirName}/lib/analysis/compounds`);
-  const { convertSummaryToSummaryMatrixRow } = await import(`${dirName}/lib/analysis/helpers`);
-  const { averageMatrixColumns } = await import(`${dirName}/lib/math/operations`);
+  const { testSimulation } = await import(`${dirName}/lib/analysis/helpers`);
 
-  const sim = new Simulation({
-    viewMode: '2d',
-    worldConfig: worldConfig,
-    typesConfig: typesConfig,
-    physicModel: createPhysicModel(worldConfig, typesConfig),
-    atomsFactory: create2dRandomDistribution,
-    drawer: createDummyDrawer(),
-  });
-
-  const runner = new Runner(sim);
-  const summaryMatrix: number[][] = [];
-
-  for (const stepsCount of steps) {
-    runner.runSteps(stepsCount);
-
-    const compounds = new CompoundsAnalyzer(sim.exportCompounds(), sim.atoms, typesConfig.FREQUENCIES.length);
-    const totalSummary: TotalSummary = {
-      WORLD: sim.summary,
-      COMPOUNDS: compounds.summary,
-    };
-    const rawMatrix = convertSummaryToSummaryMatrixRow(totalSummary);
-    summaryMatrix.push(rawMatrix);
-  }
+  const result = testSimulation(worldConfig, typesConfig, steps);
 
   console.log(`<- task ${id} finished in ${Date.now() - ts} ms`);
 
-  return averageMatrixColumns(summaryMatrix);
+  return result;
 }
 
 export const actionTestSimulationParallel = async (...args: string[]) => {
