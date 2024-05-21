@@ -16,19 +16,20 @@ export class GeneticSearch {
     this.population = this.createPopulation(config.populationSize);
   }
 
-  public async step(): Promise<number[]> {
-    const [countToSurvive, countToCrossover, countToMutate] = this.getSizes();
+  public async generationStep(): Promise<number[]> {
+    const [countToSurvive, countToCross, countToClone] = this.getSizes();
 
-    const results = this.prepareResults(await this.strategy.runner.run(this.population, this.config));
-    const [sortedPopulation, sortedErrors] = this.sortPopulation(results);
+    const results = await this.strategy.runner.run(this.population, this.config);
+    const losses = this.calcLosses(results);
+    const sortedPopulation = this.sortPopulation(losses);
 
     const survivedPopulation = sortedPopulation.slice(0, countToSurvive);
-    const crossedPopulation = this.crossoverPopulation(survivedPopulation, countToCrossover);
-    const mutatedPopulation = this.mutatePopulation(survivedPopulation, countToMutate);
+    const crossedPopulation = this.crossoverPopulation(survivedPopulation, countToCross);
+    const mutatedPopulation = this.clonePopulation(survivedPopulation, countToClone);
 
     this.population = [...survivedPopulation, ...crossedPopulation, ...mutatedPopulation];
 
-    return sortedErrors;
+    return losses;
   }
 
   private createPopulation(size: number): Population {
@@ -47,7 +48,7 @@ export class GeneticSearch {
       const rhs = getRandomArrayItem(population);
 
       const crossedGenome = this.strategy.crossover.cross(lhs, rhs, this.config);
-      const mutatedGenome = this.strategy.mutation.mutate(crossedGenome, this.config);
+      const mutatedGenome = this.strategy.mutation.mutate(crossedGenome, this.config.crossoverMutationProbability, this.config);
 
       newPopulation.push(mutatedGenome);
     }
@@ -55,29 +56,30 @@ export class GeneticSearch {
     return newPopulation;
   }
 
-  private mutatePopulation(population: Population, count: number): Population {
+  private clonePopulation(population: Population, count: number): Population {
     const newPopulation = [];
 
     for (let i = 0; i < count; i++) {
       const genome = getRandomArrayItem(population);
-      const mutatedGenome = this.strategy.mutation.mutate(genome, this.config);
+      const mutatedGenome = this.strategy.mutation.mutate(genome, this.config.cloneMutationProbability, this.config);
       newPopulation.push(mutatedGenome);
     }
 
     return newPopulation;
   }
 
-  private sortPopulation(results: number[][]): [Population, number[]] {
-    const zipped = multi.zip(this.population, results.map((x) => arraySum(x)));
+  private sortPopulation(losses: number[]): Population {
+    const zipped = multi.zip(this.population, losses);
     const sorted = single.sort(zipped, (lhs, rhs) => lhs[1] - rhs[1]);
-    return [
-      transform.toArray(single.map(sorted, (x) => x[0])),
-      transform.toArray(single.map(sorted, (x) => x[1])),
-    ];
+    return transform.toArray(single.map(sorted, (x) => x[0]));
   }
 
-  private prepareResults(results: number[][]): number[][] {
-    return this.weighResults(this.normalizeResults(results));
+  private calcLosses(results: number[][]): number[] {
+    const normalized = this.normalizeResults(results);
+    const weighed = this.weighResults(normalized);
+    const compared = this.compareWithReference(weighed);
+
+    return compared.map((x) => arraySum(x));
   }
 
   private normalizeResults(results: number[][]): number[][] {
@@ -90,13 +92,21 @@ export class GeneticSearch {
     );
   }
 
+  private compareWithReference(results: number[][]): number[][] {
+      return results.map((result) => arrayBinaryOperation(
+        result,
+        this.config.reference,
+        (res, ref) => Math.abs(res - ref)),
+      );
+  }
+
   private getSizes(): number[] {
     const countToSurvive = Math.round(this.config.populationSize * this.config.survivalRate);
     const countToDie = this.config.populationSize - countToSurvive;
 
-    const countToCrossover = Math.round(countToDie * this.config.crossoverRate);
-    const countToMutate = countToDie - countToCrossover;
+    const countToCross = Math.round(countToDie * this.config.crossoverRate);
+    const countToClone = countToDie - countToCross;
 
-    return [countToSurvive, countToCrossover, countToMutate];
+    return [countToSurvive, countToCross, countToClone];
   }
 }

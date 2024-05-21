@@ -4,7 +4,8 @@ export type GeneticSearchConfig = {
   populationSize: number;
   survivalRate: number;
   crossoverRate: number;
-  mutationProbability: number;
+  crossoverMutationProbability: number;
+  cloneMutationProbability: number;
   reference: number[];
   weights: number[];
   worldConfig: WorldConfig;
@@ -15,8 +16,10 @@ export type Genome = {
   typesConfig: TypesConfig;
 }
 
+export type Population = Genome[];
+
 export interface MutationStrategy {
-  mutate: (item: Genome, config: GeneticSearchConfig) => Genome;
+  mutate: (item: Genome, probability: number, config: GeneticSearchConfig) => Genome;
 }
 
 export interface CrossoverStrategy {
@@ -32,5 +35,3 @@ export type StrategyConfig = {
   mutation: MutationStrategy;
   crossover: CrossoverStrategy;
 }
-
-export type Population = Genome[];
