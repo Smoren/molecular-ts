@@ -1,7 +1,15 @@
 import { multi, single, transform } from 'itertools-ts';
-import type { GeneticSearchConfig, Population, StrategyConfig } from '../types/genetic';
+import { Pool } from 'multiprocess-pool';
+import type {
+  GeneticSearchConfig,
+  Genome,
+  Population,
+  RunnerStrategyInterface,
+  StrategyConfig,
+} from '../types/genetic';
+import { simulationTask, type SimulationTaskConfig } from "./multiprocessing";
+import { normalizeSummaryMatrix } from './helpers';
 import { randomizeTypesConfig } from '../config/types';
-import { normalizeSummaryMatrix } from '../analysis/helpers';
 import { arrayBinaryOperation, arraySum } from '../math';
 import { getRandomArrayItem } from '../math/random';
 
@@ -108,5 +116,34 @@ export class GeneticSearch {
     const countToClone = countToDie - countToCross;
 
     return [countToSurvive, countToCross, countToClone];
+  }
+}
+
+export class MultiprocessingRunnerStrategy implements RunnerStrategyInterface {
+  private readonly poolSize: number;
+
+  constructor(poolSize: number) {
+    this.poolSize = poolSize;
+  }
+
+  async run(population: Population, config: GeneticSearchConfig): Promise<number[][]> {
+    const inputs = this.createTasksInputList(population, config);
+    return await this.runTask(inputs);
+  }
+
+  private async runTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
+    const pool = new Pool(this.poolSize);
+    const result: number[][] = await pool.map(inputs, simulationTask);
+    pool.close();
+
+    return result;
+  }
+
+  private createTasksInputList(population: Population, config: GeneticSearchConfig): SimulationTaskConfig[] {
+    return population.map((genome, i) => this.createTaskInput(i+1, genome, config));
+  }
+
+  private createTaskInput(id: number, genome: Genome, config: GeneticSearchConfig): SimulationTaskConfig {
+    return [id, config.worldConfig, genome.typesConfig, config.simulationStepsCount];
   }
 }

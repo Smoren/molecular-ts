@@ -10,6 +10,7 @@ export type GeneticSearchConfig = {
   weights: number[];
   worldConfig: WorldConfig;
   randomTypesConfig: RandomTypesConfig;
+  simulationStepsCount: number[];
 };
 
 export type Genome = {
@@ -18,20 +19,20 @@ export type Genome = {
 
 export type Population = Genome[];
 
-export interface MutationStrategy {
+export interface MutationStrategyInterface {
   mutate: (item: Genome, probability: number, config: GeneticSearchConfig) => Genome;
 }
 
-export interface CrossoverStrategy {
+export interface CrossoverStrategyInterface {
   cross: (lhs: Genome, rhs: Genome, config: GeneticSearchConfig) => Genome;
 }
 
-export interface RunnerStrategy {
+export interface RunnerStrategyInterface {
   run: (population: Population, config: GeneticSearchConfig) => Promise<number[][]>;
 }
 
 export type StrategyConfig = {
-  runner: RunnerStrategy;
-  mutation: MutationStrategy;
-  crossover: CrossoverStrategy;
+  runner: RunnerStrategyInterface;
+  mutation: MutationStrategyInterface;
+  crossover: CrossoverStrategyInterface;
 }
