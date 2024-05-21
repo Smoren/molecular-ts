@@ -71,3 +71,7 @@ export function getIndexByFrequencies(frequencies: number[]): number {
   }
   return 0;
 }
+
+export function getRandomArrayItem<T>(input: T[]): T {
+  return input[Math.floor(Math.random() * input.length)];
+}
