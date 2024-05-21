@@ -119,31 +119,46 @@ export class GeneticSearch {
   }
 }
 
-export class MultiprocessingRunnerStrategy implements RunnerStrategyInterface {
+export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
+  public async run(population: Population, config: GeneticSearchConfig): Promise<number[][]> {
+    const inputs = this.createTasksInputList(population, config);
+    return await this.execTask(inputs);
+  }
+
+  protected abstract execTask(inputs: SimulationTaskConfig[]): Promise<number[][]>;
+
+  protected createTasksInputList(population: Population, config: GeneticSearchConfig): SimulationTaskConfig[] {
+    return population.map((genome, i) => this.createTaskInput(i+1, genome, config));
+  }
+
+  protected createTaskInput(id: number, genome: Genome, config: GeneticSearchConfig): SimulationTaskConfig {
+    return [id, config.worldConfig, genome.typesConfig, config.simulationStepsCount];
+  }
+}
+
+export class MultiprocessingRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
   private readonly poolSize: number;
 
   constructor(poolSize: number) {
+    super();
     this.poolSize = poolSize;
   }
 
-  async run(population: Population, config: GeneticSearchConfig): Promise<number[][]> {
-    const inputs = this.createTasksInputList(population, config);
-    return await this.runTask(inputs);
-  }
-
-  private async runTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
+  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
     const pool = new Pool(this.poolSize);
     const result: number[][] = await pool.map(inputs, simulationTask);
     pool.close();
 
     return result;
   }
+}
 
-  private createTasksInputList(population: Population, config: GeneticSearchConfig): SimulationTaskConfig[] {
-    return population.map((genome, i) => this.createTaskInput(i+1, genome, config));
-  }
-
-  private createTaskInput(id: number, genome: Genome, config: GeneticSearchConfig): SimulationTaskConfig {
-    return [id, config.worldConfig, genome.typesConfig, config.simulationStepsCount];
+export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
+  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
+    const result = [];
+    for (const input of inputs) {
+      result.push(await simulationTask(input));
+    }
+    return result;
   }
 }

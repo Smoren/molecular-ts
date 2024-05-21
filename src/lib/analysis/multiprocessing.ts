@@ -2,7 +2,7 @@ import type { TypesConfig, WorldConfig } from "@/lib/types/config";
 
 export type SimulationTaskConfig = [number, WorldConfig, TypesConfig, number[]];
 
-export const simulationTask = async ([id, worldConfig, typesConfig, steps]: SimulationTaskConfig) => {
+export const simulationTask = async ([id, worldConfig, typesConfig, steps]: SimulationTaskConfig): Promise<number[]> => {
   console.log(`-> task ${id} started`);
   const ts = Date.now();
 
