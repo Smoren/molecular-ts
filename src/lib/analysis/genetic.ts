@@ -1,8 +1,8 @@
+import { multi, single, transform } from 'itertools-ts';
 import type { RandomTypesConfig, TypesConfig, WorldConfig } from '../types/config';
-import { randomizeTypesConfig } from "@/lib/config/types";
-import { normalizeSummaryMatrix } from "@/lib/analysis/helpers";
-import { multi, single, transform } from "itertools-ts";
-import { arrayBinaryOperation, arraySum } from "@/lib/math";
+import { randomizeTypesConfig } from '../config/types';
+import { normalizeSummaryMatrix } from '../analysis/helpers';
+import { arrayBinaryOperation, arraySum } from '../math';
 
 type GeneticSearchConfig = {
   populationSize: number;
@@ -18,15 +18,43 @@ type PopulationItem = {
   typesConfig: TypesConfig;
 }
 
-type Population = PopulationItem[];
+interface MutationStrategy {
+  mutate: (item: PopulationItem, config: GeneticSearchConfig) => PopulationItem;
+}
+
+interface CrossoverStrategy {
+  crossover: (lhs: PopulationItem, rhs: PopulationItem, config: GeneticSearchConfig) => PopulationItem;
+}
+
+interface RunnerStrategy {
+  run: (population: Population, config: GeneticSearchConfig) => Promise<number[][]>;
+}
+
+type StrategyConfig = {
+  runner: RunnerStrategy;
+  mutation: MutationStrategy;
+  crossover: CrossoverStrategy;
+}
+
+type Population = Set<PopulationItem>;
 
 export class GeneticSearch {
   private config: GeneticSearchConfig;
+  private strategy: StrategyConfig;
   private population: Population;
 
-  constructor(config: GeneticSearchConfig) {
+  constructor(config: GeneticSearchConfig, strategy: StrategyConfig) {
     this.config = config;
+    this.strategy = strategy;
     this.population = this.createPopulation(config.populationSize);
+  }
+
+  private async step(): Promise<void> {
+    const results = await this.strategy.runner.run(this.population, this.config);
+    const normalized = this.normalizeResults(results);
+    const weighted = this.weighResults(normalized);
+
+    const ranked = this.rankPopulation(weighted);
   }
 
   private createPopulation(size: number): Population {
@@ -34,7 +62,7 @@ export class GeneticSearch {
     for (let i = 0; i < size; i++) {
       population.push({ typesConfig: randomizeTypesConfig(this.config.randomTypesConfig) });
     }
-    return population;
+    return new Set(population);
   }
 
   private normalizeResults(results: number[][]): number[][] {
@@ -47,11 +75,9 @@ export class GeneticSearch {
     );
   }
 
-  private rankPopulation(results: number[][]): Population {
-    const iter = single.sort(
-      multi.zip(results, this.population),
-      (lhs, rhs) => arraySum(lhs[0]) - arraySum(rhs[0]),
-    )
-    return transform.toArray(single.map(iter, (x) => x[1]));
+  private rankPopulation(results: number[][]): PopulationItem[] {
+    const zipped = multi.zip(results, this.population);
+    const sorted = single.sort(zipped, (lhs, rhs) => arraySum(lhs[0]) - arraySum(rhs[0]));
+    return transform.toArray(single.map(sorted, (x) => x[1]));
   }
 }
