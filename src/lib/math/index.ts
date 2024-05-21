@@ -9,6 +9,7 @@ import {
 import {
   arrayUnaryOperation,
   arrayBinaryOperation,
+  arraySum,
   concatArrays,
   concatMatrices,
   concatTensors,
@@ -57,6 +58,7 @@ export {
   changeEpsilon,
   arrayUnaryOperation,
   arrayBinaryOperation,
+  arraySum,
   concatArrays,
   concatMatrices,
   concatTensors,
