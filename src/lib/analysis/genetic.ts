@@ -14,16 +14,16 @@ type GeneticSearchConfig = {
   randomTypesConfig: RandomTypesConfig;
 };
 
-type PopulationItem = {
+type Genome = {
   typesConfig: TypesConfig;
 }
 
 interface MutationStrategy {
-  mutate: (item: PopulationItem, config: GeneticSearchConfig) => PopulationItem;
+  mutate: (item: Genome, config: GeneticSearchConfig) => Genome;
 }
 
 interface CrossoverStrategy {
-  crossover: (lhs: PopulationItem, rhs: PopulationItem, config: GeneticSearchConfig) => PopulationItem;
+  crossover: (lhs: Genome, rhs: Genome, config: GeneticSearchConfig) => Genome;
 }
 
 interface RunnerStrategy {
@@ -36,7 +36,7 @@ type StrategyConfig = {
   crossover: CrossoverStrategy;
 }
 
-type Population = Set<PopulationItem>;
+type Population = Genome[];
 
 export class GeneticSearch {
   private config: GeneticSearchConfig;
@@ -51,18 +51,22 @@ export class GeneticSearch {
 
   private async step(): Promise<void> {
     const results = await this.strategy.runner.run(this.population, this.config);
-    const normalized = this.normalizeResults(results);
-    const weighted = this.weighResults(normalized);
-
-    const ranked = this.rankPopulation(weighted);
+    const sortedPopulation = this.handleResults(results);
   }
 
   private createPopulation(size: number): Population {
-    const population = [];
+    const population: Population = [];
     for (let i = 0; i < size; i++) {
       population.push({ typesConfig: randomizeTypesConfig(this.config.randomTypesConfig) });
     }
-    return new Set(population);
+    return population;
+  }
+
+  private handleResults(results: number[][]): Population {
+    const normalized = this.normalizeResults(results);
+    const weighted = this.weighResults(normalized);
+
+    return this.rankPopulation(weighted);
   }
 
   private normalizeResults(results: number[][]): number[][] {
@@ -75,7 +79,7 @@ export class GeneticSearch {
     );
   }
 
-  private rankPopulation(results: number[][]): PopulationItem[] {
+  private rankPopulation(results: number[][]): Population {
     const zipped = multi.zip(results, this.population);
     const sorted = single.sort(zipped, (lhs, rhs) => arraySum(lhs[0]) - arraySum(rhs[0]));
     return transform.toArray(single.map(sorted, (x) => x[1]));
