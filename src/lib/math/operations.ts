@@ -129,15 +129,15 @@ export function crossTensors(lhs: number[][][], rhs: number[][][], separator: nu
 }
 
 export function randomCrossArrays(lhs: number[], rhs: number[], separator: number): number[] {
-  return lhs.map((_, i) => Math.random() > separator ? lhs[i] : rhs[i]);
+  return lhs.map((_, i) => Math.random() < separator ? lhs[i] : rhs[i]);
 }
 
 export function randomCrossMatrices(lhs: number[][], rhs: number[][], separator: number): number[][] {
-  return lhs.map((row, i) => row.map((_, j) => Math.random() > separator ? lhs[i][j] : rhs[i][j]));
+  return lhs.map((row, i) => row.map((_, j) => Math.random() < separator ? lhs[i][j] : rhs[i][j]));
 }
 
 export function randomCrossTensors(lhs: number[][][], rhs: number[][][], separator: number): number[][][] {
-  return lhs.map((row, i) => row.map((col, j) => col.map((_, k) => Math.random() > separator ? lhs[i][j][k] : rhs[i][j][k])));
+  return lhs.map((row, i) => row.map((col, j) => col.map((_, k) => Math.random() < separator ? lhs[i][j][k] : rhs[i][j][k])));
 }
 
 export function setMatrixMainDiagonal<T>(matrix: T[][], value: T): T[][] {

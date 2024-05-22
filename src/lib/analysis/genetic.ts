@@ -184,7 +184,7 @@ export class MutationStrategy implements MutationStrategyInterface {
   mutate(genome: Genome, probability: number, config: GeneticSearchConfig): Genome {
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
     const randomizedTypesConfig = randomizeTypesConfig(config.randomTypesConfig, inputTypesConfig);
-    const mutatedTypesConfig = randomCrossTypesConfigs(inputTypesConfig, randomizedTypesConfig, probability);
+    const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
     return { typesConfig: mutatedTypesConfig };
   }
