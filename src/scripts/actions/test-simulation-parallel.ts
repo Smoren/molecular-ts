@@ -2,7 +2,7 @@ import os from 'os';
 import { Pool } from "multiprocess-pool";
 import type { TypesConfig, WorldConfig } from '@/lib/types/config';
 import { createWorldConfig2d } from '@/lib/config/world';
-import { createBaseTypesConfig } from '@/lib/config/types';
+import { creatDefaultTypesConfig } from '@/lib/config/types';
 import {
   convertWeightsToSummaryMatrixRow,
   createTransparentWeights,
@@ -44,7 +44,7 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
   };
 
   const worldConfig = createWorldConfig2d(initialConfig);
-  const typesConfig = createBaseTypesConfig();
+  const typesConfig = creatDefaultTypesConfig();
   const typesCount = typesConfig.FREQUENCIES.length;
 
   const inputs = [];

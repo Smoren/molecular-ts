@@ -8,6 +8,8 @@ import {
   concatArrays,
   concatMatrices,
   concatTensors,
+  createFilledMatrix,
+  createFilledArray,
   createRandomFloat,
   createRandomInteger,
   crossArrays,
@@ -19,6 +21,7 @@ import {
   randomizeMatrix,
   setMatrixMainDiagonal,
   setTensorMainDiagonal,
+  createFilledTensor,
 } from '../math';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '../math/operations';
 
@@ -46,7 +49,7 @@ export function createColors(count: number): Array<ColorVector> {
   return result;
 }
 
-export function createBaseTypesConfig(): TypesConfig {
+export function creatDefaultTypesConfig(): TypesConfig {
   const linkFactorDistance = [
     [1, 1, 1, 1, 0.7, 1],
     [1, 1, 1, 1, 1, 1],
@@ -89,6 +92,21 @@ export function createBaseTypesConfig(): TypesConfig {
     FREQUENCIES: [1, 1, 1, 1, 1, 0.05],
     COLORS: createColors(6),
   };
+}
+
+export function createTransparentTypesConfig(typesCount: number): TypesConfig {
+  return {
+    RADIUS: createFilledArray(typesCount, 1),
+    GRAVITY: createFilledMatrix(typesCount, typesCount, 0),
+    LINK_GRAVITY: createFilledMatrix(typesCount, typesCount, 0),
+    LINKS: createFilledArray(typesCount, 0),
+    TYPE_LINKS: createFilledMatrix(typesCount, typesCount, 0),
+    LINK_FACTOR_DISTANCE: createFilledMatrix(typesCount, typesCount, 0),
+    LINK_FACTOR_DISTANCE_EXTENDED: createFilledTensor(typesCount, typesCount, typesCount, 0),
+    LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
+    FREQUENCIES: createFilledArray(typesCount, 1),
+    COLORS: createColors(typesCount),
+  }
 }
 
 export function createSingleTypeConfig(): TypesConfig {

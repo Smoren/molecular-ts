@@ -11,7 +11,7 @@ import { createWideRandomTypesConfig } from "@/lib/config/types";
 import type { GeneticSearchConfig, StrategyConfig } from "@/lib/types/genetic";
 import { convertWeightsToSummaryMatrixRow, createTransparentWeights, testSimulation } from "@/lib/analysis/helpers";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
-import { round } from "@/lib/math";
+import { arraySum, round } from "@/lib/math";
 
 export const actionGeneticSearch = async (...args: string[]) => {
   console.log('[START] genetic search action', args);
@@ -32,6 +32,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
   const weights = convertWeightsToSummaryMatrixRow(getWeights(), typesCount);
 
   console.log('[START] Calculating reference matrix');
+
   const reference = testSimulation(worldConfig, typesConfig, simulationStepsCount);
   const geneticConfig: GeneticSearchConfig = {
     populationSize: 200,

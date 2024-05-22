@@ -3,7 +3,7 @@
 import { computed, inject, watch } from "vue";
 import { useConfigStore } from '@/web/store/config';
 import { useSimulationStore } from "@/web/store/simulation";
-import { createBaseTypesConfig } from "@/lib/config/types";
+import { creatDefaultTypesConfig } from "@/lib/config/types";
 import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/web/components/config-editor/constants";
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
 import ConfigMatrix from '@/web/components/config-editor/components/inputs/config-matrix.vue';
@@ -27,7 +27,7 @@ const setDefaultTypesConfig = () => {
     return;
   }
 
-  const defaultConfig = createBaseTypesConfig();
+  const defaultConfig = creatDefaultTypesConfig();
 
   if (defaultConfig.COLORS.length !== typesConfig.COLORS.length) {
     defaultConfig.COLORS = typesConfig.COLORS;

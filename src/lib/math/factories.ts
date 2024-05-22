@@ -23,7 +23,7 @@ export function createFilledArray(length: number, value: number): number[] {
   return Array.from({ length }, () => value);
 }
 
-export function createEmptyMatrix(n: number, m: number, defaultValue: number = 0): number[][] {
+export function createFilledMatrix(n: number, m: number, defaultValue: number = 0): number[][] {
   const result: number[][] = [];
   result.length = n;
   for (let i=0; i<n; ++i) {
@@ -34,7 +34,7 @@ export function createEmptyMatrix(n: number, m: number, defaultValue: number = 0
   return result;
 }
 
-export function createEmptyTensor(n: number, m: number, k: number, defaultValue: number = 0): number[][][] {
+export function createFilledTensor(n: number, m: number, k: number, defaultValue: number = 0): number[][][] {
   const result: number[][][] = [];
   result.length = n;
   for (let i=0; i<n; ++i) {

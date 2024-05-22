@@ -1,4 +1,4 @@
-import { createEmptyMatrix, createEmptyTensor } from './factories';
+import { createFilledMatrix, createFilledTensor } from './factories';
 import type { Tensor } from './types';
 
 export function arrayUnaryOperation<T>(
@@ -66,7 +66,7 @@ export function concatArrays<T>(lhs: T[], rhs: T[]): T[] {
 export function concatMatrices(lhs: number[][], rhs: number[][], defaultValue: number = 0): number[][] {
   const n = lhs.length + rhs.length;
   const m = (lhs[0]?.length ?? 0) + (rhs[0]?.length ?? 0);
-  const result = createEmptyMatrix(n, m, defaultValue);
+  const result = createFilledMatrix(n, m, defaultValue);
 
   for (let i = 0; i < lhs.length; ++i) {
     const row = lhs[i];
@@ -89,7 +89,7 @@ export function concatTensors(lhs: number[][][], rhs: number[][][], defaultValue
   const n = lhs.length + rhs.length;
   const m = (lhs[0]?.length ?? 0) + (rhs[0]?.length ?? 0);
   const k = ((lhs[0] ?? [])[0]?.length ?? 0) + ((rhs[0] ?? [])[0]?.length ?? 0);
-  const result = createEmptyTensor(n, m, k, defaultValue);
+  const result = createFilledTensor(n, m, k, defaultValue);
 
   for (let i = 0; i < lhs.length; ++i) {
     for (let j = 0; j < lhs[i].length; ++j) {

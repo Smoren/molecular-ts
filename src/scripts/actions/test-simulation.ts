@@ -1,5 +1,5 @@
 import { createBaseWorldConfig } from '@/lib/config/world';
-import { createBaseTypesConfig } from '@/lib/config/types';
+import { creatDefaultTypesConfig } from '@/lib/config/types';
 import { createPhysicModel } from '@/lib/utils/functions';
 import { create2dRandomDistribution } from '@/lib/config/atoms';
 import { createDummyDrawer } from '@/lib/drawer/dummy';
@@ -11,7 +11,7 @@ export const actionTestSimulation = (...args: string[]) => {
   console.log('[START] test simulation action', args);
 
   const worldConfig = createBaseWorldConfig();
-  const typesConfig = createBaseTypesConfig();
+  const typesConfig = creatDefaultTypesConfig();
 
   const sim = new Simulation({
     viewMode: '2d',

@@ -9,7 +9,7 @@ import type {
 } from "@/lib/types/config";
 import { createBaseWorldConfig } from "@/lib/config/world";
 import {
-  createBaseTypesConfig,
+  creatDefaultTypesConfig,
   createDefaultRandomTypesConfig,
   createSingleTypeConfig,
 } from "@/lib/config/types";
@@ -24,7 +24,7 @@ import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations'
 
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
-  const typesConfigRaw: TypesConfig = createBaseTypesConfig();
+  const typesConfigRaw: TypesConfig = creatDefaultTypesConfig();
 
   const worldConfig: Ref<WorldConfig> = ref(fullCopyObject(worldConfigRaw));
   const typesConfig: Ref<TypesConfig> = ref(fullCopyObject(typesConfigRaw));
@@ -180,7 +180,7 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const setDefaultTypesConfig = <T>() => {
-    const newConfig = createBaseTypesConfig();
+    const newConfig = creatDefaultTypesConfig();
 
     for (const i in newConfig) {
       (typesConfig.value[i as keyof TypesConfig] as T) = newConfig[i as keyof TypesConfig] as T;

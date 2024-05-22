@@ -13,7 +13,12 @@ import type {
 import type { SimulationTaskConfig } from "./multiprocessing";
 import { simulationTask } from "./multiprocessing";
 import { normalizeSummaryMatrix } from './helpers';
-import { crossTypesConfigs, randomCrossTypesConfigs, randomizeTypesConfig } from '../config/types';
+import {
+  createTransparentTypesConfig,
+  crossTypesConfigs,
+  randomCrossTypesConfigs,
+  randomizeTypesConfig
+} from '../config/types';
 import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { getRandomArrayItem } from '../math/random';
 import { fullCopyObject } from '../utils/functions';
@@ -52,7 +57,12 @@ export class GeneticSearch implements GeneticSearchInterface {
   private createPopulation(size: number): Population {
     const population: Population = [];
     for (let i = 0; i < size; i++) {
-      population.push({ typesConfig: randomizeTypesConfig(this.config.randomTypesConfig) });
+      population.push({
+        typesConfig: randomizeTypesConfig(
+          this.config.randomTypesConfig,
+          createTransparentTypesConfig(this.config.randomTypesConfig.TYPES_COUNT),
+        ),
+      });
     }
     return population;
   }
@@ -93,11 +103,12 @@ export class GeneticSearch implements GeneticSearchInterface {
   }
 
   private calcLosses(results: number[][]): number[] {
-    const normalized = this.normalizeResults(results);
-    const weighed = this.weighResults(normalized);
-    const compared = this.compareWithReference(weighed);
+    // TODO: normalize results ???
+    results = this.normalizeResults(results);
+    results = this.weighResults(results);
+    results = this.compareWithReference(results);
 
-    return compared.map((x) => arraySum(x));
+    return results.map((x) => arraySum(x));
   }
 
   private normalizeResults(results: number[][]): number[][] {

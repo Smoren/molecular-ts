@@ -36,8 +36,8 @@ import {
   createVector,
   toVector,
   createFilledArray,
-  createEmptyMatrix,
-  createEmptyTensor,
+  createFilledMatrix,
+  createFilledTensor,
   repeatArrayValues,
 } from './factories';
 import {
@@ -52,8 +52,8 @@ export {
   createVector,
   toVector,
   createFilledArray,
-  createEmptyMatrix,
-  createEmptyTensor,
+  createFilledMatrix,
+  createFilledTensor,
   createRandomInteger,
   createRandomFloat,
   repeatArrayValues,
