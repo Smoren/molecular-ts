@@ -5,9 +5,17 @@ import {
   fullCopyObject,
 } from '../utils/functions';
 import {
-  concatArrays, concatMatrices, concatTensors,
+  concatArrays,
+  concatMatrices,
+  concatTensors,
   createRandomFloat,
   createRandomInteger,
+  crossArrays,
+  crossMatrices,
+  crossTensors,
+  randomCrossArrays,
+  randomCrossMatrices,
+  randomCrossTensors,
   randomizeMatrix,
   setMatrixMainDiagonal,
   setTensorMainDiagonal,
@@ -384,6 +392,60 @@ export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesCon
     lhs.LINK_FACTOR_DISTANCE_EXTENDED,
     rhs.LINK_FACTOR_DISTANCE_EXTENDED,
     1,
+  );
+
+  return result;
+}
+
+export function crossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, separator: number): TypesConfig {
+  const result = fullCopyObject(lhs);
+
+  result.COLORS = createColors(lhs.COLORS.length);
+  result.RADIUS = crossArrays(lhs.RADIUS, rhs.RADIUS, separator);
+  result.FREQUENCIES = crossArrays(lhs.FREQUENCIES, rhs.FREQUENCIES, separator);
+
+  result.GRAVITY = crossMatrices(lhs.GRAVITY, rhs.GRAVITY, separator);
+  result.LINK_GRAVITY = crossMatrices(lhs.LINK_GRAVITY, rhs.LINK_GRAVITY, separator);
+
+  result.LINKS = crossArrays(lhs.LINKS, rhs.LINKS, separator);
+  result.TYPE_LINKS = crossMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, separator);
+
+  result.LINK_FACTOR_DISTANCE = crossMatrices(
+    lhs.LINK_FACTOR_DISTANCE,
+    rhs.LINK_FACTOR_DISTANCE,
+    separator,
+  );
+  result.LINK_FACTOR_DISTANCE_EXTENDED = crossTensors(
+    lhs.LINK_FACTOR_DISTANCE_EXTENDED,
+    rhs.LINK_FACTOR_DISTANCE_EXTENDED,
+    separator,
+  );
+
+  return result;
+}
+
+export function randomCrossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, separator: number): TypesConfig {
+  const result = fullCopyObject(lhs);
+
+  result.COLORS = createColors(lhs.COLORS.length);
+  result.RADIUS = randomCrossArrays(lhs.RADIUS, rhs.RADIUS, separator);
+  result.FREQUENCIES = randomCrossArrays(lhs.FREQUENCIES, rhs.FREQUENCIES, separator);
+
+  result.GRAVITY = randomCrossMatrices(lhs.GRAVITY, rhs.GRAVITY, separator);
+  result.LINK_GRAVITY = randomCrossMatrices(lhs.LINK_GRAVITY, rhs.LINK_GRAVITY, separator);
+
+  result.LINKS = randomCrossArrays(lhs.LINKS, rhs.LINKS, separator);
+  result.TYPE_LINKS = randomCrossMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, separator);
+
+  result.LINK_FACTOR_DISTANCE = randomCrossMatrices(
+    lhs.LINK_FACTOR_DISTANCE,
+    rhs.LINK_FACTOR_DISTANCE,
+    separator,
+  );
+  result.LINK_FACTOR_DISTANCE_EXTENDED = randomCrossTensors(
+    lhs.LINK_FACTOR_DISTANCE_EXTENDED,
+    rhs.LINK_FACTOR_DISTANCE_EXTENDED,
+    separator,
   );
 
   return result;

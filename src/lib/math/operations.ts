@@ -110,6 +110,36 @@ export function concatTensors(lhs: number[][][], rhs: number[][][], defaultValue
   return result;
 }
 
+export function crossArrays(lhs: number[], rhs: number[], separator: number): number[] {
+  lhs = lhs.slice(0, separator);
+  rhs = rhs.slice(separator);
+  return concatArrays(lhs, rhs);
+}
+
+export function crossMatrices(lhs: number[][], rhs: number[][], separator: number): number[][] {
+  lhs = lhs.slice(0, separator).map((row) => row.slice(0, separator));
+  rhs = rhs.slice(separator).map((row) => row.slice(separator));
+  return concatMatrices(lhs, rhs);
+}
+
+export function crossTensors(lhs: number[][][], rhs: number[][][], separator: number): number[][][] {
+  lhs = lhs.slice(0, separator).map((row) => row.slice(0, separator).map((col) => col.slice(0, separator)));
+  rhs = rhs.slice(separator).map((row) => row.slice(separator).map((col) => col.slice(separator)));
+  return concatTensors(lhs, rhs);
+}
+
+export function randomCrossArrays(lhs: number[], rhs: number[], separator: number): number[] {
+  return lhs.map((_, i) => Math.random() > separator ? lhs[i] : rhs[i]);
+}
+
+export function randomCrossMatrices(lhs: number[][], rhs: number[][], separator: number): number[][] {
+  return lhs.map((row, i) => row.map((_, j) => Math.random() > separator ? lhs[i][j] : rhs[i][j]));
+}
+
+export function randomCrossTensors(lhs: number[][][], rhs: number[][][], separator: number): number[][][] {
+  return lhs.map((row, i) => row.map((col, j) => col.map((_, k) => Math.random() > separator ? lhs[i][j][k] : rhs[i][j][k])));
+}
+
 export function setMatrixMainDiagonal<T>(matrix: T[][], value: T): T[][] {
   for (let i = 0; i < matrix.length; ++i) {
     matrix[i][i] = value;

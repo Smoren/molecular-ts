@@ -1,17 +1,20 @@
 import { multi, single, transform } from 'itertools-ts';
 import { Pool } from 'multiprocess-pool';
 import type {
+  CrossoverStrategyInterface,
   GeneticSearchConfig,
-  Genome,
+  Genome, MutationStrategyInterface,
   Population,
   RunnerStrategyInterface,
   StrategyConfig,
 } from '../types/genetic';
-import { simulationTask, type SimulationTaskConfig } from "./multiprocessing";
+import type { SimulationTaskConfig } from "./multiprocessing";
+import { simulationTask } from "./multiprocessing";
 import { normalizeSummaryMatrix } from './helpers';
-import { randomizeTypesConfig } from '../config/types';
-import { arrayBinaryOperation, arraySum } from '../math';
+import { crossTypesConfigs, randomCrossTypesConfigs, randomizeTypesConfig } from '../config/types';
+import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { getRandomArrayItem } from '../math/random';
+import { fullCopyObject } from "@/lib/utils/functions";
 
 export class GeneticSearch {
   private readonly config: GeneticSearchConfig;
@@ -160,5 +163,32 @@ export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerSt
       result.push(await simulationTask(input));
     }
     return result;
+  }
+}
+
+export class StrictCrossoverStrategy implements CrossoverStrategyInterface {
+  public cross(lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
+    const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
+    return {
+      typesConfig: crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator),
+    };
+  }
+}
+
+export class RandomCrossoverStrategy implements CrossoverStrategyInterface {
+  public cross(lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
+    const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
+    return {
+      typesConfig: randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator),
+    };
+  }
+}
+
+export class MutationStrategy implements MutationStrategyInterface {
+  mutate(genome: Genome, probability: number, config: GeneticSearchConfig): Genome {
+    const typesConfig = fullCopyObject(genome.typesConfig);
+    const randomizedTypesConfig = randomizeTypesConfig(config.randomTypesConfig, typesConfig);
+
+    return { typesConfig: randomCrossTypesConfigs(typesConfig, randomizedTypesConfig, probability) };
   }
 }
