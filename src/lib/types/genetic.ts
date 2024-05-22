@@ -4,7 +4,6 @@ export type GeneticSearchConfig = {
   populationSize: number;
   survivalRate: number;
   crossoverRate: number;
-  crossoverMutationProbability: number;
   mutationProbability: number;
   reference: number[];
   weights: number[];
