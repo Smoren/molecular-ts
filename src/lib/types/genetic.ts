@@ -13,6 +13,7 @@ export type GeneticSearchConfig = {
 };
 
 export type Genome = {
+  id: number;
   typesConfig: TypesConfig;
 }
 
@@ -23,11 +24,11 @@ export interface GeneticSearchInterface {
 }
 
 export interface MutationStrategyInterface {
-  mutate: (item: Genome, probability: number, config: GeneticSearchConfig) => Genome;
+  mutate: (id: number, item: Genome, probability: number, config: GeneticSearchConfig) => Genome;
 }
 
 export interface CrossoverStrategyInterface {
-  cross: (lhs: Genome, rhs: Genome, config: GeneticSearchConfig) => Genome;
+  cross: (id: number, lhs: Genome, rhs: Genome, config: GeneticSearchConfig) => Genome;
 }
 
 export interface RunnerStrategyInterface {

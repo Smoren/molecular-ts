@@ -55,6 +55,52 @@ export function createTransparentWeights(): TotalSummaryWeights {
   };
 }
 
+export function createZeroWeights(): TotalSummaryWeights {
+  return {
+    ATOMS_MEAN_SPEED: 0,
+    ATOMS_TYPE_MEAN_SPEED: 0,
+    ATOMS_TYPE_LINKS_MEAN_COUNT: 0,
+    LINKS_CREATED_MEAN: 0,
+    LINKS_DELETED_MEAN: 0,
+    LINKS_TYPE_CREATED_MEAN: 0,
+    LINKS_TYPE_DELETED_MEAN: 0,
+    COMPOUNDS_PER_ATOM: 0,
+    COMPOUNDS_PER_ATOM_BY_TYPES: 0,
+    COMPOUND_LENGTH_SUMMARY: {
+      size: 0,
+      frequency: 0,
+      min: 0,
+      max: 0,
+      mean: 0,
+      median: 0,
+    },
+    COMPOUND_LENGTH_BY_TYPES_SUMMARY: {
+      size: 0,
+      frequency: 0,
+      min: 0,
+      max: 0,
+      mean: 0,
+      median: 0,
+    },
+    COMPOUND_SPEED_SUMMARY: {
+      size: 0,
+      frequency: 0,
+      min: 0,
+      max: 0,
+      mean: 0,
+      median: 0,
+    },
+    COMPOUND_SPEED_BY_TYPES_SUMMARY: {
+      size: 0,
+      frequency: 0,
+      min: 0,
+      max: 0,
+      mean: 0,
+      median: 0,
+    },
+  };
+}
+
 export function getSummaryMatrixGroupIndexes(typesCount: number): number[][] {
   const groups = [
     0,

@@ -27,10 +27,19 @@ export class GeneticSearch implements GeneticSearchInterface {
   private readonly config: GeneticSearchConfig;
   private readonly strategy: StrategyConfig;
   private population: Population;
+  private nextId: () => number;
 
   constructor(config: GeneticSearchConfig, strategy: StrategyConfig) {
     this.config = config;
     this.strategy = strategy;
+
+    this.nextId = (() => {
+      let id = 0;
+      return () => {
+        return ++id;
+      };
+    })();
+
     this.population = this.createPopulation(config.populationSize);
   }
 
@@ -45,7 +54,9 @@ export class GeneticSearch implements GeneticSearchInterface {
     const crossedPopulation = this.crossover(survivedPopulation, countToCross);
     const mutatedPopulation = this.clone(survivedPopulation, countToClone);
 
-    this.population = [...survivedPopulation, ...crossedPopulation, ...mutatedPopulation];
+    // TODO population should be replaced with sorted
+    // this.population = [...survivedPopulation, ...crossedPopulation, ...mutatedPopulation];
+    this.population = [...sortedPopulation];
 
     return sortLosses;
   }
@@ -58,6 +69,7 @@ export class GeneticSearch implements GeneticSearchInterface {
     const population: Population = [];
     for (let i = 0; i < size; i++) {
       population.push({
+        id: this.nextId(),
         typesConfig: randomizeTypesConfig(
           this.config.randomTypesConfig,
           createTransparentTypesConfig(this.config.randomTypesConfig.TYPES_COUNT),
@@ -73,7 +85,7 @@ export class GeneticSearch implements GeneticSearchInterface {
     for (let i = 0; i < count; i++) {
       const lhs = getRandomArrayItem(genomes);
       const rhs = getRandomArrayItem(genomes);
-      const crossedGenome = this.strategy.crossover.cross(lhs, rhs, this.config);
+      const crossedGenome = this.strategy.crossover.cross(this.nextId(), lhs, rhs, this.config);
       newPopulation.push(crossedGenome);
     }
 
@@ -85,7 +97,7 @@ export class GeneticSearch implements GeneticSearchInterface {
 
     for (let i = 0; i < count; i++) {
       const genome = getRandomArrayItem(genomes);
-      const mutatedGenome = this.strategy.mutation.mutate(genome, this.config.mutationProbability, this.config);
+      const mutatedGenome = this.strategy.mutation.mutate(this.nextId(), genome, this.config.mutationProbability, this.config);
       newPopulation.push(mutatedGenome);
     }
 
@@ -104,7 +116,7 @@ export class GeneticSearch implements GeneticSearchInterface {
 
   private calcLosses(results: number[][]): number[] {
     // TODO: normalize results ???
-    results = this.normalizeResults(results);
+    // results = this.normalizeResults(results);
     results = this.weighResults(results);
     results = this.compareWithReference(results);
 
@@ -159,29 +171,29 @@ export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
 }
 
 export class SubMatrixCrossoverStrategy implements CrossoverStrategyInterface {
-  public cross(lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
+  public cross(id: number, lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
     const randomized = randomizeTypesConfig(config.randomTypesConfig, crossed, separator);
-    return { typesConfig: randomized };
+    return { id: id, typesConfig: randomized };
   }
 }
 
 export class RandomCrossoverStrategy implements CrossoverStrategyInterface {
-  public cross(lhs: Genome, rhs: Genome): Genome {
+  public cross(id: number, lhs: Genome, rhs: Genome): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
-    return { typesConfig: crossed };
+    return { id: id, typesConfig: crossed };
   }
 }
 
 export class MutationStrategy implements MutationStrategyInterface {
-  mutate(genome: Genome, probability: number, config: GeneticSearchConfig): Genome {
+  mutate(id: number, genome: Genome, probability: number, config: GeneticSearchConfig): Genome {
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
     const randomizedTypesConfig = randomizeTypesConfig(config.randomTypesConfig, inputTypesConfig);
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
-    return { typesConfig: mutatedTypesConfig };
+    return { id: id, typesConfig: mutatedTypesConfig };
   }
 }
 
