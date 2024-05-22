@@ -65,7 +65,7 @@ export function concatArrays<T>(lhs: T[], rhs: T[]): T[] {
 
 export function concatMatrices(lhs: number[][], rhs: number[][], defaultValue: number = 0): number[][] {
   const n = lhs.length + rhs.length;
-  const m = lhs[0].length + rhs[0].length;
+  const m = (lhs[0]?.length ?? 0) + (rhs[0]?.length ?? 0);
   const result = createEmptyMatrix(n, m, defaultValue);
 
   for (let i = 0; i < lhs.length; ++i) {
@@ -78,7 +78,7 @@ export function concatMatrices(lhs: number[][], rhs: number[][], defaultValue: n
   for (let i = 0; i < rhs.length; ++i) {
     const row = rhs[i];
     for (let j = 0; j < row.length; ++j) {
-      result[lhs.length + i][lhs[0].length + j] = row[j];
+      result[lhs.length + i][(lhs[0]?.length ?? 0) + j] = row[j];
     }
   }
 
@@ -87,8 +87,8 @@ export function concatMatrices(lhs: number[][], rhs: number[][], defaultValue: n
 
 export function concatTensors(lhs: number[][][], rhs: number[][][], defaultValue: number = 0): number[][][] {
   const n = lhs.length + rhs.length;
-  const m = lhs[0].length + rhs[0].length;
-  const k = lhs[0][0].length + rhs[0][0].length;
+  const m = (lhs[0]?.length ?? 0) + (rhs[0]?.length ?? 0);
+  const k = ((lhs[0] ?? [])[0]?.length ?? 0) + ((rhs[0] ?? [])[0]?.length ?? 0);
   const result = createEmptyTensor(n, m, k, defaultValue);
 
   for (let i = 0; i < lhs.length; ++i) {
@@ -102,7 +102,7 @@ export function concatTensors(lhs: number[][][], rhs: number[][][], defaultValue
   for (let i = 0; i < rhs.length; ++i) {
     for (let j = 0; j < rhs[i].length; ++j) {
       for (let k = 0; k < rhs[i][j].length; ++k) {
-        result[lhs.length + i][lhs[0].length + j][lhs[0][0].length + k] = rhs[i][j][k];
+        result[lhs.length + i][(lhs[0]?.length ?? 0) + j][((lhs[0] ?? [])[0]?.length ?? 0) + k] = rhs[i][j][k];
       }
     }
   }
