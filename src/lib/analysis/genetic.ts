@@ -14,7 +14,7 @@ import { normalizeSummaryMatrix } from './helpers';
 import { crossTypesConfigs, randomCrossTypesConfigs, randomizeTypesConfig } from '../config/types';
 import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { getRandomArrayItem } from '../math/random';
-import { fullCopyObject } from "@/lib/utils/functions";
+import { fullCopyObject } from '../utils/functions';
 
 export class GeneticSearch {
   private readonly config: GeneticSearchConfig;
@@ -57,11 +57,8 @@ export class GeneticSearch {
     for (let i = 0; i < count; i++) {
       const lhs = getRandomArrayItem(population);
       const rhs = getRandomArrayItem(population);
-
       const crossedGenome = this.strategy.crossover.cross(lhs, rhs, this.config);
-      const mutatedGenome = this.strategy.mutation.mutate(crossedGenome, this.config.crossoverMutationProbability, this.config);
-
-      newPopulation.push(mutatedGenome);
+      newPopulation.push(crossedGenome);
     }
 
     return newPopulation;
@@ -72,7 +69,7 @@ export class GeneticSearch {
 
     for (let i = 0; i < count; i++) {
       const genome = getRandomArrayItem(population);
-      const mutatedGenome = this.strategy.mutation.mutate(genome, this.config.cloneMutationProbability, this.config);
+      const mutatedGenome = this.strategy.mutation.mutate(genome, this.config.mutationProbability, this.config);
       newPopulation.push(mutatedGenome);
     }
 
@@ -166,29 +163,29 @@ export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerSt
   }
 }
 
-export class StrictCrossoverStrategy implements CrossoverStrategyInterface {
+export class SubMatrixCrossoverStrategy implements CrossoverStrategyInterface {
   public cross(lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
-    return {
-      typesConfig: crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator),
-    };
+    const crossed = crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
+    const randomized = randomizeTypesConfig(config.randomTypesConfig, crossed, separator);
+    return { typesConfig: randomized };
   }
 }
 
 export class RandomCrossoverStrategy implements CrossoverStrategyInterface {
   public cross(lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
-    return {
-      typesConfig: randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator),
-    };
+    const crossed = randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
+    return { typesConfig: crossed };
   }
 }
 
 export class MutationStrategy implements MutationStrategyInterface {
   mutate(genome: Genome, probability: number, config: GeneticSearchConfig): Genome {
-    const typesConfig = fullCopyObject(genome.typesConfig);
-    const randomizedTypesConfig = randomizeTypesConfig(config.randomTypesConfig, typesConfig);
+    const inputTypesConfig = fullCopyObject(genome.typesConfig);
+    const randomizedTypesConfig = randomizeTypesConfig(config.randomTypesConfig, inputTypesConfig);
+    const mutatedTypesConfig = randomCrossTypesConfigs(inputTypesConfig, randomizedTypesConfig, probability);
 
-    return { typesConfig: randomCrossTypesConfigs(typesConfig, randomizedTypesConfig, probability) };
+    return { typesConfig: mutatedTypesConfig };
   }
 }
