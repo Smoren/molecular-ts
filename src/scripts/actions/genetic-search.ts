@@ -7,20 +7,22 @@ import {
   SubMatrixCrossoverStrategy,
 } from "@/lib/analysis/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
-import { createDefaultRandomTypesConfig } from "@/lib/config/types";
+import { createWideRandomTypesConfig } from "@/lib/config/types";
 import type { GeneticSearchConfig, StrategyConfig } from "@/lib/types/genetic";
 import { convertWeightsToSummaryMatrixRow, createTransparentWeights, testSimulation } from "@/lib/analysis/helpers";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
+import { round } from "@/lib/math";
 
 export const actionGeneticSearch = async (...args: string[]) => {
   console.log('[START] genetic search action', args);
   const ts = Date.now();
 
-  const simulationStepsCount = [300, 5, 5, 5, 5];
+  const generationCount = 30;
+  const simulationStepsCount = [200, 100, 20, 20, 15, 15, 10, 10, 5, 5];
   const strategyConfig: StrategyConfig = {
     runner: new MultiprocessingRunnerStrategy(os.cpus().length),
     mutation: new MutationStrategy(),
-    crossover: new SubMatrixCrossoverStrategy()
+    crossover: new SubMatrixCrossoverStrategy(),
   };
 
   const worldConfig = getWorldConfig();
@@ -29,9 +31,10 @@ export const actionGeneticSearch = async (...args: string[]) => {
   const randomTypesConfig = getRandomizeConfig(typesCount);
   const weights = convertWeightsToSummaryMatrixRow(getWeights(), typesCount);
 
+  console.log('[START] Calculating reference matrix');
   const reference = testSimulation(worldConfig, typesConfig, simulationStepsCount);
   const geneticConfig: GeneticSearchConfig = {
-    populationSize: 100,
+    populationSize: 200,
     survivalRate: 0.5,
     crossoverRate: 0.5,
     mutationProbability: 0.1,
@@ -41,13 +44,21 @@ export const actionGeneticSearch = async (...args: string[]) => {
     randomTypesConfig,
     simulationStepsCount,
   };
+  console.log('[FINISH] Calculating reference matrix');
 
-  console.log(geneticConfig);
-
+  console.log('[START] Running genetic search');
   const geneticSearch = new GeneticSearch(geneticConfig, strategyConfig);
 
-  await geneticSearch.runGenerationStep();
+  for (let i=0; i<generationCount; i++) {
+    const losses = await geneticSearch.runGenerationStep();
+    const minLoss = round(losses[0], 2);
+    const medianLoss = round(losses[round(losses.length/2, 0)], 2);
+    const meanLoss = round(losses.reduce((a, b) => a + b, 0) / losses.length, 2);
+    const maxLoss = round(losses[losses.length-1], 2);
+    console.log(`[GENERATION ${i+1}] losses: min=${minLoss}, median=${medianLoss}, mean=${meanLoss}, max=${maxLoss}`);
+  }
 
+  console.log(JSON.stringify(geneticSearch.getBestGenome(), null, 4));
   console.log(`[FINISH] in ${Date.now() - ts} ms`);
 }
 
@@ -151,13 +162,13 @@ function getReferenceTypesConfig(): TypesConfig {
 }
 
 function getRandomizeConfig(typesCount: number): RandomTypesConfig {
-  return createDefaultRandomTypesConfig(typesCount);
+  return createWideRandomTypesConfig(typesCount);
 }
 
 function getWorldConfig(): WorldConfig {
-  const atomsCount = 500;
+  const atomsCount = 1000;
   const minPosition = [0, 0];
-  const maxPosition = [1000, 1000];
+  const maxPosition = [1500, 1500];
 
   const initialConfig = {
     ATOMS_COUNT: atomsCount,

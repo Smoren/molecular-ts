@@ -237,6 +237,35 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
   };
 }
 
+export function createWideRandomTypesConfig(typesCount: number): RandomTypesConfig {
+  return {
+    TYPES_COUNT: typesCount,
+
+    USE_RADIUS_BOUNDS: false,
+    USE_FREQUENCY_BOUNDS: false,
+    USE_GRAVITY_BOUNDS: true,
+    USE_LINK_GRAVITY_BOUNDS: true,
+    USE_LINK_BOUNDS: true,
+    USE_LINK_TYPE_BOUNDS: true,
+    USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+
+    RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+    FREQUENCY_BOUNDS: [0.1, 1, 0.5, 0.1],
+    GRAVITY_BOUNDS: [-10, 1, -1, 0.1],
+    LINK_GRAVITY_BOUNDS: [-15, 1, -1, 0.1],
+    LINK_BOUNDS: [1, 6, 3],
+    LINK_TYPE_BOUNDS: [0, 5, 2],
+    LINK_FACTOR_DISTANCE_BOUNDS: [0.2, 1.2, 1, 0.1],
+
+    GRAVITY_MATRIX_SYMMETRIC: false,
+    LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+    LINK_TYPE_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
+    LINK_FACTOR_DISTANCE_EXTENDED: true,
+    LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: true,
+  };
+}
+
 export function copyConfigListValue(copyFrom: unknown[], copyTo: unknown[], defaultValue: number) {
   for (const i in copyTo as Array<unknown>) {
     copyTo[i] = copyFrom[i] ?? defaultValue;

@@ -34,7 +34,7 @@ export class GeneticSearch implements GeneticSearchInterface {
 
     const results = await this.strategy.runner.run(this.population, this.config);
     const losses = this.calcLosses(results);
-    const sortedPopulation = this.sortPopulation(losses);
+    const [sortedPopulation, sortLosses] = this.sortPopulation(losses);
 
     const survivedPopulation = sortedPopulation.slice(0, countToSurvive);
     const crossedPopulation = this.crossover(survivedPopulation, countToCross);
@@ -42,7 +42,11 @@ export class GeneticSearch implements GeneticSearchInterface {
 
     this.population = [...survivedPopulation, ...crossedPopulation, ...mutatedPopulation];
 
-    return losses;
+    return sortLosses;
+  }
+
+  public getBestGenome(): Genome {
+    return this.population[0];
   }
 
   private createPopulation(size: number): Population {
@@ -78,10 +82,14 @@ export class GeneticSearch implements GeneticSearchInterface {
     return newPopulation;
   }
 
-  private sortPopulation(losses: number[]): Population {
+  private sortPopulation(losses: number[]): [Population, number[]] {
     const zipped = multi.zip(this.population, losses);
     const sorted = single.sort(zipped, (lhs, rhs) => lhs[1] - rhs[1]);
-    return transform.toArray(single.map(sorted, (x) => x[0]));
+    const sortedArray = transform.toArray(sorted);
+    return [
+      transform.toArray(single.map(sortedArray, (x) => x[0])),
+      transform.toArray(single.map(sortedArray, (x) => x[1])),
+    ];
   }
 
   private calcLosses(results: number[][]): number[] {
@@ -93,7 +101,8 @@ export class GeneticSearch implements GeneticSearchInterface {
   }
 
   private normalizeResults(results: number[][]): number[][] {
-    return normalizeSummaryMatrix([...results, this.config.reference], this.config.randomTypesConfig.TYPES_COUNT);
+    const matrix = normalizeSummaryMatrix([...results, this.config.reference], this.config.randomTypesConfig.TYPES_COUNT);
+    return matrix.slice(0, -1);
   }
 
   private weighResults(results: number[][]): number[][] {
