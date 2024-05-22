@@ -19,6 +19,10 @@ export type Genome = {
 
 export type Population = Genome[];
 
+export interface GeneticSearchInterface {
+  runGenerationStep(): Promise<number[]>;
+}
+
 export interface MutationStrategyInterface {
   mutate: (item: Genome, probability: number, config: GeneticSearchConfig) => Genome;
 }

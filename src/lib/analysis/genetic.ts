@@ -1,12 +1,14 @@
 import { multi, single, transform } from 'itertools-ts';
 import { Pool } from 'multiprocess-pool';
 import type {
-  CrossoverStrategyInterface,
   GeneticSearchConfig,
-  Genome, MutationStrategyInterface,
-  Population,
-  RunnerStrategyInterface,
   StrategyConfig,
+  GeneticSearchInterface,
+  CrossoverStrategyInterface,
+  RunnerStrategyInterface,
+  MutationStrategyInterface,
+  Genome,
+  Population,
 } from '../types/genetic';
 import type { SimulationTaskConfig } from "./multiprocessing";
 import { simulationTask } from "./multiprocessing";
@@ -16,7 +18,7 @@ import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { getRandomArrayItem } from '../math/random';
 import { fullCopyObject } from '../utils/functions';
 
-export class GeneticSearch {
+export class GeneticSearch implements GeneticSearchInterface {
   private readonly config: GeneticSearchConfig;
   private readonly strategy: StrategyConfig;
   private population: Population;
@@ -27,7 +29,7 @@ export class GeneticSearch {
     this.population = this.createPopulation(config.populationSize);
   }
 
-  public async generationStep(): Promise<number[]> {
+  public async runGenerationStep(): Promise<number[]> {
     const [countToSurvive, countToCross, countToClone] = this.getSizes();
 
     const results = await this.strategy.runner.run(this.population, this.config);
@@ -35,8 +37,8 @@ export class GeneticSearch {
     const sortedPopulation = this.sortPopulation(losses);
 
     const survivedPopulation = sortedPopulation.slice(0, countToSurvive);
-    const crossedPopulation = this.crossoverPopulation(survivedPopulation, countToCross);
-    const mutatedPopulation = this.clonePopulation(survivedPopulation, countToClone);
+    const crossedPopulation = this.crossover(survivedPopulation, countToCross);
+    const mutatedPopulation = this.clone(survivedPopulation, countToClone);
 
     this.population = [...survivedPopulation, ...crossedPopulation, ...mutatedPopulation];
 
@@ -51,12 +53,12 @@ export class GeneticSearch {
     return population;
   }
 
-  private crossoverPopulation(population: Population, count: number): Population {
+  private crossover(genomes: Population, count: number): Population {
     const newPopulation = [];
 
     for (let i = 0; i < count; i++) {
-      const lhs = getRandomArrayItem(population);
-      const rhs = getRandomArrayItem(population);
+      const lhs = getRandomArrayItem(genomes);
+      const rhs = getRandomArrayItem(genomes);
       const crossedGenome = this.strategy.crossover.cross(lhs, rhs, this.config);
       newPopulation.push(crossedGenome);
     }
@@ -64,11 +66,11 @@ export class GeneticSearch {
     return newPopulation;
   }
 
-  private clonePopulation(population: Population, count: number): Population {
+  private clone(genomes: Population, count: number): Population {
     const newPopulation = [];
 
     for (let i = 0; i < count; i++) {
-      const genome = getRandomArrayItem(population);
+      const genome = getRandomArrayItem(genomes);
       const mutatedGenome = this.strategy.mutation.mutate(genome, this.config.mutationProbability, this.config);
       newPopulation.push(mutatedGenome);
     }
@@ -136,33 +138,6 @@ export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
   }
 }
 
-export class MultiprocessingRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
-  private readonly poolSize: number;
-
-  constructor(poolSize: number) {
-    super();
-    this.poolSize = poolSize;
-  }
-
-  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
-    const pool = new Pool(this.poolSize);
-    const result: number[][] = await pool.map(inputs, simulationTask);
-    pool.close();
-
-    return result;
-  }
-}
-
-export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
-  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
-    const result = [];
-    for (const input of inputs) {
-      result.push(await simulationTask(input));
-    }
-    return result;
-  }
-}
-
 export class SubMatrixCrossoverStrategy implements CrossoverStrategyInterface {
   public cross(lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
@@ -187,5 +162,32 @@ export class MutationStrategy implements MutationStrategyInterface {
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
     return { typesConfig: mutatedTypesConfig };
+  }
+}
+
+export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
+  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
+    const result = [];
+    for (const input of inputs) {
+      result.push(await simulationTask(input));
+    }
+    return result;
+  }
+}
+
+export class MultiprocessingRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
+  private readonly poolSize: number;
+
+  constructor(poolSize: number) {
+    super();
+    this.poolSize = poolSize;
+  }
+
+  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
+    const pool = new Pool(this.poolSize);
+    const result: number[][] = await pool.map(inputs, simulationTask);
+    pool.close();
+
+    return result;
   }
 }
