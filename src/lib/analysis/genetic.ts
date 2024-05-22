@@ -148,7 +148,7 @@ export class SubMatrixCrossoverStrategy implements CrossoverStrategyInterface {
 }
 
 export class RandomCrossoverStrategy implements CrossoverStrategyInterface {
-  public cross(lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
+  public cross(lhs: Genome, rhs: Genome): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
     return { typesConfig: crossed };
