@@ -12,7 +12,7 @@ import type { GeneticSearchConfig, StrategyConfig } from "@/lib/types/genetic";
 import {
   convertWeightsToSummaryMatrixRow,
   createTransparentWeights,
-  createZeroWeights,
+  createZeroWeights, repeatTestSimulation,
   testSimulation
 } from "@/lib/analysis/helpers";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
@@ -23,7 +23,8 @@ export const actionGeneticSearch = async (...args: string[]) => {
   const ts = Date.now();
 
   const generationCount = 30;
-  const simulationStepsCount = [200, 100, 20, 20, 15, 15, 10, 10, 5, 5];
+  const checkpoints = [200, 100, 20, 20, 15, 15, 10, 10, 5, 5];
+  const repeats = 5;
   const strategyConfig: StrategyConfig = {
     runner: new MultiprocessingRunnerStrategy(os.cpus().length),
     mutation: new MutationStrategy(),
@@ -38,7 +39,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
   console.log('[START] Calculating reference matrix');
 
-  const reference = testSimulation(worldConfig, typesConfig, simulationStepsCount);
+  const reference = repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
   const geneticConfig: GeneticSearchConfig = {
     populationSize: 30,
     survivalRate: 0.5,
@@ -48,7 +49,8 @@ export const actionGeneticSearch = async (...args: string[]) => {
     weights,
     worldConfig,
     randomTypesConfig,
-    simulationStepsCount,
+    checkpoints,
+    repeats,
   };
   console.log('[FINISH] Calculating reference matrix');
 
@@ -73,41 +75,41 @@ function getReferenceTypesConfig(): TypesConfig {
   return {
     "RADIUS": [1, 1, 1],
     "GRAVITY": [
-      [0.2, -0.4, 0.6],
-      [-1.8, -1.4, -1.6],
-      [-1.1, -1, -1.3]
+      [-1.4, -1.6, -0.7],
+      [-0.9, -1.9, -1.3],
+      [-0.6, -1.3, -0.5]
     ],
     "LINK_GRAVITY": [
-      [-2.4, -0.9, 0.2],
-      [-3.3, -2, -4.3],
-      [0.8, -0.3, -0.6]
+      [-0.4, 0, -2.5],
+      [-2.3, 0, -5],
+      [-0.6, -3.3, -3]
     ],
-    "LINKS": [3, 1, 3],
+    "LINKS": [2, 2, 3],
     "TYPE_LINKS": [
-      [2, 0, 2],
-      [2, 1, 3],
-      [3, 1, 0]
+      [3, 0, 2],
+      [3, 0, 2],
+      [1, 1, 1]
     ],
     "LINK_FACTOR_DISTANCE": [
-      [1, 0.8, 1.2],
-      [0.8, 1, 1.2],
-      [1.2, 1.2, 1]
+      [1, 1, 1],
+      [1, 1, 1],
+      [1, 1, 1]
     ],
     "LINK_FACTOR_DISTANCE_EXTENDED": [
       [
-        [1, 1.2, 0.8],
-        [1.2, 0.9, 0.8],
-        [0.8, 0.8, 0.8]
+        [1, 1, 1],
+        [1, 1, 0.8],
+        [1, 1, 1]
       ],
       [
-        [0.9, 0.8, 1.1],
-        [0.8, 1, 0.9],
-        [1.1, 0.9, 1.1]
+        [0.7, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
       ],
       [
-        [0.7, 1, 1.1],
-        [1, 0.8, 0.9],
-        [1.1, 0.9, 1]
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
       ]
     ],
     "LINK_FACTOR_DISTANCE_USE_EXTENDED": true,

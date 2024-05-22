@@ -9,7 +9,8 @@ export type GeneticSearchConfig = {
   weights: number[];
   worldConfig: WorldConfig;
   randomTypesConfig: RandomTypesConfig;
-  simulationStepsCount: number[];
+  checkpoints: number[];
+  repeats: number,
 };
 
 export type Genome = {

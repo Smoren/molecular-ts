@@ -55,8 +55,8 @@ export class GeneticSearch implements GeneticSearchInterface {
     const mutatedPopulation = this.clone(survivedPopulation, countToClone);
 
     // TODO population should be replaced with sorted
-    // this.population = [...survivedPopulation, ...crossedPopulation, ...mutatedPopulation];
-    this.population = [...sortedPopulation];
+    this.population = [...survivedPopulation, ...crossedPopulation, ...mutatedPopulation];
+    // this.population = [...sortedPopulation];
 
     return sortLosses;
   }
@@ -116,6 +116,7 @@ export class GeneticSearch implements GeneticSearchInterface {
 
   private calcLosses(results: number[][]): number[] {
     // TODO: normalize results ???
+    // TODO: bounds of each compound
     // results = this.normalizeResults(results);
     results = this.weighResults(results);
     results = this.compareWithReference(results);
@@ -153,23 +154,6 @@ export class GeneticSearch implements GeneticSearchInterface {
   }
 }
 
-export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
-  public async run(population: Population, config: GeneticSearchConfig): Promise<number[][]> {
-    const inputs = this.createTasksInputList(population, config);
-    return await this.execTask(inputs);
-  }
-
-  protected abstract execTask(inputs: SimulationTaskConfig[]): Promise<number[][]>;
-
-  protected createTasksInputList(population: Population, config: GeneticSearchConfig): SimulationTaskConfig[] {
-    return population.map((genome, i) => this.createTaskInput(i+1, genome, config));
-  }
-
-  protected createTaskInput(id: number, genome: Genome, config: GeneticSearchConfig): SimulationTaskConfig {
-    return [id, config.worldConfig, genome.typesConfig, config.simulationStepsCount];
-  }
-}
-
 export class SubMatrixCrossoverStrategy implements CrossoverStrategyInterface {
   public cross(id: number, lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
@@ -194,6 +178,23 @@ export class MutationStrategy implements MutationStrategyInterface {
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
     return { id: id, typesConfig: mutatedTypesConfig };
+  }
+}
+
+export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
+  public async run(population: Population, config: GeneticSearchConfig): Promise<number[][]> {
+    const inputs = this.createTasksInputList(population, config);
+    return await this.execTask(inputs);
+  }
+
+  protected abstract execTask(inputs: SimulationTaskConfig[]): Promise<number[][]>;
+
+  protected createTasksInputList(population: Population, config: GeneticSearchConfig): SimulationTaskConfig[] {
+    return population.map((genome, i) => this.createTaskInput(i+1, genome, config));
+  }
+
+  protected createTaskInput(id: number, genome: Genome, config: GeneticSearchConfig): SimulationTaskConfig {
+    return [id, config.worldConfig, genome.typesConfig, config.checkpoints, config.repeats];
   }
 }
 

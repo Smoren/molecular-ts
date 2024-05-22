@@ -183,7 +183,7 @@ export function normalizeSummaryMatrix(matrix: number[][], typesCount: number): 
   return result;
 }
 
-export function testSimulation(worldConfig: WorldConfig, typesConfig: TypesConfig, steps: number[]): number[] {
+export function testSimulation(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
   const sim = new Simulation({
     viewMode: '2d',
     worldConfig: worldConfig,
@@ -196,7 +196,7 @@ export function testSimulation(worldConfig: WorldConfig, typesConfig: TypesConfi
   const runner = new Runner(sim);
   const summaryMatrix: number[][] = [];
 
-  for (const stepsCount of steps) {
+  for (const stepsCount of checkpoints) {
     runner.runSteps(stepsCount);
 
     const compounds = new CompoundsAnalyzer(sim.exportCompounds(), sim.atoms, typesConfig.FREQUENCIES.length);
@@ -209,4 +209,12 @@ export function testSimulation(worldConfig: WorldConfig, typesConfig: TypesConfi
   }
 
   return averageMatrixColumns(summaryMatrix);
+}
+
+export function repeatTestSimulation(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[], repeats: number): number[] {
+  const result = [];
+  for (let i=0; i<repeats; i++) {
+    result.push(testSimulation(worldConfig, typesConfig, checkpoints));
+  }
+  return averageMatrixColumns(result);
 }
