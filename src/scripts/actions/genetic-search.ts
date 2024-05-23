@@ -31,7 +31,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
   const repeats = 1;
   const strategyConfig: StrategyConfig = {
     // runner: new MultiprocessingRunnerStrategy(os.cpus().length),
-    runner: new CachedMultiprocessingRunnerStrategy(os.cpus().length-2),
+    runner: new CachedMultiprocessingRunnerStrategy(os.cpus().length / 2),
     mutation: new MutationStrategy(),
     crossover: new SubMatrixCrossoverStrategy(),
     // crossover: new RandomCrossoverStrategy(),
@@ -72,15 +72,14 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
     const bestGenome = geneticSearch.getBestGenome();
     console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
-    console.log(`\tabsolute losses:\tmin=${absMinLoss},\tmean=${absMeanLoss}`);
-    console.log(`\tnormalized losses:\tmin=${normMinLoss},\tmean=${normMeanLoss}\tmedian=${normMedianLoss},\tmax=${normMaxLoss}`);
+    console.log(`\tnormalized losses:\tmin=${normMinLoss}\tmean=${normMeanLoss}\tmedian=${normMedianLoss}\tmax=${normMaxLoss}`);
     // console.log(`\tBest absolute losses:\t[${absoluteLosses.slice(0, 5).map((x) => round(x, 2)).join(', ')}]`);
     // console.log(`\tBest normalized losses:\t[${normalizedLosses.slice(0, 5).map((x) => round(x, 2)).join(', ')}]`);
 
     if (bestGenome.id > bestId) {
       bestId = bestGenome.id;
       fs.writeFile(
-        `logs/${runId}_generation_${i+1}_id_${bestId}.json`,
+        `data/output/${runId}_generation_${i+1}_id_${bestId}.json`,
         formatJsonString(JSON.stringify(geneticSearch.getBestGenome(), null, 4)),
         () => null
       );

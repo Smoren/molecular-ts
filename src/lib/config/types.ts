@@ -271,9 +271,9 @@ export function createWideRandomTypesConfig(typesCount: number): RandomTypesConf
     FREQUENCY_BOUNDS: [0.1, 1, 0.5, 0.1],
     GRAVITY_BOUNDS: [-10, 1, -1, 0.1],
     LINK_GRAVITY_BOUNDS: [-15, 1, -1, 0.1],
-    LINK_BOUNDS: [1, 6, 3],
-    LINK_TYPE_BOUNDS: [0, 5, 2],
-    LINK_FACTOR_DISTANCE_BOUNDS: [0.2, 1.2, 1, 0.1],
+    LINK_BOUNDS: [1, 8, 4],
+    LINK_TYPE_BOUNDS: [0, 6, 3],
+    LINK_FACTOR_DISTANCE_BOUNDS: [0.1, 1.2, 1, 0.1],
 
     GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_GRAVITY_MATRIX_SYMMETRIC: false,

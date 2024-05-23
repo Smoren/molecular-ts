@@ -1,6 +1,12 @@
 node_modules
 package-lock.json
-.idea
 dist/*
-logs/*
-!logs/.gitkeep
+
+.idea
+
+data/input/*
+!data/input/.gitkeep
+!data/input/default*
+
+data/output/*
+!data/output/.gitkeep
