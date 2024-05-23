@@ -1,24 +1,21 @@
 import { fullCopyObject } from '../utils/functions';
 import { isEqual } from './helpers';
 
-export function normalizeArray(input: number[], inplace: boolean = false): number[] {
-  const result = inplace ? input : fullCopyObject(input);
+export function normalizeArray(input: number[], mean: number): number[] {
+  const max = Math.max(...input, mean);
+  const min = Math.min(...input, mean);
 
-  if (result.length === 0) {
-    return result;
+  let std = 1;
+  if (!isEqual(min, max)) {
+    std = max - min;
+  } else if (!isEqual(mean, max)) {
+    std = Math.abs(max - mean);
   }
 
-  const min = Math.min(...result);
-  const max = Math.max(...result);
-
-  if (isEqual(min, max)) {
-    return result.map(() => 0.5);
-  }
-
-  return result.map((x) => (x - min) / (max - min));
+  return input.map((x) => (x - mean) / std);
 }
 
-export function normalizeMatrixColumns(input: number[][], inplace: boolean = false): number[][] {
+export function normalizeMatrixColumns(input: number[][], mean: number[], inplace: boolean = false): number[][] {
   const result = inplace ? input : fullCopyObject(input);
 
   if (result.length === 0) {
@@ -26,7 +23,7 @@ export function normalizeMatrixColumns(input: number[][], inplace: boolean = fal
   }
 
   for (let i = 0; i < result[0].length; i++) {
-    const columnNormalized = normalizeArray(result.map((row) => row[i]));
+    const columnNormalized = normalizeArray(result.map((row) => row[i]), mean[i]);
     for (let j = 0; j < result.length; j++) {
       result[j][i] = columnNormalized[j];
     }

@@ -3,7 +3,7 @@ import type { TypesConfig, WorldConfig } from '../types/config';
 import { Simulation } from '../simulation';
 import { Runner } from '../runner';
 import { CompoundsAnalyzer } from '../analysis/compounds';
-import { createFilledArray, normalizeMatrixColumnsUnion, repeatArrayValues } from '../math';
+import { createFilledArray, normalizeMatrixColumns, normalizeMatrixColumnsUnion, repeatArrayValues } from '../math';
 import { createPhysicModel, fullCopyObject } from '../utils/functions';
 import { create2dRandomDistribution } from '../config/atoms';
 import { averageMatrixColumns } from '../math/operations';
@@ -172,7 +172,11 @@ export function convertSummaryToSummaryMatrixRow(summary: TotalSummary): number[
   ].flat(Infinity) as number[];
 }
 
-export function normalizeSummaryMatrix(matrix: number[][], typesCount: number): number[][] {
+export function normalizeSummaryMatrix(matrix: number[][], reference: number[]): number[][] {
+  return normalizeMatrixColumns(matrix, reference).map((row) => row.map((x) => Math.abs(x)));
+}
+
+export function normalizeSummaryMatrixOld(matrix: number[][], typesCount: number): number[][] {
   const result = fullCopyObject(matrix);
   const groupIndexes = getSummaryMatrixGroupIndexes(typesCount);
 

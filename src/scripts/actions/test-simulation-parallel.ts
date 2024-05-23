@@ -59,11 +59,11 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
   const summaries: number[][] = await pool.map(inputs, simulationTask);
   pool.close();
 
-  const normalizedMatrix = normalizeSummaryMatrix(summaries, typesCount);
+  // const normalizedMatrix = normalizeSummaryMatrix(summaries, typesCount);
   const indexes = getSummaryMatrixGroupIndexes(typesCount);
   const weights = convertWeightsToSummaryMatrixRow(createTransparentWeights(), typesCount);
 
-  console.log(normalizedMatrix);
+  // console.log(normalizedMatrix);
 
   console.log(weights);
   console.log(summaries[0].length);

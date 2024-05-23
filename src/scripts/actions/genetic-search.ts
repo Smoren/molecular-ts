@@ -134,9 +134,9 @@ function getWorldConfig(): WorldConfig {
   // const minPosition = [0, 0];
   // const maxPosition = [450, 450];
 
-  const atomsCount = 1000;
+  const atomsCount = 100;
   const minPosition = [0, 0];
-  const maxPosition = [1500, 1500];
+  const maxPosition = [450, 450];
 
   const initialConfig = {
     ATOMS_COUNT: atomsCount,

@@ -117,18 +117,14 @@ export class GeneticSearch implements GeneticSearchInterface {
   private calcLosses(results: number[][]): number[] {
     // TODO: normalize results ???
     // TODO: bounds of each compound
-    const [normalizedResults, normalizedReference] = this.normalizeMatrix(results);
-    const weightedResults = this.weighMatrix(normalizedResults);
-    const weightedReference = this.weighRow(normalizedReference);
-    const lossMatrix = this.compareWithReference(weightedResults, weightedReference);
+    results = this.normalizeMatrix(results);
+    results = this.weighMatrix(results);
 
-    return lossMatrix.map((x) => arraySum(x));
+    return results.map((x) => arraySum(x));
   }
 
-  private normalizeMatrix(results: number[][]): [number[][], number[]] {
-    const normalizedMatrix = normalizeSummaryMatrix([...results, this.config.reference], this.config.randomTypesConfig.TYPES_COUNT);
-    const normalizedReference = normalizedMatrix.pop() as number[];
-    return [normalizedMatrix, normalizedReference];
+  private normalizeMatrix(results: number[][]): number[][] {
+    return normalizeSummaryMatrix(results, this.config.reference);
   }
 
   private weighRow(result: number[]): number[] {
@@ -137,15 +133,6 @@ export class GeneticSearch implements GeneticSearchInterface {
 
   private weighMatrix(results: number[][]): number[][] {
     return results.map((result) => this.weighRow(result));
-  }
-
-  private compareWithReference(results: number[][], reference: number[]): number[][] {
-    const weightedReference = this.weighRow(this.config.reference);
-    return results.map((result) => arrayBinaryOperation(
-      result,
-      weightedReference,
-      (res, ref) => Math.abs(res - ref)),
-    );
   }
 
   private getSizes(): number[] {
