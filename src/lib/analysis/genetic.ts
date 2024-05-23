@@ -43,12 +43,16 @@ export class GeneticSearch implements GeneticSearchInterface {
     this.population = this.createPopulation(config.populationSize);
   }
 
-  public async runGenerationStep(): Promise<number[]> {
+  public async runGenerationStep(): Promise<[number[], number[]]> {
     const [countToSurvive, countToCross, countToClone] = this.getSizes();
 
     const results = await this.strategy.runner.run(this.population, this.config);
-    const losses = this.calcLosses(results);
-    const [sortedPopulation, sortLosses] = this.sortPopulation(losses);
+    const [normalizedLosses, absoluteLosses] = this.calcLosses(results);
+    const [
+      sortedPopulation,
+      sortNormalizedLosses,
+      sortAbsoluteLosses,
+    ] = this.sortPopulation(normalizedLosses, absoluteLosses);
 
     const survivedPopulation = sortedPopulation.slice(0, countToSurvive);
     const crossedPopulation = this.crossover(survivedPopulation, countToCross);
@@ -58,7 +62,7 @@ export class GeneticSearch implements GeneticSearchInterface {
     this.population = [...survivedPopulation, ...crossedPopulation, ...mutatedPopulation];
     // this.population = [...sortedPopulation];
 
-    return sortLosses;
+    return [sortNormalizedLosses, sortAbsoluteLosses];
   }
 
   public getBestGenome(): Genome {
@@ -104,35 +108,38 @@ export class GeneticSearch implements GeneticSearchInterface {
     return newPopulation;
   }
 
-  private sortPopulation(losses: number[]): [Population, number[]] {
-    const zipped = multi.zip(this.population, losses);
+  private sortPopulation(normalizedLosses: number[], absoluteLosses: number[]): [Population, number[], number[]] {
+    const zipped = multi.zip(this.population, normalizedLosses, absoluteLosses);
     const sorted = single.sort(zipped, (lhs, rhs) => lhs[1] - rhs[1]);
     const sortedArray = transform.toArray(sorted);
     return [
       transform.toArray(single.map(sortedArray, (x) => x[0])),
       transform.toArray(single.map(sortedArray, (x) => x[1])),
+      transform.toArray(single.map(sortedArray, (x) => x[2])),
     ];
   }
 
-  private calcLosses(results: number[][]): number[] {
-    // TODO: normalize results ???
-    // TODO: bounds of each compound
-    results = this.normalizeMatrix(results);
-    results = this.weighMatrix(results);
+  private calcLosses(results: number[][]): [number[], number[]] {
+    const normalizedLosses = this.getNormalizedLosses(results);
+    const absoluteLosses = this.getAbsoluteLosses(results);
 
-    return results.map((x) => arraySum(x));
+    return [
+      normalizedLosses.map((x) => arraySum(x)),
+      absoluteLosses.map((x) => arraySum(x)),
+    ];
   }
 
-  private normalizeMatrix(results: number[][]): number[][] {
-    return normalizeSummaryMatrix(results, this.config.reference);
+  private getNormalizedLosses(results: number[][]): number[][] {
+    return normalizeSummaryMatrix(results, this.config.reference).map((result) => this.weighRow(result));
+  }
+
+  private getAbsoluteLosses(results: number[][]): number[][] {
+    const weightedReference = this.weighRow(this.config.reference);
+    return results.map((result) => this.weighRow(result).map((x, i) => Math.abs(x - weightedReference[i])));
   }
 
   private weighRow(result: number[]): number[] {
     return arrayBinaryOperation(result, this.config.weights, (x, y) => x * y);
-  }
-
-  private weighMatrix(results: number[][]): number[][] {
-    return results.map((result) => this.weighRow(result));
   }
 
   private getSizes(): number[] {
@@ -182,7 +189,7 @@ export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
   protected abstract execTask(inputs: SimulationTaskConfig[]): Promise<number[][]>;
 
   protected createTasksInputList(population: Population, config: GeneticSearchConfig): SimulationTaskConfig[] {
-    return population.map((genome, i) => this.createTaskInput(i+1, genome, config));
+    return population.map((genome, i) => this.createTaskInput(genome.id, genome, config));
   }
 
   protected createTaskInput(id: number, genome: Genome, config: GeneticSearchConfig): SimulationTaskConfig {
@@ -214,5 +221,33 @@ export class MultiprocessingRunnerStrategy extends BaseRunnerStrategy implements
     pool.close();
 
     return result;
+  }
+}
+
+export class CachedMultiprocessingRunnerStrategy extends MultiprocessingRunnerStrategy implements RunnerStrategyInterface {
+  private readonly cache: Map<number, number[]> = new Map();
+
+  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
+    const resultsMap = new Map(inputs.map((input) => [input[0], this.cache.get(input[0])]));
+    const inputsToRun = inputs.filter((input) => resultsMap.get(input[0]) === undefined);
+    const newResults = await super.execTask(inputsToRun);
+
+    for (const [input, result] of multi.zip(inputsToRun, newResults)) {
+      this.cache.set(input[0], result);
+      resultsMap.set(input[0], result);
+    }
+
+    const results: number[][] = [];
+    for (const input of inputs) {
+      results.push(resultsMap.get(input[0]) as number[]);
+    }
+
+    for (const id of this.cache.keys()) {
+      if (!resultsMap.has(id)) {
+        this.cache.delete(id);
+      }
+    }
+
+    return results;
   }
 }
