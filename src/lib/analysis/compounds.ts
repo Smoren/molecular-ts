@@ -2,7 +2,7 @@ import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type {
   Compound,
   CompoundsAnalyzerSummary,
-  CompoundsCollectorInterface,
+  CompoundsCollectorInterface, ExtendedStatSummary,
   StatSummary,
 } from '../types/analysis';
 import { createFilledArray, createVector, round } from '../math';
@@ -75,10 +75,10 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
   }
 
   get itemLengthSummary(): StatSummary {
-    return this.getItemLengthSummary(this.compounds, this.atoms);
+    return this.toStatSummary(this.getItemLengthSummary(this.compounds, this.atoms));
   }
 
-  get itemLengthByTypesSummary(): StatSummary[] {
+  get itemLengthByTypesSummary(): ExtendedStatSummary[] {
     return this.compoundsTypesMap.map((compounds, type) => this.getItemLengthSummary(
       compounds,
       this.atomsTypesMap[type],
@@ -86,13 +86,17 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
   }
 
   get itemSpeedSummary(): StatSummary {
-    return this.getItemSpeedSummary(this.compounds);
+    return this.toStatSummary(this.getItemSpeedSummary(this.compounds));
   }
 
-  get itemSpeedByTypesSummary(): StatSummary[] {
+  get itemSpeedByTypesSummary(): ExtendedStatSummary[] {
     return this.compoundsTypesMap.map((compounds, type) => this.getItemSpeedSummary(
       compounds,
     ));
+  }
+
+  get itemDensitySummary(): StatSummary {
+    return this.toStatSummary(this.getItemDensitySummary(this.compounds));
   }
 
   get summary(): CompoundsAnalyzerSummary {
@@ -100,10 +104,9 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
       length: this.length,
       lengthByTypes: this.lengthByTypes,
       itemLengthSummary: this.itemLengthSummary,
-      itemLengthByTypesSummary: this.itemLengthByTypesSummary,
       itemSpeedSummary: this.itemSpeedSummary,
-      itemSpeedByTypesSummary: this.itemSpeedByTypesSummary,
-    }
+      itemDensitySummary: this.itemDensitySummary,
+    };
   }
 
   private groupCompoundsByTypes(): Array<Compound[]> {
@@ -135,23 +138,22 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     return this.convertMapToArray(typesMap);
   }
 
-  private getItemLengthSummary(compounds: Array<Compound>, atoms: Array<AtomInterface>): StatSummary {
+  private getItemLengthSummary(compounds: Array<Compound>, atoms: Array<AtomInterface>): ExtendedStatSummary {
     const sizes = compounds.map((compound) => compound.size);
     return this.extractSummary(sizes, atoms.length);
   }
 
-  private getItemSpeedSummary(compounds: Array<Compound>): StatSummary {
+  private getItemSpeedSummary(compounds: Array<Compound>): ExtendedStatSummary {
     const speeds = compounds.map((compound) => this.getCompoundSpeed(compound));
     return this.extractSummary(speeds);
   }
 
-  private getCompoundBoundsVolumeSummary(compounds: Array<Compound>): StatSummary {
-    // TODO use it!
-    const volumes = compounds.map((compound) => this.getCompoundBoundsVolume(compound));
-    return this.extractSummary(volumes);
+  private getItemDensitySummary(compounds: Array<Compound>): ExtendedStatSummary {
+    const densities = compounds.map((compound) => this.getCompoundBoundsDensity(compound));
+    return this.extractSummary(densities);
   }
 
-  private extractSummary(values: number[], totalLength: number = 0): StatSummary {
+  private extractSummary(values: number[], totalLength: number = 0): ExtendedStatSummary {
     values = values.sort((a, b) => a - b);
 
     const result = values
@@ -183,14 +185,15 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
       ? round(values.length / totalLength, 4)
       : 0;
 
-    // TODO percentiles
     return {
       size: values.length,
       frequency: frequency,
       min: result[0],
       max: result[1],
       mean: result[2],
+      p25,
       median,
+      p75,
     }
   }
 
@@ -204,9 +207,9 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     return speedVectors.reduce((acc, vector) => acc.add(vector), zeroVector).div(compound.size).abs;
   }
 
-  private getCompoundBoundsVolume(compound: Compound): number {
+  private getCompoundBoundsDensity(compound: Compound): number {
     const bounds = this.getCompoundBoundsSize(compound);
-    return bounds.reduce((acc, coord) => acc * coord, 1);
+    return compound.size / bounds.reduce((acc, coord) => acc * coord, 1);
   }
 
   private getCompoundBoundsSize(compound: Compound): number[] {
@@ -231,5 +234,16 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     }
 
     return result;
+  }
+
+  private toStatSummary(summary: ExtendedStatSummary): StatSummary {
+    return {
+      min: summary.min,
+      max: summary.max,
+      mean: summary.mean,
+      p25: summary.p25,
+      median: summary.median,
+      p75: summary.p75,
+    }
   }
 }

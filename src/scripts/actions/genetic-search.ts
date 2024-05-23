@@ -12,7 +12,8 @@ import type { GeneticSearchConfig, StrategyConfig } from "@/lib/types/genetic";
 import {
   convertWeightsToSummaryMatrixRow,
   createTransparentWeights,
-  createZeroWeights, repeatTestSimulation,
+  createZeroWeights,
+  repeatTestSimulation,
   testSimulation,
 } from "@/lib/analysis/helpers";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
@@ -43,7 +44,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
   const reference = repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
   const geneticConfig: GeneticSearchConfig = {
-    populationSize: 10,
+    populationSize: 100,
     survivalRate: 0.5,
     crossoverRate: 0.5,
     mutationProbability: 0.1,
@@ -134,9 +135,9 @@ function getWorldConfig(): WorldConfig {
   // const minPosition = [0, 0];
   // const maxPosition = [450, 450];
 
-  const atomsCount = 100;
+  const atomsCount = 500;
   const minPosition = [0, 0];
-  const maxPosition = [450, 450];
+  const maxPosition = [1500, 1500];
 
   const initialConfig = {
     ATOMS_COUNT: atomsCount,
@@ -153,12 +154,12 @@ function getWeights(): TotalSummaryWeights {
   //   ...createZeroWeights(),
   //   ATOMS_MEAN_SPEED: 1,
   //   COMPOUND_LENGTH_SUMMARY: {
-  //     size: 0,
-  //     frequency: 0,
   //     min: 0,
   //     max: 0,
-  //     mean: 0,
+  //     mean: 1,
+  //     p25: 1,
   //     median: 1,
+  //     p75: 1,
   //   },
   // }
 }

@@ -6,7 +6,6 @@ import { creatDefaultTypesConfig } from '@/lib/config/types';
 import {
   convertWeightsToSummaryMatrixRow,
   createTransparentWeights,
-  getSummaryMatrixGroupIndexes,
   normalizeSummaryMatrix,
 } from "@/lib/analysis/helpers";
 
@@ -60,15 +59,12 @@ export const actionTestSimulationParallel = async (...args: string[]) => {
   pool.close();
 
   // const normalizedMatrix = normalizeSummaryMatrix(summaries, typesCount);
-  const indexes = getSummaryMatrixGroupIndexes(typesCount);
   const weights = convertWeightsToSummaryMatrixRow(createTransparentWeights(), typesCount);
 
   // console.log(normalizedMatrix);
 
-  console.log(weights);
   console.log(summaries[0].length);
   console.log(weights.length);
-  console.log(indexes.flat(1).length);
 
   console.log(`[FINISH] in ${Date.now() - ts} ms`);
 }
