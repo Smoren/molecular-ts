@@ -28,7 +28,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
   const generationCount = 100;
   const checkpoints = [200, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 20, 1, 1, 1, 1, 1];
-  const repeats = 3;
+  const repeats = 1;
   const strategyConfig: StrategyConfig = {
     // runner: new MultiprocessingRunnerStrategy(os.cpus().length),
     runner: new CachedMultiprocessingRunnerStrategy(os.cpus().length-2),
@@ -73,7 +73,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
     const bestGenome = geneticSearch.getBestGenome();
     console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
     console.log(`\tabsolute losses:\tmin=${absMinLoss},\tmean=${absMeanLoss}`);
-    console.log(`\tnormalized losses:\tmin=${normMinLoss},\tmean=${normMeanLoss}\tmedian=${normMedianLoss},,\tmax=${normMaxLoss}`);
+    console.log(`\tnormalized losses:\tmin=${normMinLoss},\tmean=${normMeanLoss}\tmedian=${normMedianLoss},\tmax=${normMaxLoss}`);
     // console.log(`\tBest absolute losses:\t[${absoluteLosses.slice(0, 5).map((x) => round(x, 2)).join(', ')}]`);
     // console.log(`\tBest normalized losses:\t[${normalizedLosses.slice(0, 5).map((x) => round(x, 2)).join(', ')}]`);
 
@@ -109,51 +109,39 @@ function getAbsoluteLossesSummary(losses: number[]): [number, number] {
 
 function getReferenceTypesConfig(): TypesConfig {
   return {
-    "RADIUS": [1, 1, 1],
+    "RADIUS": [1, 1],
     "GRAVITY": [
-      [-1.4, -1.6, -0.7],
-      [-0.9, -1.9, -1.3],
-      [-0.6, -1.3, -0.5]
+      [0.1, -0.7],
+      [-0.7, -2.4]
     ],
     "LINK_GRAVITY": [
-      [-0.4, 0, -2.5],
-      [-2.3, 0, -5],
-      [-0.6, -3.3, -3]
+      [-0.4, -6.3],
+      [-6.3, -1.7]
     ],
-    "LINKS": [2, 2, 3],
+    "LINKS": [5, 5],
     "TYPE_LINKS": [
-      [3, 0, 2],
-      [3, 0, 2],
-      [1, 1, 1]
+      [2, 1],
+      [1, 2]
     ],
     "LINK_FACTOR_DISTANCE": [
-      [1, 1, 1],
-      [1, 1, 1],
-      [1, 1, 1]
+      [1, 1],
+      [1, 1]
     ],
     "LINK_FACTOR_DISTANCE_EXTENDED": [
       [
-        [1, 1, 1],
-        [1, 1, 0.8],
-        [1, 1, 1]
+        [1, 1],
+        [1, 1]
       ],
       [
-        [0.7, 1, 1],
-        [1, 1, 1],
-        [1, 1, 1]
-      ],
-      [
-        [1, 1, 1],
-        [1, 1, 1],
-        [1, 1, 1]
+        [1, 1],
+        [1, 1]
       ]
     ],
     "LINK_FACTOR_DISTANCE_USE_EXTENDED": true,
-    "FREQUENCIES": [1, 1, 1],
+    "FREQUENCIES": [1, 1],
     "COLORS": [
       [250, 20, 20],
-      [200, 140, 100],
-      [80, 170, 140]
+      [200, 140, 100]
     ]
   };
 }
@@ -181,19 +169,7 @@ function getWorldConfig(): WorldConfig {
 }
 
 function getWeights(): TotalSummaryWeights {
-  // return createTransparentWeights();
-  return {
-    ...createTransparentWeights(),
-    COMPOUND_LENGTH_SUMMARY: {
-      min: 1,
-      max: 1,
-      mean: 5,
-      p25: 5,
-      median: 10,
-      p75: 5,
-    },
-    COMPOUNDS_PER_ATOM: 10,
-  };
+  return createTransparentWeights();
 }
 
 const formatJsonString = (jsonStr: string) => {
