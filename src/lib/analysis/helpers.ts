@@ -144,8 +144,8 @@ export function convertWeightsToSummaryMatrixRow(weights: TotalSummaryWeights, t
 }
 
 export function convertSummaryToSummaryMatrixRow(summary: TotalSummary): number[] {
-  const compoundsPerAtom = summary.COMPOUNDS.size / summary.WORLD.ATOMS_COUNT[0];
-  const compoundsPerAtomByTypes = summary.COMPOUNDS.sizeByTypes.map((x) => x / summary.WORLD.ATOMS_COUNT[0]);
+  const compoundsPerAtom = summary.COMPOUNDS.length / summary.WORLD.ATOMS_COUNT[0];
+  const compoundsPerAtomByTypes = summary.COMPOUNDS.lengthByTypes.map((x) => x / summary.WORLD.ATOMS_COUNT[0]);
   const compoundLengthSummary = Object.values(summary.COMPOUNDS.itemLengthSummary).slice(1);
   const compoundLengthByTypesSummary = summary.COMPOUNDS.itemLengthByTypesSummary.map(
     (item) => Object.values(item).slice(1),

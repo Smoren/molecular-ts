@@ -87,8 +87,8 @@ export interface CompoundsCollectorInterface {
 }
 
 export type CompoundsAnalyzerSummary = {
-  size: number;
-  sizeByTypes: number[];
+  length: number;
+  lengthByTypes: number[];
   itemLengthSummary: StatSummary;
   itemLengthByTypesSummary: StatSummary[];
   itemSpeedSummary: StatSummary;

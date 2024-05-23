@@ -28,7 +28,7 @@ export const actionTestSimulation = (...args: string[]) => {
   console.log(sim.summary);
 
   const compounds = new CompoundsAnalyzer(sim.exportCompounds(), sim.atoms, typesConfig.FREQUENCIES.length);
-  console.log(compounds.sizeByTypes);
+  console.log(compounds.lengthByTypes);
   console.log(compounds.itemLengthSummary);
   console.log(compounds.itemLengthByTypesSummary);
 

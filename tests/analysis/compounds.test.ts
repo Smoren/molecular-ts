@@ -37,8 +37,8 @@ describe.each([
       const compoundsActual = collector.getCompounds();
       expectSameArraysOfSets(compoundsActual, compoundsExpected);
 
-      expect(analyzer.size).toEqual(lengthExpected);
-      expect(analyzer.sizeByTypes).toEqual(lengthByTypesExpected);
+      expect(analyzer.length).toEqual(lengthExpected);
+      expect(analyzer.lengthByTypes).toEqual(lengthByTypesExpected);
 
       const itemLengthSummary = analyzer.itemLengthSummary;
       expect(itemLengthSummary).toEqual(itemSizeSummaryExpected);

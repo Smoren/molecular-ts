@@ -66,11 +66,11 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     this.atomsTypesMap = this.groupAtomsByTypes();
   }
 
-  get size(): number {
+  get length(): number {
     return this.compounds.length;
   }
 
-  get sizeByTypes(): number[] {
+  get lengthByTypes(): number[] {
     return this.compoundsTypesMap.map((compounds) => compounds.length);
   }
 
@@ -97,8 +97,8 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
 
   get summary(): CompoundsAnalyzerSummary {
     return {
-      size: this.size,
-      sizeByTypes: this.sizeByTypes,
+      length: this.length,
+      lengthByTypes: this.lengthByTypes,
       itemLengthSummary: this.itemLengthSummary,
       itemLengthByTypesSummary: this.itemLengthByTypesSummary,
       itemSpeedSummary: this.itemSpeedSummary,
@@ -145,6 +145,12 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     return this.extractSummary(speeds);
   }
 
+  private getCompoundBoundsVolumeSummary(compounds: Array<Compound>): StatSummary {
+    // TODO use it!
+    const volumes = compounds.map((compound) => this.getCompoundBoundsVolume(compound));
+    return this.extractSummary(volumes);
+  }
+
   private extractSummary(values: number[], totalLength: number = 0): StatSummary {
     values = values.sort((a, b) => a - b);
 
@@ -165,10 +171,19 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
       ? values[Math.floor(values.length / 2)]
       : 0;
 
+    const p25 = values.length > 0
+      ? values[Math.floor(values.length * 0.25)]
+      : 0;
+
+    const p75 = values.length > 0
+      ? values[Math.floor(values.length * 0.75)]
+      : 0;
+
     const frequency = totalLength > 0
       ? round(values.length / totalLength, 4)
       : 0;
 
+    // TODO percentiles
     return {
       size: values.length,
       frequency: frequency,
@@ -187,6 +202,24 @@ export class CompoundsAnalyzer implements CompoundsAnalyzerSummary {
     const speedVectors = [...compound].map((atom) => atom.speed);
     const zeroVector = createVector(createFilledArray(speedVectors[0].length, 0));
     return speedVectors.reduce((acc, vector) => acc.add(vector), zeroVector).div(compound.size).abs;
+  }
+
+  private getCompoundBoundsVolume(compound: Compound): number {
+    const bounds = this.getCompoundBoundsSize(compound);
+    return bounds.reduce((acc, coord) => acc * coord, 1);
+  }
+
+  private getCompoundBoundsSize(compound: Compound): number[] {
+    const coords: number[][] = [];
+    for (const atom of compound) {
+      for (let i=0; i<atom.position.length; ++i) {
+        if (coords[i] === undefined) {
+          coords[i] = [];
+        }
+        coords[i].push(atom.position[i]);
+      }
+    }
+    return coords.map((coords) => Math.max(...coords) - Math.min(...coords));
   }
 
   private convertMapToArray<T>(map: Record<number, T[]>): Array<T[]> {
