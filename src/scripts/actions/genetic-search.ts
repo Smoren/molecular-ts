@@ -3,7 +3,7 @@ import type { RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/co
 import {
   GeneticSearch,
   MultiprocessingRunnerStrategy,
-  MutationStrategy,
+  MutationStrategy, RandomCrossoverStrategy, SimpleRunnerStrategy,
   SubMatrixCrossoverStrategy,
 } from "@/lib/analysis/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
@@ -13,7 +13,7 @@ import {
   convertWeightsToSummaryMatrixRow,
   createTransparentWeights,
   createZeroWeights, repeatTestSimulation,
-  testSimulation
+  testSimulation,
 } from "@/lib/analysis/helpers";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
 import { arraySum, round } from "@/lib/math";
@@ -26,9 +26,11 @@ export const actionGeneticSearch = async (...args: string[]) => {
   const checkpoints = [200, 100, 20, 20, 15, 15, 10, 10, 5, 5];
   const repeats = 5;
   const strategyConfig: StrategyConfig = {
+    // runner: new SimpleRunnerStrategy(),
     runner: new MultiprocessingRunnerStrategy(os.cpus().length),
     mutation: new MutationStrategy(),
     crossover: new SubMatrixCrossoverStrategy(),
+    // crossover: new RandomCrossoverStrategy(),
   };
 
   const worldConfig = getWorldConfig();
@@ -41,7 +43,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
   const reference = repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
   const geneticConfig: GeneticSearchConfig = {
-    populationSize: 30,
+    populationSize: 10,
     survivalRate: 0.5,
     crossoverRate: 0.5,
     mutationProbability: 0.1,
@@ -65,6 +67,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
     const maxLoss = round(losses[losses.length-1], 2);
     const bestGenome = geneticSearch.getBestGenome();
     console.log(`[GENERATION ${i+1}] id=${bestGenome.id} losses: min=${minLoss}, median=${medianLoss}, mean=${meanLoss}, max=${maxLoss}`);
+    // console.log('Best losses:', losses.slice(0, 5).map((x) => round(x, 2)).join(', '));
   }
 
   console.log(JSON.stringify(geneticSearch.getBestGenome(), null, 4));
@@ -127,9 +130,13 @@ function getRandomizeConfig(typesCount: number): RandomTypesConfig {
 }
 
 function getWorldConfig(): WorldConfig {
-  const atomsCount = 100;
+  // const atomsCount = 100;
+  // const minPosition = [0, 0];
+  // const maxPosition = [450, 450];
+
+  const atomsCount = 1000;
   const minPosition = [0, 0];
-  const maxPosition = [450, 450];
+  const maxPosition = [1500, 1500];
 
   const initialConfig = {
     ATOMS_COUNT: atomsCount,
@@ -144,11 +151,12 @@ function getWeights(): TotalSummaryWeights {
   return createTransparentWeights();
   // return {
   //   ...createZeroWeights(),
+  //   ATOMS_MEAN_SPEED: 1,
   //   COMPOUND_LENGTH_SUMMARY: {
   //     size: 0,
   //     frequency: 0,
   //     min: 0,
-  //     max: 1,
+  //     max: 0,
   //     mean: 0,
   //     median: 1,
   //   },

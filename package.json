@@ -10,7 +10,7 @@
     "type-check": "vue-tsc --noEmit",
     "test": "jest",
     "tool": "tsx --no-warnings src/scripts/tool.ts",
-    "genetic": "npm run tool test-simulation-parallel"
+    "genetic": "npm run tool genetic-search"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",

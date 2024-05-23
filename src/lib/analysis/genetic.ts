@@ -11,7 +11,7 @@ import type {
   Population,
 } from '../types/genetic';
 import type { SimulationTaskConfig } from "./multiprocessing";
-import { simulationTask } from "./multiprocessing";
+import { simulationTaskMultiprocessing, simulationTaskSingle } from "./multiprocessing";
 import { normalizeSummaryMatrix } from './helpers';
 import {
   createTransparentTypesConfig,
@@ -117,30 +117,35 @@ export class GeneticSearch implements GeneticSearchInterface {
   private calcLosses(results: number[][]): number[] {
     // TODO: normalize results ???
     // TODO: bounds of each compound
-    // results = this.normalizeResults(results);
-    results = this.weighResults(results);
-    results = this.compareWithReference(results);
+    const [normalizedResults, normalizedReference] = this.normalizeMatrix(results);
+    const weightedResults = this.weighMatrix(normalizedResults);
+    const weightedReference = this.weighRow(normalizedReference);
+    const lossMatrix = this.compareWithReference(weightedResults, weightedReference);
 
-    return results.map((x) => arraySum(x));
+    return lossMatrix.map((x) => arraySum(x));
   }
 
-  private normalizeResults(results: number[][]): number[][] {
-    const matrix = normalizeSummaryMatrix([...results, this.config.reference], this.config.randomTypesConfig.TYPES_COUNT);
-    return matrix.slice(0, -1);
+  private normalizeMatrix(results: number[][]): [number[][], number[]] {
+    const normalizedMatrix = normalizeSummaryMatrix([...results, this.config.reference], this.config.randomTypesConfig.TYPES_COUNT);
+    const normalizedReference = normalizedMatrix.pop() as number[];
+    return [normalizedMatrix, normalizedReference];
   }
 
-  private weighResults(results: number[][]): number[][] {
-    return results.map(
-      (result) => arrayBinaryOperation(result, this.config.weights, (x, y) => x * y)
+  private weighRow(result: number[]): number[] {
+    return arrayBinaryOperation(result, this.config.weights, (x, y) => x * y);
+  }
+
+  private weighMatrix(results: number[][]): number[][] {
+    return results.map((result) => this.weighRow(result));
+  }
+
+  private compareWithReference(results: number[][], reference: number[]): number[][] {
+    const weightedReference = this.weighRow(this.config.reference);
+    return results.map((result) => arrayBinaryOperation(
+      result,
+      weightedReference,
+      (res, ref) => Math.abs(res - ref)),
     );
-  }
-
-  private compareWithReference(results: number[][]): number[][] {
-      return results.map((result) => arrayBinaryOperation(
-        result,
-        this.config.reference,
-        (res, ref) => Math.abs(res - ref)),
-      );
   }
 
   private getSizes(): number[] {
@@ -202,7 +207,7 @@ export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerSt
   protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
     const result = [];
     for (const input of inputs) {
-      result.push(await simulationTask(input));
+      result.push(await simulationTaskSingle(input));
     }
     return result;
   }
@@ -218,7 +223,7 @@ export class MultiprocessingRunnerStrategy extends BaseRunnerStrategy implements
 
   protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
     const pool = new Pool(this.poolSize);
-    const result: number[][] = await pool.map(inputs, simulationTask);
+    const result: number[][] = await pool.map(inputs, simulationTaskMultiprocessing);
     pool.close();
 
     return result;
