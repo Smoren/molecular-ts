@@ -170,6 +170,24 @@ export class RandomCrossoverStrategy implements CrossoverStrategyInterface {
   }
 }
 
+export class ComposedCrossoverStrategy implements CrossoverStrategyInterface {
+  private randomStrategy: CrossoverStrategyInterface;
+  private subMatrixStrategy: CrossoverStrategyInterface;
+
+  constructor() {
+    this.randomStrategy = new RandomCrossoverStrategy();
+    this.subMatrixStrategy = new SubMatrixCrossoverStrategy();
+  }
+
+  public cross(id: number, lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
+    if (Math.random() > 0.5) {
+      return this.randomStrategy.cross(id, lhs, rhs, config);
+    }
+
+    return this.subMatrixStrategy.cross(id, lhs, rhs, config);
+  }
+}
+
 export class MutationStrategy implements MutationStrategyInterface {
   mutate(id: number, genome: Genome, probability: number, config: GeneticSearchConfig): Genome {
     const inputTypesConfig = fullCopyObject(genome.typesConfig);

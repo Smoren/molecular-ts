@@ -2,9 +2,8 @@ import os from "os";
 import {
   CachedMultiprocessingRunnerStrategy,
   GeneticSearch,
+  ComposedCrossoverStrategy,
   MutationStrategy,
-  RandomCrossoverStrategy,
-  SubMatrixCrossoverStrategy,
 } from "@/lib/analysis/genetic";
 import type { GeneticSearchConfig, StrategyConfig } from "@/lib/types/genetic";
 import {
@@ -31,12 +30,11 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
   const generationCount = 100;
   const checkpoints = [200, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 20, 1, 1, 1, 1, 1];
-  const repeats = 1;
+  const repeats = 3;
   const strategyConfig: StrategyConfig = {
-    runner: new CachedMultiprocessingRunnerStrategy(os.cpus().length / 2),
+    runner: new CachedMultiprocessingRunnerStrategy(os.cpus().length),
     mutation: new MutationStrategy(),
-    crossover: new SubMatrixCrossoverStrategy(),
-    // crossover: new RandomCrossoverStrategy(),
+    crossover: new ComposedCrossoverStrategy(),
   };
 
   const worldConfig = getWorldConfig();
