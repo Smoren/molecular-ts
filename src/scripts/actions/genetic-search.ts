@@ -27,7 +27,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
   const argsParser = new ArgsParser(args);
 
-  console.log(`[START] genetic search action (process_id = ${runId})`, args);
+  console.log(`[START] genetic search action (process_id = ${runId})`);
 
   const generationCount = 100;
   const checkpoints = [200, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 20, 1, 1, 1, 1, 1];
