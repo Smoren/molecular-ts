@@ -19,10 +19,13 @@ import {
   getWorldConfig,
   writeJsonFile
 } from "@/scripts/lib/genetic/io";
+import { ArgsParser } from "@/scripts/lib/router";
 
 export const actionGeneticSearch = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
+
+  const argsParser = new ArgsParser(args);
 
   console.log(`[START] genetic search action (process_id = ${runId})`, args);
 

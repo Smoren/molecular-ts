@@ -35,3 +35,29 @@ export class Router {
     }
   }
 }
+
+export class ArgsParser {
+  argsMap: Map<string, string> = new Map();
+  anonymousArgs: string[] = [];
+
+  constructor(args: string[]) {
+    this.parse(args);
+  }
+
+  get(key: string, defaultValue?: string): string | undefined {
+    return this.argsMap.get(key) ?? defaultValue;
+  }
+
+  private parse(args: string[]) {
+    for (const arg of args) {
+      const exploded = arg.split('=');
+
+      if (exploded.length === 2) {
+        const [key, value] = exploded;
+        this.argsMap.set(key, value);
+      } else {
+        this.anonymousArgs.push(arg);
+      }
+    }
+  }
+}
