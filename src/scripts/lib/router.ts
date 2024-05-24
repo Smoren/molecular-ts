@@ -38,26 +38,32 @@ export class Router {
 
 export class ArgsParser {
   argsMap: Map<string, string> = new Map();
-  anonymousArgs: string[] = [];
 
   constructor(args: string[]) {
     this.parse(args);
+  }
+
+  has(key: string): boolean {
+    return this.argsMap.has(key);
   }
 
   get(key: string, defaultValue?: string): string | undefined {
     return this.argsMap.get(key) ?? defaultValue;
   }
 
+  getString(key: string, defaultValue: string): string {
+    return this.get(key, defaultValue) as string;
+  }
+
+  summary(): Record<string, string | string[]> {
+    return Object.fromEntries(this.argsMap);
+  }
+
   private parse(args: string[]) {
     for (const arg of args) {
       const exploded = arg.split('=');
-
-      if (exploded.length === 2) {
-        const [key, value] = exploded;
-        this.argsMap.set(key, value);
-      } else {
-        this.anonymousArgs.push(arg);
-      }
+      const [key, value] = exploded;
+      this.argsMap.set(key, value);
     }
   }
 }
