@@ -34,7 +34,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
       referenceConfigFileName,
       weightsFileName,
     } = argsMap;
-    console.log('INPUT PARAMS:', argsMap);
+    console.log('[INPUT PARAMS]', argsMap);
 
     console.log(`[START] genetic search action (process_id = ${runId})`);
 
