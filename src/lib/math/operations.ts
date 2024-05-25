@@ -56,7 +56,7 @@ export function concatArrays<T>(lhs: T[], rhs: T[]): T[] {
   return [...lhs, ...rhs];
 }
 
-export function concatMatrices(lhs: number[][], rhs: number[][], defaultValue: number = 0): number[][] {
+export function concatMatrices<T>(lhs: T[][], rhs: T[][], defaultValue: T): T[][] {
   const n = lhs.length + rhs.length;
   const m = (lhs[0]?.length ?? 0) + (rhs[0]?.length ?? 0);
   const result = createFilledMatrix(n, m, defaultValue);
@@ -78,7 +78,7 @@ export function concatMatrices(lhs: number[][], rhs: number[][], defaultValue: n
   return result;
 }
 
-export function concatTensors(lhs: number[][][], rhs: number[][][], defaultValue: number = 0): number[][][] {
+export function concatTensors<T>(lhs: T[][][], rhs: T[][][], defaultValue: T): T[][][] {
   const n = lhs.length + rhs.length;
   const m = (lhs[0]?.length ?? 0) + (rhs[0]?.length ?? 0);
   const k = ((lhs[0] ?? [])[0]?.length ?? 0) + ((rhs[0] ?? [])[0]?.length ?? 0);
@@ -103,22 +103,22 @@ export function concatTensors(lhs: number[][][], rhs: number[][][], defaultValue
   return result;
 }
 
-export function crossArrays(lhs: number[], rhs: number[], separator: number): number[] {
+export function crossArrays<T>(lhs: T[], rhs: T[], separator: number): T[] {
   lhs = lhs.slice(0, separator);
   rhs = rhs.slice(separator);
   return concatArrays(lhs, rhs);
 }
 
-export function crossMatrices(lhs: number[][], rhs: number[][], separator: number): number[][] {
+export function crossMatrices<T>(lhs: T[][], rhs: T[][], separator: number, defaultValue: T): T[][] {
   lhs = lhs.slice(0, separator).map((row) => row.slice(0, separator));
   rhs = rhs.slice(separator).map((row) => row.slice(separator));
-  return concatMatrices(lhs, rhs);
+  return concatMatrices(lhs, rhs, defaultValue);
 }
 
-export function crossTensors(lhs: number[][][], rhs: number[][][], separator: number): number[][][] {
+export function crossTensors<T>(lhs: T[][][], rhs: T[][][], separator: number, defaultValue: T): T[][][] {
   lhs = lhs.slice(0, separator).map((row) => row.slice(0, separator).map((col) => col.slice(0, separator)));
   rhs = rhs.slice(separator).map((row) => row.slice(separator).map((col) => col.slice(separator)));
-  return concatTensors(lhs, rhs);
+  return concatTensors(lhs, rhs, defaultValue);
 }
 
 export function randomCrossArrays<T>(lhs: T[], rhs: T[], separator: number): T[] {

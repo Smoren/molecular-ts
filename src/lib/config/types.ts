@@ -429,22 +429,14 @@ export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesCon
   result.RADIUS = concatArrays(lhs.RADIUS, rhs.RADIUS);
   result.FREQUENCIES = concatArrays(lhs.FREQUENCIES, rhs.FREQUENCIES);
 
-  result.GRAVITY = concatMatrices(lhs.GRAVITY, rhs.GRAVITY);
-  result.LINK_GRAVITY = concatMatrices(lhs.LINK_GRAVITY, rhs.LINK_GRAVITY);
+  result.GRAVITY = concatMatrices(lhs.GRAVITY, rhs.GRAVITY, 0);
+  result.LINK_GRAVITY = concatMatrices(lhs.LINK_GRAVITY, rhs.LINK_GRAVITY, 0);
 
   result.LINKS = concatArrays(lhs.LINKS, rhs.LINKS);
-  result.TYPE_LINKS = concatMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS);
+  result.TYPE_LINKS = concatMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, 0);
 
-  result.LINK_FACTOR_DISTANCE = concatMatrices(
-    lhs.LINK_FACTOR_DISTANCE,
-    rhs.LINK_FACTOR_DISTANCE,
-    1,
-  );
-  result.LINK_FACTOR_DISTANCE_EXTENDED = concatTensors(
-    lhs.LINK_FACTOR_DISTANCE_EXTENDED,
-    rhs.LINK_FACTOR_DISTANCE_EXTENDED,
-    1,
-  );
+  result.LINK_FACTOR_DISTANCE = concatMatrices(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, 1);
+  result.LINK_FACTOR_DISTANCE_EXTENDED = concatTensors(lhs.LINK_FACTOR_DISTANCE_EXTENDED, rhs.LINK_FACTOR_DISTANCE_EXTENDED, 1);
 
   return result;
 }
@@ -456,22 +448,14 @@ export function crossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, separator:
   result.RADIUS = crossArrays(lhs.RADIUS, rhs.RADIUS, separator);
   result.FREQUENCIES = crossArrays(lhs.FREQUENCIES, rhs.FREQUENCIES, separator);
 
-  result.GRAVITY = crossMatrices(lhs.GRAVITY, rhs.GRAVITY, separator);
-  result.LINK_GRAVITY = crossMatrices(lhs.LINK_GRAVITY, rhs.LINK_GRAVITY, separator);
+  result.GRAVITY = crossMatrices(lhs.GRAVITY, rhs.GRAVITY, separator, 0);
+  result.LINK_GRAVITY = crossMatrices(lhs.LINK_GRAVITY, rhs.LINK_GRAVITY, separator, 0);
 
   result.LINKS = crossArrays(lhs.LINKS, rhs.LINKS, separator);
-  result.TYPE_LINKS = crossMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, separator);
+  result.TYPE_LINKS = crossMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, separator, 0);
 
-  result.LINK_FACTOR_DISTANCE = crossMatrices(
-    lhs.LINK_FACTOR_DISTANCE,
-    rhs.LINK_FACTOR_DISTANCE,
-    separator,
-  );
-  result.LINK_FACTOR_DISTANCE_EXTENDED = crossTensors(
-    lhs.LINK_FACTOR_DISTANCE_EXTENDED,
-    rhs.LINK_FACTOR_DISTANCE_EXTENDED,
-    separator,
-  );
+  result.LINK_FACTOR_DISTANCE = crossMatrices(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, separator, 1);
+  result.LINK_FACTOR_DISTANCE_EXTENDED = crossTensors(lhs.LINK_FACTOR_DISTANCE_EXTENDED, rhs.LINK_FACTOR_DISTANCE_EXTENDED, separator, 1);
 
   return result;
 }
@@ -489,16 +473,8 @@ export function randomCrossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, sepa
   result.LINKS = randomCrossArrays(lhs.LINKS, rhs.LINKS, separator);
   result.TYPE_LINKS = randomCrossMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, separator);
 
-  result.LINK_FACTOR_DISTANCE = randomCrossMatrices(
-    lhs.LINK_FACTOR_DISTANCE,
-    rhs.LINK_FACTOR_DISTANCE,
-    separator,
-  );
-  result.LINK_FACTOR_DISTANCE_EXTENDED = randomCrossTensors(
-    lhs.LINK_FACTOR_DISTANCE_EXTENDED,
-    rhs.LINK_FACTOR_DISTANCE_EXTENDED,
-    separator,
-  );
+  result.LINK_FACTOR_DISTANCE = randomCrossMatrices(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, separator);
+  result.LINK_FACTOR_DISTANCE_EXTENDED = randomCrossTensors(lhs.LINK_FACTOR_DISTANCE_EXTENDED, rhs.LINK_FACTOR_DISTANCE_EXTENDED, separator);
 
   return result;
 }

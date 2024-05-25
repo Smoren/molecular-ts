@@ -19,12 +19,12 @@ export function toVector(coords: NumericVector): VectorInterface {
   return (coords instanceof Vector) ? coords : createVector(coords);
 }
 
-export function createFilledArray(length: number, value: number): number[] {
+export function createFilledArray<T>(length: number, value: T): T[] {
   return Array.from({ length }, () => value);
 }
 
-export function createFilledMatrix(n: number, m: number, defaultValue: number = 0): number[][] {
-  const result: number[][] = [];
+export function createFilledMatrix<T>(n: number, m: number, defaultValue: T): T[][] {
+  const result: T[][] = [];
   result.length = n;
   for (let i=0; i<n; ++i) {
     result[i] = [];
@@ -34,8 +34,8 @@ export function createFilledMatrix(n: number, m: number, defaultValue: number = 
   return result;
 }
 
-export function createFilledTensor(n: number, m: number, k: number, defaultValue: number = 0): number[][][] {
-  const result: number[][][] = [];
+export function createFilledTensor<T>(n: number, m: number, k: number, defaultValue: T): T[][][] {
+  const result: T[][][] = [];
   result.length = n;
   for (let i=0; i<n; ++i) {
     result[i] = [];
@@ -49,7 +49,7 @@ export function createFilledTensor(n: number, m: number, k: number, defaultValue
   return result;
 }
 
-export function repeatArrayValues(value: number[], repetitions: number): number[] {
+export function repeatArrayValues<T>(value: T[], repetitions: number): T[] {
   const result = [];
   for (let i = 0; i < repetitions; ++i) {
     result.push(...value);
