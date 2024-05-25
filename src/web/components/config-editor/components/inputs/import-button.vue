@@ -11,7 +11,7 @@ const emit = defineEmits<{
   start: [];
   success: [data: Record<string, unknown>];
   error: [e: Error];
-}>()
+}>();
 
 const uploadFile: Ref<HTMLInputElement | null> = ref(null);
 

@@ -12,6 +12,7 @@ import {
   creatDefaultTypesConfig,
   createDefaultRandomTypesConfig,
   createSingleTypeConfig,
+  removeIndexFromTypesConfig,
 } from "@/lib/config/types";
 import { fullCopyObject } from "@/lib/utils/functions";
 import {
@@ -224,6 +225,11 @@ export const useConfigStore = defineStore("config", () => {
     setTypesConfig(newConfig);
   }
 
+  const removeTypeFromConfig = (index: number): void => {
+    const newConfig = removeIndexFromTypesConfig(typesConfig.value, index);
+    setTypesConfig(newConfig);
+  }
+
   const appendType = () => {
     const newTypeConfig = createSingleTypeConfig();
     addTypesFromConfig(newTypeConfig);
@@ -258,6 +264,7 @@ export const useConfigStore = defineStore("config", () => {
     setDefaultTypesConfig,
     appendType,
     addTypesFromConfig,
+    removeTypeFromConfig,
     exportConfig,
     importConfig,
     exportConfigBase64,

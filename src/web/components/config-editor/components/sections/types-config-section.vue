@@ -49,6 +49,13 @@ const refill = () => {
   }
 };
 
+const removeType = (index: number) => {
+  if (confirm('Are you sure to remove type?')) {
+    configStore.removeTypeFromConfig(index);
+    refillAtoms!();
+  }
+}
+
 const linkInfluenceConfigDescription = computed(() => {
   const matrixDescription = "Matrix of influence on neighbors links shows how particles of each type affect " +
       "the maximum length of links of neighboring particles of different types."
@@ -58,7 +65,7 @@ const linkInfluenceConfigDescription = computed(() => {
   return typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED
     ? tensorDescription
     : matrixDescription;
-})
+});
 
 </script>
 
@@ -73,17 +80,24 @@ const linkInfluenceConfigDescription = computed(() => {
       </div>
       <div>
         <input-header
-            name="Initial Frequencies"
-            tooltip="Ratio of the number of particles that will be generated on refill."
-            position="center"
+          name="Initial Frequencies"
+          tooltip="Ratio of the number of particles that will be generated on refill."
+          position="center"
         />
-        <config-list :values="typesConfig.FREQUENCIES" :colors="typesConfig.COLORS" :step="0.1" />
+        <config-list
+          :values="typesConfig.FREQUENCIES"
+          :colors="typesConfig.COLORS"
+          :step="0.1"
+          color-title="Remove type"
+          color-cursor="pointer"
+          @colorClick="removeType"
+        />
       </div>
       <div>
         <input-header
-            name="Radius"
-            tooltip="Radius of each type of particles."
-            position="center"
+          name="Radius"
+          tooltip="Radius of each type of particles."
+          position="center"
         />
         <config-list :values="typesConfig.RADIUS" :colors="typesConfig.COLORS" :step="0.1" />
       </div>

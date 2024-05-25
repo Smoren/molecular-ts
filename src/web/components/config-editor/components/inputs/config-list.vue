@@ -8,9 +8,17 @@ withDefaults(defineProps<{
   min?: number;
   max?: number;
   step?: number;
+  colorTitle?: string;
+  colorCursor?: string;
 }>(), {
   step: 1,
+  colorTitle: '',
+  colorCursor: 'default',
 });
+
+const emit = defineEmits<{
+  colorClick: [index: number];
+}>();
 
 </script>
 
@@ -18,7 +26,12 @@ withDefaults(defineProps<{
   <table>
     <tr>
       <td style="width: 30px"></td>
-      <td v-for="color in colors" :style="{ backgroundColor: getColorString(color) }">
+      <td
+        v-for="(color, index) in colors"
+        :style="{ backgroundColor: getColorString(color), cursor: colorCursor }"
+        :title="colorTitle"
+        @click="emit('colorClick', index)"
+      >
         &nbsp;
       </td>
     </tr>
