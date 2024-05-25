@@ -23,7 +23,12 @@ import {
   setTensorMainDiagonal,
   createFilledTensor,
 } from '../math';
-import { makeMatrixSymmetric, makeTensorSymmetric } from '../math/operations';
+import {
+  makeMatrixSymmetric,
+  makeTensorSymmetric,
+  removeIndexFromArray,
+  removeIndexFromMatrix, removeIndexFromTensor
+} from '../math/operations';
 
 export function createColors(count: number): Array<ColorVector> {
   const predefined: Array<ColorVector> = [
@@ -494,6 +499,25 @@ export function randomCrossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, sepa
     rhs.LINK_FACTOR_DISTANCE_EXTENDED,
     separator,
   );
+
+  return result;
+}
+
+export function removeIndexFromTypesConfig(input: TypesConfig, index: number): TypesConfig {
+  const result = fullCopyObject(input);
+
+  result.COLORS = removeIndexFromArray(input.COLORS, index);
+  result.RADIUS = removeIndexFromArray(input.RADIUS, index);
+  result.FREQUENCIES = removeIndexFromArray(input.FREQUENCIES, index);
+
+  result.GRAVITY = removeIndexFromMatrix(input.GRAVITY, index);
+  result.LINK_GRAVITY = removeIndexFromMatrix(input.LINK_GRAVITY, index);
+
+  result.LINKS = removeIndexFromArray(input.LINKS, index);
+  result.TYPE_LINKS = removeIndexFromMatrix(input.TYPE_LINKS, index);
+
+  result.LINK_FACTOR_DISTANCE = removeIndexFromMatrix(input.LINK_FACTOR_DISTANCE, index);
+  result.LINK_FACTOR_DISTANCE_EXTENDED = removeIndexFromTensor(input.LINK_FACTOR_DISTANCE_EXTENDED, index);
 
   return result;
 }

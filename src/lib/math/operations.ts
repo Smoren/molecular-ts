@@ -1,10 +1,7 @@
 import { createFilledMatrix, createFilledTensor } from './factories';
 import type { Tensor } from './types';
 
-export function arrayUnaryOperation<T>(
-  input: Array<T>,
-  operator: (item: T) => T,
-): Array<T> {
+export function arrayUnaryOperation<T>(input: Array<T>, operator: (item: T) => T): Array<T> {
   const result: Array<T> = [];
 
   for (const item of input) {
@@ -14,11 +11,7 @@ export function arrayUnaryOperation<T>(
   return result;
 }
 
-export function arrayBinaryOperation<T>(
-  lhs: Array<T>,
-  rhs: Array<T>,
-  operator: (lhs: T, rhs: T) => T,
-): Array<T> {
+export function arrayBinaryOperation<T>(lhs: Array<T>, rhs: Array<T>, operator: (lhs: T, rhs: T) => T): Array<T> {
   const result: Array<T> = [];
   const len = Math.min(lhs.length, rhs.length);
 
@@ -128,27 +121,27 @@ export function crossTensors(lhs: number[][][], rhs: number[][][], separator: nu
   return concatTensors(lhs, rhs);
 }
 
-export function randomCrossArrays(lhs: number[], rhs: number[], separator: number): number[] {
+export function randomCrossArrays<T>(lhs: T[], rhs: T[], separator: number): T[] {
   return lhs.map((_, i) => Math.random() < separator ? lhs[i] : rhs[i]);
 }
 
-export function randomCrossMatrices(lhs: number[][], rhs: number[][], separator: number): number[][] {
+export function randomCrossMatrices<T>(lhs: T[][], rhs: T[][], separator: number): T[][] {
   return lhs.map((row, i) => row.map((_, j) => Math.random() < separator ? lhs[i][j] : rhs[i][j]));
 }
 
-export function randomCrossTensors(lhs: number[][][], rhs: number[][][], separator: number): number[][][] {
+export function randomCrossTensors<T>(lhs: T[][][], rhs: T[][][], separator: number): T[][][] {
   return lhs.map((row, i) => row.map((col, j) => col.map((_, k) => Math.random() < separator ? lhs[i][j][k] : rhs[i][j][k])));
 }
 
-export function removeIndexFromArray(input: number[], index: number): number[] {
+export function removeIndexFromArray<T>(input: T[], index: number): T[] {
   return input.filter((_, i) => i !== index);
 }
 
-export function removeIndexFromMatrix(matrix: number[][], index: number): number[][] {
+export function removeIndexFromMatrix<T>(matrix: T[][], index: number): T[][] {
   return matrix.filter((_, i) => i !== index).map((row) => removeIndexFromArray(row, index));
 }
 
-export function removeIndexFromTensor(tensor: number[][][], index: number): number[][][] {
+export function removeIndexFromTensor<T>(tensor: T[][][], index: number): T[][][] {
   return tensor.filter((_, i) => i !== index).map((row) => removeIndexFromMatrix(row, index));
 }
 
