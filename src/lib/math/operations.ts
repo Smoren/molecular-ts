@@ -140,6 +140,18 @@ export function randomCrossTensors(lhs: number[][][], rhs: number[][][], separat
   return lhs.map((row, i) => row.map((col, j) => col.map((_, k) => Math.random() < separator ? lhs[i][j][k] : rhs[i][j][k])));
 }
 
+export function removeIndexFromArray(input: number[], index: number): number[] {
+  return input.filter((_, i) => i !== index);
+}
+
+export function removeIndexFromMatrix(matrix: number[][], index: number): number[][] {
+  return matrix.filter((_, i) => i !== index).map((row) => removeIndexFromArray(row, index));
+}
+
+export function removeIndexFromTensor(tensor: number[][][], index: number): number[][][] {
+  return tensor.filter((_, i) => i !== index).map((row) => removeIndexFromMatrix(row, index));
+}
+
 export function setMatrixMainDiagonal<T>(matrix: T[][], value: T): T[][] {
   for (let i = 0; i < matrix.length; ++i) {
     matrix[i][i] = value;

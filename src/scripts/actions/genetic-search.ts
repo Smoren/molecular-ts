@@ -60,7 +60,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
       populationSize: 100,
       survivalRate: 0.3,
       crossoverRate: 0.5,
-      mutationProbability: 0.1,
+      mutationProbability: 0.02,
       reference,
       weights,
       worldConfig,

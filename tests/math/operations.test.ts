@@ -3,7 +3,7 @@ import type { Tensor } from "../../src/lib/math/types";
 import {
   crossArrays,
   crossMatrices,
-  crossTensors,
+  crossTensors, removeIndexFromArray, removeIndexFromMatrix, removeIndexFromTensor,
   tensorBinaryOperation,
   tensorUnaryOperation,
 } from '../../src/lib/math/operations';
@@ -691,6 +691,285 @@ function dataProviderForCrossTensors(): Array<[number[][][], number[][][], numbe
           [1, 1, 1],
           [1, 1, 1],
           [1, 1, 1],
+        ],
+      ],
+    ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForRemoveIndexFromArray(),
+] as Array<[number[], number, number[]]>)(
+  'Remove Index From Array Test',
+  (input, index, expected) => {
+    it('', () => {
+      const result = removeIndexFromArray(input, index);
+      expect(result).toEqual(expected);
+    });
+  },
+);
+
+function dataProviderForRemoveIndexFromArray(): Array<[number[], number, number[]]> {
+  return [
+    [
+      [1],
+      0,
+      [],
+    ],
+    [
+      [1, 2],
+      0,
+      [2],
+    ],
+    [
+      [1, 2],
+      1,
+      [1],
+    ],
+    [
+      [1, 2, 3],
+      0,
+      [2, 3],
+    ],
+    [
+      [1, 2, 3],
+      1,
+      [1, 3],
+    ],
+    [
+      [1, 2, 3],
+      2,
+      [1, 2],
+    ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForRemoveIndexFromMatrix(),
+] as Array<[number[][], number, number[][]]>)(
+  'Remove Index From Matrix Test',
+  (input, index, expected) => {
+    it('', () => {
+      const result = removeIndexFromMatrix(input, index);
+      expect(result).toEqual(expected);
+    });
+  },
+);
+
+function dataProviderForRemoveIndexFromMatrix(): Array<[number[][], number, number[][]]> {
+  return [
+    [
+      [
+        [1]
+      ],
+      0,
+      [],
+    ],
+    [
+      [
+        [1, 2],
+        [3, 4],
+      ],
+      0,
+      [
+        [4],
+      ],
+    ],
+    [
+      [
+        [1, 2],
+        [3, 4],
+      ],
+      1,
+      [
+        [1],
+      ],
+    ],
+    [
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+      0,
+      [
+        [5, 6],
+        [8, 9],
+      ],
+    ],
+    [
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+      1,
+      [
+        [1, 3],
+        [7, 9],
+      ],
+    ],
+    [
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+      2,
+      [
+        [1, 2],
+        [4, 5],
+      ],
+    ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForRemoveIndexFromTensor(),
+] as Array<[number[][][], number, number[][][]]>)(
+  'Remove Index From Tensor Test',
+  (input, index, expected) => {
+    it('', () => {
+      const result = removeIndexFromTensor(input, index);
+      expect(result).toEqual(expected);
+    });
+  },
+);
+
+function dataProviderForRemoveIndexFromTensor(): Array<[number[][][], number, number[][][]]> {
+  return [
+    [
+      [
+        [
+          [1],
+        ],
+      ],
+      0,
+      [],
+    ],
+    [
+      [
+        [
+          [1, 2],
+          [3, 4],
+        ],
+        [
+          [11, 22],
+          [33, 44],
+        ],
+      ],
+      0,
+      [
+        [
+          [44],
+        ],
+      ],
+    ],
+    [
+      [
+        [
+          [1, 2],
+          [3, 4],
+        ],
+        [
+          [11, 22],
+          [33, 44],
+        ],
+      ],
+      1,
+      [
+        [
+          [1],
+        ],
+      ],
+    ],
+    [
+      [
+        [
+          [1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9],
+        ],
+        [
+          [11, 22, 33],
+          [44, 55, 66],
+          [77, 88, 99],
+        ],
+        [
+          [111, 222, 333],
+          [444, 555, 666],
+          [777, 888, 999],
+        ],
+      ],
+      0,
+      [
+        [
+          [55, 66],
+          [88, 99],
+        ],
+        [
+          [555, 666],
+          [888, 999],
+        ],
+      ],
+    ],
+    [
+      [
+        [
+          [1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9],
+        ],
+        [
+          [11, 22, 33],
+          [44, 55, 66],
+          [77, 88, 99],
+        ],
+        [
+          [111, 222, 333],
+          [444, 555, 666],
+          [777, 888, 999],
+        ],
+      ],
+      1,
+      [
+        [
+          [1, 3],
+          [7, 9],
+        ],
+        [
+          [111, 333],
+          [777, 999],
+        ],
+      ],
+    ],
+    [
+      [
+        [
+          [1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9],
+        ],
+        [
+          [11, 22, 33],
+          [44, 55, 66],
+          [77, 88, 99],
+        ],
+        [
+          [111, 222, 333],
+          [444, 555, 666],
+          [777, 888, 999],
+        ],
+      ],
+      2,
+      [
+        [
+          [1, 2],
+          [4, 5],
+        ],
+        [
+          [11, 22],
+          [44, 55],
         ],
       ],
     ],
