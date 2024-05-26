@@ -28,8 +28,8 @@ import type { RandomTypesConfig } from "@/lib/types/config";
 export class GeneticSearch implements GeneticSearchInterface {
   private readonly config: GeneticSearchConfig;
   private readonly strategy: StrategyConfig;
+  private readonly nextId: () => number;
   private population: Population;
-  private nextId: () => number;
 
   constructor(config: GeneticSearchConfig, strategy: StrategyConfig) {
     this.config = config;
