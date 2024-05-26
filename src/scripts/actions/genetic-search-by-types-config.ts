@@ -13,7 +13,7 @@ import {
 } from "@/scripts/lib/genetic/io";
 import { createGeneticSearchByTypesConfig } from "@/lib/genetic/factories";
 
-export const actionGeneticSearch = async (...args: string[]) => {
+export const actionGeneticSearchByTypesConfig = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
 
