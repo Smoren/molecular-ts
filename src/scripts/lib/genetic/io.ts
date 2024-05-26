@@ -2,18 +2,16 @@ import fs from "node:fs";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
+import type { GeneticSearchMacroConfig, RunnerStrategyConfig } from "@/lib/types/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
-import type { GeneticSearchMacroConfig, RunnerStrategyConfig } from "@/lib/types/genetic";
 
 export function getGeneticMacroConfig(fileName: string): GeneticSearchMacroConfig {
   return readJsonFile(`data/input/${fileName}`) as GeneticSearchMacroConfig;
 }
 
-export function getGeneticRunnerStrategyConfig(fileName: string, worldConfig: WorldConfig): RunnerStrategyConfig {
-  const config = readJsonFile(`data/input/${fileName}`) as RunnerStrategyConfig;
-  config.worldConfig = worldConfig;
-  return config;
+export function getGeneticRunnerStrategyConfig(fileName: string): RunnerStrategyConfig {
+  return readJsonFile(`data/input/${fileName}`) as RunnerStrategyConfig;
 }
 
 export function getReferenceTypesConfig(fileName: string): TypesConfig {

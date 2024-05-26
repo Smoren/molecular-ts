@@ -1,20 +1,5 @@
-import os from "os";
-import {
-  CachedMultiprocessingRunnerStrategy,
-  GeneticSearch,
-  ComposedCrossoverStrategy,
-  MutationStrategy,
-  RandomPopulateStrategy,
-} from "@/lib/genetic/genetic";
-import type {
-  GeneticSearchInputConfig,
-  StrategyConfig
-} from "@/lib/types/genetic";
-import {
-  convertWeightsToSummaryMatrixRow,
-  repeatTestSimulation,
-  setTypesCountToRandomizeConfigCollection,
-} from "@/lib/genetic/helpers";
+import { ArgsParser } from "@/scripts/lib/router";
+import type { GeneticSearchLikeTypesFactoryConfig } from "@/lib/types/genetic";
 import { getAbsoluteLossesSummary, getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getGeneticMacroConfig,
@@ -22,10 +7,10 @@ import {
   getRandomizeConfig,
   getReferenceTypesConfig,
   getWeights,
-  getWorldConfig, readJsonFile,
+  getWorldConfig,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
-import { ArgsParser } from "@/scripts/lib/router";
+import { createGeneticSearchLikeTypesConfig } from "@/lib/genetic/factories";
 
 export const actionGeneticSearch = async (...args: string[]) => {
   const ts = Date.now();
@@ -47,48 +32,25 @@ export const actionGeneticSearch = async (...args: string[]) => {
     console.log('[INPUT PARAMS]', argsMap);
     console.log(`[START] genetic search action (process_id = ${runId})`);
 
-    const worldConfig = getWorldConfig(initialConfigFileName);
-    const typesConfig = getReferenceTypesConfig(referenceConfigFileName);
-    const weights = convertWeightsToSummaryMatrixRow(getWeights(weightsFileName), typesConfig.FREQUENCIES.length);
-    const geneticMacroConfig = getGeneticMacroConfig(geneticMacroConfigFileName);
-    const runnerStrategyConfig = getGeneticRunnerStrategyConfig(geneticRunnerConfigFileName, worldConfig);
-
-    const [
-      populateRandomTypesConfig,
-      mutationRandomTypesConfig,
-      crossoverRandomTypesConfig,
-    ] = setTypesCountToRandomizeConfigCollection([
-      getRandomizeConfig(populateRandomizeConfigFileName),
-      getRandomizeConfig(mutationRandomizeConfigFileName),
-      getRandomizeConfig(crossoverRandomizeConfigFileName),
-    ], typesConfig.FREQUENCIES.length);
-
-    const strategyConfig: StrategyConfig = {
-      populate: new RandomPopulateStrategy(populateRandomTypesConfig),
-      runner: new CachedMultiprocessingRunnerStrategy(runnerStrategyConfig, os.cpus().length),
-      mutation: new MutationStrategy(mutationRandomTypesConfig),
-      crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
+    const config: GeneticSearchLikeTypesFactoryConfig = {
+      geneticSearchMacroConfig: getGeneticMacroConfig(geneticMacroConfigFileName),
+      runnerStrategyConfig: getGeneticRunnerStrategyConfig(geneticRunnerConfigFileName),
+      populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
+      mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),
+      crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
+      worldConfig: getWorldConfig(initialConfigFileName),
+      referenceTypesConfig: getReferenceTypesConfig(referenceConfigFileName),
+      weights: getWeights(weightsFileName),
     };
 
-    console.log('[START] Calculating reference matrix');
-    const reference = repeatTestSimulation(
-      worldConfig,
-      typesConfig,
-      runnerStrategyConfig.checkpoints,
-      runnerStrategyConfig.repeats,
-    );
-    console.log('[FINISH] Calculating reference matrix');
-
-    const geneticInputConfig: GeneticSearchInputConfig = {
-      reference,
-      weights,
-    };
+    console.log('[START] Building genetic search');
+    const geneticSearch = createGeneticSearchLikeTypesConfig(config);
+    console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');
-    const geneticSearch = new GeneticSearch(geneticMacroConfig, geneticInputConfig, strategyConfig);
     let bestId: number = 0;
 
-    for (let i=0; i<geneticMacroConfig.generationsCount; i++) {
+    for (let i=0; i<config.geneticSearchMacroConfig.generationsCount; i++) {
       const [normalizedLosses, absoluteLosses] = await geneticSearch.runGenerationStep();
 
       const [normMinLoss, normMeanLoss, normMedianLoss, normMaxLoss] = getNormalizedLossesSummary(normalizedLosses);

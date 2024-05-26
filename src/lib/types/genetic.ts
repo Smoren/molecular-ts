@@ -1,4 +1,5 @@
-import type { TypesConfig, WorldConfig } from './config';
+import type { RandomTypesConfig, TypesConfig, WorldConfig } from './config';
+import type { TotalSummaryWeights } from '../types/analysis';
 
 export type GeneticSearchMacroConfig = {
   generationsCount: number;
@@ -30,6 +31,7 @@ export type Population = Genome[];
 
 export interface GeneticSearchInterface {
   runGenerationStep(): Promise<[number[], number[]]>;
+  getBestGenome(): Genome;
 }
 
 export interface PopulateStrategyInterface {
@@ -53,4 +55,15 @@ export type StrategyConfig = {
   runner: RunnerStrategyInterface;
   mutation: MutationStrategyInterface;
   crossover: CrossoverStrategyInterface;
+}
+
+export type GeneticSearchLikeTypesFactoryConfig = {
+  geneticSearchMacroConfig: GeneticSearchMacroConfig;
+  runnerStrategyConfig: RunnerStrategyConfig;
+  populateRandomizeConfig: RandomTypesConfig;
+  mutationRandomizeConfig: RandomTypesConfig;
+  crossoverRandomizeConfig: RandomTypesConfig;
+  worldConfig: WorldConfig;
+  referenceTypesConfig: TypesConfig;
+  weights: TotalSummaryWeights;
 }
