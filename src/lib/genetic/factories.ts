@@ -34,7 +34,7 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesFac
 
   const strategyConfig: StrategyConfig = {
     populate: new RandomPopulateStrategy(populateRandomTypesConfig),
-    runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig, os.cpus().length),
+    runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
     mutation: new MutationStrategy(mutationRandomTypesConfig),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };

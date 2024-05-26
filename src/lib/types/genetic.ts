@@ -2,7 +2,6 @@ import type { RandomTypesConfig, TypesConfig, WorldConfig } from './config';
 import type { TotalSummaryWeights } from '../types/analysis';
 
 export type GeneticSearchMacroConfig = {
-  generationsCount: number;
   populationSize: number;
   survivalRate: number;
   crossoverRate: number;
@@ -19,7 +18,8 @@ export type GeneticSearchConfig = GeneticSearchMacroConfig & GeneticSearchInputC
 export type RunnerStrategyConfig = {
   worldConfig: WorldConfig;
   checkpoints: number[];
-  repeats: number,
+  repeats: number;
+  poolSize: number;
 };
 
 export type Genome = {
@@ -47,9 +47,14 @@ export type GeneticSearchByTypesFactoryConfig = {
   worldConfig: WorldConfig;
 }
 
+export type GenerationResult = [number[], number[]];
+export type GenerationCallback = (generation: number, result: GenerationResult) => void;
+
 export interface GeneticSearchInterface {
+  run(generationsCount: number, afterStep: GenerationCallback): Promise<void>;
   runGenerationStep(): Promise<[number[], number[]]>;
   getBestGenome(): Genome;
+  getPopulation(): Population;
 }
 
 export interface PopulateStrategyInterface {

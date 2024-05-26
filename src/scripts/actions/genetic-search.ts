@@ -1,9 +1,10 @@
+import os from 'os';
 import { ArgsParser } from "@/scripts/lib/router";
 import type { GeneticSearchByTypesFactoryConfig } from "@/lib/types/genetic";
 import { getAbsoluteLossesSummary, getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getGeneticMacroConfig,
-  getGeneticRunnerStrategyConfig,
+  getRunnerStrategyConfig,
   getRandomizeConfig,
   getReferenceTypesConfig,
   getWeights,
@@ -20,6 +21,8 @@ export const actionGeneticSearch = async (...args: string[]) => {
     const argsParser = new ArgsParser(args);
     const argsMap = parseArgs(argsParser);
     const {
+      poolSize,
+      generationsCount,
       geneticMacroConfigFileName,
       geneticRunnerConfigFileName,
       initialConfigFileName,
@@ -34,7 +37,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
     const config: GeneticSearchByTypesFactoryConfig = {
       geneticSearchMacroConfig: getGeneticMacroConfig(geneticMacroConfigFileName),
-      runnerStrategyConfig: getGeneticRunnerStrategyConfig(geneticRunnerConfigFileName),
+      runnerStrategyConfig: getRunnerStrategyConfig(geneticRunnerConfigFileName, poolSize),
       populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
       mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
@@ -50,9 +53,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
     console.log('[START] Running genetic search');
     let bestId: number = 0;
 
-    for (let i=0; i<config.geneticSearchMacroConfig.generationsCount; i++) {
-      const [normalizedLosses, absoluteLosses] = await geneticSearch.runGenerationStep();
-
+    await geneticSearch.run(generationsCount, (i, [normalizedLosses, absoluteLosses]) => {
       const [normMinLoss, normMeanLoss, normMedianLoss, normMaxLoss] = getNormalizedLossesSummary(normalizedLosses);
       const [absMinLoss, absMeanLoss] = getAbsoluteLossesSummary(absoluteLosses);
 
@@ -66,7 +67,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
         bestId = bestGenome.id;
         writeJsonFile(`data/output/${runId}_generation_${i+1}_id_${bestId}.json`, geneticSearch.getBestGenome());
       }
-    }
+    });
   } catch (e) {
     console.error('[ERROR]', (e as Error).message);
   }
@@ -75,6 +76,9 @@ export const actionGeneticSearch = async (...args: string[]) => {
 }
 
 function parseArgs(argsParser: ArgsParser) {
+  const poolSize = argsParser.getInt('poolSize', os.cpus().length);
+  const generationsCount = argsParser.getInt('generationsCount', 100);
+
   const geneticMacroConfigFileName = argsParser.getString('macroConfigFileName', 'default-genetic-macro-config');
   const geneticRunnerConfigFileName = argsParser.getString('geneticRunnerConfigFileName', 'default-genetic-runner-config');
 
@@ -88,6 +92,8 @@ function parseArgs(argsParser: ArgsParser) {
   const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
 
   return {
+    poolSize,
+    generationsCount,
     geneticMacroConfigFileName,
     geneticRunnerConfigFileName,
     initialConfigFileName,

@@ -55,6 +55,14 @@ export class ArgsParser {
     return this.get(key, defaultValue) as string;
   }
 
+  getInt(key: string, defaultValue: number): number {
+    const value = this.get(key);
+    if (value === undefined) {
+      return defaultValue;
+    }
+    return parseInt(value);
+  }
+
   summary(): Record<string, string | string[]> {
     return Object.fromEntries(this.argsMap);
   }

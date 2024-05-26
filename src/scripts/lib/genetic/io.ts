@@ -10,8 +10,10 @@ export function getGeneticMacroConfig(fileName: string): GeneticSearchMacroConfi
   return readJsonFile(`data/input/${fileName}`) as GeneticSearchMacroConfig;
 }
 
-export function getGeneticRunnerStrategyConfig(fileName: string): RunnerStrategyConfig {
-  return readJsonFile(`data/input/${fileName}`) as RunnerStrategyConfig;
+export function getRunnerStrategyConfig(fileName: string, cpuCount: number): RunnerStrategyConfig {
+  const config = readJsonFile(`data/input/${fileName}`) as RunnerStrategyConfig;
+  config.poolSize = cpuCount;
+  return config;
 }
 
 export function getReferenceTypesConfig(fileName: string): TypesConfig {

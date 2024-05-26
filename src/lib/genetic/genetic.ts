@@ -5,10 +5,11 @@ import type {
   GeneticSearchConfig,
   StrategyConfig,
   GeneticSearchInterface,
+  GenerationCallback,
   Genome,
   Population,
 } from '../types/genetic';
-import { normalizeSummaryMatrix } from './helpers';
+import { createNextIdGenerator, normalizeSummaryMatrix } from './helpers';
 import { arrayBinaryOperation, arraySum } from '../math';
 import { getRandomArrayItem } from '../math/random';
 
@@ -21,15 +22,15 @@ export class GeneticSearch implements GeneticSearchInterface {
   constructor(macroConfig: GeneticSearchMacroConfig, inputConfig: GeneticSearchInputConfig, strategy: StrategyConfig) {
     this.config = { ...macroConfig, ...inputConfig };
     this.strategy = strategy;
-
-    this.nextId = (() => {
-      let id = 0;
-      return () => {
-        return ++id;
-      };
-    })();
+    this.nextId = createNextIdGenerator();
 
     this.population = this.createPopulation(this.config.populationSize);
+  }
+
+  public async run(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
+    for (let i=0; i<generationsCount; i++) {
+      afterStep(i, await this.runGenerationStep());
+    }
   }
 
   public async runGenerationStep(): Promise<[number[], number[]]> {
@@ -55,6 +56,10 @@ export class GeneticSearch implements GeneticSearchInterface {
 
   public getBestGenome(): Genome {
     return this.population[0];
+  }
+
+  public getPopulation(): Population {
+    return this.population;
   }
 
   private createPopulation(size: number): Population {

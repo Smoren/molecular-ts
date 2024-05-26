@@ -134,15 +134,12 @@ export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerSt
 }
 
 export class MultiprocessingRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
-  private readonly poolSize: number;
-
-  constructor(config: RunnerStrategyConfig, poolSize: number) {
+  constructor(config: RunnerStrategyConfig) {
     super(config);
-    this.poolSize = poolSize;
   }
 
   protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
-    const pool = new Pool(this.poolSize);
+    const pool = new Pool(this.config.poolSize);
     const result: number[][] = await pool.map(inputs, simulationTaskMultiprocessing);
     pool.close();
 

@@ -171,3 +171,10 @@ export function repeatTestSimulation(worldConfig: WorldConfig, typesConfig: Type
   }
   return averageMatrixColumns(result);
 }
+
+export function createNextIdGenerator(): () => number {
+  return (() => {
+    let id = 0;
+    return () => ++id;
+  })();
+}

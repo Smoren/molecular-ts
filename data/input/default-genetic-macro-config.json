@@ -1,5 +1,4 @@
 {
-  "generationsCount": 100,
   "populationSize": 100,
   "survivalRate": 0.3,
   "crossoverRate": 0.5,
