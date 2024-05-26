@@ -127,6 +127,19 @@ export class MutationStrategy implements MutationStrategyInterface {
   }
 }
 
+export class MutationFromSourceStrategy extends MutationStrategy implements MutationStrategyInterface {
+  private readonly sourceTypesConfig: TypesConfig;
+
+  constructor(randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
+    super(randomizeConfig);
+    this.sourceTypesConfig = sourceTypesConfig;
+  }
+
+  public mutate(id: number, genome: Genome, probability: number): Genome {
+    return super.mutate(id, { id: 0, typesConfig: this.sourceTypesConfig }, probability);
+  }
+}
+
 export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
   protected readonly config: RunnerStrategyConfig;
 
