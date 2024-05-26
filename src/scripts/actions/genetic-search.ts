@@ -1,5 +1,5 @@
 import { ArgsParser } from "@/scripts/lib/router";
-import type { GeneticSearchLikeTypesFactoryConfig } from "@/lib/types/genetic";
+import type { GeneticSearchByTypesFactoryConfig } from "@/lib/types/genetic";
 import { getAbsoluteLossesSummary, getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getGeneticMacroConfig,
@@ -10,7 +10,7 @@ import {
   getWorldConfig,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
-import { createGeneticSearchLikeTypesConfig } from "@/lib/genetic/factories";
+import { createGeneticSearchByTypesConfig } from "@/lib/genetic/factories";
 
 export const actionGeneticSearch = async (...args: string[]) => {
   const ts = Date.now();
@@ -32,19 +32,19 @@ export const actionGeneticSearch = async (...args: string[]) => {
     console.log('[INPUT PARAMS]', argsMap);
     console.log(`[START] genetic search action (process_id = ${runId})`);
 
-    const config: GeneticSearchLikeTypesFactoryConfig = {
+    const config: GeneticSearchByTypesFactoryConfig = {
       geneticSearchMacroConfig: getGeneticMacroConfig(geneticMacroConfigFileName),
       runnerStrategyConfig: getGeneticRunnerStrategyConfig(geneticRunnerConfigFileName),
       populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
       mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
-      worldConfig: getWorldConfig(initialConfigFileName),
       referenceTypesConfig: getReferenceTypesConfig(referenceConfigFileName),
       weights: getWeights(weightsFileName),
+      worldConfig: getWorldConfig(initialConfigFileName),
     };
 
     console.log('[START] Building genetic search');
-    const geneticSearch = createGeneticSearchLikeTypesConfig(config);
+    const geneticSearch = createGeneticSearchByTypesConfig(config);
     console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');

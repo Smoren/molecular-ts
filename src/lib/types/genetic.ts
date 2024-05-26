@@ -36,15 +36,15 @@ export type StrategyConfig = {
   crossover: CrossoverStrategyInterface;
 }
 
-export type GeneticSearchLikeTypesFactoryConfig = {
+export type GeneticSearchByTypesFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchMacroConfig;
   runnerStrategyConfig: RunnerStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
-  worldConfig: WorldConfig;
   referenceTypesConfig: TypesConfig;
   weights: TotalSummaryWeights;
+  worldConfig: WorldConfig;
 }
 
 export interface GeneticSearchInterface {
