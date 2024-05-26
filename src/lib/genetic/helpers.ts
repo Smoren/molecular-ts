@@ -1,5 +1,5 @@
 import type { TotalSummary, TotalSummaryWeights } from '../types/analysis';
-import type { TypesConfig, WorldConfig } from '../types/config';
+import type { RandomTypesConfig, TypesConfig, WorldConfig } from '../types/config';
 import { Simulation } from '../simulation';
 import { Runner } from '../runner';
 import { CompoundsAnalyzer } from '../analysis/compounds';
@@ -123,6 +123,13 @@ export function convertSummaryToSummaryMatrixRow(summary: TotalSummary): number[
     compoundSpeedSummary,
     compoundDensitySummary,
   ].flat(Infinity) as number[];
+}
+
+export function setTypesCountToRandomizeConfigCollection(configs: RandomTypesConfig[], typesCount: number): RandomTypesConfig[] {
+  return configs.map((config) => {
+    config.TYPES_COUNT = typesCount;
+    return config;
+  });
 }
 
 export function normalizeSummaryMatrix(matrix: number[][], reference: number[]): number[][] {

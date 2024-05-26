@@ -3,12 +3,14 @@ import {
   CachedMultiprocessingRunnerStrategy,
   GeneticSearch,
   ComposedCrossoverStrategy,
-  MutationStrategy, RandomPopulateStrategy,
+  MutationStrategy,
+  RandomPopulateStrategy,
 } from "@/lib/genetic/genetic";
 import type { GeneticSearchConfig, StrategyConfig } from "@/lib/types/genetic";
 import {
   convertWeightsToSummaryMatrixRow,
   repeatTestSimulation,
+  setTypesCountToRandomizeConfigCollection,
 } from "@/lib/genetic/helpers";
 import { getAbsoluteLossesSummary, getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
@@ -36,7 +38,6 @@ export const actionGeneticSearch = async (...args: string[]) => {
       weightsFileName,
     } = argsMap;
     console.log('[INPUT PARAMS]', argsMap);
-
     console.log(`[START] genetic search action (process_id = ${runId})`);
 
     const generationCount = 100;
@@ -47,9 +48,15 @@ export const actionGeneticSearch = async (...args: string[]) => {
     const typesCount = typesConfig.FREQUENCIES.length;
     const weights = convertWeightsToSummaryMatrixRow(getWeights(weightsFileName), typesCount);
 
-    const populateRandomTypesConfig = getRandomizeConfig(populateRandomizeConfigFileName, typesCount);
-    const mutationRandomTypesConfig = getRandomizeConfig(mutationRandomizeConfigFileName, typesCount);
-    const crossoverRandomTypesConfig = getRandomizeConfig(crossoverRandomizeConfigFileName, typesCount);
+    const [
+      populateRandomTypesConfig,
+      mutationRandomTypesConfig,
+      crossoverRandomTypesConfig,
+    ] = setTypesCountToRandomizeConfigCollection([
+      getRandomizeConfig(populateRandomizeConfigFileName),
+      getRandomizeConfig(mutationRandomizeConfigFileName),
+      getRandomizeConfig(crossoverRandomizeConfigFileName),
+    ], typesCount);
 
     const strategyConfig: StrategyConfig = {
       populate: new RandomPopulateStrategy(populateRandomTypesConfig),

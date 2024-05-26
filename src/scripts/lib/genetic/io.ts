@@ -10,10 +10,8 @@ export function getReferenceTypesConfig(fileName: string): TypesConfig {
   return simulationConfig.typesConfig;
 }
 
-export function getRandomizeConfig(fileName: string, typesCount: number): RandomTypesConfig {
-  const worldConfig = readJsonFile(`data/input/${fileName}`) as RandomTypesConfig;
-  worldConfig.TYPES_COUNT = typesCount;
-  return worldConfig;
+export function getRandomizeConfig(fileName: string): RandomTypesConfig {
+  return readJsonFile(`data/input/${fileName}`) as RandomTypesConfig;
 }
 
 export function getWorldConfig(initialFileName: string): WorldConfig {
