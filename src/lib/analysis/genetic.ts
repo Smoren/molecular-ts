@@ -23,7 +23,7 @@ import {
 import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { getRandomArrayItem } from '../math/random';
 import { fullCopyObject } from '../utils/functions';
-import type { RandomTypesConfig } from "@/lib/types/config";
+import type { RandomTypesConfig } from '../types/config';
 
 export class GeneticSearch implements GeneticSearchInterface {
   private readonly config: GeneticSearchConfig;
