@@ -1,13 +1,18 @@
 import type { TypesConfig, WorldConfig } from './config';
 
-export type GeneticSearchConfig = {
+export type GeneticSearchMacroConfig = {
   populationSize: number;
   survivalRate: number;
   crossoverRate: number;
   mutationProbability: number;
+};
+
+export type GeneticSearchInputConfig = {
   reference: number[];
   weights: number[];
 };
+
+export type GeneticSearchConfig = GeneticSearchMacroConfig & GeneticSearchInputConfig;
 
 export type RunnerStrategyConfig = {
   worldConfig: WorldConfig;

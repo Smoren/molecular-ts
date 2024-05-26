@@ -1,6 +1,8 @@
 import { multi, single, transform } from 'itertools-ts';
 import { Pool } from 'multiprocess-pool';
 import type {
+  GeneticSearchMacroConfig,
+  GeneticSearchInputConfig,
   GeneticSearchConfig,
   RunnerStrategyConfig,
   StrategyConfig,
@@ -32,8 +34,8 @@ export class GeneticSearch implements GeneticSearchInterface {
   private readonly nextId: () => number;
   private population: Population;
 
-  constructor(config: GeneticSearchConfig, strategy: StrategyConfig) {
-    this.config = config;
+  constructor(macroConfig: GeneticSearchMacroConfig, inputConfig: GeneticSearchInputConfig, strategy: StrategyConfig) {
+    this.config = { ...macroConfig, ...inputConfig };
     this.strategy = strategy;
 
     this.nextId = (() => {
@@ -43,7 +45,7 @@ export class GeneticSearch implements GeneticSearchInterface {
       };
     })();
 
-    this.population = this.createPopulation(config.populationSize);
+    this.population = this.createPopulation(this.config.populationSize);
   }
 
   public async runGenerationStep(): Promise<[number[], number[]]> {

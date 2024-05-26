@@ -6,7 +6,12 @@ import {
   MutationStrategy,
   RandomPopulateStrategy,
 } from "@/lib/genetic/genetic";
-import type { GeneticSearchConfig, RunnerStrategyConfig, StrategyConfig } from "@/lib/types/genetic";
+import type {
+  GeneticSearchConfig, GeneticSearchInputConfig,
+  GeneticSearchMacroConfig,
+  RunnerStrategyConfig,
+  StrategyConfig
+} from "@/lib/types/genetic";
 import {
   convertWeightsToSummaryMatrixRow,
   repeatTestSimulation,
@@ -72,20 +77,22 @@ export const actionGeneticSearch = async (...args: string[]) => {
     };
 
     console.log('[START] Calculating reference matrix');
-
     const reference = repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
-    const geneticConfig: GeneticSearchConfig = {
+    console.log('[FINISH] Calculating reference matrix');
+
+    const geneticMacroConfig: GeneticSearchMacroConfig = {
       populationSize: 100,
       survivalRate: 0.3,
       crossoverRate: 0.5,
       mutationProbability: 0.02,
+    };
+    const geneticInputConfig: GeneticSearchInputConfig = {
       reference,
       weights,
     };
-    console.log('[FINISH] Calculating reference matrix');
 
     console.log('[START] Running genetic search');
-    const geneticSearch = new GeneticSearch(geneticConfig, strategyConfig);
+    const geneticSearch = new GeneticSearch(geneticMacroConfig, geneticInputConfig, strategyConfig);
     let bestId: number = 0;
 
     for (let i=0; i<generationCount; i++) {
