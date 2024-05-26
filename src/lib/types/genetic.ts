@@ -47,6 +47,18 @@ export type GeneticSearchByTypesConfigFactoryConfig = {
   worldConfig: WorldConfig;
 }
 
+export type RandomSearchByTypesConfigFactoryConfig = {
+  geneticSearchMacroConfig: GeneticSearchMacroConfig;
+  runnerStrategyConfig: RunnerStrategyConfig;
+  populateRandomizeConfig: RandomTypesConfig;
+  mutationRandomizeConfig: RandomTypesConfig;
+  crossoverRandomizeConfig: RandomTypesConfig;
+  sourceTypesConfig: TypesConfig;
+  referenceTypesConfig: TypesConfig;
+  weights: TotalSummaryWeights;
+  worldConfig: WorldConfig;
+}
+
 export type GenerationResult = [number[], number[]];
 export type GenerationCallback = (generation: number, result: GenerationResult) => void;
 

@@ -16,7 +16,7 @@ export function getRunnerStrategyConfig(fileName: string, cpuCount: number): Run
   return config;
 }
 
-export function getReferenceTypesConfig(fileName: string): TypesConfig {
+export function getTypesConfig(fileName: string): TypesConfig {
   const simulationConfig = readJsonFile(`data/input/${fileName}`) as SimulationConfig;
   return simulationConfig.typesConfig;
 }

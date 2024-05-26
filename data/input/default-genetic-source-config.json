@@ -1,0 +1,97 @@
+{
+  "worldConfig": {
+    "VIEW_MODE": "2d",
+    "PHYSIC_MODEL": "v2",
+    "ATOM_RADIUS": 5,
+    "MAX_INTERACTION_RADIUS": 100,
+    "MAX_LINK_RADIUS": 60,
+    "MAX_FORCE": 0.4,
+    "GRAVITY_FORCE_MULTIPLIER": 1,
+    "LINK_FORCE_MULTIPLIER": 0.015,
+    "BOUNCE_FORCE_MULTIPLIER": 2,
+    "BOUNDS_FORCE_MULTIPLIER": 0.01,
+    "INERTIAL_MULTIPLIER": 0.96,
+    "SPEED": 25,
+    "PLAYBACK_SPEED": 1,
+    "SIMPLIFIED_VIEW_MODE": false,
+    "TEMPERATURE_MULTIPLIER": 0,
+    "CONFIG_2D": {
+      "BOUNDS": {
+        "MIN_POSITION": [0, 0],
+        "MAX_POSITION": [2500, 2500]
+      },
+      "INITIAL": {
+        "ATOMS_COUNT": 2000,
+        "MIN_POSITION": [0, 0],
+        "MAX_POSITION": [2500, 2000]
+      }
+    },
+    "CONFIG_3D": {
+      "BOUNDS": {
+        "MIN_POSITION": [0, 0, 0],
+        "MAX_POSITION": [500, 500, 500]
+      },
+      "INITIAL": {
+        "ATOMS_COUNT": 1000,
+        "MIN_POSITION": [0, 0, 0],
+        "MAX_POSITION": [500, 500, 500]
+      }
+    },
+    "MIN_POSITION": [0, 0, 0],
+    "MAX_POSITION": [2500, 2500, 2500]
+  },
+  "typesConfig": {
+    "RADIUS": [1, 1, 1],
+    "GRAVITY": [
+      [-1.4, -1.6, -0.7],
+      [-0.9, -1.9, -1.3],
+      [-0.6, -1.3, -0.5]
+    ],
+    "LINK_GRAVITY": [
+      [-0.4, 0, -2.5],
+      [-2.3, 0, -5],
+      [-0.6, -3.3, -3]
+    ],
+    "LINKS": [2, 2, 3],
+    "TYPE_LINKS": [
+      [3, 0, 2],
+      [3, 0, 2],
+      [1, 1, 1]
+    ],
+    "LINK_FACTOR_DISTANCE": [
+      [1, 1, 1],
+      [1, 1, 1],
+      [1, 1, 1]
+    ],
+    "LINK_FACTOR_DISTANCE_EXTENDED": [
+      [
+        [1, 1, 1],
+        [1, 1, 0.8],
+        [1, 1, 1]
+      ],
+      [
+        [0.7, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
+      ],
+      [
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
+      ]
+    ],
+    "LINK_FACTOR_DISTANCE_USE_EXTENDED": true,
+    "FREQUENCIES": [1, 1, 1],
+    "COLORS": [
+      [250, 20, 20],
+      [200, 140, 100],
+      [80, 170, 140]
+    ]
+  },
+  "typesSymmetricConfig": {
+    "GRAVITY_MATRIX_SYMMETRIC": false,
+    "LINK_GRAVITY_MATRIX_SYMMETRIC": false,
+    "LINK_TYPE_MATRIX_SYMMETRIC": false,
+    "LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC": false
+  }
+}

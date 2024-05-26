@@ -9,7 +9,7 @@ import type {
   RunnerStrategyConfig,
   RunnerStrategyInterface,
 } from '../types/genetic';
-import type { RandomTypesConfig } from '../types/config';
+import type { RandomTypesConfig, TypesConfig } from '../types/config';
 import type { SimulationTaskConfig } from '../genetic/multiprocessing';
 import {
   createTransparentTypesConfig,
@@ -37,6 +37,33 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface {
           this.randomizeConfig,
           createTransparentTypesConfig(this.randomizeConfig.TYPES_COUNT),
         ),
+      });
+    }
+    return population;
+  }
+}
+
+export class MutationPopulateStrategy implements PopulateStrategyInterface {
+  private readonly referenceTypesConfig: TypesConfig;
+  private readonly randomizeConfig: RandomTypesConfig;
+  private readonly probability: number;
+
+  constructor(referenceTypesConfig: TypesConfig, randomizeConfig: RandomTypesConfig, probability: number) {
+    this.referenceTypesConfig = referenceTypesConfig;
+    this.randomizeConfig = randomizeConfig;
+    this.probability = probability;
+  }
+
+  public populate(size: number): Population {
+    const population: Population = [];
+    for (let i = 0; i < size; i++) {
+      const inputTypesConfig = fullCopyObject(this.referenceTypesConfig);
+      const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
+      const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.probability);
+
+      population.push({
+        id: 0,
+        typesConfig: mutatedTypesConfig,
       });
     }
     return population;
