@@ -6,7 +6,7 @@ import {
   MutationStrategy,
   RandomPopulateStrategy,
 } from "@/lib/genetic/genetic";
-import type { GeneticSearchConfig, StrategyConfig } from "@/lib/types/genetic";
+import type { GeneticSearchConfig, RunnerStrategyConfig, StrategyConfig } from "@/lib/types/genetic";
 import {
   convertWeightsToSummaryMatrixRow,
   repeatTestSimulation,
@@ -48,6 +48,12 @@ export const actionGeneticSearch = async (...args: string[]) => {
     const typesCount = typesConfig.FREQUENCIES.length;
     const weights = convertWeightsToSummaryMatrixRow(getWeights(weightsFileName), typesCount);
 
+    const runnerStrategyConfig: RunnerStrategyConfig = {
+      worldConfig,
+      checkpoints,
+      repeats,
+    };
+
     const [
       populateRandomTypesConfig,
       mutationRandomTypesConfig,
@@ -60,7 +66,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
     const strategyConfig: StrategyConfig = {
       populate: new RandomPopulateStrategy(populateRandomTypesConfig),
-      runner: new CachedMultiprocessingRunnerStrategy(os.cpus().length),
+      runner: new CachedMultiprocessingRunnerStrategy(runnerStrategyConfig, os.cpus().length),
       mutation: new MutationStrategy(mutationRandomTypesConfig),
       crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
     };
@@ -75,9 +81,6 @@ export const actionGeneticSearch = async (...args: string[]) => {
       mutationProbability: 0.02,
       reference,
       weights,
-      worldConfig,
-      checkpoints,
-      repeats,
     };
     console.log('[FINISH] Calculating reference matrix');
 

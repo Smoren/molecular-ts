@@ -7,6 +7,9 @@ export type GeneticSearchConfig = {
   mutationProbability: number;
   reference: number[];
   weights: number[];
+};
+
+export type RunnerStrategyConfig = {
   worldConfig: WorldConfig;
   checkpoints: number[];
   repeats: number,
@@ -36,7 +39,7 @@ export interface CrossoverStrategyInterface {
 }
 
 export interface RunnerStrategyInterface {
-  run: (population: Population, config: GeneticSearchConfig) => Promise<number[][]>;
+  run: (population: Population) => Promise<number[][]>;
 }
 
 export type StrategyConfig = {

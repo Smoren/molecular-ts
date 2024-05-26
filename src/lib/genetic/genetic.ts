@@ -2,17 +2,18 @@ import { multi, single, transform } from 'itertools-ts';
 import { Pool } from 'multiprocess-pool';
 import type {
   GeneticSearchConfig,
+  RunnerStrategyConfig,
   StrategyConfig,
   GeneticSearchInterface,
   CrossoverStrategyInterface,
   RunnerStrategyInterface,
   MutationStrategyInterface,
+  PopulateStrategyInterface,
   Genome,
   Population,
-  PopulateStrategyInterface,
 } from '../types/genetic';
-import type { SimulationTaskConfig } from "./multiprocessing";
-import { simulationTaskMultiprocessing, simulationTaskSingle } from "./multiprocessing";
+import type { SimulationTaskConfig } from './multiprocessing';
+import { simulationTaskMultiprocessing, simulationTaskSingle } from './multiprocessing';
 import { normalizeSummaryMatrix } from './helpers';
 import {
   createTransparentTypesConfig,
@@ -48,7 +49,7 @@ export class GeneticSearch implements GeneticSearchInterface {
   public async runGenerationStep(): Promise<[number[], number[]]> {
     const [countToSurvive, countToCross, countToClone] = this.getSizes();
 
-    const results = await this.strategy.runner.run(this.population, this.config);
+    const results = await this.strategy.runner.run(this.population);
     const [normalizedLosses, absoluteLosses] = this.calcLosses(results);
     const [
       sortedPopulation,
@@ -226,19 +227,25 @@ export class MutationStrategy implements MutationStrategyInterface {
 }
 
 export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
-  public async run(population: Population, config: GeneticSearchConfig): Promise<number[][]> {
-    const inputs = this.createTasksInputList(population, config);
+  protected readonly config: RunnerStrategyConfig;
+
+  constructor(config: RunnerStrategyConfig) {
+    this.config = config;
+  }
+
+  public async run(population: Population): Promise<number[][]> {
+    const inputs = this.createTasksInputList(population);
     return await this.execTask(inputs);
   }
 
   protected abstract execTask(inputs: SimulationTaskConfig[]): Promise<number[][]>;
 
-  protected createTasksInputList(population: Population, config: GeneticSearchConfig): SimulationTaskConfig[] {
-    return population.map((genome) => this.createTaskInput(genome.id, genome, config));
+  protected createTasksInputList(population: Population): SimulationTaskConfig[] {
+    return population.map((genome) => this.createTaskInput(genome.id, genome));
   }
 
-  protected createTaskInput(id: number, genome: Genome, config: GeneticSearchConfig): SimulationTaskConfig {
-    return [id, config.worldConfig, genome.typesConfig, config.checkpoints, config.repeats];
+  protected createTaskInput(id: number, genome: Genome): SimulationTaskConfig {
+    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
@@ -255,8 +262,8 @@ export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerSt
 export class MultiprocessingRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
   private readonly poolSize: number;
 
-  constructor(poolSize: number) {
-    super();
+  constructor(config: RunnerStrategyConfig, poolSize: number) {
+    super(config);
     this.poolSize = poolSize;
   }
 
