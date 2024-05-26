@@ -60,7 +60,6 @@ export class GeneticSearch implements GeneticSearchInterface {
     const crossedPopulation = this.crossover(survivedPopulation, countToCross);
     const mutatedPopulation = this.clone(survivedPopulation, countToClone);
 
-    // TODO population should be replaced with sorted
     this.population = [...survivedPopulation, ...crossedPopulation, ...mutatedPopulation];
     // this.population = [...sortedPopulation];
 
@@ -148,7 +147,7 @@ export class GeneticSearch implements GeneticSearchInterface {
 }
 
 export class RandomPopulateStrategy implements PopulateStrategyInterface {
-  private randomizeConfig: RandomTypesConfig;
+  private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(randomizeConfig: RandomTypesConfig) {
     this.randomizeConfig = randomizeConfig;
@@ -170,13 +169,13 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface {
 }
 
 export class SubMatrixCrossoverStrategy implements CrossoverStrategyInterface {
-  private randomizeConfig: RandomTypesConfig;
+  private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(randomizeConfig: RandomTypesConfig) {
     this.randomizeConfig = randomizeConfig;
   }
 
-  public cross(id: number, lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
+  public cross(id: number, lhs: Genome, rhs: Genome): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
     const randomized = randomizeTypesConfig(this.randomizeConfig, crossed, separator);
@@ -193,8 +192,8 @@ export class RandomCrossoverStrategy implements CrossoverStrategyInterface {
 }
 
 export class ComposedCrossoverStrategy implements CrossoverStrategyInterface {
-  private randomStrategy: CrossoverStrategyInterface;
-  private subMatrixStrategy: CrossoverStrategyInterface;
+  private readonly randomStrategy: CrossoverStrategyInterface;
+  private readonly subMatrixStrategy: CrossoverStrategyInterface;
 
   constructor(randomizeConfig: RandomTypesConfig) {
     this.randomStrategy = new RandomCrossoverStrategy();
@@ -211,13 +210,13 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface {
 }
 
 export class MutationStrategy implements MutationStrategyInterface {
-  private randomizeConfig: RandomTypesConfig;
+  private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(randomizeConfig: RandomTypesConfig) {
     this.randomizeConfig = randomizeConfig;
   }
 
-  mutate(id: number, genome: Genome, probability: number, config: GeneticSearchConfig): Genome {
+  mutate(id: number, genome: Genome, probability: number): Genome {
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
     const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
@@ -235,7 +234,7 @@ export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
   protected abstract execTask(inputs: SimulationTaskConfig[]): Promise<number[][]>;
 
   protected createTasksInputList(population: Population, config: GeneticSearchConfig): SimulationTaskConfig[] {
-    return population.map((genome, i) => this.createTaskInput(genome.id, genome, config));
+    return population.map((genome) => this.createTaskInput(genome.id, genome, config));
   }
 
   protected createTaskInput(id: number, genome: Genome, config: GeneticSearchConfig): SimulationTaskConfig {
