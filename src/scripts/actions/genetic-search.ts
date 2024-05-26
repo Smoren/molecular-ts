@@ -7,9 +7,7 @@ import {
   RandomPopulateStrategy,
 } from "@/lib/genetic/genetic";
 import type {
-  GeneticSearchConfig, GeneticSearchInputConfig,
-  GeneticSearchMacroConfig,
-  RunnerStrategyConfig,
+  GeneticSearchInputConfig,
   StrategyConfig
 } from "@/lib/types/genetic";
 import {
@@ -19,10 +17,12 @@ import {
 } from "@/lib/genetic/helpers";
 import { getAbsoluteLossesSummary, getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
+  getGeneticMacroConfig,
+  getGeneticRunnerStrategyConfig,
   getRandomizeConfig,
   getReferenceTypesConfig,
   getWeights,
-  getWorldConfig,
+  getWorldConfig, readJsonFile,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
 import { ArgsParser } from "@/scripts/lib/router";
@@ -35,6 +35,8 @@ export const actionGeneticSearch = async (...args: string[]) => {
     const argsParser = new ArgsParser(args);
     const argsMap = parseArgs(argsParser);
     const {
+      geneticMacroConfigFileName,
+      geneticRunnerConfigFileName,
       initialConfigFileName,
       populateRandomizeConfigFileName,
       mutationRandomizeConfigFileName,
@@ -45,19 +47,11 @@ export const actionGeneticSearch = async (...args: string[]) => {
     console.log('[INPUT PARAMS]', argsMap);
     console.log(`[START] genetic search action (process_id = ${runId})`);
 
-    const generationCount = 100;
-    const checkpoints = [200, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 20, 1, 1, 1, 1, 1];
-    const repeats = 3;
     const worldConfig = getWorldConfig(initialConfigFileName);
     const typesConfig = getReferenceTypesConfig(referenceConfigFileName);
-    const typesCount = typesConfig.FREQUENCIES.length;
-    const weights = convertWeightsToSummaryMatrixRow(getWeights(weightsFileName), typesCount);
-
-    const runnerStrategyConfig: RunnerStrategyConfig = {
-      worldConfig,
-      checkpoints,
-      repeats,
-    };
+    const weights = convertWeightsToSummaryMatrixRow(getWeights(weightsFileName), typesConfig.FREQUENCIES.length);
+    const geneticMacroConfig = getGeneticMacroConfig(geneticMacroConfigFileName);
+    const runnerStrategyConfig = getGeneticRunnerStrategyConfig(geneticRunnerConfigFileName, worldConfig);
 
     const [
       populateRandomTypesConfig,
@@ -67,7 +61,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
       getRandomizeConfig(populateRandomizeConfigFileName),
       getRandomizeConfig(mutationRandomizeConfigFileName),
       getRandomizeConfig(crossoverRandomizeConfigFileName),
-    ], typesCount);
+    ], typesConfig.FREQUENCIES.length);
 
     const strategyConfig: StrategyConfig = {
       populate: new RandomPopulateStrategy(populateRandomTypesConfig),
@@ -77,15 +71,14 @@ export const actionGeneticSearch = async (...args: string[]) => {
     };
 
     console.log('[START] Calculating reference matrix');
-    const reference = repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
+    const reference = repeatTestSimulation(
+      worldConfig,
+      typesConfig,
+      runnerStrategyConfig.checkpoints,
+      runnerStrategyConfig.repeats,
+    );
     console.log('[FINISH] Calculating reference matrix');
 
-    const geneticMacroConfig: GeneticSearchMacroConfig = {
-      populationSize: 100,
-      survivalRate: 0.3,
-      crossoverRate: 0.5,
-      mutationProbability: 0.02,
-    };
     const geneticInputConfig: GeneticSearchInputConfig = {
       reference,
       weights,
@@ -95,7 +88,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
     const geneticSearch = new GeneticSearch(geneticMacroConfig, geneticInputConfig, strategyConfig);
     let bestId: number = 0;
 
-    for (let i=0; i<generationCount; i++) {
+    for (let i=0; i<geneticMacroConfig.generationsCount; i++) {
       const [normalizedLosses, absoluteLosses] = await geneticSearch.runGenerationStep();
 
       const [normMinLoss, normMeanLoss, normMedianLoss, normMaxLoss] = getNormalizedLossesSummary(normalizedLosses);
@@ -120,6 +113,9 @@ export const actionGeneticSearch = async (...args: string[]) => {
 }
 
 function parseArgs(argsParser: ArgsParser) {
+  const geneticMacroConfigFileName = argsParser.getString('macroConfigFileName', 'default-genetic-macro-config');
+  const geneticRunnerConfigFileName = argsParser.getString('geneticRunnerConfigFileName', 'default-genetic-runner-config');
+
   const initialConfigFileName = argsParser.getString('initialConfigFileName', 'default-genetic-initial-config');
   const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-genetic-reference-config');
   const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-weights');
@@ -130,6 +126,8 @@ function parseArgs(argsParser: ArgsParser) {
   const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
 
   return {
+    geneticMacroConfigFileName,
+    geneticRunnerConfigFileName,
     initialConfigFileName,
     populateRandomizeConfigFileName,
     mutationRandomizeConfigFileName,

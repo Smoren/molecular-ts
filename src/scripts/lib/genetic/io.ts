@@ -4,6 +4,17 @@ import type { SimulationConfig } from "@/lib/types/simulation";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
+import type { GeneticSearchMacroConfig, RunnerStrategyConfig } from "@/lib/types/genetic";
+
+export function getGeneticMacroConfig(fileName: string): GeneticSearchMacroConfig {
+  return readJsonFile(`data/input/${fileName}`) as GeneticSearchMacroConfig;
+}
+
+export function getGeneticRunnerStrategyConfig(fileName: string, worldConfig: WorldConfig): RunnerStrategyConfig {
+  const config = readJsonFile(`data/input/${fileName}`) as RunnerStrategyConfig;
+  config.worldConfig = worldConfig;
+  return config;
+}
 
 export function getReferenceTypesConfig(fileName: string): TypesConfig {
   const simulationConfig = readJsonFile(`data/input/${fileName}`) as SimulationConfig;

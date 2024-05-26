@@ -1,6 +1,7 @@
 import type { TypesConfig, WorldConfig } from './config';
 
 export type GeneticSearchMacroConfig = {
+  generationsCount: number;
   populationSize: number;
   survivalRate: number;
   crossoverRate: number;
