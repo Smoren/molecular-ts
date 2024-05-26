@@ -7,16 +7,16 @@ import type {
 } from '../types/genetic';
 import {
   convertWeightsToSummaryMatrixRow,
-  repeatTestSimulation,
   setTypesCountToRandomizeConfigCollection,
+  repeatTestSimulation,
 } from '../genetic/helpers';
+import { GeneticSearch } from '../genetic/genetic';
 import {
   CachedMultiprocessingRunnerStrategy,
   ComposedCrossoverStrategy,
-  GeneticSearch,
   MutationStrategy,
   RandomPopulateStrategy,
-} from '../genetic/genetic';
+} from '../genetic/strategies';
 
 export function createGeneticSearchLikeTypesConfig(config: GeneticSearchLikeTypesFactoryConfig): GeneticSearchInterface {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;

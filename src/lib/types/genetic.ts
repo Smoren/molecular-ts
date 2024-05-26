@@ -29,6 +29,24 @@ export type Genome = {
 
 export type Population = Genome[];
 
+export type StrategyConfig = {
+  populate: PopulateStrategyInterface;
+  runner: RunnerStrategyInterface;
+  mutation: MutationStrategyInterface;
+  crossover: CrossoverStrategyInterface;
+}
+
+export type GeneticSearchLikeTypesFactoryConfig = {
+  geneticSearchMacroConfig: GeneticSearchMacroConfig;
+  runnerStrategyConfig: RunnerStrategyConfig;
+  populateRandomizeConfig: RandomTypesConfig;
+  mutationRandomizeConfig: RandomTypesConfig;
+  crossoverRandomizeConfig: RandomTypesConfig;
+  worldConfig: WorldConfig;
+  referenceTypesConfig: TypesConfig;
+  weights: TotalSummaryWeights;
+}
+
 export interface GeneticSearchInterface {
   runGenerationStep(): Promise<[number[], number[]]>;
   getBestGenome(): Genome;
@@ -48,22 +66,4 @@ export interface CrossoverStrategyInterface {
 
 export interface RunnerStrategyInterface {
   run: (population: Population) => Promise<number[][]>;
-}
-
-export type StrategyConfig = {
-  populate: PopulateStrategyInterface;
-  runner: RunnerStrategyInterface;
-  mutation: MutationStrategyInterface;
-  crossover: CrossoverStrategyInterface;
-}
-
-export type GeneticSearchLikeTypesFactoryConfig = {
-  geneticSearchMacroConfig: GeneticSearchMacroConfig;
-  runnerStrategyConfig: RunnerStrategyConfig;
-  populateRandomizeConfig: RandomTypesConfig;
-  mutationRandomizeConfig: RandomTypesConfig;
-  crossoverRandomizeConfig: RandomTypesConfig;
-  worldConfig: WorldConfig;
-  referenceTypesConfig: TypesConfig;
-  weights: TotalSummaryWeights;
 }
