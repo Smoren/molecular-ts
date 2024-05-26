@@ -9,6 +9,7 @@ import type {
   MutationStrategyInterface,
   Genome,
   Population,
+  PopulateStrategyInterface,
 } from '../types/genetic';
 import type { SimulationTaskConfig } from "./multiprocessing";
 import { simulationTaskMultiprocessing, simulationTaskSingle } from "./multiprocessing";
@@ -17,11 +18,12 @@ import {
   createTransparentTypesConfig,
   crossTypesConfigs,
   randomCrossTypesConfigs,
-  randomizeTypesConfig
+  randomizeTypesConfig,
 } from '../config/types';
 import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { getRandomArrayItem } from '../math/random';
 import { fullCopyObject } from '../utils/functions';
+import type { RandomTypesConfig } from "@/lib/types/config";
 
 export class GeneticSearch implements GeneticSearchInterface {
   private readonly config: GeneticSearchConfig;
@@ -70,17 +72,9 @@ export class GeneticSearch implements GeneticSearchInterface {
   }
 
   private createPopulation(size: number): Population {
-    const population: Population = [];
-    for (let i = 0; i < size; i++) {
-      population.push({
-        id: this.nextId(),
-        typesConfig: randomizeTypesConfig(
-          this.config.randomTypesConfig,
-          createTransparentTypesConfig(this.config.randomTypesConfig.TYPES_COUNT),
-        ),
-      });
-    }
-    return population;
+    return this.strategy.populate
+      .populate(size)
+      .map((x) => ({ ...x, id: this.nextId() }));
   }
 
   private crossover(genomes: Population, count: number): Population {
@@ -153,11 +147,39 @@ export class GeneticSearch implements GeneticSearchInterface {
   }
 }
 
+export class RandomPopulateStrategy implements PopulateStrategyInterface {
+  private randomizeConfig: RandomTypesConfig;
+
+  constructor(randomizeConfig: RandomTypesConfig) {
+    this.randomizeConfig = randomizeConfig;
+  }
+
+  public populate(size: number): Population {
+    const population: Population = [];
+    for (let i = 0; i < size; i++) {
+      population.push({
+        id: 0,
+        typesConfig: randomizeTypesConfig(
+          this.randomizeConfig,
+          createTransparentTypesConfig(this.randomizeConfig.TYPES_COUNT),
+        ),
+      });
+    }
+    return population;
+  }
+}
+
 export class SubMatrixCrossoverStrategy implements CrossoverStrategyInterface {
+  private randomizeConfig: RandomTypesConfig;
+
+  constructor(randomizeConfig: RandomTypesConfig) {
+    this.randomizeConfig = randomizeConfig;
+  }
+
   public cross(id: number, lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
-    const randomized = randomizeTypesConfig(config.randomTypesConfig, crossed, separator);
+    const randomized = randomizeTypesConfig(this.randomizeConfig, crossed, separator);
     return { id: id, typesConfig: randomized };
   }
 }
@@ -174,9 +196,9 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface {
   private randomStrategy: CrossoverStrategyInterface;
   private subMatrixStrategy: CrossoverStrategyInterface;
 
-  constructor() {
+  constructor(randomizeConfig: RandomTypesConfig) {
     this.randomStrategy = new RandomCrossoverStrategy();
-    this.subMatrixStrategy = new SubMatrixCrossoverStrategy();
+    this.subMatrixStrategy = new SubMatrixCrossoverStrategy(randomizeConfig);
   }
 
   public cross(id: number, lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
@@ -189,9 +211,15 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface {
 }
 
 export class MutationStrategy implements MutationStrategyInterface {
+  private randomizeConfig: RandomTypesConfig;
+
+  constructor(randomizeConfig: RandomTypesConfig) {
+    this.randomizeConfig = randomizeConfig;
+  }
+
   mutate(id: number, genome: Genome, probability: number, config: GeneticSearchConfig): Genome {
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
-    const randomizedTypesConfig = randomizeTypesConfig(config.randomTypesConfig, inputTypesConfig);
+    const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
     return { id: id, typesConfig: mutatedTypesConfig };

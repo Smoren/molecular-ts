@@ -3,7 +3,7 @@ import {
   CachedMultiprocessingRunnerStrategy,
   GeneticSearch,
   ComposedCrossoverStrategy,
-  MutationStrategy,
+  MutationStrategy, RandomPopulateStrategy,
 } from "@/lib/analysis/genetic";
 import type { GeneticSearchConfig, StrategyConfig } from "@/lib/types/genetic";
 import {
@@ -16,7 +16,7 @@ import {
   getReferenceTypesConfig,
   getWeights,
   getWorldConfig,
-  writeJsonFile
+  writeJsonFile,
 } from "@/scripts/lib/genetic/io";
 import { ArgsParser } from "@/scripts/lib/router";
 
@@ -30,7 +30,9 @@ export const actionGeneticSearch = async (...args: string[]) => {
     const argsMap = parseArgs(argsParser);
     const {
       initialConfigFileName,
-      randomizeConfigFileName,
+      populateRandomizeConfigFileName,
+      mutationRandomizeConfigFileName,
+      crossoverRandomizeConfigFileName,
       referenceConfigFileName,
       weightsFileName,
     } = argsMap;
@@ -41,17 +43,21 @@ export const actionGeneticSearch = async (...args: string[]) => {
     const generationCount = 100;
     const checkpoints = [200, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 20, 1, 1, 1, 1, 1];
     const repeats = 3;
-    const strategyConfig: StrategyConfig = {
-      runner: new CachedMultiprocessingRunnerStrategy(os.cpus().length),
-      mutation: new MutationStrategy(),
-      crossover: new ComposedCrossoverStrategy(),
-    };
-
     const worldConfig = getWorldConfig(initialConfigFileName);
     const typesConfig = getReferenceTypesConfig(referenceConfigFileName);
     const typesCount = typesConfig.FREQUENCIES.length;
-    const randomTypesConfig = getRandomizeConfig(randomizeConfigFileName, typesCount);
     const weights = convertWeightsToSummaryMatrixRow(getWeights(weightsFileName), typesCount);
+
+    const populateRandomTypesConfig = getRandomizeConfig(populateRandomizeConfigFileName, typesCount);
+    const mutationRandomTypesConfig = getRandomizeConfig(mutationRandomizeConfigFileName, typesCount);
+    const crossoverRandomTypesConfig = getRandomizeConfig(crossoverRandomizeConfigFileName, typesCount);
+
+    const strategyConfig: StrategyConfig = {
+      populate: new RandomPopulateStrategy(populateRandomTypesConfig),
+      runner: new CachedMultiprocessingRunnerStrategy(os.cpus().length),
+      mutation: new MutationStrategy(mutationRandomTypesConfig),
+      crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
+    };
 
     console.log('[START] Calculating reference matrix');
 
@@ -64,7 +70,6 @@ export const actionGeneticSearch = async (...args: string[]) => {
       reference,
       weights,
       worldConfig,
-      randomTypesConfig,
       checkpoints,
       repeats,
     };
@@ -100,13 +105,19 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
 function parseArgs(argsParser: ArgsParser) {
   const initialConfigFileName = argsParser.getString('initialConfigFileName', 'default-genetic-initial-config');
-  const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-genetic-randomize-config');
   const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-genetic-reference-config');
   const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-weights');
 
+  const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-genetic-randomize-config');
+  const populateRandomizeConfigFileName = argsParser.getString('populateRandomizeConfigFileName', randomizeConfigFileName);
+  const mutationRandomizeConfigFileName = argsParser.getString('mutationRandomizeConfigFileName', randomizeConfigFileName);
+  const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
+
   return {
     initialConfigFileName,
-    randomizeConfigFileName,
+    populateRandomizeConfigFileName,
+    mutationRandomizeConfigFileName,
+    crossoverRandomizeConfigFileName,
     referenceConfigFileName,
     weightsFileName,
   };

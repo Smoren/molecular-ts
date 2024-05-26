@@ -1,4 +1,4 @@
-import type { RandomTypesConfig, TypesConfig, WorldConfig } from './config';
+import type { TypesConfig, WorldConfig } from './config';
 
 export type GeneticSearchConfig = {
   populationSize: number;
@@ -8,7 +8,6 @@ export type GeneticSearchConfig = {
   reference: number[];
   weights: number[];
   worldConfig: WorldConfig;
-  randomTypesConfig: RandomTypesConfig;
   checkpoints: number[];
   repeats: number,
 };
@@ -24,6 +23,10 @@ export interface GeneticSearchInterface {
   runGenerationStep(): Promise<[number[], number[]]>;
 }
 
+export interface PopulateStrategyInterface {
+  populate: (size: number) => Population;
+}
+
 export interface MutationStrategyInterface {
   mutate: (id: number, item: Genome, probability: number, config: GeneticSearchConfig) => Genome;
 }
@@ -37,6 +40,7 @@ export interface RunnerStrategyInterface {
 }
 
 export type StrategyConfig = {
+  populate: PopulateStrategyInterface;
   runner: RunnerStrategyInterface;
   mutation: MutationStrategyInterface;
   crossover: CrossoverStrategyInterface;
