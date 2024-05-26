@@ -2,7 +2,7 @@ import os from 'os';
 import type {
   GeneticSearchInputConfig,
   GeneticSearchInterface,
-  GeneticSearchByTypesFactoryConfig,
+  GeneticSearchByTypesConfigFactoryConfig,
   StrategyConfig,
 } from '../types/genetic';
 import {
@@ -18,7 +18,7 @@ import {
   RandomPopulateStrategy,
 } from '../genetic/strategies';
 
-export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesFactoryConfig): GeneticSearchInterface {
+export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
   config.runnerStrategyConfig.worldConfig = config.worldConfig;
 

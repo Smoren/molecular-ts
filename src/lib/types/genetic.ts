@@ -36,7 +36,7 @@ export type StrategyConfig = {
   crossover: CrossoverStrategyInterface;
 }
 
-export type GeneticSearchByTypesFactoryConfig = {
+export type GeneticSearchByTypesConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchMacroConfig;
   runnerStrategyConfig: RunnerStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;

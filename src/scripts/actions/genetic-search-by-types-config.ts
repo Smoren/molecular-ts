@@ -1,6 +1,6 @@
 import os from 'os';
 import { ArgsParser } from "@/scripts/lib/router";
-import type { GeneticSearchByTypesFactoryConfig } from "@/lib/types/genetic";
+import type { GeneticSearchByTypesConfigFactoryConfig } from "@/lib/types/genetic";
 import { getAbsoluteLossesSummary, getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getGeneticMacroConfig,
@@ -35,7 +35,7 @@ export const actionGeneticSearchByTypesConfig = async (...args: string[]) => {
     console.log('[INPUT PARAMS]', argsMap);
     console.log(`[START] genetic search action (process_id = ${runId})`);
 
-    const config: GeneticSearchByTypesFactoryConfig = {
+    const config: GeneticSearchByTypesConfigFactoryConfig = {
       geneticSearchMacroConfig: getGeneticMacroConfig(geneticMacroConfigFileName),
       runnerStrategyConfig: getRunnerStrategyConfig(geneticRunnerConfigFileName, poolSize),
       populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
