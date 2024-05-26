@@ -82,7 +82,7 @@ export class GeneticSearch implements GeneticSearchInterface {
     for (let i = 0; i < count; i++) {
       const lhs = getRandomArrayItem(genomes);
       const rhs = getRandomArrayItem(genomes);
-      const crossedGenome = this.strategy.crossover.cross(this.nextId(), lhs, rhs, this.config);
+      const crossedGenome = this.strategy.crossover.cross(this.nextId(), lhs, rhs);
       newPopulation.push(crossedGenome);
     }
 
@@ -94,7 +94,7 @@ export class GeneticSearch implements GeneticSearchInterface {
 
     for (let i = 0; i < count; i++) {
       const genome = getRandomArrayItem(genomes);
-      const mutatedGenome = this.strategy.mutation.mutate(this.nextId(), genome, this.config.mutationProbability, this.config);
+      const mutatedGenome = this.strategy.mutation.mutate(this.nextId(), genome, this.config.mutationProbability);
       newPopulation.push(mutatedGenome);
     }
 
@@ -200,12 +200,12 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface {
     this.subMatrixStrategy = new SubMatrixCrossoverStrategy(randomizeConfig);
   }
 
-  public cross(id: number, lhs: Genome, rhs: Genome, config: GeneticSearchConfig): Genome {
+  public cross(id: number, lhs: Genome, rhs: Genome): Genome {
     if (Math.random() > 0.5) {
-      return this.randomStrategy.cross(id, lhs, rhs, config);
+      return this.randomStrategy.cross(id, lhs, rhs);
     }
 
-    return this.subMatrixStrategy.cross(id, lhs, rhs, config);
+    return this.subMatrixStrategy.cross(id, lhs, rhs);
   }
 }
 

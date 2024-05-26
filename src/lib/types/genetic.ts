@@ -28,11 +28,11 @@ export interface PopulateStrategyInterface {
 }
 
 export interface MutationStrategyInterface {
-  mutate: (id: number, item: Genome, probability: number, config: GeneticSearchConfig) => Genome;
+  mutate: (id: number, item: Genome, probability: number) => Genome;
 }
 
 export interface CrossoverStrategyInterface {
-  cross: (id: number, lhs: Genome, rhs: Genome, config: GeneticSearchConfig) => Genome;
+  cross: (id: number, lhs: Genome, rhs: Genome) => Genome;
 }
 
 export interface RunnerStrategyInterface {
