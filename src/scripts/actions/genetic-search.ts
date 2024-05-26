@@ -4,12 +4,12 @@ import {
   GeneticSearch,
   ComposedCrossoverStrategy,
   MutationStrategy, RandomPopulateStrategy,
-} from "@/lib/analysis/genetic";
+} from "@/lib/genetic/genetic";
 import type { GeneticSearchConfig, StrategyConfig } from "@/lib/types/genetic";
 import {
   convertWeightsToSummaryMatrixRow,
   repeatTestSimulation,
-} from "@/lib/analysis/helpers";
+} from "@/lib/genetic/helpers";
 import { getAbsoluteLossesSummary, getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,
@@ -26,7 +26,6 @@ export const actionGeneticSearch = async (...args: string[]) => {
 
   try {
     const argsParser = new ArgsParser(args);
-
     const argsMap = parseArgs(argsParser);
     const {
       initialConfigFileName,

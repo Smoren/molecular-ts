@@ -7,7 +7,7 @@ import {
   convertWeightsToSummaryMatrixRow,
   createTransparentWeights,
   normalizeSummaryMatrix,
-} from "@/lib/analysis/helpers";
+} from "@/lib/genetic/helpers";
 
 export const simulationTask = async (
   [id, worldConfig, typesConfig, steps]: [number, WorldConfig, TypesConfig, number[]],
