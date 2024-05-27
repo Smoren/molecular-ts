@@ -102,7 +102,7 @@ export function convertWeightsToSummaryMatrixRow(weights: TotalSummaryWeights, t
   ].flat(Infinity) as number[];
 }
 
-export function convertSummaryToSummaryMatrixRow(summary: TotalSummary): number[] {
+export function convertTotalSummaryToSummaryMatrixRow(summary: TotalSummary): number[] {
   const compoundsPerAtom = summary.COMPOUNDS.length / summary.WORLD.ATOMS_COUNT[0];
   const compoundsPerAtomByTypes = summary.COMPOUNDS.lengthByTypes.map((x) => x / summary.WORLD.ATOMS_COUNT[0]);
   const compoundLengthSummary = Object.values(summary.COMPOUNDS.itemLengthSummary);
@@ -157,7 +157,7 @@ export function testSimulation(worldConfig: WorldConfig, typesConfig: TypesConfi
       WORLD: sim.summary,
       COMPOUNDS: compounds.summary,
     };
-    const rawMatrix = convertSummaryToSummaryMatrixRow(totalSummary);
+    const rawMatrix = convertTotalSummaryToSummaryMatrixRow(totalSummary);
     summaryMatrix.push(rawMatrix);
   }
 
