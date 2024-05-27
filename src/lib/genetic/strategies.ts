@@ -3,11 +3,12 @@ import { multi } from 'itertools-ts';
 import type {
   Genome,
   Population,
+  MutationStrategyConfig,
+  RunnerStrategyConfig,
   CrossoverStrategyInterface,
   MutationStrategyInterface,
   PopulateStrategyInterface,
-  RunnerStrategyConfig,
-  RunnerStrategyInterface, MutationStrategyConfig,
+  RunnerStrategyInterface,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
 import type { SimulationTaskConfig } from '../genetic/multiprocessing';
