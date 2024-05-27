@@ -23,3 +23,13 @@ export function roundWithStep(value: number, step: number, precision?: number): 
   }
   return result;
 }
+
+export function groupArray<T>(input: T[], groupSizes: number[]): T[][] {
+  const result: T[][] = [];
+  let index = 0;
+  for (const groupSize of groupSizes) {
+    result.push(input.slice(index, index + groupSize));
+    index += groupSize;
+  }
+  return result;
+}

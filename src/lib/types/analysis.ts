@@ -71,11 +71,13 @@ export interface SummaryManagerInterface {
 
 export type Compound = Set<AtomInterface>;
 
+export const STAT_SUMMARY_ARRAY_SIZE = 6;
+
 export type StatSummary = {
   min: number;
   max: number;
   mean: number;
-  p25: number
+  p25: number;
   median: number;
   p75: number;
 }
@@ -117,4 +119,19 @@ export type TotalSummaryWeights = {
   COMPOUND_LENGTH_SUMMARY: StatSummary;
   COMPOUND_SPEED_SUMMARY: StatSummary;
   COMPOUND_DENSITY_SUMMARY: StatSummary;
+}
+
+export type SummaryMatrixRowObject = {
+  atomsMeanSpeed: number;
+  atomTypeMeanSpeed: number[];
+  atomTypeLinksMeanCount: number[];
+  linksCreatedMean: number;
+  linksDeletedMean: number;
+  linksTypeCreatedMean: number[];
+  linksTypeDeletedMean: number[];
+  compoundsPerAtom: number;
+  compoundsPerAtomByTypes: number[];
+  compoundLengthSummary: StatSummary;
+  compoundSpeedSummary: StatSummary;
+  compoundDensitySummary: StatSummary;
 }

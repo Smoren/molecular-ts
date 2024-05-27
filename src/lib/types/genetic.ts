@@ -1,5 +1,6 @@
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from './config';
-import type { TotalSummaryWeights } from '../types/analysis';
+import type { StatSummary, TotalSummaryWeights } from '../types/analysis';
+import { createFilledArray } from "@/lib/math";
 
 export type GeneticSearchMacroConfig = {
   populationSize: number;
