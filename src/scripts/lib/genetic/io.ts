@@ -2,7 +2,7 @@ import fs from "node:fs";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
-import type { GeneticMainConfig, GeneticSearchMacroConfig, RunnerStrategyConfig } from "@/lib/types/genetic";
+import type { GeneticMainConfig } from "@/lib/types/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
 
