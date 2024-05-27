@@ -7,7 +7,8 @@ import {
   getTypesConfig,
   getWeights,
   getWorldConfig,
-  writeJsonFile, getGeneticMainConfig,
+  getGeneticMainConfig,
+  writeJsonFile,
 } from "@/scripts/lib/genetic/io";
 import { createRandomSearchByTypesConfig } from "@/lib/genetic/factories";
 

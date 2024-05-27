@@ -6,20 +6,10 @@ import type { GeneticMainConfig, GeneticSearchMacroConfig, RunnerStrategyConfig 
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
 
-export function getGeneticMacroConfig(fileName: string): GeneticSearchMacroConfig {
-  return readJsonFile(`data/input/${fileName}`) as GeneticSearchMacroConfig;
-}
-
 export function getGeneticMainConfig(fileName: string, poolSize: number): GeneticMainConfig {
   const result = readJsonFile(`data/input/${fileName}`) as GeneticMainConfig;
   result.runner.poolSize = poolSize;
   return result;
-}
-
-export function getRunnerStrategyConfig(fileName: string, cpuCount: number): RunnerStrategyConfig {
-  const config = readJsonFile(`data/input/${fileName}`) as RunnerStrategyConfig;
-  config.poolSize = cpuCount;
-  return config;
 }
 
 export function getTypesConfig(fileName: string): TypesConfig {
