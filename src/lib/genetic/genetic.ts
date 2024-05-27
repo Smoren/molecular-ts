@@ -90,7 +90,6 @@ export class GeneticSearch implements GeneticSearchInterface {
 
     for (let i = 0; i < count; i++) {
       const genome = getRandomArrayItem(genomes);
-      // TODO mutationProbability to separate config
       const mutatedGenome = this.strategy.mutation.mutate(this.nextId(), genome);
       newPopulation.push(mutatedGenome);
     }
