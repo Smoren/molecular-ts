@@ -29,6 +29,7 @@ export const actionRandomSearchByTypesConfig = async (...args: string[]) => {
       sourceConfigFileName,
       referenceConfigFileName,
       weightsFileName,
+      worldConfigFileName,
     } = argsMap;
     console.log('[INPUT PARAMS]', argsMap);
     console.log(`[START] random search action (process_id = ${runId})`);
@@ -44,7 +45,7 @@ export const actionRandomSearchByTypesConfig = async (...args: string[]) => {
       sourceTypesConfig: getTypesConfig(sourceConfigFileName),
       referenceTypesConfig: getTypesConfig(referenceConfigFileName),
       weights: getWeights(weightsFileName),
-      worldConfig: getWorldConfig(mainConfig.initial),
+      worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
     };
 
     console.log('[START] Building genetic search');
@@ -88,6 +89,8 @@ function parseArgs(argsParser: ArgsParser) {
   const mutationRandomizeConfigFileName = argsParser.getString('mutationRandomizeConfigFileName', randomizeConfigFileName);
   const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
 
+  const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
+
   return {
     poolSize,
     generationsCount,
@@ -98,5 +101,6 @@ function parseArgs(argsParser: ArgsParser) {
     sourceConfigFileName,
     referenceConfigFileName,
     weightsFileName,
+    worldConfigFileName,
   };
 }

@@ -28,6 +28,7 @@ export const actionGeneticSearchByTypesConfig = async (...args: string[]) => {
       crossoverRandomizeConfigFileName,
       referenceConfigFileName,
       weightsFileName,
+      worldConfigFileName,
     } = argsMap;
     console.log('[INPUT PARAMS]', argsMap);
     console.log(`[START] genetic search action (process_id = ${runId})`);
@@ -42,7 +43,7 @@ export const actionGeneticSearchByTypesConfig = async (...args: string[]) => {
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
       referenceTypesConfig: getTypesConfig(referenceConfigFileName),
       weights: getWeights(weightsFileName),
-      worldConfig: getWorldConfig(mainConfig.initial),
+      worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
     };
 
     console.log('[START] Building genetic search');
@@ -88,6 +89,8 @@ function parseArgs(argsParser: ArgsParser) {
   const mutationRandomizeConfigFileName = argsParser.getString('mutationRandomizeConfigFileName', randomizeConfigFileName);
   const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
 
+  const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
+
   return {
     poolSize,
     generationsCount,
@@ -97,5 +100,6 @@ function parseArgs(argsParser: ArgsParser) {
     crossoverRandomizeConfigFileName,
     referenceConfigFileName,
     weightsFileName,
+    worldConfigFileName,
   };
 }

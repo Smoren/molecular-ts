@@ -46,9 +46,9 @@ export function createBaseWorldConfig(): WorldConfig {
   };
 }
 
-export function createWorldConfig2d(initialConfig: InitialConfig): WorldConfig {
+export function createWorldConfig2d(initialConfig: InitialConfig, worldConfig?: WorldConfig): WorldConfig {
   return {
-    ...createBaseWorldConfig(),
+    ...(worldConfig ?? createBaseWorldConfig()),
     VIEW_MODE: '2d',
     CONFIG_2D: {
       ...createBaseWorldConfig().CONFIG_2D,
@@ -62,9 +62,9 @@ export function createWorldConfig2d(initialConfig: InitialConfig): WorldConfig {
 }
 
 
-export function createWorldConfig3d(initialConfig: InitialConfig): WorldConfig {
+export function createWorldConfig3d(initialConfig: InitialConfig, worldConfig?: WorldConfig): WorldConfig {
   return {
-    ...createBaseWorldConfig(),
+    ...(worldConfig ?? createBaseWorldConfig()),
     VIEW_MODE: '3d',
     CONFIG_3D: {
       ...createBaseWorldConfig().CONFIG_3D,

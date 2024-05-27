@@ -21,8 +21,10 @@ export function getRandomizeConfig(fileName: string): RandomTypesConfig {
   return readJsonFile(`data/input/${fileName}`) as RandomTypesConfig;
 }
 
-export function getWorldConfig(initialConfig: InitialConfig): WorldConfig {
-  return createWorldConfig2d(initialConfig);
+export function getWorldConfig(fileName: string, initialConfig: InitialConfig): WorldConfig {
+  const worldConfig = readJsonFile(`data/input/${fileName}`) as WorldConfig;
+  worldConfig.TEMPERATURE_FUNCTION = () => 1;
+  return createWorldConfig2d(initialConfig, worldConfig);
 }
 
 export function getWeights(fileName: string): TotalSummaryWeights {
