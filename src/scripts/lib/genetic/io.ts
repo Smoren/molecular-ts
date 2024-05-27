@@ -2,12 +2,18 @@ import fs from "node:fs";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
-import type { GeneticSearchMacroConfig, RunnerStrategyConfig } from "@/lib/types/genetic";
+import type { GeneticMainConfig, GeneticSearchMacroConfig, RunnerStrategyConfig } from "@/lib/types/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
 
 export function getGeneticMacroConfig(fileName: string): GeneticSearchMacroConfig {
   return readJsonFile(`data/input/${fileName}`) as GeneticSearchMacroConfig;
+}
+
+export function getGeneticMainConfig(fileName: string, poolSize: number): GeneticMainConfig {
+  const result = readJsonFile(`data/input/${fileName}`) as GeneticMainConfig;
+  result.runner.poolSize = poolSize;
+  return result;
 }
 
 export function getRunnerStrategyConfig(fileName: string, cpuCount: number): RunnerStrategyConfig {
@@ -25,8 +31,7 @@ export function getRandomizeConfig(fileName: string): RandomTypesConfig {
   return readJsonFile(`data/input/${fileName}`) as RandomTypesConfig;
 }
 
-export function getWorldConfig(initialFileName: string): WorldConfig {
-  const initialConfig = readJsonFile(`data/input/${initialFileName}`) as InitialConfig;
+export function getWorldConfig(initialConfig: InitialConfig): WorldConfig {
   return createWorldConfig2d(initialConfig);
 }
 

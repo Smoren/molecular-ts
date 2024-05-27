@@ -3,12 +3,11 @@ import { ArgsParser } from "@/scripts/lib/router";
 import type { GeneticSearchByTypesConfigFactoryConfig } from "@/lib/types/genetic";
 import { getAbsoluteLossesSummary, getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
-  getGeneticMacroConfig,
-  getRunnerStrategyConfig,
   getRandomizeConfig,
   getTypesConfig,
   getWeights,
   getWorldConfig,
+  getGeneticMainConfig,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
 import { createGeneticSearchByTypesConfig } from "@/lib/genetic/factories";
@@ -23,9 +22,7 @@ export const actionGeneticSearchByTypesConfig = async (...args: string[]) => {
     const {
       poolSize,
       generationsCount,
-      geneticMacroConfigFileName,
-      geneticRunnerConfigFileName,
-      initialConfigFileName,
+      geneticMainConfigFileName,
       populateRandomizeConfigFileName,
       mutationRandomizeConfigFileName,
       crossoverRandomizeConfigFileName,
@@ -35,15 +32,17 @@ export const actionGeneticSearchByTypesConfig = async (...args: string[]) => {
     console.log('[INPUT PARAMS]', argsMap);
     console.log(`[START] genetic search action (process_id = ${runId})`);
 
+    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize);
     const config: GeneticSearchByTypesConfigFactoryConfig = {
-      geneticSearchMacroConfig: getGeneticMacroConfig(geneticMacroConfigFileName),
-      runnerStrategyConfig: getRunnerStrategyConfig(geneticRunnerConfigFileName, poolSize),
+      geneticSearchMacroConfig: mainConfig.macro,
+      runnerStrategyConfig: mainConfig.runner,
+      mutationStrategyConfig: mainConfig.mutation,
       populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
       mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
       referenceTypesConfig: getTypesConfig(referenceConfigFileName),
       weights: getWeights(weightsFileName),
-      worldConfig: getWorldConfig(initialConfigFileName),
+      worldConfig: getWorldConfig(mainConfig.initial),
     };
 
     console.log('[START] Building genetic search');
@@ -79,10 +78,8 @@ function parseArgs(argsParser: ArgsParser) {
   const poolSize = argsParser.getInt('poolSize', os.cpus().length);
   const generationsCount = argsParser.getInt('generationsCount', 100);
 
-  const geneticMacroConfigFileName = argsParser.getString('macroConfigFileName', 'default-genetic-macro-config');
-  const geneticRunnerConfigFileName = argsParser.getString('geneticRunnerConfigFileName', 'default-genetic-runner-config');
+  const geneticMainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
-  const initialConfigFileName = argsParser.getString('initialConfigFileName', 'default-genetic-initial-config');
   const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-genetic-reference-config');
   const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-weights');
 
@@ -94,9 +91,7 @@ function parseArgs(argsParser: ArgsParser) {
   return {
     poolSize,
     generationsCount,
-    geneticMacroConfigFileName,
-    geneticRunnerConfigFileName,
-    initialConfigFileName,
+    geneticMainConfigFileName,
     populateRandomizeConfigFileName,
     mutationRandomizeConfigFileName,
     crossoverRandomizeConfigFileName,

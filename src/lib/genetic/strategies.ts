@@ -7,7 +7,7 @@ import type {
   MutationStrategyInterface,
   PopulateStrategyInterface,
   RunnerStrategyConfig,
-  RunnerStrategyInterface,
+  RunnerStrategyInterface, MutationStrategyConfig,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
 import type { SimulationTaskConfig } from '../genetic/multiprocessing';
@@ -111,17 +111,28 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface {
   }
 }
 
-export class MutationStrategy implements MutationStrategyInterface {
+export abstract class BaseMutationStrategy implements MutationStrategyInterface {
+  protected readonly config: MutationStrategyConfig;
+
+  protected constructor(config: MutationStrategyConfig) {
+    this.config = config;
+  }
+
+  public abstract mutate(id: number, genome: Genome): Genome;
+}
+
+export class MutationStrategy extends BaseMutationStrategy implements MutationStrategyInterface {
   private readonly randomizeConfig: RandomTypesConfig;
 
-  constructor(randomizeConfig: RandomTypesConfig) {
+  constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig) {
+    super(config);
     this.randomizeConfig = randomizeConfig;
   }
 
-  mutate(id: number, genome: Genome, probability: number): Genome {
+  mutate(id: number, genome: Genome): Genome {
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
     const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
-    const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
+    const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.config.probability);
 
     return { id: id, typesConfig: mutatedTypesConfig };
   }
@@ -130,13 +141,13 @@ export class MutationStrategy implements MutationStrategyInterface {
 export class MutationFromSourceStrategy extends MutationStrategy implements MutationStrategyInterface {
   private readonly sourceTypesConfig: TypesConfig;
 
-  constructor(randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
-    super(randomizeConfig);
+  constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
+    super(config, randomizeConfig);
     this.sourceTypesConfig = sourceTypesConfig;
   }
 
-  public mutate(id: number, genome: Genome, probability: number): Genome {
-    return super.mutate(id, { id: 0, typesConfig: this.sourceTypesConfig }, probability);
+  public mutate(id: number): Genome {
+    return super.mutate(id, { id: 0, typesConfig: this.sourceTypesConfig });
   }
 }
 

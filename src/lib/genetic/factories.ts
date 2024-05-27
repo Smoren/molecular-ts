@@ -37,7 +37,7 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesCon
   const strategyConfig: StrategyConfig = {
     populate: new RandomPopulateStrategy(populateRandomTypesConfig),
     runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
-    mutation: new MutationStrategy(mutationRandomTypesConfig),
+    mutation: new MutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
@@ -81,7 +81,7 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
       config.geneticSearchMacroConfig.mutationProbability,
     ),
     runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
-    mutation: new MutationFromSourceStrategy(mutationRandomTypesConfig, config.sourceTypesConfig),
+    mutation: new MutationFromSourceStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 

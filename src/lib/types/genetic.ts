@@ -1,4 +1,4 @@
-import type { RandomTypesConfig, TypesConfig, WorldConfig } from './config';
+import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from './config';
 import type { TotalSummaryWeights } from '../types/analysis';
 
 export type GeneticSearchMacroConfig = {
@@ -39,6 +39,7 @@ export type StrategyConfig = {
 export type GeneticSearchByTypesConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchMacroConfig;
   runnerStrategyConfig: RunnerStrategyConfig;
+  mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
@@ -50,6 +51,7 @@ export type GeneticSearchByTypesConfigFactoryConfig = {
 export type RandomSearchByTypesConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchMacroConfig;
   runnerStrategyConfig: RunnerStrategyConfig;
+  mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
@@ -57,6 +59,17 @@ export type RandomSearchByTypesConfigFactoryConfig = {
   referenceTypesConfig: TypesConfig;
   weights: TotalSummaryWeights;
   worldConfig: WorldConfig;
+}
+
+export type MutationStrategyConfig = {
+  probability: number;
+}
+
+export type GeneticMainConfig = {
+  macro: GeneticSearchMacroConfig;
+  initial: InitialConfig;
+  runner: RunnerStrategyConfig;
+  mutation: MutationStrategyConfig;
 }
 
 export type GenerationResult = [number[], number[]];
@@ -74,7 +87,7 @@ export interface PopulateStrategyInterface {
 }
 
 export interface MutationStrategyInterface {
-  mutate: (id: number, item: Genome, probability: number) => Genome;
+  mutate: (id: number, item: Genome) => Genome;
 }
 
 export interface CrossoverStrategyInterface {
