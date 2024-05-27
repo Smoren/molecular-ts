@@ -78,7 +78,7 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
     populate: new MutationPopulateStrategy(
       config.sourceTypesConfig,
       populateRandomTypesConfig,
-      config.geneticSearchMacroConfig.mutationProbability,
+      config.mutationStrategyConfig.probability,
     ),
     runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
     mutation: new MutationFromSourceStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),

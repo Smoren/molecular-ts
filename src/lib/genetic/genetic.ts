@@ -62,6 +62,10 @@ export class GeneticSearch implements GeneticSearchInterface {
     return this.population;
   }
 
+  public setPopulation(population: Population) {
+    this.population = population;
+  }
+
   private createPopulation(size: number): Population {
     return this.strategy.populate
       .populate(size)
@@ -136,5 +140,49 @@ export class GeneticSearch implements GeneticSearchInterface {
     const countToClone = countToDie - countToCross;
 
     return [countToSurvive, countToCross, countToClone];
+  }
+}
+
+export class ComposedGeneticSearch implements GeneticSearchInterface {
+  private readonly eliminators: GeneticSearchInterface[];
+  private readonly final: GeneticSearchInterface;
+
+  constructor(eliminators: GeneticSearchInterface[], final: GeneticSearchInterface) {
+    this.eliminators = eliminators;
+    this.final = final;
+  }
+
+  public getPopulation(): Population {
+    const result: Population = [];
+    for (const eliminators of this.eliminators) {
+      result.push(...eliminators.getPopulation());
+    }
+    return result;
+  }
+
+  public setPopulation(): void {
+    throw new Error('Cannot set population of composed search.');
+  }
+
+  public async run(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
+    for (let i=0; i<generationsCount; i++) {
+      afterStep(i, await this.runGenerationStep());
+    }
+  }
+
+  public async runGenerationStep(): Promise<[number[], number[]]> {
+    for (const eliminators of this.eliminators) {
+      await eliminators.runGenerationStep();
+    }
+    this.final.setPopulation(this.getBestGenomes());
+    return await this.final.runGenerationStep();
+  }
+
+  public getBestGenome(): Genome {
+    return this.final.getBestGenome();
+  }
+
+  private getBestGenomes(): Population {
+    return this.eliminators.map((eliminators) => eliminators.getBestGenome());
   }
 }

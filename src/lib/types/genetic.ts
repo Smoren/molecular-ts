@@ -5,7 +5,6 @@ export type GeneticSearchMacroConfig = {
   populationSize: number;
   survivalRate: number;
   crossoverRate: number;
-  mutationProbability: number;
 };
 
 export type GeneticSearchInputConfig = {
@@ -80,6 +79,7 @@ export interface GeneticSearchInterface {
   runGenerationStep(): Promise<[number[], number[]]>;
   getBestGenome(): Genome;
   getPopulation(): Population;
+  setPopulation(population: Population): void;
 }
 
 export interface PopulateStrategyInterface {
