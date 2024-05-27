@@ -1,0 +1,11 @@
+{
+  "runner": {
+    "checkpoints": [200, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 20, 1, 1, 1, 1, 1],
+    "repeats": 3
+  },
+  "initial": {
+    "ATOMS_COUNT": 300,
+    "MIN_POSITION": [0, 0],
+    "MAX_POSITION": [800, 800]
+  }
+}

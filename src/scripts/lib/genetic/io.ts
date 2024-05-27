@@ -2,7 +2,7 @@ import fs from "node:fs";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
 import type { TotalSummaryWeights } from "@/lib/types/analysis";
-import type { GeneticMainConfig } from "@/lib/types/genetic";
+import type { GeneticMainConfig, SimulationMainConfig } from "@/lib/types/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
 
@@ -10,6 +10,10 @@ export function getGeneticMainConfig(fileName: string, poolSize: number): Geneti
   const result = readJsonFile(`data/input/${fileName}`) as GeneticMainConfig;
   result.runner.poolSize = poolSize;
   return result;
+}
+
+export function getSimulationMainConfig(fileName: string): SimulationMainConfig {
+  return readJsonFile(`data/input/${fileName}`) as SimulationMainConfig;
 }
 
 export function getTypesConfig(fileName: string): TypesConfig {

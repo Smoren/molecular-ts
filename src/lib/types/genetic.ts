@@ -72,6 +72,11 @@ export type GeneticMainConfig = {
   mutation: MutationStrategyConfig;
 }
 
+export type SimulationMainConfig = {
+  initial: InitialConfig;
+  runner: RunnerStrategyConfig;
+}
+
 export type GenerationResult = [number[], number[]];
 export type GenerationCallback = (generation: number, result: GenerationResult) => void;
 

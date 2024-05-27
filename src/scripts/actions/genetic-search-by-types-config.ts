@@ -30,8 +30,8 @@ export const actionGeneticSearchByTypesConfig = async (...args: string[]) => {
       weightsFileName,
       worldConfigFileName,
     } = argsMap;
-    console.log('[INPUT PARAMS]', argsMap);
     console.log(`[START] genetic search action (process_id = ${runId})`);
+    console.log('[INPUT PARAMS]', argsMap);
 
     const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize);
     const config: GeneticSearchByTypesConfigFactoryConfig = {

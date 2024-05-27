@@ -31,8 +31,8 @@ export const actionRandomSearchByTypesConfig = async (...args: string[]) => {
       weightsFileName,
       worldConfigFileName,
     } = argsMap;
-    console.log('[INPUT PARAMS]', argsMap);
     console.log(`[START] random search action (process_id = ${runId})`);
+    console.log('[INPUT PARAMS]', argsMap);
 
     const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize);
     const config: RandomSearchByTypesConfigFactoryConfig = {
