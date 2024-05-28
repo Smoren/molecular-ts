@@ -2,7 +2,8 @@ import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type {
   Compound,
   CompoundsAnalyzerSummary,
-  CompoundsCollectorInterface, ExtendedStatSummary,
+  CompoundsCollectorInterface,
+  ExtendedStatSummary,
   StatSummary,
 } from '../types/analysis';
 import { createFilledArray, createVector, round } from '../math';
