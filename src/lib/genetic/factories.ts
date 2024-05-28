@@ -8,7 +8,7 @@ import type {
 import {
   convertWeightsToSummaryMatrixRow,
   setTypesCountToRandomizeConfigCollection,
-  repeatTestSimulation,
+  repeatTestSimulation, convertSummaryMatrixRowObjectToArray,
 } from '../genetic/helpers';
 import { GeneticSearch } from '../genetic/genetic';
 import {
@@ -41,12 +41,14 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesCon
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
-  const reference = repeatTestSimulation(
-    config.worldConfig,
-    config.referenceTypesConfig,
-    config.runnerStrategyConfig.checkpoints,
-    config.runnerStrategyConfig.repeats,
-  );
+  const reference = config.referenceSummaryRowObject === undefined
+    ? repeatTestSimulation(
+      config.worldConfig,
+      config.referenceTypesConfig,
+      config.runnerStrategyConfig.checkpoints,
+      config.runnerStrategyConfig.repeats,
+    )
+    : convertSummaryMatrixRowObjectToArray(config.referenceSummaryRowObject);
 
   const geneticInputConfig: GeneticSearchInputConfig = {
     reference,

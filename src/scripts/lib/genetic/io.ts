@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
-import type { TotalSummaryWeights } from "@/lib/types/analysis";
+import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/types/analysis";
 import type { GeneticMainConfig, SimulationMainConfig } from "@/lib/types/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
@@ -19,6 +19,13 @@ export function getSimulationMainConfig(fileName: string): SimulationMainConfig 
 export function getTypesConfig(fileName: string): TypesConfig {
   const simulationConfig = readJsonFile(`data/input/${fileName}`) as SimulationConfig;
   return simulationConfig.typesConfig;
+}
+
+export function getSummaryRowObject(fileName?: string): SummaryMatrixRowObject | undefined {
+  if (fileName === undefined) {
+    return undefined;
+  }
+  return readJsonFile(`data/input/${fileName}`) as SummaryMatrixRowObject;
 }
 
 export function getRandomizeConfig(fileName: string): RandomTypesConfig {

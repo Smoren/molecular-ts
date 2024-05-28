@@ -1,5 +1,5 @@
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from './config';
-import type { StatSummary, TotalSummaryWeights } from '../types/analysis';
+import type { StatSummary, SummaryMatrixRowObject, TotalSummaryWeights } from '../types/analysis';
 import { createFilledArray } from "@/lib/math";
 
 export type GeneticSearchMacroConfig = {
@@ -44,6 +44,7 @@ export type GeneticSearchByTypesConfigFactoryConfig = {
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
   referenceTypesConfig: TypesConfig;
+  referenceSummaryRowObject?: SummaryMatrixRowObject;
   weights: TotalSummaryWeights;
   worldConfig: WorldConfig;
 }
