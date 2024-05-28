@@ -5,6 +5,7 @@ import { getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,
   getTypesConfig,
+  getSummaryRowObject,
   getWeights,
   getWorldConfig,
   getGeneticMainConfig,
@@ -28,6 +29,7 @@ export const actionRandomSearchByTypesConfig = async (...args: string[]) => {
       crossoverRandomizeConfigFileName,
       sourceConfigFileName,
       referenceConfigFileName,
+      referenceSummaryFileName,
       weightsFileName,
       worldConfigFileName,
     } = argsMap;
@@ -44,6 +46,7 @@ export const actionRandomSearchByTypesConfig = async (...args: string[]) => {
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
       sourceTypesConfig: getTypesConfig(sourceConfigFileName),
       referenceTypesConfig: getTypesConfig(referenceConfigFileName),
+      referenceSummaryRowObject: getSummaryRowObject(referenceSummaryFileName),
       weights: getWeights(weightsFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
     };
@@ -82,6 +85,7 @@ function parseArgs(argsParser: ArgsParser) {
 
   const sourceConfigFileName = argsParser.getString('sourceConfigFileName', 'default-genetic-source-config');
   const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-genetic-reference-config');
+  const referenceSummaryFileName = argsParser.get('referenceSummaryFileName', undefined);
   const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-weights');
 
   const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-genetic-randomize-config');
@@ -100,6 +104,7 @@ function parseArgs(argsParser: ArgsParser) {
     crossoverRandomizeConfigFileName,
     sourceConfigFileName,
     referenceConfigFileName,
+    referenceSummaryFileName,
     weightsFileName,
     worldConfigFileName,
   };

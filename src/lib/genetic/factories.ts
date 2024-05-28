@@ -59,9 +59,16 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesCon
 }
 
 export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface {
-  if (config.referenceTypesConfig.FREQUENCIES.length !== config.sourceTypesConfig.FREQUENCIES.length) {
-    throw new Error('Reference and source types must have same length');
+  if (config.referenceSummaryRowObject === undefined) {
+    if (config.referenceTypesConfig.FREQUENCIES.length !== config.sourceTypesConfig.FREQUENCIES.length) {
+      throw new Error('Reference and source types must have same length');
+    }
+  } else {
+    if (config.referenceSummaryRowObject.atomTypeMeanSpeed.length !== config.sourceTypesConfig.FREQUENCIES.length) {
+      throw new Error('Reference and source types must have same length');
+    }
   }
+
 
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
   config.runnerStrategyConfig.worldConfig = config.worldConfig;
@@ -87,12 +94,14 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
-  const reference = repeatTestSimulation(
-    config.worldConfig,
-    config.referenceTypesConfig,
-    config.runnerStrategyConfig.checkpoints,
-    config.runnerStrategyConfig.repeats,
-  );
+  const reference = config.referenceSummaryRowObject === undefined
+    ? repeatTestSimulation(
+      config.worldConfig,
+      config.referenceTypesConfig,
+      config.runnerStrategyConfig.checkpoints,
+      config.runnerStrategyConfig.repeats,
+    )
+    : convertSummaryMatrixRowObjectToArray(config.referenceSummaryRowObject);
 
   const geneticInputConfig: GeneticSearchInputConfig = {
     reference,

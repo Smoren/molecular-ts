@@ -58,6 +58,7 @@ export type RandomSearchByTypesConfigFactoryConfig = {
   crossoverRandomizeConfig: RandomTypesConfig;
   sourceTypesConfig: TypesConfig;
   referenceTypesConfig: TypesConfig;
+  referenceSummaryRowObject?: SummaryMatrixRowObject;
   weights: TotalSummaryWeights;
   worldConfig: WorldConfig;
 }
