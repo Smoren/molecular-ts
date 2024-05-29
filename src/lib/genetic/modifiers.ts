@@ -1,5 +1,6 @@
 import type { SummaryMatrixRowObject } from '../types/analysis';
-import { convertArrayToStatSummary, convertStatSummaryToArray } from "@/lib/analysis/helpers";
+import { arraySum } from '../math';
+import { convertArrayToStatSummary, convertStatSummaryToArray } from '../analysis/helpers';
 
 export class SummaryMatrixRowObjectModifier {
   private readonly row: SummaryMatrixRowObject;
@@ -18,6 +19,19 @@ export class SummaryMatrixRowObjectModifier {
     this.row.compoundSpeedSummary = convertArrayToStatSummary(
       convertStatSummaryToArray(this.row.compoundSpeedSummary).map((x) => x * value),
     );
+    return this;
+  }
+
+  public mulTypeSpeed(type: number, value: number): SummaryMatrixRowObjectModifier {
+    const oldMeanSpeed = arraySum(this.row.atomTypeMeanSpeed) / this.row.atomTypeMeanSpeed.length;
+    this.row.atomTypeMeanSpeed[type] *= value;
+    const newMeanSpeed = arraySum(this.row.atomTypeMeanSpeed) / this.row.atomTypeMeanSpeed.length;
+
+    this.row.atomsMeanSpeed *= newMeanSpeed / oldMeanSpeed;
+    this.row.compoundSpeedSummary = convertArrayToStatSummary(
+      convertStatSummaryToArray(this.row.compoundSpeedSummary).map((x) => x * newMeanSpeed / oldMeanSpeed),
+    );
+
     return this;
   }
 }
