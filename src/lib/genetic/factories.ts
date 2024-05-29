@@ -8,7 +8,8 @@ import type {
 import {
   convertWeightsToSummaryMatrixRow,
   setTypesCountToRandomizeConfigCollection,
-  repeatTestSimulation, convertSummaryMatrixRowObjectToArray,
+  convertSummaryMatrixRowObjectToArray,
+  repeatTestSimulation,
 } from '../genetic/helpers';
 import { GeneticSearch } from '../genetic/genetic';
 import {
