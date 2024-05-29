@@ -159,8 +159,11 @@ export class ComposedGeneticSearch implements GeneticSearchInterface {
     return result;
   }
 
-  public setPopulation(): void {
-    throw new Error('Cannot set population of composed search.');
+  public setPopulation(population: Population): void {
+    for (const eliminator of this.eliminators) {
+      eliminator.setPopulation(population.slice(0, eliminator.getPopulation().length));
+      population = population.slice(eliminator.getPopulation().length);
+    }
   }
 
   public async run(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
