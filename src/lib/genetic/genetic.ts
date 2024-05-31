@@ -6,6 +6,7 @@ import type {
   StrategyConfig,
   GeneticSearchInterface,
   GenerationCallback,
+  GenerationResult,
   Genome,
   Population,
 } from '../types/genetic';
@@ -33,7 +34,7 @@ export class GeneticSearch implements GeneticSearchInterface {
     }
   }
 
-  public async runGenerationStep(): Promise<[number[], number[]]> {
+  public async runGenerationStep(): Promise<GenerationResult> {
     const [countToSurvive, countToCross, countToClone] = this.getSizes();
 
     const results = await this.strategy.runner.run(this.population);
@@ -172,7 +173,7 @@ export class ComposedGeneticSearch implements GeneticSearchInterface {
     }
   }
 
-  public async runGenerationStep(): Promise<[number[], number[]]> {
+  public async runGenerationStep(): Promise<GenerationResult> {
     for (const eliminators of this.eliminators) {
       await eliminators.runGenerationStep();
     }

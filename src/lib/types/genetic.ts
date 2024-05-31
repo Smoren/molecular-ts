@@ -83,7 +83,7 @@ export type GenerationCallback = (generation: number, result: GenerationResult) 
 
 export interface GeneticSearchInterface {
   run(generationsCount: number, afterStep: GenerationCallback): Promise<void>;
-  runGenerationStep(): Promise<[number[], number[]]>;
+  runGenerationStep(): Promise<GenerationResult>;
   getBestGenome(): Genome;
   getPopulation(): Population;
   setPopulation(population: Population): void;
