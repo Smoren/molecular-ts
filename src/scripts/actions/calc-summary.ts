@@ -7,7 +7,7 @@ import {
 } from "@/scripts/lib/genetic/io";
 import { convertSummaryMatrixRowToObject, repeatTestSimulation } from "@/lib/genetic/helpers";
 
-export const actionCalcSimulationSummary = async (...args: string[]) => {
+export const actionCalcSummary = async (...args: string[]) => {
   const ts = Date.now();
 
   try {

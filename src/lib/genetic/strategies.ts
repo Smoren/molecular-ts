@@ -44,13 +44,13 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface {
   }
 }
 
-export class MutationPopulateStrategy implements PopulateStrategyInterface {
-  private readonly referenceTypesConfig: TypesConfig;
+export class SourceMutationPopulateStrategy implements PopulateStrategyInterface {
+  private readonly sourceTypesConfig: TypesConfig;
   private readonly randomizeConfig: RandomTypesConfig;
   private readonly probability: number;
 
-  constructor(referenceTypesConfig: TypesConfig, randomizeConfig: RandomTypesConfig, probability: number) {
-    this.referenceTypesConfig = referenceTypesConfig;
+  constructor(sourceTypesConfig: TypesConfig, randomizeConfig: RandomTypesConfig, probability: number) {
+    this.sourceTypesConfig = sourceTypesConfig;
     this.randomizeConfig = randomizeConfig;
     this.probability = probability;
   }
@@ -58,7 +58,7 @@ export class MutationPopulateStrategy implements PopulateStrategyInterface {
   public populate(size: number): Population {
     const population: Population = [];
     for (let i = 0; i < size; i++) {
-      const inputTypesConfig = fullCopyObject(this.referenceTypesConfig);
+      const inputTypesConfig = fullCopyObject(this.sourceTypesConfig);
       const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
       const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.probability);
 
@@ -139,7 +139,7 @@ export class MutationStrategy extends BaseMutationStrategy implements MutationSt
   }
 }
 
-export class MutationFromSourceStrategy extends MutationStrategy implements MutationStrategyInterface {
+export class SourceMutationStrategy extends MutationStrategy implements MutationStrategyInterface {
   private readonly sourceTypesConfig: TypesConfig;
 
   constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {

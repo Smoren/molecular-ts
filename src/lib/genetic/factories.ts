@@ -17,8 +17,8 @@ import {
   ComposedCrossoverStrategy,
   MutationStrategy,
   RandomPopulateStrategy,
-  MutationPopulateStrategy,
-  MutationFromSourceStrategy,
+  SourceMutationPopulateStrategy,
+  SourceMutationStrategy,
 } from '../genetic/strategies';
 
 export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface {
@@ -85,13 +85,13 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
   ], typesCount);
 
   const strategyConfig: StrategyConfig = {
-    populate: new MutationPopulateStrategy(
+    populate: new SourceMutationPopulateStrategy(
       config.sourceTypesConfig,
       populateRandomTypesConfig,
       config.mutationStrategyConfig.probability,
     ),
     runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
-    mutation: new MutationFromSourceStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
+    mutation: new SourceMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
