@@ -52,7 +52,7 @@ const refill = () => {
 const removeType = (index: number) => {
   if (confirm('Are you sure to remove type?')) {
     configStore.removeTypeFromConfig(index);
-    refillAtoms!();
+    refillAtoms!(true);
   }
 }
 
