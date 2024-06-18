@@ -8,6 +8,7 @@ import ConfigBounds from "@/web/components/config-editor/components/inputs/confi
 import InitialConfigSection from "@/web/components/config-editor/components/sections/initial-config-section.vue";
 import Flag from "@/web/components/config-editor/components/inputs/flag.vue";
 import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
+import RandomizeConfigSnippets from "@/web/components/config-editor/components/widgets/randomize-config-snippets.vue";
 
 const configStore = useConfigStore();
 const { randomTypesConfig, typesConfig } = configStore;
@@ -234,6 +235,11 @@ const randomizeTypesConfig = () => {
       <button class="btn btn-outline-primary" @click="randomizeTypesConfig" style="width: 100%;">
         {{ needRefill ? 'Randomize and Refill' : 'Randomize' }}
       </button>
+      <br />
+      <br />
+      <br />
+      <h4>Snippets</h4>
+      <randomize-config-snippets />
     </template>
   </config-section>
 </template>
