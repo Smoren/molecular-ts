@@ -198,8 +198,8 @@ export class Simulation implements SimulationInterface {
     this.step();
 
     if (this.summaryManager.step % 30 === 0) {
-      console.log('time', this.summaryManager.step)
-      console.log('SUMMARY', this.summary);
+      // console.log('time', this.summaryManager.step)
+      // console.log('SUMMARY', this.summary);
     }
 
     if (this.runningState.isRunning) {

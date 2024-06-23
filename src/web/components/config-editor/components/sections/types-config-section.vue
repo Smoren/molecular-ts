@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import { computed, inject, watch } from "vue";
+import { computed, inject } from "vue";
 import { useConfigStore } from '@/web/store/config';
 import { useSimulationStore } from "@/web/store/simulation";
-import { creatDefaultTypesConfig } from "@/lib/config/types";
+import { clearInactiveParams, creatDefaultTypesConfig } from "@/lib/config/types";
 import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/web/components/config-editor/constants";
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
 import ConfigMatrix from '@/web/components/config-editor/components/inputs/config-matrix.vue';
@@ -11,7 +11,6 @@ import ConfigList from '@/web/components/config-editor/components/inputs/config-
 import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
 import Flag from "@/web/components/config-editor/components/inputs/flag.vue";
 import ConfigTensor from "@/web/components/config-editor/components/inputs/config-tensor.vue";
-import { distributeLinkFactorDistance } from '@/lib/utils/functions';
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
@@ -21,6 +20,10 @@ const {
   clearAtoms,
   refillAtoms,
 } = useSimulationStore();
+
+const clean = () => {
+  clearInactiveParams(typesConfig);
+}
 
 const setDefaultTypesConfig = () => {
   if (!confirm('Are you sure?')) {
@@ -74,6 +77,7 @@ const linkInfluenceConfigDescription = computed(() => {
     <template #body>
       <div class="btn-group" role="group">
         <button class="btn btn-outline-secondary" @click="toggleRandomizeConfig">Randomize</button>
+        <button class="btn btn-outline-secondary" @click="clean">Clean</button>
         <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button>
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
         <button class="btn btn-outline-secondary" @click="configStore.appendType">Add type</button>

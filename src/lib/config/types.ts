@@ -497,3 +497,40 @@ export function removeIndexFromTypesConfig(input: TypesConfig, index: number): T
 
   return result;
 }
+
+function getUnableToConnectTypePairs(typesConfig: TypesConfig): [number, number][] {
+  const result: Set<string> = new Set();
+  for (let i = 0; i < typesConfig.LINKS.length; ++i) {
+    if (typesConfig.LINKS[i] === 0) {
+      for (let j = 0; j < typesConfig.LINKS.length; ++j) {
+        if (typesConfig.TYPE_LINKS[i][j] === 1) {
+          result.add(`${i},${j}`);
+          result.add(`${j},${i}`);
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < typesConfig.TYPE_LINKS.length; ++i) {
+    for (let j = 0; j < typesConfig.TYPE_LINKS[i].length; ++j) {
+      if (typesConfig.TYPE_LINKS[i][j] === 0) {
+        result.add(`${i},${j}`);
+        result.add(`${j},${i}`);
+      }
+    }
+  }
+
+  return [...result.values()].map((x) => x.split(',').map((y) => Number(y))) as [number, number][];
+}
+
+export function clearInactiveParams(config: TypesConfig) {
+  const pairs = getUnableToConnectTypePairs(config);
+  for (const [i, j] of pairs) {
+    config.TYPE_LINKS[i][j] = 0;
+    config.LINK_GRAVITY[i][j] = 0;
+    config.LINK_FACTOR_DISTANCE[i][j] = 1;
+    for (const matrix of config.LINK_FACTOR_DISTANCE_EXTENDED) {
+      matrix[i][j] = 1;
+    }
+  }
+}
