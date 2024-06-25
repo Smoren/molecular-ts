@@ -40,8 +40,8 @@ const applySnippet = (config: RandomTypesConfig) => {
         {{ snippet.name }}
       </div>
       <div class="btn-group">
-        <button class="btn btn-outline-secondary" @click="applySnippet(snippet.value)">Apply</button>
         <button class="btn btn-outline-secondary" @click="removeSnippet(index)">Remove</button>
+        <button class="btn btn-outline-secondary" @click="applySnippet(snippet.value)">Apply</button>
       </div>
     </div>
   </div>
