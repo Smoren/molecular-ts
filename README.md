@@ -1,7 +1,7 @@
 # MolecuLarva — Molecular Simulation
 
 This project is an experiment that visualizes the behavior of particles
-in two-dimensional and three-dimensional space:
+in 2D and 3D space:
 
 * Collisions and rebounds of particles upon contact.
 * Simulation of forces of attraction and repulsion between particles.
@@ -15,6 +15,9 @@ Particles of different types are visualized in different colors. Their propertie
 3. **Connection limit map** shows the maximum number of links for particles of each type.
 4. **Connection limit matrix** shows the maximum number of connections that particles of each type can have with particles of different types.
 5. **Tensor of influence on neighbors links** shows how particles of type A affect the maximum link lengths of particles of type B with particles of type C.
+
+The main goal of this project is to study self-organizing systems and explore configurations in which conditions for 
+spontaneous emergence of artificial life will be present.
 
 ## Demo
 
