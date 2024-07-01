@@ -239,7 +239,6 @@ export class Drawer2d implements DrawerInterface {
       this.viewConfig.offset[0] += diff[0];
       this.viewConfig.offset[1] += diff[1];
     });
-
   }
 
   get width(): number {

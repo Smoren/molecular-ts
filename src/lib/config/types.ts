@@ -27,7 +27,8 @@ import {
   makeMatrixSymmetric,
   makeTensorSymmetric,
   removeIndexFromArray,
-  removeIndexFromMatrix, removeIndexFromTensor
+  removeIndexFromMatrix,
+  removeIndexFromTensor,
 } from '../math/operations';
 
 export function createColors(count: number): Array<ColorVector> {
