@@ -211,9 +211,7 @@ export class Drawer2d implements DrawerInterface {
     });
 
     this.domElement.addEventListener('mousedown', (event: MouseEvent) => {
-      mouseDownVector = createVector(
-        transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
-      );
+      mouseDownVector = createVector([event.offsetX, event.offsetY]);
       document.body.style.cursor = 'grabbing';
     });
 
@@ -231,13 +229,12 @@ export class Drawer2d implements DrawerInterface {
       if (mouseDownVector === null) {
         return;
       }
-      const coords = createVector(
-        transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
-      );
+      const coords = createVector([event.offsetX, event.offsetY]);
+      const diff = coords.clone().sub(mouseDownVector);
 
-      const diff = coords.sub(mouseDownVector);
       this.viewConfig.offset[0] += diff[0];
       this.viewConfig.offset[1] += diff[1];
+      mouseDownVector = coords;
     });
   }
 
