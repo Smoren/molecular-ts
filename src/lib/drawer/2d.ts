@@ -159,6 +159,7 @@ export class Drawer2d implements DrawerInterface {
     resizeObserver.observe(this.domElement);
 
     let keyDown: number | null = null;
+    let mouseDownVector: NumericVector | null = null;
 
     document.body.addEventListener('keydown', (event: KeyboardEvent) => {
       const key = parseInt(event.key);
@@ -208,6 +209,37 @@ export class Drawer2d implements DrawerInterface {
 
       event.preventDefault();
     });
+
+    this.domElement.addEventListener('mousedown', (event: MouseEvent) => {
+      mouseDownVector = createVector(
+        transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
+      );
+      document.body.style.cursor = 'grabbing';
+    });
+
+    document.body.addEventListener('mouseup', (event: MouseEvent) => {
+      mouseDownVector = null;
+      document.body.style.cursor = 'auto';
+    });
+
+    document.body.addEventListener('mouseleave', (event: MouseEvent) => {
+      mouseDownVector = null;
+      document.body.style.cursor = 'auto';
+    });
+
+    this.domElement.addEventListener('mousemove', (event: MouseEvent) => {
+      if (mouseDownVector === null) {
+        return;
+      }
+      const coords = createVector(
+        transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
+      );
+
+      const diff = coords.sub(mouseDownVector);
+      this.viewConfig.offset[0] += diff[0];
+      this.viewConfig.offset[1] += diff[1];
+    });
+
   }
 
   get width(): number {
