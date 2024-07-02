@@ -210,19 +210,23 @@ export class Drawer2d implements DrawerInterface {
       event.preventDefault();
     });
 
-    const mouseDownHandler = (event: MouseEvent) => {
-      mouseDownVector = createVector([event.offsetX, event.offsetY]);
+    const mouseDownHandler = (event: MouseEvent | TouchEvent) => {
+      mouseDownVector = (event instanceof MouseEvent)
+        ? createVector([event.offsetX, event.offsetY])
+        : createVector([event.touches[0].clientX, event.touches[0].clientY]);
       document.body.style.cursor = 'grabbing';
     };
-    const mouseUpHandler = (event: MouseEvent) => {
+    const mouseUpHandler = (event: MouseEvent | TouchEvent) => {
       mouseDownVector = null;
       document.body.style.cursor = 'auto';
     };
-    const mouseMoveHandler = (event: MouseEvent) => {
+    const mouseMoveHandler = (event: MouseEvent | TouchEvent) => {
       if (mouseDownVector === null) {
         return;
       }
-      const coords = createVector([event.offsetX, event.offsetY]);
+      const coords = (event instanceof MouseEvent)
+        ? createVector([event.offsetX, event.offsetY])
+        : createVector([event.touches[0].clientX, event.touches[0].clientY]);
       const diff = coords.clone().sub(mouseDownVector);
 
       this.viewConfig.offset[0] += diff[0];
@@ -234,6 +238,10 @@ export class Drawer2d implements DrawerInterface {
     document.body.addEventListener('mouseup', mouseUpHandler);
     document.body.addEventListener('mouseleave', mouseUpHandler);
     this.domElement.addEventListener('mousemove', mouseMoveHandler);
+
+    this.domElement.addEventListener('touchstart', mouseDownHandler);
+    document.body.addEventListener('touchend', mouseUpHandler);
+    this.domElement.addEventListener('touchmove', mouseMoveHandler);
   }
 
   get width(): number {
