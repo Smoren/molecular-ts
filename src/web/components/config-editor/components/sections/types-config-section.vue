@@ -172,7 +172,7 @@ const linkInfluenceConfigDescription = computed(() => {
           :values="typesConfig.TYPE_LINK_WEIGHTS"
           :colors="typesConfig.COLORS"
           :step="1"
-          :min="0"
+          :min="1"
           v-model:symmetric="typesSymmetricConfig.LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC"
         />
       </div>

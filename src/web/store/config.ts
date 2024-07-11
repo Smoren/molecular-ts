@@ -22,6 +22,7 @@ import {
 import { useFlash } from '@/web/hooks/use-flash';
 import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/types';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
+import { createFilledMatrix } from "@/lib/math";
 
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
@@ -122,6 +123,14 @@ export const useConfigStore = defineStore("config", () => {
         console.log('worldConfig upd');
       }
       if (config.typesConfig !== undefined) {
+        if (config.typesConfig.TYPE_LINK_WEIGHTS === undefined) {
+          config.typesConfig.TYPE_LINK_WEIGHTS = createFilledMatrix(
+            config.typesConfig.FREQUENCIES.length,
+            config.typesConfig.FREQUENCIES.length,
+            1,
+          );
+        }
+
         if (config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED === undefined) {
           config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = false;
         }

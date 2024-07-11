@@ -91,14 +91,16 @@ export class RulesHelper implements RulesHelperInterface {
     if (lhs.bonds.length >= this.TYPES_CONFIG.LINKS[lhs.type]) {
       return false;
     }
-    return lhs.bonds.lengthOf(rhs.type) < this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
+    const weight = this.TYPES_CONFIG.TYPE_LINK_WEIGHTS[lhs.type][rhs.type];
+    return this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type] - lhs.bonds.lengthOf(rhs.type) * weight >= weight;
   }
 
   private _isLinkRedundant(lhs: AtomInterface, rhs: AtomInterface): boolean {
     if (lhs.bonds.length > this.TYPES_CONFIG.LINKS[lhs.type]) {
       return true;
     }
-    return lhs.bonds.lengthOf(rhs.type) > this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
+    const weight = this.TYPES_CONFIG.TYPE_LINK_WEIGHTS[lhs.type][rhs.type];
+    return lhs.bonds.lengthOf(rhs.type) * weight > this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
   }
 }
 

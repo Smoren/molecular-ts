@@ -294,7 +294,7 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     USE_LINK_GRAVITY_BOUNDS: true,
     USE_LINK_BOUNDS: true,
     USE_LINK_TYPE_BOUNDS: true,
-    USE_LINK_TYPE_WEIGHT_BOUNDS: true,
+    USE_LINK_TYPE_WEIGHT_BOUNDS: false,
     USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
 
     RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
@@ -453,6 +453,17 @@ export function randomizeTypesConfig(
     }
   }
 
+  if (!randomTypesConfig.USE_LINK_TYPE_WEIGHT_BOUNDS) {
+    copyConfigMatrixValue(oldConfig.TYPE_LINK_WEIGHTS, newConfig.TYPE_LINK_WEIGHTS, 0);
+  } else {
+    if (randomTypesConfig.LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC) {
+      makeMatrixSymmetric(newConfig.TYPE_LINK_WEIGHTS);
+    }
+    if (skipSubMatricesBoundaryIndex !== undefined) {
+      copyConfigMatrixValue(oldConfig.TYPE_LINK_WEIGHTS, newConfig.TYPE_LINK_WEIGHTS, 1, skipSubMatricesBoundaryIndex);
+    }
+  }
+
   if (!randomTypesConfig.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
     copyConfigMatrixValue(oldConfig.LINK_FACTOR_DISTANCE, newConfig.LINK_FACTOR_DISTANCE, 1);
     copyConfigTensorValue(oldConfig.LINK_FACTOR_DISTANCE_EXTENDED, newConfig.LINK_FACTOR_DISTANCE_EXTENDED, 1);
@@ -493,6 +504,7 @@ export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesCon
 
   result.LINKS = concatArrays(lhs.LINKS, rhs.LINKS);
   result.TYPE_LINKS = concatMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, 0);
+  result.TYPE_LINK_WEIGHTS = concatMatrices(lhs.TYPE_LINK_WEIGHTS, rhs.TYPE_LINK_WEIGHTS, 1);
 
   result.LINK_FACTOR_DISTANCE = concatMatrices(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, 1);
   result.LINK_FACTOR_DISTANCE_EXTENDED = concatTensors(lhs.LINK_FACTOR_DISTANCE_EXTENDED, rhs.LINK_FACTOR_DISTANCE_EXTENDED, 1);
@@ -512,6 +524,7 @@ export function crossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, separator:
 
   result.LINKS = crossArrays(lhs.LINKS, rhs.LINKS, separator);
   result.TYPE_LINKS = crossMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, separator, 0);
+  result.TYPE_LINK_WEIGHTS = crossMatrices(lhs.TYPE_LINK_WEIGHTS, rhs.TYPE_LINK_WEIGHTS, separator, 1);
 
   result.LINK_FACTOR_DISTANCE = crossMatrices(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, separator, 1);
   result.LINK_FACTOR_DISTANCE_EXTENDED = crossTensors(lhs.LINK_FACTOR_DISTANCE_EXTENDED, rhs.LINK_FACTOR_DISTANCE_EXTENDED, separator, 1);
@@ -531,6 +544,7 @@ export function randomCrossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, sepa
 
   result.LINKS = randomCrossArrays(lhs.LINKS, rhs.LINKS, separator);
   result.TYPE_LINKS = randomCrossMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, separator);
+  result.TYPE_LINK_WEIGHTS = randomCrossMatrices(lhs.TYPE_LINK_WEIGHTS, rhs.TYPE_LINK_WEIGHTS, separator);
 
   result.LINK_FACTOR_DISTANCE = randomCrossMatrices(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, separator);
   result.LINK_FACTOR_DISTANCE_EXTENDED = randomCrossTensors(lhs.LINK_FACTOR_DISTANCE_EXTENDED, rhs.LINK_FACTOR_DISTANCE_EXTENDED, separator);
@@ -550,6 +564,7 @@ export function removeIndexFromTypesConfig(input: TypesConfig, index: number): T
 
   result.LINKS = removeIndexFromArray(input.LINKS, index);
   result.TYPE_LINKS = removeIndexFromMatrix(input.TYPE_LINKS, index);
+  result.TYPE_LINK_WEIGHTS = removeIndexFromMatrix(input.TYPE_LINK_WEIGHTS, index);
 
   result.LINK_FACTOR_DISTANCE = removeIndexFromMatrix(input.LINK_FACTOR_DISTANCE, index);
   result.LINK_FACTOR_DISTANCE_EXTENDED = removeIndexFromTensor(input.LINK_FACTOR_DISTANCE_EXTENDED, index);
@@ -586,6 +601,7 @@ export function clearInactiveParams(config: TypesConfig) {
   const pairs = getUnableToConnectTypePairs(config);
   for (const [i, j] of pairs) {
     config.TYPE_LINKS[i][j] = 0;
+    config.TYPE_LINK_WEIGHTS[i][j] = 1;
     config.LINK_GRAVITY[i][j] = 0;
     config.LINK_FACTOR_DISTANCE[i][j] = 1;
     for (const matrix of config.LINK_FACTOR_DISTANCE_EXTENDED) {
