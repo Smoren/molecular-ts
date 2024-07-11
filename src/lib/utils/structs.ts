@@ -88,19 +88,27 @@ export class RulesHelper implements RulesHelperInterface {
   }
 
   private _canLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
-    if (lhs.bonds.length >= this.TYPES_CONFIG.LINKS[lhs.type]) {
+    const weight = this.TYPES_CONFIG.TYPE_LINK_WEIGHTS[lhs.type][rhs.type];
+    if (this.TYPES_CONFIG.LINKS[lhs.type] - this._countWeightedBonds(lhs) < weight) {
       return false;
     }
-    const weight = this.TYPES_CONFIG.TYPE_LINK_WEIGHTS[lhs.type][rhs.type];
-    return this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type] - lhs.bonds.lengthOf(rhs.type) * weight >= weight;
+    return lhs.bonds.lengthOf(rhs.type) < this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
   }
 
   private _isLinkRedundant(lhs: AtomInterface, rhs: AtomInterface): boolean {
-    if (lhs.bonds.length > this.TYPES_CONFIG.LINKS[lhs.type]) {
+    if (this._countWeightedBonds(lhs) > this.TYPES_CONFIG.LINKS[lhs.type]) {
       return true;
     }
-    const weight = this.TYPES_CONFIG.TYPE_LINK_WEIGHTS[lhs.type][rhs.type];
-    return lhs.bonds.lengthOf(rhs.type) * weight > this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
+    return lhs.bonds.lengthOf(rhs.type) > this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
+  }
+
+  private _countWeightedBonds(atom: AtomInterface): number {
+    let result = 0;
+    const typesCountMap = atom.bonds.getTypesCountMap();
+    for (const type in typesCountMap) {
+      result += this.TYPES_CONFIG.TYPE_LINK_WEIGHTS[atom.type][type] * typesCountMap[type];
+    }
+    return result;
   }
 }
 

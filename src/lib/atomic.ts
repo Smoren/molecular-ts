@@ -38,6 +38,10 @@ class BondMap implements BondMapInterface {
     this.typesCount[atom.type]--;
     this.count--;
   }
+
+  getTypesCountMap(): Record<number, number> {
+    return this.typesCount;
+  }
 }
 
 export class Atom implements AtomInterface {

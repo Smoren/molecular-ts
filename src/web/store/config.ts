@@ -123,14 +123,6 @@ export const useConfigStore = defineStore("config", () => {
         console.log('worldConfig upd');
       }
       if (config.typesConfig !== undefined) {
-        if (config.typesConfig.TYPE_LINK_WEIGHTS === undefined) {
-          config.typesConfig.TYPE_LINK_WEIGHTS = createFilledMatrix(
-            config.typesConfig.FREQUENCIES.length,
-            config.typesConfig.FREQUENCIES.length,
-            1,
-          );
-        }
-
         if (config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED === undefined) {
           config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = false;
         }
@@ -149,6 +141,14 @@ export const useConfigStore = defineStore("config", () => {
           radius.length = config.typesConfig.FREQUENCIES.length;
           radius.fill(1);
           config.typesConfig.RADIUS = radius;
+        }
+
+        if (config.typesConfig.TYPE_LINK_WEIGHTS === undefined) {
+          config.typesConfig.TYPE_LINK_WEIGHTS = createFilledMatrix(
+            config.typesConfig.FREQUENCIES.length,
+            config.typesConfig.FREQUENCIES.length,
+            1,
+          );
         }
 
         console.log('typesConfig upd');
