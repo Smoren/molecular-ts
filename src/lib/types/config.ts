@@ -8,6 +8,7 @@ export type RadiusConfig = number[];
 export type GravityConfig = number[][];
 export type LinksConfig = number[];
 export type TypeLinksConfig = number[][];
+export type TypeLinkWeightsConfig = number[][];
 export type LinkFactorDistanceConfig = number[][];
 export type LinkFactorDistanceExtendedConfig = number[][][];
 export type FrequenciesConfig = number[];
@@ -31,6 +32,7 @@ export type TypesConfig = {
   LINK_GRAVITY: GravityConfig;
   LINKS: LinksConfig;
   TYPE_LINKS: TypeLinksConfig;
+  TYPE_LINK_WEIGHTS: TypeLinkWeightsConfig;
   LINK_FACTOR_DISTANCE: LinkFactorDistanceConfig;
   LINK_FACTOR_DISTANCE_EXTENDED: LinkFactorDistanceExtendedConfig;
   LINK_FACTOR_DISTANCE_USE_EXTENDED: boolean;
@@ -66,6 +68,7 @@ export type RandomTypesConfig = {
   USE_LINK_GRAVITY_BOUNDS: boolean;
   USE_LINK_BOUNDS: boolean;
   USE_LINK_TYPE_BOUNDS: boolean;
+  USE_LINK_TYPE_WEIGHT_BOUNDS: boolean;
   USE_LINK_FACTOR_DISTANCE_BOUNDS: boolean;
 
   RADIUS_BOUNDS: [number, number, number?, number?];
@@ -74,18 +77,22 @@ export type RandomTypesConfig = {
   LINK_GRAVITY_BOUNDS: [number, number, number?, number?];
   LINK_BOUNDS: [number, number, number?];
   LINK_TYPE_BOUNDS: [number, number, number?];
+  LINK_TYPE_WEIGHT_BOUNDS: [number, number, number?];
   LINK_FACTOR_DISTANCE_BOUNDS: [number, number, number?, number?];
 
   GRAVITY_MATRIX_SYMMETRIC: boolean;
   LINK_GRAVITY_MATRIX_SYMMETRIC: boolean;
   LINK_TYPE_MATRIX_SYMMETRIC: boolean;
+  LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_DISTANCE_EXTENDED: boolean;
   LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: boolean;
 };
+
 export type TypesSymmetricConfig = {
   GRAVITY_MATRIX_SYMMETRIC: boolean;
   LINK_GRAVITY_MATRIX_SYMMETRIC: boolean;
   LINK_TYPE_MATRIX_SYMMETRIC: boolean;
+  LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: boolean;
 }

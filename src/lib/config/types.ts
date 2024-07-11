@@ -88,6 +88,13 @@ export function creatDefaultTypesConfig(): TypesConfig {
       [1, 1, 0, 0, 0],
       [1, 1, 0, 0, 2],
     ],
+    TYPE_LINK_WEIGHTS: [
+      [1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1],
+    ],
     LINK_FACTOR_DISTANCE: linkFactorDistance,
     LINK_FACTOR_DISTANCE_EXTENDED: [
       [
@@ -139,6 +146,7 @@ export function createTransparentTypesConfig(typesCount: number): TypesConfig {
     LINK_GRAVITY: createFilledMatrix(typesCount, typesCount, 0),
     LINKS: createFilledArray(typesCount, 0),
     TYPE_LINKS: createFilledMatrix(typesCount, typesCount, 0),
+    TYPE_LINK_WEIGHTS: createFilledMatrix(typesCount, typesCount, 1),
     LINK_FACTOR_DISTANCE: createFilledMatrix(typesCount, typesCount, 0),
     LINK_FACTOR_DISTANCE_EXTENDED: createFilledTensor(typesCount, typesCount, typesCount, 0),
     LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
@@ -156,6 +164,7 @@ export function createSingleTypeConfig(): TypesConfig {
     LINK_GRAVITY: [[0]],
     LINKS: [0],
     TYPE_LINKS: [[0]],
+    TYPE_LINK_WEIGHTS: [[1]],
     LINK_FACTOR_DISTANCE: [[1]],
     LINK_FACTOR_DISTANCE_EXTENDED: [[[1]]],
     LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
@@ -168,12 +177,14 @@ export function createRandomTypesConfig({
   FREQUENCY_BOUNDS,
   GRAVITY_BOUNDS,
   LINK_GRAVITY_BOUNDS,
-  LINK_TYPE_BOUNDS,
   LINK_BOUNDS,
+  LINK_TYPE_BOUNDS,
+  LINK_TYPE_WEIGHT_BOUNDS,
   LINK_FACTOR_DISTANCE_BOUNDS,
   GRAVITY_MATRIX_SYMMETRIC,
   LINK_GRAVITY_MATRIX_SYMMETRIC,
   LINK_TYPE_MATRIX_SYMMETRIC,
+  LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC,
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
   LINK_FACTOR_DISTANCE_EXTENDED,
   LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE,
@@ -219,6 +230,14 @@ export function createRandomTypesConfig({
     precision,
   );
 
+  const typeLinkWeights = randomizeMatrix(
+    TYPES_COUNT,
+    LINK_TYPE_WEIGHT_BOUNDS,
+    createRandomInteger,
+    LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC,
+    precision,
+  );
+
   const linkFactorDistance = randomizeMatrix(
     TYPES_COUNT,
     LINK_FACTOR_DISTANCE_BOUNDS,
@@ -257,6 +276,7 @@ export function createRandomTypesConfig({
     LINK_GRAVITY: linkGravity,
     LINKS: links,
     TYPE_LINKS: typeLinks,
+    TYPE_LINK_WEIGHTS: typeLinkWeights,
     LINK_FACTOR_DISTANCE: linkFactorDistance,
     LINK_FACTOR_DISTANCE_EXTENDED: linkFactorDistanceExtended ?? createDistributedLinkFactorDistance(linkFactorDistance),
     LINK_FACTOR_DISTANCE_USE_EXTENDED: LINK_FACTOR_DISTANCE_EXTENDED,
@@ -274,6 +294,7 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     USE_LINK_GRAVITY_BOUNDS: true,
     USE_LINK_BOUNDS: true,
     USE_LINK_TYPE_BOUNDS: true,
+    USE_LINK_TYPE_WEIGHT_BOUNDS: true,
     USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
 
     RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
@@ -282,11 +303,13 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     LINK_GRAVITY_BOUNDS: [-5, 1, -1, 0.1],
     LINK_BOUNDS: [1, 3, 2],
     LINK_TYPE_BOUNDS: [0, 3, 2],
+    LINK_TYPE_WEIGHT_BOUNDS: [1, 2, 1],
     LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
 
     GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_TYPE_MATRIX_SYMMETRIC: false,
+    LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
     LINK_FACTOR_DISTANCE_EXTENDED: true,
     LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: true,
@@ -303,6 +326,7 @@ export function createWideRandomTypesConfig(typesCount: number): RandomTypesConf
     USE_LINK_GRAVITY_BOUNDS: true,
     USE_LINK_BOUNDS: true,
     USE_LINK_TYPE_BOUNDS: true,
+    USE_LINK_TYPE_WEIGHT_BOUNDS: true,
     USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
 
     RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
@@ -311,11 +335,13 @@ export function createWideRandomTypesConfig(typesCount: number): RandomTypesConf
     LINK_GRAVITY_BOUNDS: [-15, 1, -1, 0.1],
     LINK_BOUNDS: [1, 8, 4],
     LINK_TYPE_BOUNDS: [0, 6, 3],
+    LINK_TYPE_WEIGHT_BOUNDS: [1, 2, 1],
     LINK_FACTOR_DISTANCE_BOUNDS: [0.1, 1.2, 1, 0.1],
 
     GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_TYPE_MATRIX_SYMMETRIC: false,
+    LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
     LINK_FACTOR_DISTANCE_EXTENDED: true,
     LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: true,
