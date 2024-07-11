@@ -172,6 +172,21 @@ const randomizeTypesConfig = () => {
 
       <div>
         <input-header
+          name="Types Link Weights"
+          tooltip="Connection weight matrix shows the connection weights that particles of each type have
+                   with particles of different types."
+          tooltip-position="left"
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_TYPE_WEIGHT_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_LINK_TYPE_WEIGHT_BOUNDS">
+          <config-bounds :step="1" :values="randomTypesConfig.LINK_TYPE_WEIGHT_BOUNDS" />
+          <flag title="Symmetric" v-model="randomTypesConfig.LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC" />
+        </div>
+      </div>
+
+      <div>
+        <input-header
           name="Links Distance Factor"
           tooltip="Matrix of influence on neighbors links shows how particles of each type affect the maximum length of
                    links of neighboring particles of different types."

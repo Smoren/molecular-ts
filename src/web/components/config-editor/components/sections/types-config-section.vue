@@ -163,6 +163,21 @@ const linkInfluenceConfigDescription = computed(() => {
       </div>
       <div>
         <input-header
+          name="Type Link Weights"
+          tooltip="Connection weight matrix shows the connection weights that particles of each type have
+                   with particles of different types."
+          position="center"
+        />
+        <config-matrix
+          :values="typesConfig.TYPE_LINK_WEIGHTS"
+          :colors="typesConfig.COLORS"
+          :step="1"
+          :min="0"
+          v-model:symmetric="typesSymmetricConfig.LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC"
+        />
+      </div>
+      <div>
+        <input-header
           name="Links Distance Factor"
           :tooltip="linkInfluenceConfigDescription"
           position="center"
