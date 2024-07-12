@@ -233,7 +233,7 @@ export function createRandomTypesConfig({
   const typeLinkWeights = randomizeMatrix(
     TYPES_COUNT,
     LINK_TYPE_WEIGHT_BOUNDS,
-    createRandomInteger,
+    createRandomFloat,
     LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC,
     precision,
   );
@@ -303,7 +303,7 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     LINK_GRAVITY_BOUNDS: [-5, 1, -1, 0.1],
     LINK_BOUNDS: [1, 3, 2],
     LINK_TYPE_BOUNDS: [0, 3, 2],
-    LINK_TYPE_WEIGHT_BOUNDS: [1, 2, 1],
+    LINK_TYPE_WEIGHT_BOUNDS: [1, 2, 1, 0.1],
     LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
 
     GRAVITY_MATRIX_SYMMETRIC: false,
@@ -335,7 +335,7 @@ export function createWideRandomTypesConfig(typesCount: number): RandomTypesConf
     LINK_GRAVITY_BOUNDS: [-15, 1, -1, 0.1],
     LINK_BOUNDS: [1, 8, 4],
     LINK_TYPE_BOUNDS: [0, 6, 3],
-    LINK_TYPE_WEIGHT_BOUNDS: [1, 2, 1],
+    LINK_TYPE_WEIGHT_BOUNDS: [1, 2, 1, 0.1],
     LINK_FACTOR_DISTANCE_BOUNDS: [0.1, 1.2, 1, 0.1],
 
     GRAVITY_MATRIX_SYMMETRIC: false,
@@ -454,7 +454,7 @@ export function randomizeTypesConfig(
   }
 
   if (!randomTypesConfig.USE_LINK_TYPE_WEIGHT_BOUNDS) {
-    copyConfigMatrixValue(oldConfig.TYPE_LINK_WEIGHTS, newConfig.TYPE_LINK_WEIGHTS, 0);
+    copyConfigMatrixValue(oldConfig.TYPE_LINK_WEIGHTS, newConfig.TYPE_LINK_WEIGHTS, 1);
   } else {
     if (randomTypesConfig.LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC) {
       makeMatrixSymmetric(newConfig.TYPE_LINK_WEIGHTS);

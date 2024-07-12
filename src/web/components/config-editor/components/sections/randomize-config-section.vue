@@ -180,7 +180,7 @@ const randomizeTypesConfig = () => {
           <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_TYPE_WEIGHT_BOUNDS" />
         </input-header>
         <div v-show="randomTypesConfig.USE_LINK_TYPE_WEIGHT_BOUNDS">
-          <config-bounds :step="1" :values="randomTypesConfig.LINK_TYPE_WEIGHT_BOUNDS" />
+          <config-bounds :step="0.1" :values="randomTypesConfig.LINK_TYPE_WEIGHT_BOUNDS" />
           <flag title="Symmetric" v-model="randomTypesConfig.LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC" />
         </div>
       </div>
