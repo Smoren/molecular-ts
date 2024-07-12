@@ -164,8 +164,8 @@ const linkInfluenceConfigDescription = computed(() => {
       <div>
         <input-header
           name="Type Link Weights"
-          tooltip="Connection weight matrix shows the connection weights that particles of each type have
-                   with particles of different types."
+          tooltip="The connection weight matrix shows the connection weights between each pair of types
+                   in the left type link limit."
           position="center"
         />
         <config-matrix

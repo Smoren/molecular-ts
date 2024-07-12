@@ -173,8 +173,8 @@ const randomizeTypesConfig = () => {
       <div>
         <input-header
           name="Types Link Weights"
-          tooltip="Connection weight matrix shows the connection weights that particles of each type have
-                   with particles of different types."
+          tooltip="The connection weight matrix shows the connection weights between each pair of types
+                   in the left type link limit."
           tooltip-position="left"
         >
           <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_TYPE_WEIGHT_BOUNDS" />
@@ -225,15 +225,21 @@ const randomizeTypesConfig = () => {
         </div>
       </div>
       <div>
-        <flag
-          title="Leave submatrices unchanged on boundary index"
-          v-model="useIgnoreSubMatricesBoundaryIndex"
-        />
+        <input-header
+          name="Change only crossed submatrices"
+          tooltip="Apply changes only to the upper right and lower left quadrants of a matrix divided by
+                   a specified number of types."
+          tooltip-position="center"
+          :style-bold="false"
+        >
+          <input type="checkbox" class="title-flag" v-model="useIgnoreSubMatricesBoundaryIndex" />
+        </input-header>
         <input
           v-show="useIgnoreSubMatricesBoundaryIndex"
           type="number"
           v-model="ignoreSubMatricesBoundaryIndex"
           placeholder="Cross position"
+          style="margin-top: 10px;"
         />
       </div>
       <div>
