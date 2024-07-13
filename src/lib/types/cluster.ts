@@ -16,10 +16,12 @@ export interface ClusterMapInterface {
   clear(): void;
   handleAtom(atom: AtomInterface): ClusterInterface;
   getCluster(clusterCoords: NumericVector): ClusterInterface;
+  findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined;
 }
 
 export interface ClusterManagerInterface {
   handleAtom(atom: AtomInterface, callback: (lhs: AtomInterface, rhs: AtomInterface) => void): void;
   countAtoms(): number;
   clear(): void;
+  findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined;
 }

@@ -43,6 +43,15 @@ export class Simulation implements SimulationInterface {
     this.runningState = new RunningState();
 
     this.drawer.addClickListener((coords, extraKey) => {
+      const foundAtom = this.clusterManager.findAtomByCoords(
+        coords,
+        this.config.typesConfig.RADIUS,
+        this.config.worldConfig.ATOM_RADIUS,
+      );
+      if (foundAtom) {
+        console.log('ATOM FOUND', foundAtom);
+      }
+
       if (extraKey === null || extraKey > this.config.typesConfig.FREQUENCIES.length) {
         return;
       }

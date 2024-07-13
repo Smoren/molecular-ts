@@ -114,6 +114,18 @@ class ClusterMap implements ClusterMapInterface {
     return this.map.get(key) as Cluster;
   }
 
+  public findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined {
+    const clusterCoords = this.getClusterCoords(coords);
+    const cluster = this.getCluster(clusterCoords);
+    for (const atom of cluster) {
+      const dist = atom.position.clone().sub(coords).abs;
+      if (dist <= radiusMap[atom.type] * radiusMultiplier) {
+        return atom;
+      }
+    }
+    return undefined;
+  }
+
   private getClusterByAtom(atom: AtomInterface): ClusterInterface {
     const clusterCoords = this.getClusterCoords(atom.position);
     return this.getCluster(clusterCoords);
@@ -175,5 +187,9 @@ export class ClusterManager implements ClusterManagerInterface {
         }
       }
     }
+  }
+
+  findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined {
+    return this.map.findAtomByCoords(coords, radiusMap, radiusMultiplier);
   }
 }
