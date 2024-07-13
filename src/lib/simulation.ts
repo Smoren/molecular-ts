@@ -13,6 +13,8 @@ import { SummaryManager } from './analysis/summary';
 import type { NumericVector } from './math/types';
 import type { Compound } from './types/analysis';
 import { CompoundsCollector } from './analysis/compounds';
+import { PreventException } from "@/lib/drawer/utils";
+import { toVector } from "@/lib/math";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -42,22 +44,7 @@ export class Simulation implements SimulationInterface {
     this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
     this.runningState = new RunningState();
 
-    this.drawer.eventManager.onClick((event) => {
-      const foundAtom = this.clusterManager.findAtomByCoords(
-        event.coords,
-        this.config.typesConfig.RADIUS,
-        this.config.worldConfig.ATOM_RADIUS,
-      );
-      if (foundAtom) {
-        console.log('ATOM FOUND', foundAtom);
-      }
-
-      if (event.extraKey === undefined || event.extraKey > this.config.typesConfig.FREQUENCIES.length) {
-        return;
-      }
-      console.log('atom added');
-      this._atoms.push(createAtom(event.extraKey-1, event.coords));
-    });
+    this.initEventHandlers();
   }
 
   get atoms(): AtomInterface[] {
@@ -216,5 +203,43 @@ export class Simulation implements SimulationInterface {
     } else {
       this.runningState.confirmStop();
     }
+  }
+
+  private initEventHandlers(): void {
+    let grabbedAtom: AtomInterface | undefined = undefined;
+
+    this.drawer.eventManager.onClick((event) => {
+      if (event.extraKey === undefined || event.extraKey > this.config.typesConfig.FREQUENCIES.length) {
+        return;
+      }
+      console.log('atom added');
+      this._atoms.push(createAtom(event.extraKey-1, event.coords));
+    });
+
+    this.drawer.eventManager.onMouseDown((event) => {
+      if (!event.ctrlKey) {
+        return;
+      }
+      grabbedAtom = this.clusterManager.findAtomByCoords(
+        event.coords,
+        this.config.typesConfig.RADIUS,
+        this.config.worldConfig.ATOM_RADIUS*2,
+      );
+      if (grabbedAtom) {
+        console.log('ATOM FOUND', grabbedAtom);
+      }
+      throw new PreventException();
+    });
+
+    this.drawer.eventManager.onMouseGrab((event) => {
+      if (grabbedAtom) {
+        const speed = toVector(event.coords).sub(grabbedAtom.position).mul(0.2);
+        grabbedAtom.speed.set(speed);
+      }
+    });
+
+    this.drawer.eventManager.onMouseUp((event) => {
+      grabbedAtom = undefined;
+    });
   }
 }

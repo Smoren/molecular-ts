@@ -175,7 +175,7 @@ export class Drawer2d implements DrawerInterface {
       const coords = createVector(
         transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
       );
-      this.eventManager.triggerClick({ coords, extraKey: keyDown });
+      this.eventManager.triggerClick({ coords, extraKey: keyDown, ctrlKey: event.ctrlKey });
       console.log(keyDown, coords);
     });
 
@@ -208,22 +208,57 @@ export class Drawer2d implements DrawerInterface {
     });
 
     const mouseDownHandler = (event: MouseEvent | TouchEvent) => {
-      mouseDownVector = (event instanceof MouseEvent)
-        ? createVector([event.offsetX, event.offsetY])
-        : createVector([event.touches[0].clientX, event.touches[0].clientY]);
-      document.body.style.cursor = 'grabbing';
-    };
-    const mouseUpHandler = (event: MouseEvent | TouchEvent) => {
-      mouseDownVector = undefined;
-      document.body.style.cursor = 'auto';
-    };
-    const mouseMoveHandler = (event: MouseEvent | TouchEvent) => {
-      if (mouseDownVector === undefined) {
-        return;
-      }
       const coords = (event instanceof MouseEvent)
         ? createVector([event.offsetX, event.offsetY])
         : createVector([event.touches[0].clientX, event.touches[0].clientY]);
+      document.body.style.cursor = 'grabbing';
+
+      try {
+        this.eventManager.triggerMouseDown({
+          coords: transposeCoordsBackward(coords, this.viewConfig.offset, this.viewConfig.scale),
+          extraKey: keyDown,
+          ctrlKey: event.ctrlKey,
+        });
+      } catch (e) {
+        return;
+      }
+
+      mouseDownVector = coords;
+    };
+    const mouseUpHandler = (event: MouseEvent | TouchEvent) => {
+      const coords = (event instanceof MouseEvent)
+        ? createVector([event.offsetX, event.offsetY])
+        : createVector([event.touches[0].clientX, event.touches[0].clientY]);
+      mouseDownVector = undefined;
+      document.body.style.cursor = 'auto';
+
+      this.eventManager.triggerMouseUp({
+        coords: transposeCoordsBackward(coords, this.viewConfig.offset, this.viewConfig.scale),
+        extraKey: keyDown,
+        ctrlKey: event.ctrlKey,
+      });
+    };
+    const mouseMoveHandler = (event: MouseEvent | TouchEvent) => {
+      const coords = (event instanceof MouseEvent)
+        ? createVector([event.offsetX, event.offsetY])
+        : createVector([event.touches[0].clientX, event.touches[0].clientY]);
+
+      this.eventManager.triggerMouseMove({
+        coords: transposeCoordsBackward(coords, this.viewConfig.offset, this.viewConfig.scale),
+        extraKey: keyDown,
+        ctrlKey: event.ctrlKey,
+      });
+
+      if (mouseDownVector === undefined) {
+        return;
+      }
+
+      this.eventManager.triggerMouseGrab({
+        coords: transposeCoordsBackward(coords, this.viewConfig.offset, this.viewConfig.scale),
+        extraKey: keyDown,
+        ctrlKey: event.ctrlKey,
+      });
+
       const diff = coords.clone().sub(mouseDownVector);
 
       this.viewConfig.offset[0] += diff[0];

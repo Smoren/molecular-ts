@@ -11,7 +11,9 @@ export interface ViewConfigInterface {
 export type MouseEventData = {
   coords: NumericVector;
   extraKey: number | undefined;
+  ctrlKey: boolean;
 }
+
 export type MouseEventListenerCallback = (event: MouseEventData) => void;
 
 export interface DrawerInterface {
@@ -24,11 +26,13 @@ export interface EventManagerInterface {
   onClick(callback: MouseEventListenerCallback): EventManagerInterface;
   onMouseDown(callback: MouseEventListenerCallback): EventManagerInterface;
   onMouseMove(callback: MouseEventListenerCallback): EventManagerInterface;
+  onMouseGrab(callback: MouseEventListenerCallback): EventManagerInterface;
   onMouseUp(callback: MouseEventListenerCallback): EventManagerInterface;
 
   triggerClick(event: MouseEventData): void;
   triggerMouseDown(event: MouseEventData): void;
   triggerMouseMove(event: MouseEventData): void;
+  triggerMouseGrab(event: MouseEventData): void;
   triggerMouseUp(event: MouseEventData): void;
 }
 

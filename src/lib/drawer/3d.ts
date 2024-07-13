@@ -281,6 +281,7 @@ export class Drawer3d implements DrawerInterface {
         this.eventManager.triggerClick({
           coords: [pos.x, pos.y, pos.z],
           extraKey: keyDown,
+          ctrlKey: event.ctrlKey,
         });
       }
     };
