@@ -12,6 +12,7 @@ import {
   creatDefaultTypesConfig,
   createDefaultRandomTypesConfig,
   createSingleTypeConfig,
+  createTransparentTypesConfig,
   removeIndexFromTypesConfig,
 } from "@/lib/config/types";
 import { fullCopyObject } from "@/lib/utils/functions";
@@ -22,7 +23,6 @@ import {
 import { useFlash } from '@/web/hooks/use-flash';
 import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/types';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
-import { createFilledMatrix } from "@/lib/math";
 
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
@@ -123,6 +123,8 @@ export const useConfigStore = defineStore("config", () => {
         console.log('worldConfig upd');
       }
       if (config.typesConfig !== undefined) {
+        setTypesConfig(createTransparentTypesConfig(config.typesConfig.FREQUENCIES.length));
+
         if (config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED === undefined) {
           config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = false;
         }
@@ -133,21 +135,6 @@ export const useConfigStore = defineStore("config", () => {
         ) {
           config.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED = createDistributedLinkFactorDistance(
             config.typesConfig.LINK_FACTOR_DISTANCE,
-          );
-        }
-
-        if (config.typesConfig.RADIUS === undefined) {
-          const radius: number[] = [];
-          radius.length = config.typesConfig.FREQUENCIES.length;
-          radius.fill(1);
-          config.typesConfig.RADIUS = radius;
-        }
-
-        if (config.typesConfig.TYPE_LINK_WEIGHTS === undefined) {
-          config.typesConfig.TYPE_LINK_WEIGHTS = createFilledMatrix(
-            config.typesConfig.FREQUENCIES.length,
-            config.typesConfig.FREQUENCIES.length,
-            1,
           );
         }
 
