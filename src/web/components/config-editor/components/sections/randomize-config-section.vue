@@ -18,7 +18,7 @@ const {
   refillAtoms,
 } = useSimulationStore();
 
-const forceRefill = ref(false);
+const forceRefill = ref(true);
 
 const needRefill = computed((): boolean => {
   return randomTypesConfig.TYPES_COUNT !== configStore.typesConfig.COLORS.length ||
