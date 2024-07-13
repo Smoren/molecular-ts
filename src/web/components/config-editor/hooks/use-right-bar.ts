@@ -10,10 +10,11 @@ export const useRightBar = () => {
 
   const rightBarMode: Ref<number> = ref(rightBarModeMap.RANDOMIZE);
 
-  const toggleRightBar = (mode: number): boolean => {
+  const toggleRightBar = (mode: number, onOpen?: () => void): boolean => {
     if (mode !== rightBarMode.value || !rightBarVisible.state.value) {
       rightBarMode.value = mode;
       rightBarVisible.on();
+      if (onOpen) onOpen();
       return true;
     } else {
       rightBarVisible.off();

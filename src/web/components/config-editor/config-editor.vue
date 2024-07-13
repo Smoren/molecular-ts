@@ -18,9 +18,11 @@ import WorldConfigSection from '@/web/components/config-editor/components/sectio
 import SummarySection from "@/web/components/config-editor/components/sections/summary-section.vue";
 import ExchangeSection from "@/web/components/config-editor/components/sections/exchange-section.vue";
 import LinkSection from "@/web/components/config-editor/components/sections/link-section.vue";
+import { useConfigStore } from "@/web/store/config";
 
 const leftBarVisible = useSwitch(false);
 const activeAccordionItem = ref('collapse-world');
+const configStore = useConfigStore();
 
 const {
   rightBarVisible,
@@ -29,7 +31,10 @@ const {
   toggleRightBar,
 } = useRightBar();
 
-provide<() => boolean>(PROVIDED_TOGGLE_RANDOMIZE_CONFIG, () => toggleRightBar(rightBarModeMap.RANDOMIZE));
+provide<() => boolean>(
+    PROVIDED_TOGGLE_RANDOMIZE_CONFIG,
+    () => toggleRightBar(rightBarModeMap.RANDOMIZE, () => configStore.syncRandomTypesCount()),
+);
 provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarModeMap.SUMMARY));
 
 </script>

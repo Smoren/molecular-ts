@@ -22,7 +22,7 @@ const removeSnippet = (index: number) => {
 }
 const applySnippet = (config: RandomTypesConfig) => {
   console.log('APPLY', config);
-  configStore.setRandomTypesConfig(config);
+  configStore.setRandomTypesConfig(config, ['TYPES_COUNT']);
 }
 
 </script>

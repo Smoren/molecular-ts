@@ -92,11 +92,18 @@ export const useConfigStore = defineStore("config", () => {
     setWorldConfigRaw(newConfig);
   }
 
-  const setRandomTypesConfig = (newConfig: RandomTypesConfig) => {
+  const setRandomTypesConfig = (newConfig: RandomTypesConfig, excludeKeys: string[] = []) => {
     const buf = fullCopyObject(newConfig);
     for (const i in newConfig) {
+      if (excludeKeys.includes(i)) {
+        continue;
+      }
       (randomTypesConfig.value[i as keyof RandomTypesConfig] as number) = buf[i as keyof RandomTypesConfig] as number;
     }
+  }
+
+  const syncRandomTypesCount = () => {
+    randomTypesConfig.value.TYPES_COUNT = typesConfig.value.FREQUENCIES.length;
   }
 
   const exportConfig = () => {
@@ -273,6 +280,7 @@ export const useConfigStore = defineStore("config", () => {
     randomizeTypesConfig,
     setDefaultTypesConfig,
     setRandomTypesConfig,
+    syncRandomTypesCount,
     appendType,
     addTypesFromConfig,
     removeTypeFromConfig,
