@@ -1,5 +1,5 @@
 import type { AtomInterface, LinkInterface } from '../types/atomic';
-import type { QueueInterface } from '../types/helpers';
+import type { QueueInterface } from './utils';
 import type { TypesConfig, WorldConfig } from '../types/config';
 
 export type WorldSummary<T> = {

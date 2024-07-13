@@ -1,6 +1,6 @@
 import type { NumericVector, VectorInterface } from '../math/types';
 import type { AtomInterface } from './atomic';
-import type { LinkManagerInterface } from './helpers';
+import type { LinkManagerInterface } from './utils';
 import type { TypesConfig, WorldConfig } from './config';
 
 export interface ViewConfigInterface {

@@ -3,7 +3,7 @@ import type { AtomInterface } from './atomic';
 import type { DrawerInterface } from './drawer';
 import type { PhysicModelInterface } from './interaction';
 import type { WorldSummary, Compound } from './analysis';
-import type { LinkManagerInterface } from './helpers';
+import type { LinkManagerInterface } from './utils';
 
 export type SimulationConfig = {
   viewMode: ViewMode;

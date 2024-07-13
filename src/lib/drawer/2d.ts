@@ -8,7 +8,7 @@ import type {
 } from '../types/drawer';
 import type { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import type { AtomInterface, LinkInterface } from '../types/atomic';
-import type { LinkManagerInterface } from '../types/helpers';
+import type { LinkManagerInterface } from '../types/utils';
 
 /**
  * Transpose coords with backward applying offset and scale

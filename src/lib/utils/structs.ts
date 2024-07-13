@@ -5,7 +5,7 @@ import type {
   GeometryHelperInterface,
   QueueInterface,
   RunningStateInterface,
-} from '../types/helpers';
+} from '../types/utils';
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type {
   WorldConfig,

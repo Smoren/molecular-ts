@@ -1,7 +1,7 @@
 import type { SimulationConfig, SimulationInterface } from './types/simulation';
 import type { AtomInterface } from './types/atomic';
 import type { DrawerInterface } from './types/drawer';
-import type { LinkManagerInterface, RunningStateInterface } from './types/helpers';
+import type { LinkManagerInterface, RunningStateInterface } from './types/utils';
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
 import type { ClusterManagerInterface } from './types/cluster';
 import type { WorldSummary, SummaryManagerInterface } from './types/analysis';
