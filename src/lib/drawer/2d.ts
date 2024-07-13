@@ -3,12 +3,14 @@ import type { NumericVector } from '../math/types';
 import type {
   Drawer2dConfigInterface,
   DrawerInterface,
-  MouseClickListenerCallback,
+  EventManagerInterface,
+  MouseEventListenerCallback,
   ViewConfigInterface,
 } from '../types/drawer';
 import type { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type { LinkManagerInterface } from '../types/utils';
+import { EventManager } from '../drawer/utils';
 
 /**
  * Transpose coords with backward applying offset and scale
@@ -37,12 +39,12 @@ export function transposeCoordsForward(
 }
 
 export class Drawer2d implements DrawerInterface {
+  public readonly eventManager: EventManagerInterface;
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly domElement: HTMLCanvasElement;
   private readonly viewConfig: ViewConfigInterface;
   private readonly context: CanvasRenderingContext2D;
-  private readonly listeners: MouseClickListenerCallback[] = [];
 
   constructor({
     domElement,
@@ -55,6 +57,7 @@ export class Drawer2d implements DrawerInterface {
     this.WORLD_CONFIG = worldConfig;
     this.TYPES_CONFIG = typesConfig;
     this.context = domElement.getContext('2d') as CanvasRenderingContext2D;
+    this.eventManager = new EventManager();
     this.refresh();
     this.initEventHandlers();
   }
@@ -84,10 +87,6 @@ export class Drawer2d implements DrawerInterface {
     }
 
     this.context.restore();
-  }
-
-  public addClickListener(callback: MouseClickListenerCallback): void {
-    this.listeners.push(callback);
   }
 
   public clear(): void {
@@ -158,8 +157,8 @@ export class Drawer2d implements DrawerInterface {
     });
     resizeObserver.observe(this.domElement);
 
-    let keyDown: number | null = null;
-    let mouseDownVector: NumericVector | null = null;
+    let keyDown: number | undefined = undefined;
+    let mouseDownVector: NumericVector | undefined = undefined;
 
     document.body.addEventListener('keydown', (event: KeyboardEvent) => {
       const key = parseInt(event.key);
@@ -169,16 +168,14 @@ export class Drawer2d implements DrawerInterface {
     });
 
     document.body.addEventListener('keyup', () => {
-      keyDown = null;
+      keyDown = undefined;
     });
 
     this.domElement.addEventListener('click', (event: MouseEvent) => {
       const coords = createVector(
         transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
       );
-      for (const callback of this.listeners) {
-        callback(coords, keyDown);
-      }
+      this.eventManager.triggerClick({ coords, extraKey: keyDown });
       console.log(keyDown, coords);
     });
 
@@ -217,11 +214,11 @@ export class Drawer2d implements DrawerInterface {
       document.body.style.cursor = 'grabbing';
     };
     const mouseUpHandler = (event: MouseEvent | TouchEvent) => {
-      mouseDownVector = null;
+      mouseDownVector = undefined;
       document.body.style.cursor = 'auto';
     };
     const mouseMoveHandler = (event: MouseEvent | TouchEvent) => {
-      if (mouseDownVector === null) {
+      if (mouseDownVector === undefined) {
         return;
       }
       const coords = (event instanceof MouseEvent)

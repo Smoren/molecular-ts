@@ -1,4 +1,4 @@
-import type { DrawerInterface } from '../types/drawer';
+import type { DrawerInterface, EventManagerInterface } from '../types/drawer';
 
 export class DrawerDummy implements DrawerInterface {
   public draw(): void {
@@ -9,8 +9,8 @@ export class DrawerDummy implements DrawerInterface {
     return;
   }
 
-  public addClickListener(): void {
-    return;
+  public get eventManager(): EventManagerInterface {
+    throw new Error('Not implemented');
   }
 }
 

@@ -1,7 +1,8 @@
 import type {
   Drawer3dConfigInterface,
   DrawerInterface,
-  MouseClickListenerCallback,
+  EventManagerInterface,
+  MouseEventListenerCallback,
 } from '../types/drawer';
 import type { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import type { AtomInterface, LinkInterface } from '../types/atomic';
@@ -19,8 +20,10 @@ import {
 import type { NumericVector } from '../math/types';
 import type { LinkManagerInterface } from '../types/utils';
 import { createVector } from '../math';
+import { EventManager } from '../drawer/utils';
 
 export class Drawer3d implements DrawerInterface {
+  public readonly eventManager: EventManagerInterface;
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly domElement: HTMLCanvasElement;
@@ -34,7 +37,6 @@ export class Drawer3d implements DrawerInterface {
     new Vector3(0, 0, 0),
     new Vector3(0, 0, 0),
   ];
-  private readonly listeners: MouseClickListenerCallback[] = [];
 
   constructor({
     domElement,
@@ -57,6 +59,7 @@ export class Drawer3d implements DrawerInterface {
       this.scene.render();
     });
     this.scene.skipPointerMovePicking = true;
+    this.eventManager = new EventManager();
 
     this.initEventHandlers();
   }
@@ -96,10 +99,6 @@ export class Drawer3d implements DrawerInterface {
     this.linksMap.forEach((item) => this.scene.removeMesh(item));
     this.atomsMap.clear();
     this.linksMap.clear();
-  }
-
-  public addClickListener(callback: MouseClickListenerCallback): void {
-    this.listeners.push(callback);
   }
 
   private normalizeFrame(): void {
@@ -262,7 +261,7 @@ export class Drawer3d implements DrawerInterface {
   }
 
   private initEventHandlers(): void {
-    let keyDown: number | null = null;
+    let keyDown: number | undefined = undefined;
 
     document.body.addEventListener('keydown', (event: KeyboardEvent) => {
       const key = parseInt(event.key);
@@ -272,16 +271,17 @@ export class Drawer3d implements DrawerInterface {
     });
 
     document.body.addEventListener('keyup', () => {
-      keyDown = null;
+      keyDown = undefined;
     });
 
     this.scene.onPointerDown = (event, pickResult) => {
       if (event.button == 0) {
         const pos = this.camera.position.add(pickResult.ray!.direction.multiplyByFloats(500, 500, 500));
 
-        for (const callback of this.listeners) {
-          callback(createVector([pos.x, pos.y, pos.z]), keyDown);
-        }
+        this.eventManager.triggerClick({
+          coords: [pos.x, pos.y, pos.z],
+          extraKey: keyDown,
+        });
       }
     };
   }

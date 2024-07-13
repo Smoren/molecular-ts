@@ -42,9 +42,9 @@ export class Simulation implements SimulationInterface {
     this.clusterManager = new ClusterManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
     this.runningState = new RunningState();
 
-    this.drawer.addClickListener((coords, extraKey) => {
+    this.drawer.eventManager.onClick((event) => {
       const foundAtom = this.clusterManager.findAtomByCoords(
-        coords,
+        event.coords,
         this.config.typesConfig.RADIUS,
         this.config.worldConfig.ATOM_RADIUS,
       );
@@ -52,11 +52,11 @@ export class Simulation implements SimulationInterface {
         console.log('ATOM FOUND', foundAtom);
       }
 
-      if (extraKey === null || extraKey > this.config.typesConfig.FREQUENCIES.length) {
+      if (event.extraKey === undefined || event.extraKey > this.config.typesConfig.FREQUENCIES.length) {
         return;
       }
       console.log('atom added');
-      this._atoms.push(createAtom(extraKey-1, coords));
+      this._atoms.push(createAtom(event.extraKey-1, event.coords));
     });
   }
 
