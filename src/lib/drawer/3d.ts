@@ -141,7 +141,7 @@ export class Drawer3d implements DrawerInterface {
 
     atomMesh.material = material;
     atomMesh.freezeNormals();
-    atomMesh.isPickable = false;
+    // atomMesh.isPickable = false;
     atomMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION;
 
     return atomMesh;
@@ -275,6 +275,19 @@ export class Drawer3d implements DrawerInterface {
     });
 
     this.scene.onPointerDown = (event, pickResult) => {
+      if (pickResult.pickedMesh) {
+        const pos = pickResult.pickedMesh.getAbsolutePosition();
+        try {
+          this.eventManager.triggerMouseDown({
+            coords: [pos.x, pos.y, pos.z],
+            extraKey: keyDown,
+            ctrlKey: event.ctrlKey,
+          });
+        } catch (e) {
+          return;
+        }
+      }
+
       if (event.button == 0) {
         const pos = this.camera.position.add(pickResult.ray!.direction.multiplyByFloats(500, 500, 500));
 

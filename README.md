@@ -14,7 +14,8 @@ Particles of different types are visualized in different colors. Their propertie
 2. **Gravity coefficient matrix for linked particles** shows whether a particle of one type will attract or repel a particle of another type in the case when they are linked to each other, and with what force.
 3. **Connection limit map** shows the maximum number of links for particles of each type.
 4. **Connection limit matrix** shows the maximum number of connections that particles of each type can have with particles of different types.
-5. **Tensor of influence on neighbors links** shows how particles of type A affect the maximum link lengths of particles of type B with particles of type C.
+5. **Connection weight matrix** shows the weight occupied by the link between a particle of type A and a particle of type B in the overall limit on the number of bonds of a particle of type A (in Connection limit map).
+6. **Tensor of influence on neighbors links** shows how particles of type A affect the maximum link lengths of particles of type B with particles of type C.
 
 The main goal of this project is to study self-organizing systems and explore configurations in which conditions for 
 spontaneous emergence of artificial life will be present.

@@ -228,7 +228,7 @@ export class Simulation implements SimulationInterface {
       if (grabbedAtom) {
         console.log('ATOM FOUND', grabbedAtom);
       }
-      throw new PreventException();
+      throw new PreventException('prevent exception');
     });
 
     this.drawer.eventManager.onMouseGrab((event) => {
