@@ -11,6 +11,7 @@ import ConfigList from '@/web/components/config-editor/components/inputs/config-
 import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
 import Flag from "@/web/components/config-editor/components/inputs/flag.vue";
 import ConfigTensor from "@/web/components/config-editor/components/inputs/config-tensor.vue";
+import TransformationConfig from "@/web/components/config-editor/components/widgets/transformation-config.vue";
 
 const configStore = useConfigStore();
 const typesConfig = configStore.typesConfig;
@@ -200,6 +201,13 @@ const linkInfluenceConfigDescription = computed(() => {
         />
         <div style="margin-bottom: 5px;"></div>
         <flag title="Extended mode" v-model="typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED" />
+      </div>
+      <div>
+        <input-header
+          name="Transformations on create link"
+        />
+        <br />
+        <transformation-config :colors="typesConfig.COLORS" v-model="typesConfig.TRANSFORMATION" />
       </div>
     </template>
   </config-section>
