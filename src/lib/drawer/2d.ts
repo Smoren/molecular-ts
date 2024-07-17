@@ -90,7 +90,7 @@ export class Drawer2d implements DrawerInterface {
   }
 
   public clear(): void {
-    this.context.fillStyle = '#33334c';
+    this.context.fillStyle = 'rgb(51, 51, 76, 0.8)';
     this.context.rect(0, 0, this.width, this.height);
     this.context.fill();
   }
