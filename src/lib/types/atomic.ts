@@ -12,13 +12,15 @@ export interface BondMapInterface {
 
 export interface AtomInterface {
   readonly id: number;
-  readonly type: number;
   readonly position: VectorInterface;
   readonly speed: VectorInterface;
   readonly bonds: BondMapInterface;
+  type: number;
+  newType: number | undefined;
   linkDistanceFactor: number;
   linkDistanceFactors: number[];
   cluster?: ClusterInterface;
+  updateType(): void;
   exportState(): Record<string, unknown>;
 }
 

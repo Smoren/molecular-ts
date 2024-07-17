@@ -87,6 +87,11 @@ export class RulesHelper implements RulesHelperInterface {
     return this._isLinkRedundant(lhs, rhs) || this._isLinkRedundant(rhs, lhs);
   }
 
+  handleTransform(lhs: AtomInterface, rhs: AtomInterface): void {
+    this._handleTransform(lhs, rhs);
+    this._handleTransform(rhs, lhs);
+  }
+
   private _canLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
     const weight = this.TYPES_CONFIG.TYPE_LINK_WEIGHTS[lhs.type][rhs.type];
     if (this.TYPES_CONFIG.LINKS[lhs.type] - this._countWeightedBonds(lhs) < weight) {
@@ -100,6 +105,12 @@ export class RulesHelper implements RulesHelperInterface {
       return true;
     }
     return lhs.bonds.lengthOf(rhs.type) > this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
+  }
+
+  private _handleTransform(lhs: AtomInterface, rhs: AtomInterface): void {
+    if (this.TYPES_CONFIG.TRANSFORMATION[lhs.type] && this.TYPES_CONFIG.TRANSFORMATION[lhs.type][rhs.type] !== undefined) {
+      lhs.newType = this.TYPES_CONFIG.TRANSFORMATION[lhs.type][rhs.type];
+    }
   }
 
   private _countWeightedBonds(atom: AtomInterface): number {

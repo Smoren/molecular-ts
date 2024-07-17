@@ -46,12 +46,13 @@ class BondMap implements BondMapInterface {
 
 export class Atom implements AtomInterface {
   readonly id: number;
-  readonly type: number;
   readonly position: VectorInterface;
   readonly speed: VectorInterface;
   readonly bonds: BondMapInterface;
   readonly linkDistanceFactor: number;
   readonly linkDistanceFactors: number[];
+  type: number;
+  newType: number | undefined = undefined;
   cluster?: ClusterInterface;
 
   constructor(id: number, type: number, position: NumericVector, speed?: NumericVector) {
@@ -62,6 +63,14 @@ export class Atom implements AtomInterface {
     this.bonds = new BondMap();
     this.linkDistanceFactor = 1;
     this.linkDistanceFactors = [];
+  }
+
+  updateType(): void {
+    if (this.newType === undefined) {
+      return;
+    }
+    this.type = this.newType;
+    this.newType = undefined;
   }
 
   exportState(): Record<string, unknown> {
