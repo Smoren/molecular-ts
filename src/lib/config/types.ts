@@ -136,6 +136,7 @@ export function creatDefaultTypesConfig(): TypesConfig {
     LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
     FREQUENCIES: [1, 1, 0.5, 0.5, 1],
     COLORS: createColors(5),
+    TRANSFORMATION: {},
   };
 }
 
@@ -152,6 +153,7 @@ export function createTransparentTypesConfig(typesCount: number): TypesConfig {
     LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
     FREQUENCIES: createFilledArray(typesCount, 1),
     COLORS: createColors(typesCount),
+    TRANSFORMATION: {},
   }
 }
 
@@ -168,6 +170,7 @@ export function createSingleTypeConfig(): TypesConfig {
     LINK_FACTOR_DISTANCE: [[1]],
     LINK_FACTOR_DISTANCE_EXTENDED: [[[1]]],
     LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
+    TRANSFORMATION: {},
   };
 }
 
@@ -281,6 +284,7 @@ export function createRandomTypesConfig({
     LINK_FACTOR_DISTANCE_EXTENDED: linkFactorDistanceExtended ?? createDistributedLinkFactorDistance(linkFactorDistance),
     LINK_FACTOR_DISTANCE_USE_EXTENDED: LINK_FACTOR_DISTANCE_EXTENDED,
     COLORS: createColors(TYPES_COUNT),
+    TRANSFORMATION: {}, // TODO randomize it
   };
 }
 

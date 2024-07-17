@@ -13,6 +13,7 @@ export type LinkFactorDistanceConfig = number[][];
 export type LinkFactorDistanceExtendedConfig = number[][][];
 export type FrequenciesConfig = number[];
 export type ColorsConfig = Array<ColorVector>;
+export type TransformationConfig = Record<number, Record<number, number>>;
 export type BoundsConfig = {
   MIN_POSITION: NumericVector;
   MAX_POSITION: NumericVector;
@@ -38,6 +39,7 @@ export type TypesConfig = {
   LINK_FACTOR_DISTANCE_USE_EXTENDED: boolean;
   FREQUENCIES: FrequenciesConfig;
   COLORS: ColorsConfig;
+  TRANSFORMATION: TransformationConfig;
 };
 export type WorldConfig = {
   VIEW_MODE: ViewMode;
