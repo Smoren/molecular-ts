@@ -17,6 +17,7 @@ export interface AtomInterface {
   readonly position: VectorInterface;
   readonly speed: VectorInterface;
   readonly bonds: BondMapInterface;
+  readonly isTypeChanged: boolean;
   type: number;
   newType: number | undefined;
   linkDistanceFactor: number;

@@ -108,14 +108,15 @@ export class RulesHelper implements RulesHelperInterface {
   }
 
   private _handleTransform(lhs: AtomInterface, rhs: AtomInterface): void {
-    if (!this.TYPES_CONFIG.TRANSFORMATION[lhs.type] || this.TYPES_CONFIG.TRANSFORMATION[lhs.type][rhs.type] === undefined) {
+    if (!this._issetTransformation(lhs, rhs)) {
       return;
     }
     lhs.newType = this.TYPES_CONFIG.TRANSFORMATION[lhs.type][rhs.type];
-    const bondMap = lhs.bonds.getStorage();
-    for (const i in bondMap) {
-      bondMap[i].bonds.update(lhs);
-    }
+  }
+
+  private _issetTransformation(lhs: AtomInterface, rhs: AtomInterface): boolean {
+    return this.TYPES_CONFIG.TRANSFORMATION[lhs.type]
+      && this.TYPES_CONFIG.TRANSFORMATION[lhs.type][rhs.type] !== undefined;
   }
 
   private _countWeightedBonds(atom: AtomInterface): number {

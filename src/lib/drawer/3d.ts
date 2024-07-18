@@ -78,6 +78,10 @@ export class Drawer3d implements DrawerInterface {
       drawObject.position.x = atom.position[0];
       drawObject.position.y = atom.position[1];
       drawObject.position.z = atom.position[2];
+
+      if (atom.isTypeChanged) {
+        this.updateAtomColor(atom, drawObject);
+      }
     }
 
     if (!this.WORLD_CONFIG.SIMPLIFIED_VIEW_MODE) {
@@ -99,6 +103,16 @@ export class Drawer3d implements DrawerInterface {
     this.linksMap.forEach((item) => this.scene.removeMesh(item));
     this.atomsMap.clear();
     this.linksMap.clear();
+  }
+
+  private updateAtomColor(atom: AtomInterface, drawObject: Mesh): void {
+    const color = this.TYPES_CONFIG.COLORS[atom.newType!];
+    const material = new StandardMaterial('material', this.scene);
+    material.diffuseColor.r = color[0];
+    material.diffuseColor.g = color[1];
+    material.diffuseColor.b = color[2];
+    material.freeze();
+    drawObject.material = material;
   }
 
   private normalizeFrame(): void {
@@ -278,14 +292,17 @@ export class Drawer3d implements DrawerInterface {
       if (pickResult.pickedMesh) {
         const pos = pickResult.pickedMesh.getAbsolutePosition();
         try {
+          if (event.ctrlKey) {
+            this.camera.detachControl();
+          }
           this.eventManager.triggerMouseDown({
             coords: [pos.x, pos.y, pos.z],
             extraKey: keyDown,
             ctrlKey: event.ctrlKey,
           });
         } catch (e) {
-          return;
         }
+        return;
       }
 
       if (event.button == 0) {
@@ -297,6 +314,19 @@ export class Drawer3d implements DrawerInterface {
           ctrlKey: event.ctrlKey,
         });
       }
+    };
+
+    this.scene.onPointerUp = (event, pickResult) => {
+      const pos = this.camera.position.add(pickResult!.ray!.direction.multiplyByFloats(500, 500, 500));
+      try {
+        this.eventManager.triggerMouseUp({
+          coords: [pos.x, pos.y, pos.z],
+          extraKey: keyDown,
+          ctrlKey: event.ctrlKey,
+        });
+      } catch (e) {
+      }
+      this.camera.attachControl();
     };
   }
 }
