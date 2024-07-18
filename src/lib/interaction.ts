@@ -152,6 +152,20 @@ export class InteractionManager implements InteractionManagerInterface {
     }
   }
 
+  updateAtomType(atom: AtomInterface): void {
+    if (!atom.isTypeChanged) {
+      return;
+    }
+
+    const bondMap = atom.bonds.getStorage();
+    for (const i in bondMap) {
+      bondMap[i].bonds.update(atom);
+    }
+
+    atom.type = atom.newType as number;
+    atom.newType = undefined;
+  }
+
   private normalizeForce(value: number): number {
     if (Math.abs(value) > this.WORLD_CONFIG.MAX_FORCE) {
       return Math.sign(value) * this.WORLD_CONFIG.MAX_FORCE * this.WORLD_CONFIG.SPEED;

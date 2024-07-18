@@ -49,7 +49,7 @@ class BondMap implements BondMapInterface {
       this.typesCount[newType]++;
 
       if (this.typesCount[atom.type] < 0 || this.typesCount[newType] < 0) {
-        console.log('error', this.typesCount[atom.type], this.typesCount[newType]);
+        console.warn('error', this.typesCount[atom.type], this.typesCount[newType]);
       }
     }
   }
@@ -86,20 +86,6 @@ export class Atom implements AtomInterface {
 
   get isTypeChanged(): boolean {
     return this.newType !== undefined && this.type !== this.newType;
-  }
-
-  updateType(): void {
-    if (!this.isTypeChanged) {
-      return;
-    }
-
-    const bondMap = this.bonds.getStorage();
-    for (const i in bondMap) {
-      bondMap[i].bonds.update(this);
-    }
-
-    this.type = this.newType as number;
-    this.newType = undefined;
   }
 
   exportState(): Record<string, unknown> {

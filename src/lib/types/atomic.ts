@@ -23,7 +23,6 @@ export interface AtomInterface {
   linkDistanceFactor: number;
   linkDistanceFactors: number[];
   cluster?: ClusterInterface;
-  updateType(): void;
   exportState(): Record<string, unknown>;
 }
 

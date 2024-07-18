@@ -12,6 +12,7 @@ export interface InteractionManagerInterface {
   clearDistanceFactor(atom: AtomInterface): void;
   getDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): number;
   updateDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): void;
+  updateAtomType(atom: AtomInterface): void;
 }
 
 export interface PhysicModelInterface {
