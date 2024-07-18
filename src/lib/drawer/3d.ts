@@ -204,6 +204,7 @@ export class Drawer3d implements DrawerInterface {
     material.diffuseColor.g = color[1];
     material.diffuseColor.b = color[2];
     material.freeze();
+    mesh.material = material;
   }
 
   private createNewLinkMesh(path: Vector3[], radius: number, id: string): Mesh {
