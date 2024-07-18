@@ -7,7 +7,9 @@ export interface BondMapInterface {
   has(atom: AtomInterface): boolean;
   add(atom: AtomInterface): void;
   delete(atom: AtomInterface): void;
+  update(atom: AtomInterface): void;
   getTypesCountMap(): Record<number, number>;
+  getStorage(): Record<number, AtomInterface>;
 }
 
 export interface AtomInterface {

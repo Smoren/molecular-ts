@@ -3,7 +3,7 @@ import type { NumericVector } from '../math/types';
 
 export function createBaseWorldConfig(): WorldConfig {
   return {
-    VIEW_MODE: '3d',
+    VIEW_MODE: '2d',
     PHYSIC_MODEL: 'v2',
     ATOM_RADIUS: 5,
     MAX_INTERACTION_RADIUS: 100,

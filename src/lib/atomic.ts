@@ -39,8 +39,17 @@ class BondMap implements BondMapInterface {
     this.count--;
   }
 
+  update(atom: AtomInterface): void {
+    this.typesCount[atom.type]--;
+    this.typesCount[atom.newType as number]++;
+  }
+
   getTypesCountMap(): Record<number, number> {
     return this.typesCount;
+  }
+
+  getStorage(): Record<number, AtomInterface> {
+    return this.storage;
   }
 }
 
