@@ -173,6 +173,9 @@ export class Drawer3d implements DrawerInterface {
     this.bufVectors[1].z = rhsCoords[2];
 
     if (mesh) {
+      if (link.lhs.isTypeChanged || link.rhs.isTypeChanged) {
+        this.updateLinkColor(link, mesh);
+      }
       return this.createLinkMeshFromInstance(this.bufVectors, radius, mesh);
     }
 
@@ -192,6 +195,15 @@ export class Drawer3d implements DrawerInterface {
     newMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION;
 
     return newMesh;
+  }
+
+  private updateLinkColor(link: LinkInterface, mesh: Mesh) {
+    const color = this.getLinkColor(link);
+    const material = new StandardMaterial('material', this.scene);
+    material.diffuseColor.r = color[0];
+    material.diffuseColor.g = color[1];
+    material.diffuseColor.b = color[2];
+    material.freeze();
   }
 
   private createNewLinkMesh(path: Vector3[], radius: number, id: string): Mesh {
@@ -249,8 +261,8 @@ export class Drawer3d implements DrawerInterface {
   }
 
   private getLinkColor(link: LinkInterface): ColorVector {
-    const lhsColor = this.TYPES_CONFIG.COLORS[link.lhs.type];
-    const rhsColor = this.TYPES_CONFIG.COLORS[link.rhs.type];
+    const lhsColor = this.TYPES_CONFIG.COLORS[link.lhs.newType ?? link.lhs.type];
+    const rhsColor = this.TYPES_CONFIG.COLORS[link.rhs.newType ?? link.rhs.type];
     return [
       (lhsColor[0]+rhsColor[0])/2,
       (lhsColor[1]+rhsColor[1])/2,
