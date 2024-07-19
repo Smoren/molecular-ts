@@ -47,7 +47,7 @@ const removeTransformation = (index: number) => {
 <template>
   <div class="input-group mb-3">
     <div class="input-group-append">
-      <button class="btn btn-outline-secondary" @click="addTransformation">Add</button>
+      <button class="btn btn-outline-secondary" @click="addTransformation">Add rule</button>
     </div>
   </div>
   <div class="list-group">
