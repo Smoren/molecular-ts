@@ -202,11 +202,13 @@ const linkInfluenceConfigDescription = computed(() => {
         <div style="margin-bottom: 5px;"></div>
         <flag title="Extended mode" v-model="typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED" />
       </div>
-      <div>
+      <div style="margin-top: 30px;">
         <input-header
-          name="Transformations on create link"
+          name="Transformations on link creation"
+          tooltip="Experimental feature. A + B ➔ C means that when the particle of type A connects to a particle of type B,
+                   then the particle of type A changes its type to C."
         />
-        <br />
+        <div style="margin-top: 10px;"></div>
         <transformation-config :colors="typesConfig.COLORS" v-model="typesConfig.TRANSFORMATION" />
       </div>
     </template>
