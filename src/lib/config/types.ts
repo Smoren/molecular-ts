@@ -424,6 +424,11 @@ export function randomizeTypesConfig(
     copyConfigListValue(oldConfig.LINKS, newConfig.LINKS, 0);
   }
 
+  // TODO randomize transformations
+  if (newConfig.FREQUENCIES.length === oldConfig.FREQUENCIES.length) {
+    newConfig.TRANSFORMATION = fullCopyObject(oldConfig.TRANSFORMATION);
+  }
+
   if (!randomTypesConfig.USE_GRAVITY_BOUNDS) {
     copyConfigMatrixValue(oldConfig.GRAVITY, newConfig.GRAVITY, 0);
   } else {
