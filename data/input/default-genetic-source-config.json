@@ -91,7 +91,8 @@
       [250, 20, 20],
       [200, 140, 100],
       [80, 170, 140]
-    ]
+    ],
+    "TRANSFORMATION": {}
   },
   "typesSymmetricConfig": {
     "GRAVITY_MATRIX_SYMMETRIC": false,
