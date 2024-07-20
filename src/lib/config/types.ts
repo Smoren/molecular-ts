@@ -578,6 +578,8 @@ export function removeIndexFromTypesConfig(input: TypesConfig, index: number): T
   result.LINK_FACTOR_DISTANCE = removeIndexFromMatrix(input.LINK_FACTOR_DISTANCE, index);
   result.LINK_FACTOR_DISTANCE_EXTENDED = removeIndexFromTensor(input.LINK_FACTOR_DISTANCE_EXTENDED, index);
 
+  result.TRANSFORMATION = {};
+
   return result;
 }
 
