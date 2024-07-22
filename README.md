@@ -35,6 +35,8 @@ Live demo: https://smoren.github.io/molecular-ts/
 * `Wheel` — move up and down.
 * `Shift + Wheel` — move left and right.
 * `Ctrl + Wheel` — zoom.
+* `Mouse down + Mouse move` — move arbitrarily.
+* `Ctrl + Mouse down + Mouse move` (on a particle) — drag it arbitrarily.
 
 ### Adding new particles
 * `Numeric key down + Click` — add a particle with the type corresponding to the number of the key.
