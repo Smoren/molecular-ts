@@ -20,7 +20,6 @@ export interface AtomInterface {
   readonly isTypeChanged: boolean;
   type: number;
   newType: number | undefined;
-  linkDistanceFactor: number;
   linkDistanceFactors: number[];
   cluster?: ClusterInterface;
   exportState(): Record<string, unknown>;

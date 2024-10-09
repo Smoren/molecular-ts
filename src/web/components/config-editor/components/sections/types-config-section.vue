@@ -61,14 +61,8 @@ const removeType = (index: number) => {
 }
 
 const linkInfluenceConfigDescription = computed(() => {
-  const matrixDescription = "Matrix of influence on neighbors links shows how particles of each type affect " +
-      "the maximum length of links of neighboring particles of different types."
-  const tensorDescription = "Tensor of influence on neighbors links shows how particles of each type affect " +
+  return "Tensor of influence on neighbors links shows how particles of each type affect " +
       "the maximum length of links of neighboring particles of different types with particles of specific types."
-
-  return typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED
-    ? tensorDescription
-    : matrixDescription;
 });
 
 </script>
@@ -182,24 +176,13 @@ const linkInfluenceConfigDescription = computed(() => {
           :tooltip="linkInfluenceConfigDescription"
           position="center"
         />
-        <config-matrix
-          v-if="!typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED"
-          :values="typesConfig.LINK_FACTOR_DISTANCE"
-          :colors="typesConfig.COLORS"
-          :step="0.1"
-          :min="0"
-          v-model:symmetric="typesSymmetricConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
-        />
         <config-tensor
-          v-else
           :values="typesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
           :colors="typesConfig.COLORS"
           :step="0.1"
           :min="0"
           v-model:symmetric="typesSymmetricConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
         />
-        <div style="margin-bottom: 5px;"></div>
-        <flag title="Extended mode" v-model="typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED" />
       </div>
       <div style="margin-top: 30px;">
         <input-header

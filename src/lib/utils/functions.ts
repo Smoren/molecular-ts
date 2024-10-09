@@ -1,7 +1,6 @@
 import type { AtomInterface } from '../types/atomic';
 import type { NumericVector } from '../math/types';
 import type {
-  LinkFactorDistanceConfig,
   LinkFactorDistanceExtendedConfig,
   PhysicModelName,
   ViewModeConfig,
@@ -61,32 +60,6 @@ export function createPhysicModel(
   };
 
   return new map[worldConfig.PHYSIC_MODEL](worldConfig, typesConfig);
-}
-
-export function createDistributedLinkFactorDistance(matrix: LinkFactorDistanceConfig): LinkFactorDistanceExtendedConfig {
-  const result: LinkFactorDistanceExtendedConfig = [];
-  for (let i=0; i<matrix.length; ++i) {
-    const level1: number[][] = [];
-    for (let j=0; j<matrix.length; ++j) {
-      const level2: number[] = [];
-      level2.length = matrix[i].length;
-      level2.fill(matrix[i][j]);
-      level1.push(level2);
-    }
-    result.push(level1);
-  }
-  return result;
-}
-
-export function distributeLinkFactorDistance(
-  tensor: LinkFactorDistanceExtendedConfig,
-  matrix: LinkFactorDistanceConfig,
-): void {
-  for (let i=0; i<matrix.length; ++i) {
-    for (let j=0; j<matrix.length; ++j) {
-      tensor[i][j].fill(matrix[i][j])
-    }
-  }
 }
 
 export function getViewModeConfig(worldConfig: WorldConfig, viewMode?: ViewMode): ViewModeConfig {

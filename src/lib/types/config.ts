@@ -9,7 +9,6 @@ export type GravityConfig = number[][];
 export type LinksConfig = number[];
 export type TypeLinksConfig = number[][];
 export type TypeLinkWeightsConfig = number[][];
-export type LinkFactorDistanceConfig = number[][];
 export type LinkFactorDistanceExtendedConfig = number[][][];
 export type FrequenciesConfig = number[];
 export type ColorsConfig = Array<ColorVector>;
@@ -34,9 +33,7 @@ export type TypesConfig = {
   LINKS: LinksConfig;
   TYPE_LINKS: TypeLinksConfig;
   TYPE_LINK_WEIGHTS: TypeLinkWeightsConfig;
-  LINK_FACTOR_DISTANCE: LinkFactorDistanceConfig;
   LINK_FACTOR_DISTANCE_EXTENDED: LinkFactorDistanceExtendedConfig;
-  LINK_FACTOR_DISTANCE_USE_EXTENDED: boolean;
   FREQUENCIES: FrequenciesConfig;
   COLORS: ColorsConfig;
   TRANSFORMATION: TransformationConfig;
@@ -87,7 +84,6 @@ export type RandomTypesConfig = {
   LINK_TYPE_MATRIX_SYMMETRIC: boolean;
   LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: boolean;
-  LINK_FACTOR_DISTANCE_EXTENDED: boolean;
   LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: boolean;
 };
 

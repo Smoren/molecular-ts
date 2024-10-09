@@ -1,6 +1,5 @@
 import type { ColorVector, RandomTypesConfig, TypesConfig } from '../types/config';
 import {
-  createDistributedLinkFactorDistance,
   getRandomColor,
   fullCopyObject,
 } from '../utils/functions';
@@ -56,14 +55,6 @@ export function createColors(count: number): Array<ColorVector> {
 }
 
 export function creatDefaultTypesConfig(): TypesConfig {
-  const linkFactorDistance = [
-    [1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1],
-  ];
-
   return {
     RADIUS: [1, 1, 1, 1, 1],
     GRAVITY: [
@@ -95,7 +86,6 @@ export function creatDefaultTypesConfig(): TypesConfig {
       [1, 1, 1, 1, 1],
       [1, 1, 1, 1, 1],
     ],
-    LINK_FACTOR_DISTANCE: linkFactorDistance,
     LINK_FACTOR_DISTANCE_EXTENDED: [
       [
         [1, 1, 1, 1.1, 1],
@@ -133,7 +123,6 @@ export function creatDefaultTypesConfig(): TypesConfig {
         [1.1, 0.7, 1.2, 1, 1]
       ]
     ],
-    LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
     FREQUENCIES: [1, 1, 0.5, 0.5, 1],
     COLORS: createColors(5),
     TRANSFORMATION: {},
@@ -148,9 +137,7 @@ export function createTransparentTypesConfig(typesCount: number): TypesConfig {
     LINKS: createFilledArray(typesCount, 0),
     TYPE_LINKS: createFilledMatrix(typesCount, typesCount, 0),
     TYPE_LINK_WEIGHTS: createFilledMatrix(typesCount, typesCount, 1),
-    LINK_FACTOR_DISTANCE: createFilledMatrix(typesCount, typesCount, 0),
     LINK_FACTOR_DISTANCE_EXTENDED: createFilledTensor(typesCount, typesCount, typesCount, 0),
-    LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
     FREQUENCIES: createFilledArray(typesCount, 1),
     COLORS: createColors(typesCount),
     TRANSFORMATION: {},
@@ -167,9 +154,7 @@ export function createSingleTypeConfig(): TypesConfig {
     LINKS: [0],
     TYPE_LINKS: [[0]],
     TYPE_LINK_WEIGHTS: [[1]],
-    LINK_FACTOR_DISTANCE: [[1]],
     LINK_FACTOR_DISTANCE_EXTENDED: [[[1]]],
-    LINK_FACTOR_DISTANCE_USE_EXTENDED: true,
     TRANSFORMATION: {},
   };
 }
@@ -189,7 +174,6 @@ export function createRandomTypesConfig({
   LINK_TYPE_MATRIX_SYMMETRIC,
   LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC,
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
-  LINK_FACTOR_DISTANCE_EXTENDED,
   LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE,
 }: RandomTypesConfig): TypesConfig {
   const precision = 8;
@@ -241,31 +225,17 @@ export function createRandomTypesConfig({
     precision,
   );
 
-  const linkFactorDistance = randomizeMatrix(
-    TYPES_COUNT,
-    LINK_FACTOR_DISTANCE_BOUNDS,
-    createRandomFloat,
-    LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
-    precision,
-  );
-
-  if (LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE) {
-    setMatrixMainDiagonal(linkFactorDistance, 1);
-  }
-
   let linkFactorDistanceExtended: number[][][] | undefined;
 
-  if (LINK_FACTOR_DISTANCE_EXTENDED) {
-    linkFactorDistanceExtended = [];
-    for (let i=0; i<TYPES_COUNT; ++i) {
-      linkFactorDistanceExtended.push(randomizeMatrix(
-        TYPES_COUNT,
-        LINK_FACTOR_DISTANCE_BOUNDS,
-        createRandomFloat,
-        LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
-        precision,
-      ));
-    }
+  linkFactorDistanceExtended = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    linkFactorDistanceExtended.push(randomizeMatrix(
+      TYPES_COUNT,
+      LINK_FACTOR_DISTANCE_BOUNDS,
+      createRandomFloat,
+      LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
+      precision,
+    ));
 
     if (LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE) {
       setTensorMainDiagonal(linkFactorDistanceExtended, 1);
@@ -280,9 +250,7 @@ export function createRandomTypesConfig({
     LINKS: links,
     TYPE_LINKS: typeLinks,
     TYPE_LINK_WEIGHTS: typeLinkWeights,
-    LINK_FACTOR_DISTANCE: linkFactorDistance,
-    LINK_FACTOR_DISTANCE_EXTENDED: linkFactorDistanceExtended ?? createDistributedLinkFactorDistance(linkFactorDistance),
-    LINK_FACTOR_DISTANCE_USE_EXTENDED: LINK_FACTOR_DISTANCE_EXTENDED,
+    LINK_FACTOR_DISTANCE_EXTENDED: linkFactorDistanceExtended,
     COLORS: createColors(TYPES_COUNT),
     TRANSFORMATION: {}, // TODO randomize it
   };
@@ -315,7 +283,6 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     LINK_TYPE_MATRIX_SYMMETRIC: false,
     LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
-    LINK_FACTOR_DISTANCE_EXTENDED: true,
     LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: true,
   };
 }
@@ -347,7 +314,6 @@ export function createWideRandomTypesConfig(typesCount: number): RandomTypesConf
     LINK_TYPE_MATRIX_SYMMETRIC: false,
     LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
-    LINK_FACTOR_DISTANCE_EXTENDED: true,
     LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: true,
   };
 }
@@ -474,21 +440,12 @@ export function randomizeTypesConfig(
   }
 
   if (!randomTypesConfig.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
-    copyConfigMatrixValue(oldConfig.LINK_FACTOR_DISTANCE, newConfig.LINK_FACTOR_DISTANCE, 1);
     copyConfigTensorValue(oldConfig.LINK_FACTOR_DISTANCE_EXTENDED, newConfig.LINK_FACTOR_DISTANCE_EXTENDED, 1);
-    newConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = oldConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED;
   } else {
     if (randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC) {
-      makeMatrixSymmetric(newConfig.LINK_FACTOR_DISTANCE);
       makeTensorSymmetric(newConfig.LINK_FACTOR_DISTANCE_EXTENDED);
     }
     if (skipSubMatricesBoundaryIndex !== undefined) {
-      copyConfigMatrixValue(
-        oldConfig.LINK_FACTOR_DISTANCE,
-        newConfig.LINK_FACTOR_DISTANCE,
-        1,
-        skipSubMatricesBoundaryIndex,
-      );
       copyConfigTensorValue(
         oldConfig.LINK_FACTOR_DISTANCE_EXTENDED,
         newConfig.LINK_FACTOR_DISTANCE_EXTENDED,
@@ -515,7 +472,6 @@ export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesCon
   result.TYPE_LINKS = concatMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, 0);
   result.TYPE_LINK_WEIGHTS = concatMatrices(lhs.TYPE_LINK_WEIGHTS, rhs.TYPE_LINK_WEIGHTS, 1);
 
-  result.LINK_FACTOR_DISTANCE = concatMatrices(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, 1);
   result.LINK_FACTOR_DISTANCE_EXTENDED = concatTensors(lhs.LINK_FACTOR_DISTANCE_EXTENDED, rhs.LINK_FACTOR_DISTANCE_EXTENDED, 1);
 
   return result;
@@ -535,7 +491,6 @@ export function crossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, separator:
   result.TYPE_LINKS = crossMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, separator, 0);
   result.TYPE_LINK_WEIGHTS = crossMatrices(lhs.TYPE_LINK_WEIGHTS, rhs.TYPE_LINK_WEIGHTS, separator, 1);
 
-  result.LINK_FACTOR_DISTANCE = crossMatrices(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, separator, 1);
   result.LINK_FACTOR_DISTANCE_EXTENDED = crossTensors(lhs.LINK_FACTOR_DISTANCE_EXTENDED, rhs.LINK_FACTOR_DISTANCE_EXTENDED, separator, 1);
 
   return result;
@@ -555,7 +510,6 @@ export function randomCrossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, sepa
   result.TYPE_LINKS = randomCrossMatrices(lhs.TYPE_LINKS, rhs.TYPE_LINKS, separator);
   result.TYPE_LINK_WEIGHTS = randomCrossMatrices(lhs.TYPE_LINK_WEIGHTS, rhs.TYPE_LINK_WEIGHTS, separator);
 
-  result.LINK_FACTOR_DISTANCE = randomCrossMatrices(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, separator);
   result.LINK_FACTOR_DISTANCE_EXTENDED = randomCrossTensors(lhs.LINK_FACTOR_DISTANCE_EXTENDED, rhs.LINK_FACTOR_DISTANCE_EXTENDED, separator);
 
   return result;
@@ -575,7 +529,6 @@ export function removeIndexFromTypesConfig(input: TypesConfig, index: number): T
   result.TYPE_LINKS = removeIndexFromMatrix(input.TYPE_LINKS, index);
   result.TYPE_LINK_WEIGHTS = removeIndexFromMatrix(input.TYPE_LINK_WEIGHTS, index);
 
-  result.LINK_FACTOR_DISTANCE = removeIndexFromMatrix(input.LINK_FACTOR_DISTANCE, index);
   result.LINK_FACTOR_DISTANCE_EXTENDED = removeIndexFromTensor(input.LINK_FACTOR_DISTANCE_EXTENDED, index);
 
   result.TRANSFORMATION = {};
@@ -614,7 +567,6 @@ export function clearInactiveParams(config: TypesConfig) {
     config.TYPE_LINKS[i][j] = 0;
     config.TYPE_LINK_WEIGHTS[i][j] = 1;
     config.LINK_GRAVITY[i][j] = 0;
-    config.LINK_FACTOR_DISTANCE[i][j] = 1;
     for (const matrix of config.LINK_FACTOR_DISTANCE_EXTENDED) {
       matrix[i][j] = 1;
     }

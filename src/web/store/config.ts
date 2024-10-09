@@ -16,10 +16,6 @@ import {
   removeIndexFromTypesConfig,
 } from "@/lib/config/types";
 import { fullCopyObject } from "@/lib/utils/functions";
-import {
-  createDistributedLinkFactorDistance,
-  distributeLinkFactorDistance,
-} from "@/lib/utils/functions";
 import { useFlash } from '@/web/hooks/use-flash';
 import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/types';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
@@ -131,20 +127,6 @@ export const useConfigStore = defineStore("config", () => {
       }
       if (config.typesConfig !== undefined) {
         setTypesConfig(createTransparentTypesConfig(config.typesConfig.FREQUENCIES.length));
-
-        if (config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED === undefined) {
-          config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED = false;
-        }
-
-        if (
-          config.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED === undefined ||
-          !config.typesConfig.LINK_FACTOR_DISTANCE_USE_EXTENDED
-        ) {
-          config.typesConfig.LINK_FACTOR_DISTANCE_EXTENDED = createDistributedLinkFactorDistance(
-            config.typesConfig.LINK_FACTOR_DISTANCE,
-          );
-        }
-
         console.log('typesConfig upd');
         setTypesConfig(config.typesConfig);
       }
@@ -232,7 +214,6 @@ export const useConfigStore = defineStore("config", () => {
       makeMatrixSymmetric(typesConfig.value.TYPE_LINK_WEIGHTS);
     }
     if (typesSymmetricConfig.value.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC) {
-      makeMatrixSymmetric(typesConfig.value.LINK_FACTOR_DISTANCE);
       makeTensorSymmetric(typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED);
     }
   }
@@ -251,14 +232,6 @@ export const useConfigStore = defineStore("config", () => {
     const newTypeConfig = createSingleTypeConfig();
     addTypesFromConfig(newTypeConfig);
   }
-
-  watch(() => typesConfig.value.LINK_FACTOR_DISTANCE_USE_EXTENDED, (value: boolean) => {
-    if (!value || flash.receive(FLASH_IMPORT_STARTED)) {
-      return;
-    }
-
-    distributeLinkFactorDistance(typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED, typesConfig.value.LINK_FACTOR_DISTANCE);
-  });
 
   watch(worldConfig, (newConfig: WorldConfig) => {
     setWorldConfigRaw(newConfig);
