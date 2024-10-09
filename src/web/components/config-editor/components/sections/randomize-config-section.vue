@@ -214,13 +214,6 @@ const randomizeTypesConfig = () => {
                 style="text-align: center;"
               />
             </div>
-            <div>
-              <flag
-                title="Extended"
-                v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
-                style="text-align: right;"
-              />
-            </div>
           </div>
         </div>
       </div>

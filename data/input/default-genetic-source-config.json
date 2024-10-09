@@ -63,11 +63,6 @@
       [1, 1, 1],
       [1, 1, 1]
     ],
-    "LINK_FACTOR_DISTANCE": [
-      [1, 1, 1],
-      [1, 1, 1],
-      [1, 1, 1]
-    ],
     "LINK_FACTOR_DISTANCE_EXTENDED": [
       [
         [1, 1, 1],
@@ -85,7 +80,6 @@
         [1, 1, 1]
       ]
     ],
-    "LINK_FACTOR_DISTANCE_USE_EXTENDED": true,
     "FREQUENCIES": [1, 1, 1],
     "COLORS": [
       [250, 20, 20],

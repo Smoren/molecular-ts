@@ -122,33 +122,19 @@ export class InteractionManager implements InteractionManagerInterface {
   }
 
   clearDistanceFactor(atom: AtomInterface): void {
-    atom.linkDistanceFactor = 1;
-    if (
-      this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_USE_EXTENDED ||
-      atom.linkDistanceFactors.length !== this.TYPES_CONFIG.FREQUENCIES.length
-    ) {
-      for (let i = 0; i < this.TYPES_CONFIG.FREQUENCIES.length; ++i) {
-        atom.linkDistanceFactors[i] = 1;
-      }
+    for (let i = 0; i < this.TYPES_CONFIG.FREQUENCIES.length; ++i) {
+      atom.linkDistanceFactors[i] = 1;
     }
   }
 
   getDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): number {
-    if (this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_USE_EXTENDED) {
-      return lhs.linkDistanceFactors[rhs.type];
-    }
-
-    return lhs.linkDistanceFactor;
+    return lhs.linkDistanceFactors[rhs.type];
   }
 
   updateDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): void {
-    if (this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_USE_EXTENDED) {
-      const mults = this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_EXTENDED[rhs.type][lhs.type];
-      for (let i=0; i<mults.length; ++i) {
-        lhs.linkDistanceFactors[i] *= mults[i];
-      }
-    } else {
-      lhs.linkDistanceFactor *= this.TYPES_CONFIG.LINK_FACTOR_DISTANCE[rhs.type][lhs.type];
+    const mults = this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_EXTENDED[rhs.type][lhs.type];
+    for (let i=0; i<mults.length; ++i) {
+      lhs.linkDistanceFactors[i] *= mults[i];
     }
   }
 
