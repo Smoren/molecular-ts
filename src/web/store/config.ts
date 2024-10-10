@@ -224,7 +224,7 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const addTypesFromConfig = (config: TypesConfig): void => {
-    const newConfig = concatTypesConfigs(typesConfig.value, config);
+    const newConfig = concatTypesConfigs(typesConfig.value, convertTypesConfigForBackwardCompatibility(config));
     setTypesConfig(newConfig);
   }
 
