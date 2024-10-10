@@ -187,10 +187,10 @@ const randomizeTypesConfig = () => {
 
       <div>
         <input-header
-          name="Links Distance Factor"
-          tooltip="Matrix of influence on neighbors links shows how particles of each type affect the maximum length of
+            name="Links Distance Factor"
+            tooltip="Matrix of influence on neighbors links shows how particles of each type affect the maximum length of
                    links of neighboring particles of different types."
-          tooltip-position="left"
+            tooltip-position="left"
         >
           <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_FACTOR_DISTANCE_BOUNDS" />
         </input-header>
@@ -207,11 +207,46 @@ const randomizeTypesConfig = () => {
                 v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC"
               />
             </div>
+            <div></div>
             <div>
               <flag
                 title="Ignore self type"
                 v-model="randomTypesConfig.LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE"
                 style="text-align: center;"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <input-header
+            name="Links Elastic Factor"
+            tooltip="Matrix of influence on neighbors links shows how particles of each type affect the elastic force of
+                   links of neighboring particles of different types."
+            tooltip-position="left"
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_FACTOR_ELASTIC_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_LINK_FACTOR_ELASTIC_BOUNDS">
+          <config-bounds
+            name="Links Distance Factor"
+            :step="0.1"
+            :values="randomTypesConfig.LINK_FACTOR_ELASTIC_BOUNDS"
+          />
+          <div class="grid-wrapper">
+            <div>
+              <flag
+                title="Symmetric"
+                v-model="randomTypesConfig.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC"
+              />
+            </div>
+            <div></div>
+            <div>
+              <flag
+                  title="Ignore self type"
+                  v-model="randomTypesConfig.LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE"
+                  style="text-align: center;"
               />
             </div>
           </div>

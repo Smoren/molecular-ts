@@ -169,6 +169,7 @@ export class Simulation implements SimulationInterface {
     for (const atom of this._atoms) {
       this.interactionManager.updateAtomType(atom);
       this.interactionManager.clearDistanceFactor(atom);
+      this.interactionManager.clearElasticFactor(atom);
       this.interactionManager.moveAtom(atom);
       this.summaryManager.noticeAtom(atom, this.config.worldConfig);
     }

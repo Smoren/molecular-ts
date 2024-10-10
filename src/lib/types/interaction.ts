@@ -10,6 +10,7 @@ export interface InteractionManagerInterface {
   interactAtomsStep2(atom: AtomInterface, neighbour: AtomInterface): void;
   setPhysicModel(model: PhysicModelInterface): void;
   clearDistanceFactor(atom: AtomInterface): void;
+  clearElasticFactor(atom: AtomInterface): void;
   getDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): number;
   updateDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): void;
   updateAtomType(atom: AtomInterface): void;
@@ -18,7 +19,7 @@ export interface InteractionManagerInterface {
 export interface PhysicModelInterface {
   readonly geometry: GeometryHelperInterface;
   getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number;
-  getLinkForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number;
+  getLinkForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number, elasticFactor: number): number;
   getBoundsForce(dist: number): number;
 }
 

@@ -28,8 +28,8 @@ export class PhysicModelV1 implements PhysicModelInterface {
     return multiplier * this.geometry.getMassMultiplier(lhs, rhs) / dist2;
   }
 
-  getLinkForce(lhs: AtomInterface, rhs: AtomInterface): number {
-    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.geometry.getMassMultiplier(lhs, rhs);
+  getLinkForce(lhs: AtomInterface, rhs: AtomInterface, elasticFactor: number): number {
+    return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.geometry.getMassMultiplier(lhs, rhs) * elasticFactor;
   }
 
   getBoundsForce(dist: number): number {

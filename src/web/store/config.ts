@@ -42,6 +42,7 @@ export const useConfigStore = defineStore("config", () => {
     LINK_TYPE_MATRIX_SYMMETRIC: false,
     LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
+    LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
   });
 
   const getConfigValues = () => {
@@ -202,6 +203,9 @@ export const useConfigStore = defineStore("config", () => {
     }
     if (config.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
       typesSymmetricConfig.value.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC = config.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC;
+    }
+    if (config.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
+      typesSymmetricConfig.value.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC = config.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC;
     }
   }
 

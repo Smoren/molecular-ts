@@ -84,6 +84,7 @@ export class InteractionManager implements InteractionManagerInterface {
 
     if (dist2 <= this.WORLD_CONFIG.MAX_LINK_RADIUS ** 2) {
       this.updateDistanceFactor(lhs, rhs);
+      this.updateElasticFactor(lhs, rhs);
     }
   }
 
@@ -127,14 +128,31 @@ export class InteractionManager implements InteractionManagerInterface {
     }
   }
 
+  clearElasticFactor(atom: AtomInterface): void {
+    for (let i = 0; i < this.TYPES_CONFIG.FREQUENCIES.length; ++i) {
+      atom.linkElasticFactors[i] = 1;
+    }
+  }
+
   getDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): number {
     return lhs.linkDistanceFactors[rhs.type];
+  }
+
+  getElasticFactor(lhs: AtomInterface, rhs: AtomInterface): number {
+    return lhs.linkElasticFactors[rhs.type];
   }
 
   updateDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): void {
     const mults = this.TYPES_CONFIG.LINK_FACTOR_DISTANCE[rhs.type][lhs.type];
     for (let i=0; i<mults.length; ++i) {
       lhs.linkDistanceFactors[i] *= mults[i];
+    }
+  }
+
+  updateElasticFactor(lhs: AtomInterface, rhs: AtomInterface): void {
+    const mults = this.TYPES_CONFIG.LINK_FACTOR_ELASTIC[rhs.type][lhs.type];
+    for (let i=0; i<mults.length; ++i) {
+      lhs.linkElasticFactors[i] *= mults[i];
     }
   }
 
@@ -192,9 +210,9 @@ export class InteractionManager implements InteractionManagerInterface {
     dist2: number,
     distVector: VectorInterface,
   ): void {
-    lhs.speed.add(
-      distVector.normalize().mul(this.normalizeForce(this.physicModel.getLinkForce(lhs, rhs, dist2))),
-    );
+    const elasticFactor = this.getElasticFactor(rhs, lhs); // TODO check!
+    const force = this.physicModel.getLinkForce(lhs, rhs, dist2, elasticFactor);
+    lhs.speed.add(distVector.normalize().mul(this.normalizeForce(force)));
   }
 
   private getDist2(distVector: NumericVector): number {
