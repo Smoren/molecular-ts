@@ -1,7 +1,7 @@
 import type { AtomInterface } from '../types/atomic';
 import type { NumericVector } from '../math/types';
 import type {
-  LinkFactorDistanceExtendedConfig,
+  LinkFactorDistanceConfig,
   PhysicModelName,
   ViewModeConfig,
   WorldConfig,

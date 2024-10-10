@@ -177,7 +177,7 @@ const linkInfluenceConfigDescription = computed(() => {
           position="center"
         />
         <config-tensor
-          :values="typesConfig.LINK_FACTOR_DISTANCE_EXTENDED"
+          :values="typesConfig.LINK_FACTOR_DISTANCE"
           :colors="typesConfig.COLORS"
           :step="0.1"
           :min="0"

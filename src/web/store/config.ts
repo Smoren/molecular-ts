@@ -219,7 +219,7 @@ export const useConfigStore = defineStore("config", () => {
       makeMatrixSymmetric(typesConfig.value.TYPE_LINK_WEIGHTS);
     }
     if (typesSymmetricConfig.value.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC) {
-      makeTensorSymmetric(typesConfig.value.LINK_FACTOR_DISTANCE_EXTENDED);
+      makeTensorSymmetric(typesConfig.value.LINK_FACTOR_DISTANCE);
     }
   }
 

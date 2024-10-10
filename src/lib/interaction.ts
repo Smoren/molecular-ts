@@ -132,7 +132,7 @@ export class InteractionManager implements InteractionManagerInterface {
   }
 
   updateDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): void {
-    const mults = this.TYPES_CONFIG.LINK_FACTOR_DISTANCE_EXTENDED[rhs.type][lhs.type];
+    const mults = this.TYPES_CONFIG.LINK_FACTOR_DISTANCE[rhs.type][lhs.type];
     for (let i=0; i<mults.length; ++i) {
       lhs.linkDistanceFactors[i] *= mults[i];
     }
