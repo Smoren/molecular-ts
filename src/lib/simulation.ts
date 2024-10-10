@@ -207,6 +207,10 @@ export class Simulation implements SimulationInterface {
   }
 
   private initEventHandlers(): void {
+    if (this.drawer.eventManager === undefined) {
+      return;
+    }
+
     let grabbedAtom: AtomInterface | undefined = undefined;
 
     this.drawer.eventManager.onClick((event) => {

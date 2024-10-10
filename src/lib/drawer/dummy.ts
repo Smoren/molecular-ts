@@ -9,8 +9,8 @@ export class DrawerDummy implements DrawerInterface {
     return;
   }
 
-  public get eventManager(): EventManagerInterface {
-    throw new Error('Not implemented');
+  public get eventManager(): EventManagerInterface | undefined {
+    return undefined;
   }
 }
 

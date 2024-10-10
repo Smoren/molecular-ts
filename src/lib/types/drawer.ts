@@ -17,7 +17,7 @@ export type MouseEventData = {
 export type MouseEventListenerCallback = (event: MouseEventData) => void;
 
 export interface DrawerInterface {
-  readonly eventManager: EventManagerInterface;
+  readonly eventManager?: EventManagerInterface;
   draw(atoms: Array<AtomInterface>, links: LinkManagerInterface): void;
   clear(): void;
 }
