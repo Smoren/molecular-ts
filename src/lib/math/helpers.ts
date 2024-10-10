@@ -33,3 +33,9 @@ export function groupArray<T>(input: T[], groupSizes: number[]): T[][] {
   }
   return result;
 }
+
+export function getFunctionArgNames(func: Function): string[] {
+  const funcString = func.toString();
+  const match = funcString.match(/\(([^)]*)\)/);
+  return match ? match[1].split(',').map(arg => arg.trim()) : [];
+}
