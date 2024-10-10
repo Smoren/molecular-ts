@@ -2,6 +2,7 @@ import type { TypesConfig, WorldConfig } from '../types/config';
 import type { AtomInterface } from '../types/atomic';
 import type { PhysicModelInterface } from '../types/interaction';
 import { GeometryHelper } from '../utils/structs';
+import { toVector } from "@/lib/math";
 
 export class PhysicModelV1 implements PhysicModelInterface {
   public readonly geometry: GeometryHelper;
@@ -28,7 +29,7 @@ export class PhysicModelV1 implements PhysicModelInterface {
     return multiplier * this.geometry.getMassMultiplier(lhs, rhs) / dist2;
   }
 
-  getLinkForce(lhs: AtomInterface, rhs: AtomInterface, elasticFactor: number): number {
+  getLinkForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number, elasticFactor: number): number {
     return this.WORLD_CONFIG.LINK_FORCE_MULTIPLIER * this.geometry.getMassMultiplier(lhs, rhs) * elasticFactor;
   }
 
