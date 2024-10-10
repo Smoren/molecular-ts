@@ -19,6 +19,11 @@ import { fullCopyObject } from "@/lib/utils/functions";
 import { useFlash } from '@/web/hooks/use-flash';
 import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/types';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
+import {
+  convertTypesConfigForBackwardCompatibility,
+  convertWorldConfigForBackwardCompatibility,
+  convertTypesSymmetricConfigForBackwardCompatibility,
+} from '@/web/utils/backward';
 
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
@@ -122,16 +127,16 @@ export const useConfigStore = defineStore("config", () => {
     flash.turnOn(FLASH_IMPORT_STARTED);
     try {
       if (config.worldConfig !== undefined) {
-        setWorldConfig(config.worldConfig);
+        setWorldConfig(convertWorldConfigForBackwardCompatibility(config.worldConfig));
         console.log('worldConfig upd');
       }
       if (config.typesConfig !== undefined) {
         setTypesConfig(createTransparentTypesConfig(config.typesConfig.FREQUENCIES.length));
+        setTypesConfig(convertTypesConfigForBackwardCompatibility(config.typesConfig));
         console.log('typesConfig upd');
-        setTypesConfig(config.typesConfig);
       }
       if (config.typesSymmetricConfig !== undefined && config.typesSymmetricConfig.GRAVITY_MATRIX_SYMMETRIC !== undefined) {
-        setTypesSymmetricConfig(config.typesSymmetricConfig);
+        setTypesSymmetricConfig(convertTypesSymmetricConfigForBackwardCompatibility(config.typesSymmetricConfig));
         console.log('typesSymmetricConfig upd');
       }
 
