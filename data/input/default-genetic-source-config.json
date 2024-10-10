@@ -63,7 +63,7 @@
       [1, 1, 1],
       [1, 1, 1]
     ],
-    "LINK_FACTOR_DISTANCE_EXTENDED": [
+    "LINK_FACTOR_DISTANCE": [
       [
         [1, 1, 1],
         [1, 1, 0.8],
