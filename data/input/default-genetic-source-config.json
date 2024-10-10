@@ -80,6 +80,23 @@
         [1, 1, 1]
       ]
     ],
+    "LINK_FACTOR_ELASTIC": [
+      [
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
+      ],
+      [
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
+      ],
+      [
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]
+      ]
+    ],
     "FREQUENCIES": [1, 1, 1],
     "COLORS": [
       [250, 20, 20],
@@ -92,6 +109,7 @@
     "GRAVITY_MATRIX_SYMMETRIC": false,
     "LINK_GRAVITY_MATRIX_SYMMETRIC": false,
     "LINK_TYPE_MATRIX_SYMMETRIC": false,
-    "LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC": false
+    "LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC": false,
+    "LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC": false
   }
 }
