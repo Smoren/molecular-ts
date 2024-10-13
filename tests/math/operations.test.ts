@@ -368,7 +368,7 @@ describe.each([
   'Cross Matrices Test',
   (lhs, rhs, separator, expected) => {
     it('', () => {
-      const result = crossMatrices(lhs, rhs, separator);
+      const result = crossMatrices(lhs, rhs, separator, 0);
       expect(result).toEqual(expected);
     });
   },
@@ -464,7 +464,7 @@ describe.each([
   'Cross Tensors Test',
   (lhs, rhs, separator, expected) => {
     it('', () => {
-      const result = crossTensors(lhs, rhs, separator);
+      const result = crossTensors(lhs, rhs, separator, 0);
       expect(result).toEqual(expected);
     });
   },

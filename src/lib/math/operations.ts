@@ -1,21 +1,11 @@
 import { createFilledMatrix, createFilledTensor } from './factories';
 import type { Tensor } from './types';
 
-export const BINARY_OPERATOR = {
-  ADD: (lhs: number, rhs: number) => lhs + rhs,
-  SUB: (lhs: number, rhs: number) => lhs - rhs,
-  MUL: (lhs: number, rhs: number) => lhs * rhs,
-  DIV: (lhs: number, rhs: number) => lhs / rhs,
-};
-
-export const UNARY_OPERATOR = {
-  REV: (x: number) => 1 / x,
-  NEG: (x: number) => -x,
-  ABS: (x: number) => Math.abs(x),
-  LOG: (x: number) => Math.log(x),
-};
-
 export const UNARY_OPERATOR_FACTORY = {
+  REV: () => (x: number) => 1 / x,
+  NEG: () => (x: number) => -x,
+  ABS: () => (x: number) => Math.abs(x),
+  LOG: () => (x: number) => Math.log(x),
   ADD: (value: number) => (x: number) => x + value,
   SUB: (value: number) => (x: number) => x - value,
   MUL: (value: number) => (x: number) => x * value,
@@ -23,6 +13,13 @@ export const UNARY_OPERATOR_FACTORY = {
   MIN: (min: number) => (x: number) => Math.min(x, min),
   MAX: (max: number) => (x: number) => Math.max(x, max),
   MINMAX: (min: number, max: number) => (x: number) => Math.min(Math.max(x, min), max),
+};
+
+export const BINARY_OPERATOR_FACTORY = {
+  ADD: () => (lhs: number, rhs: number) => lhs + rhs,
+  SUB: () => (lhs: number, rhs: number) => lhs - rhs,
+  MUL: () => (lhs: number, rhs: number) => lhs * rhs,
+  DIV: () => (lhs: number, rhs: number) => lhs / rhs,
 };
 
 export function arrayUnaryOperation<T>(input: Array<T>, operator: (item: T) => T): Array<T> {
