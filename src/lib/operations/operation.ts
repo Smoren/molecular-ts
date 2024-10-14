@@ -6,7 +6,7 @@ import type {
   OperationConfig,
   OperationInterface,
   OperationPipeConfig,
-  OperationPipeInterface,
+  OperationPipeInterface, FactoryName,
 } from "./types";
 import { OperationType } from "./types";
 import { getFunctionArgNames, getTensorDimensions } from "../math/helpers";
@@ -25,6 +25,25 @@ export class Operation implements OperationInterface {
 
   constructor(config: OperationConfig) {
     this.config = config;
+    this.initFactoryArgs();
+  }
+
+  get type(): OperationType {
+    return this.config.type;
+  }
+
+  set type(type: OperationType) {
+    this.config.type = type;
+    this.config.factoryName = 'ADD';
+    this.initFactoryArgs();
+  }
+
+  get factoryName(): FactoryName {
+    return this.config.factoryName;
+  }
+
+  set factoryName(name: FactoryName) {
+    this.config.factoryName = name;
     this.initFactoryArgs();
   }
 
@@ -64,6 +83,7 @@ export class Operation implements OperationInterface {
   }
 
   private initFactoryArgs(): void {
+    this.factoryArgs.length = 0;
     getFunctionArgNames(this.getFactory()).forEach((name) => {
       this.factoryArgs.push({ name, value: 0 });
     });

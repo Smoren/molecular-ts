@@ -32,6 +32,10 @@ export type OperationPipeConfig = {
 export interface OperationInterface {
   readonly config: OperationConfig;
   readonly factoryArgs: FactoryArgument[];
+  get type(): OperationType;
+  set type(type: OperationType);
+  get factoryName(): FactoryName;
+  set factoryName(name: FactoryName);
   setFactoryArgValues(values: number[]): OperationInterface;
   run(typesConfig: TypesConfig, leftArgumentValue: ArgumentValue): Tensor<number>;
 }

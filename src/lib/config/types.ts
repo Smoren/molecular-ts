@@ -62,6 +62,8 @@ export function createColors(count: number): Array<ColorVector> {
 
 export function creatDefaultTypesConfig(): TypesConfig {
   return {
+    COLORS: createColors(5),
+    FREQUENCIES: [1, 1, 0.5, 0.5, 1],
     RADIUS: [1, 1, 1, 1, 1],
     GRAVITY: [
       [-1.4, 0.7, 0.1, -4.7, -0.5],
@@ -130,8 +132,6 @@ export function creatDefaultTypesConfig(): TypesConfig {
       ]
     ],
     LINK_FACTOR_ELASTIC: createFilledTensor(5, 5, 5, 1),
-    FREQUENCIES: [1, 1, 0.5, 0.5, 1],
-    COLORS: createColors(5),
     TRANSFORMATION: {},
   };
 }
