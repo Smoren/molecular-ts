@@ -2,6 +2,7 @@
 
 import { useConfigStore } from "@/web/store/config";
 import { useSimulationStore } from "@/web/store/simulation";
+import Flag from "@/web/components/config-editor/components/inputs/flag.vue";
 import ConfigCoordsBounds from "@/web/components/config-editor/components/inputs/config-coords-bounds.vue";
 import ConfigSection from "@/web/components/config-editor/components/containers/config-section.vue";
 import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
@@ -25,6 +26,7 @@ const getActualInitialConfig = () => {
 }
 
 const initialConfig: Ref<InitialConfig> = ref(getActualInitialConfig());
+const syncWithWorldConfigBounds: Ref<boolean> = ref(true);
 
 watch(() => configStore.worldConfig.VIEW_MODE, () => {
   initialConfig.value = getActualInitialConfig();
@@ -39,6 +41,12 @@ const refill = () => {
     refillAtoms!();
   }
 };
+
+const onChange = (values: number[]) => {
+  if (syncWithWorldConfigBounds.value) {
+    configStore.updateWorldConfigBounds(initialConfig.value.MIN_POSITION, initialConfig.value.MAX_POSITION);
+  }
+}
 
 </script>
 
@@ -57,11 +65,15 @@ const refill = () => {
 
       <div>
         <input-header name="Min Position" />
-        <config-coords-bounds name="Min Position" :step="1" :values="initialConfig.MIN_POSITION" />
+        <config-coords-bounds name="Min Position" :step="1" :values="initialConfig.MIN_POSITION" @change="onChange" />
       </div>
       <div>
         <input-header name="Max Position" />
-        <config-coords-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" />
+        <config-coords-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" @change="onChange" />
+      </div>
+
+      <div>
+        <flag title="Sync with world config bounds" v-model="syncWithWorldConfigBounds" />
       </div>
 
       <div v-if="withButtons">

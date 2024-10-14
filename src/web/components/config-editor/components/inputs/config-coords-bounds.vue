@@ -13,6 +13,14 @@ const props = withDefaults(defineProps<{
   titles: () => ['x', 'y', 'z'],
 });
 
+const emit = defineEmits<{
+  change: [values: number[]];
+}>();
+
+const emitOnChange = () => {
+  emit('change', props.values);
+}
+
 const slicedTitles = computed(() => props.titles.slice(0, props.values.length));
 
 </script>
@@ -27,7 +35,14 @@ const slicedTitles = computed(() => props.titles.slice(0, props.values.length));
       </tr>
       <tr>
         <td v-for="(_, index) in values">
-          <input type="number" v-model="values[index]" :step="step" :min="min" :max="max">
+          <input
+            type="number"
+            v-model="values[index]"
+            :step="step"
+            :min="min"
+            :max="max"
+            @input="emitOnChange"
+          >
         </td>
       </tr>
     </table>

@@ -242,6 +242,16 @@ export const useConfigStore = defineStore("config", () => {
     addTypesFromConfig(newTypeConfig);
   }
 
+  const updateWorldConfigBounds = (minBounds: number[], maxBounds: number[]) => {
+    if (worldConfig.value.VIEW_MODE === '3d') {
+      worldConfig.value.CONFIG_3D.BOUNDS.MIN_POSITION = [...minBounds];
+      worldConfig.value.CONFIG_3D.BOUNDS.MAX_POSITION = [...maxBounds];
+    } else {
+      worldConfig.value.CONFIG_2D.BOUNDS.MIN_POSITION = [...minBounds];
+      worldConfig.value.CONFIG_2D.BOUNDS.MAX_POSITION = [...maxBounds];
+    }
+  }
+
   watch(worldConfig, (newConfig: WorldConfig) => {
     setWorldConfigRaw(newConfig);
   }, { deep: true });
@@ -259,6 +269,7 @@ export const useConfigStore = defineStore("config", () => {
     setViewMode,
     setTypesConfig,
     setWorldConfig,
+    updateWorldConfigBounds,
     randomizeTypesConfig,
     setDefaultTypesConfig,
     setRandomTypesConfig,
