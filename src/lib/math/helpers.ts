@@ -36,13 +36,6 @@ export function groupArray<T>(input: T[], groupSizes: number[]): T[][] {
   return result;
 }
 
-export function getFunctionArgNames(func: Function): string[] {
-  const funcString = func.toString();
-  const match = funcString.match(/\(([^)]*)\)/);
-  const result = match ? match[1].split(',').map(arg => arg.trim()) : [];
-  return result.filter((x) => !!x);
-}
-
 export function getTensorDimensions(tensor: Tensor<number>): number {
   let result = 0;
   if (tensor.length === 0) {

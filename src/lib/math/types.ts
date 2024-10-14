@@ -18,6 +18,12 @@ type TensorItem<T> = T | TensorItem<T>[];
  */
 export type Tensor<T> = TensorItem<T>[];
 
+export type Operator = (...args: number[]) => number;
+export type OperatorFactory = {
+  arguments: string[];
+  call: (...args: number[]) => Operator;
+}
+
 /**
  * Interface of vector
  */

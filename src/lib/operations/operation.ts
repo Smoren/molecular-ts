@@ -6,10 +6,11 @@ import type {
   OperationConfig,
   OperationInterface,
   OperationPipeConfig,
-  OperationPipeInterface, FactoryName,
+  OperationPipeInterface,
+  FactoryName,
 } from "./types";
 import { OperationType } from "./types";
-import { getFunctionArgNames, getTensorDimensions } from "../math/helpers";
+import { getTensorDimensions } from "../math/helpers";
 import {
   UNARY_OPERATOR_FACTORY,
   BINARY_OPERATOR_FACTORY,
@@ -17,7 +18,7 @@ import {
   tensorUnaryOperation,
 } from "../math/operations";
 import type { TypesConfig } from "../types/config";
-import type { Tensor } from "../math/types";
+import type { OperatorFactory, Tensor } from "../math/types";
 
 export class Operation implements OperationInterface {
   public readonly config: OperationConfig;
@@ -58,15 +59,15 @@ export class Operation implements OperationInterface {
     const factoryArgValues = this.factoryArgs.map((arg) => arg.value);
 
     if (this.config.type === OperationType.UNARY) {
-      const factory = UNARY_OPERATOR_FACTORY[this.config.factoryName as UnaryFactoryName] as (...args: number[]) => (x: number) => number;
-      const operator = factory(...factoryArgValues);
+      const factory = UNARY_OPERATOR_FACTORY[this.config.factoryName as UnaryFactoryName] as OperatorFactory;
+      const operator = factory.call(...factoryArgValues);
 
-      return tensorUnaryOperation<number>(leftArgumentValue, operator as (x: number) => number);
+      return tensorUnaryOperation<number>(leftArgumentValue, operator);
     }
 
     if (this.config.type === OperationType.BINARY) {
-      const factory = BINARY_OPERATOR_FACTORY[this.config.factoryName as BinaryFactoryName] as (...args: number[]) => (x: number) => number;
-      const operator = factory(...factoryArgValues);
+      const factory = BINARY_OPERATOR_FACTORY[this.config.factoryName as BinaryFactoryName] as OperatorFactory;
+      const operator = factory.call(...factoryArgValues);
 
       const rightArgumentValue = this.config.rightArgument !== undefined
         ? (typesConfig[this.config.rightArgument] as ArgumentValue)
@@ -76,7 +77,7 @@ export class Operation implements OperationInterface {
         throw new Error('Right argument is not defined for binary operation.');
       }
 
-      return tensorBinaryOperation<number>(leftArgumentValue, rightArgumentValue, operator as (x: number, y: number) => number);
+      return tensorBinaryOperation<number>(leftArgumentValue, rightArgumentValue, operator);
     }
 
     throw new Error('Unknown operation type.');
@@ -84,16 +85,16 @@ export class Operation implements OperationInterface {
 
   private initFactoryArgs(): void {
     this.factoryArgs.length = 0;
-    getFunctionArgNames(this.getFactory()).forEach((name) => {
+    this.getFactory().arguments.forEach((name) => {
       this.factoryArgs.push({ name, value: 0 });
     });
   }
 
-  private getFactory(): (...args: number[]) => unknown {
+  private getFactory(): OperatorFactory {
     if (this.config.type === OperationType.UNARY) {
-      return UNARY_OPERATOR_FACTORY[this.config.factoryName as UnaryFactoryName] as (...args: number[]) => unknown;
+      return UNARY_OPERATOR_FACTORY[this.config.factoryName as UnaryFactoryName] as OperatorFactory;
     } else if (this.config.type === OperationType.BINARY) {
-      return BINARY_OPERATOR_FACTORY[this.config.factoryName as BinaryFactoryName] as (...args: number[]) => unknown;
+      return BINARY_OPERATOR_FACTORY[this.config.factoryName as BinaryFactoryName] as OperatorFactory;
     }
     throw new Error('Unknown operation type.');
   }

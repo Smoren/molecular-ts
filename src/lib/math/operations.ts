@@ -1,28 +1,82 @@
 import { createFilledMatrix, createFilledTensor } from './factories';
-import type { Tensor } from './types';
+import type { OperatorFactory, Tensor } from './types';
 
-export const UNARY_OPERATOR_FACTORY = {
-  ZEROS: () => () => 0,
-  CONST: (value: number) => () => value,
-  REV: () => (x: number) => 1 / x,
-  NEG: () => (x: number) => -x,
-  ABS: () => (x: number) => Math.abs(x),
-  LOG: () => (x: number) => Math.log(x),
-  ADD: (value: number) => (x: number) => x + value,
-  SUB: (value: number) => (x: number) => x - value,
-  MUL: (value: number) => (x: number) => x * value,
-  DIV: (value: number) => (x: number) => x / value,
-  MIN: (min: number) => (x: number) => Math.min(x, min),
-  MAX: (max: number) => (x: number) => Math.max(x, max),
-  MINMAX: (min: number, max: number) => (x: number) => Math.min(Math.max(x, min), max),
+export const UNARY_OPERATOR_FACTORY: Record<string, OperatorFactory> = {
+  ZEROS: {
+    arguments: [],
+    call: () => () => 0,
+  },
+  CONST: {
+    arguments: ['value'],
+    call: (value: number) => () => value,
+  },
+  REV: {
+    arguments: [],
+    call: () => (x: number) => 1 / x,
+  },
+  NEG: {
+    arguments: [],
+    call: () => (x: number) => -x,
+  },
+  ABS: {
+    arguments: [],
+    call: () => (x: number) => Math.abs(x),
+  },
+  LOG: {
+    arguments: [],
+    call: () => (x: number) => Math.log(x),
+  },
+  ADD: {
+    arguments: ['value'],
+    call: (value: number) => (x: number) => x + value,
+  },
+  SUB: {
+    arguments: ['value'],
+    call: (value: number) => (x: number) => x - value,
+  },
+  MUL: {
+    arguments: ['value'],
+    call: (value: number) => (x: number) => x * value,
+  },
+  DIV: {
+    arguments: ['value'],
+    call: (value: number) => (x: number) => x / value,
+  },
+  MIN: {
+    arguments: ['value'],
+    call: (value: number) => (x: number) => Math.min(x, value),
+  },
+  MAX: {
+    arguments: ['value'],
+    call: (value: number) => (x: number) => Math.max(x, value),
+  },
+  MINMAX: {
+    arguments: ['min', 'max'],
+    call: (min: number, max: number) => (x: number) => Math.min(Math.max(x, min), max),
+  },
 };
 
-export const BINARY_OPERATOR_FACTORY = {
-  ADD: () => (lhs: number, rhs: number) => lhs + rhs,
-  SUB: () => (lhs: number, rhs: number) => lhs - rhs,
-  MUL: () => (lhs: number, rhs: number) => lhs * rhs,
-  DIV: () => (lhs: number, rhs: number) => lhs / rhs,
-  REPLACE_FROM: () => (lhs: number, rhs: number) => rhs,
+export const BINARY_OPERATOR_FACTORY: Record<string, OperatorFactory> = {
+  ADD: {
+    arguments: [],
+    call: () => (lhs: number, rhs: number) => lhs + rhs,
+  },
+  SUB: {
+    arguments: [],
+    call: () => (lhs: number, rhs: number) => lhs - rhs,
+  },
+  MUL: {
+    arguments: [],
+    call: () => (lhs: number, rhs: number) => lhs * rhs,
+  },
+  DIV: {
+    arguments: [],
+    call: () => (lhs: number, rhs: number) => lhs / rhs,
+  },
+  REPLACE_FROM: {
+    arguments: [],
+    call: () => (lhs: number, rhs: number) => rhs,
+  },
 };
 
 export function arrayUnaryOperation<T>(input: Array<T>, operator: (item: T) => T): Array<T> {
