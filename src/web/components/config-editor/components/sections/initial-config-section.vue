@@ -26,7 +26,7 @@ const getActualInitialConfig = () => {
 }
 
 const initialConfig: Ref<InitialConfig> = ref(getActualInitialConfig());
-const syncWithWorldConfigBounds: Ref<boolean> = ref(true);
+const syncWithWorldConfigBounds: Ref<boolean> = ref(false);
 
 watch(() => configStore.worldConfig.VIEW_MODE, () => {
   initialConfig.value = getActualInitialConfig();
@@ -73,7 +73,7 @@ const onChange = (values: number[]) => {
       </div>
 
       <div>
-        <flag title="Sync with world config bounds" v-model="syncWithWorldConfigBounds" />
+        <flag title="Sync with world config bounds" v-model="syncWithWorldConfigBounds" @change="onChange" />
       </div>
 
       <div v-if="withButtons">
