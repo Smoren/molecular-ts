@@ -3,11 +3,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 const logo = new URL('./assets/logo.png', import.meta.url).href
 
-import { provide, ref } from 'vue';
-import { useSwitch } from "@/web/hooks/use-switch";
-import { useRightBar } from "@/web/components/config-editor/hooks/use-right-bar";
+import { ref } from 'vue';
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
-import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG, PROVIDED_TOGGLE_SUMMARY } from '@/web/components/config-editor/constants';
 import Navbar from "@/web/components/config-editor/components/containers/navbar.vue";
 import Sidebar from "@/web/components/config-editor/components/containers/sidebar.vue";
 import InitialConfigSection from "@/web/components/config-editor/components/sections/initial-config-section.vue";
@@ -18,35 +15,29 @@ import WorldConfigSection from '@/web/components/config-editor/components/sectio
 import SummarySection from "@/web/components/config-editor/components/sections/summary-section.vue";
 import ExchangeSection from "@/web/components/config-editor/components/sections/exchange-section.vue";
 import LinkSection from "@/web/components/config-editor/components/sections/link-section.vue";
-import { useConfigStore } from "@/web/store/config";
+import { useLeftBarStore } from '@/web/store/left-bar';
+import { useRightBarStore } from '@/web/store/right-bar';
 
-const leftBarVisible = useSwitch(false);
+const leftBarStore = useLeftBarStore();
+const rightBarStore = useRightBarStore();
+
 const activeAccordionItem = ref('collapse-world');
-const configStore = useConfigStore();
-
-const {
-  rightBarVisible,
-  rightBarMode,
-  rightBarModeMap,
-  toggleRightBar,
-} = useRightBar();
-
-provide<() => boolean>(
-    PROVIDED_TOGGLE_RANDOMIZE_CONFIG,
-    () => toggleRightBar(rightBarModeMap.RANDOMIZE, () => configStore.syncRandomTypesCount()),
-);
-provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarModeMap.SUMMARY));
 
 </script>
 
 <template>
-  <navbar :on-burger-click="leftBarVisible.on">
+  <navbar :on-burger-click="leftBarStore.open">
     <template #title>
       MolecuLarva
       <img :src="logo" alt="MolecuLarva" style="height: 30px; margin-left: 10px; margin-right: -10px">
     </template>
     <template #body>
-      <sidebar :visible="leftBarVisible" position="left" style="overflow: hidden; resize: horizontal;">
+      <sidebar
+        :visible="leftBarStore.isOpened"
+        :close-action="leftBarStore.close"
+        position="left"
+        style="overflow: hidden; resize: horizontal;"
+      >
         <template #title>
           Config
         </template>
@@ -70,11 +61,15 @@ provide<() => boolean>(PROVIDED_TOGGLE_SUMMARY, () => toggleRightBar(rightBarMod
           <link-section />
         </template>
       </sidebar>
-      <sidebar :visible="rightBarVisible" position="right">
+      <sidebar
+        :visible="rightBarStore.isOpened"
+        :close-action="rightBarStore.close"
+        position="right"
+      >
         <template #body>
-          <div v-if="rightBarVisible.state.value">
-            <randomize-config-section v-if="rightBarMode === rightBarModeMap.RANDOMIZE" />
-            <summary-section v-if="rightBarMode === rightBarModeMap.SUMMARY" />
+          <div v-if="rightBarStore.isOpened">
+            <randomize-config-section v-if="rightBarStore.isMode(rightBarStore.modes.RANDOMIZE)" />
+            <summary-section v-if="rightBarStore.isMode(rightBarStore.modes.SUMMARY)" />
           </div>
         </template>
       </sidebar>

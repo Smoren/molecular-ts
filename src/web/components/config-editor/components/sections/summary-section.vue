@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, type ComputedRef, ref, type Ref } from 'vue';
+import { ref, type Ref } from 'vue';
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
 import { useSimulationStore } from '@/web/store/simulation';
 import type { TimeSeriesConfig } from "@/web/components/config-editor/components/widgets/chart.vue";

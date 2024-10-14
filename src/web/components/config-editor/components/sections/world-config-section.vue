@@ -1,17 +1,18 @@
 <script setup lang="ts">
 
-import { inject, ref, toRefs, watch } from "vue";
+import { ref, toRefs, watch } from "vue";
 import { useConfigStore } from '@/web/store/config';
 import { useSimulationStore } from "@/web/store/simulation";
 import { usePhysicsStore } from '@/web/store/physics';
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
 import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
-import { PROVIDED_TOGGLE_SUMMARY } from "@/web/components/config-editor/constants";
+import { useRightBarStore } from '@/web/store/right-bar';
 
 const physicsStore = usePhysicsStore();
 const { physicModelName } = toRefs(physicsStore);
 
 const configStore = useConfigStore();
+const rightBarStore = useRightBarStore();
 const worldConfig = configStore.worldConfig;
 
 const simulation = useSimulationStore();
@@ -32,8 +33,6 @@ const refill = () => {
     refillAtoms!();
   }
 };
-
-const toggleSummary = inject<() => boolean>(PROVIDED_TOGGLE_SUMMARY);
 
 const pausedTitle = ref('Pause');
 const updatePausedTitle = () => {
@@ -63,7 +62,7 @@ watch(() => configStore.worldConfig.VIEW_MODE, () => {
         <button class="btn btn-outline-secondary" @click="refill">
           Refill
         </button>
-        <button class="btn btn-outline-secondary" @click="toggleSummary">
+        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.SUMMARY)">
           Summary
         </button>
       </div>

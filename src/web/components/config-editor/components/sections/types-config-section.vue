@@ -1,19 +1,19 @@
 <script setup lang="ts">
 
-import { computed, inject } from "vue";
+import { computed } from "vue";
 import { useConfigStore } from '@/web/store/config';
 import { useSimulationStore } from "@/web/store/simulation";
 import { clearInactiveParams, creatDefaultTypesConfig } from "@/lib/config/types";
-import { PROVIDED_TOGGLE_RANDOMIZE_CONFIG } from "@/web/components/config-editor/constants";
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
 import ConfigMatrix from '@/web/components/config-editor/components/inputs/config-matrix.vue';
 import ConfigList from '@/web/components/config-editor/components/inputs/config-list.vue';
 import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
-import Flag from "@/web/components/config-editor/components/inputs/flag.vue";
 import ConfigTensor from "@/web/components/config-editor/components/inputs/config-tensor.vue";
 import TransformationConfig from "@/web/components/config-editor/components/widgets/transformation-config.vue";
+import { useRightBarStore } from '@/web/store/right-bar';
 
 const configStore = useConfigStore();
+const rightBarStore = useRightBarStore();
 const typesConfig = configStore.typesConfig;
 const typesSymmetricConfig = configStore.typesSymmetricConfig;
 
@@ -46,7 +46,6 @@ const setDefaultTypesConfig = () => {
   }
 };
 
-const toggleRandomizeConfig = inject<() => boolean>(PROVIDED_TOGGLE_RANDOMIZE_CONFIG);
 const refill = () => {
   if (confirm('Are you sure?')) {
     refillAtoms!();
@@ -76,7 +75,7 @@ const linkElasticFactorConfigDescription = computed(() => {
   <config-section>
     <template #body>
       <div class="btn-group" role="group">
-        <button class="btn btn-outline-secondary" @click="toggleRandomizeConfig">Randomize</button>
+        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.RANDOMIZE)">Randomize</button>
         <button class="btn btn-outline-secondary" @click="clean">Clean</button>
         <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button>
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
