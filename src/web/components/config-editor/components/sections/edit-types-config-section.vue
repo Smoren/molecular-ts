@@ -98,7 +98,7 @@ watch(() => inputType.value, () => {
     <template #body>
       <br />
       <div>
-        <input-header name="Input config item" />
+        <input-header name="Config item to edit" />
         <select v-model="inputType" style="width: 100%;">
           <option v-for="(item, index) in typesAvailable" :key="index" :value="item.alias">
             {{ item.name }}
