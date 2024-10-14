@@ -17,6 +17,7 @@ import ExchangeSection from "@/web/components/config-editor/components/sections/
 import LinkSection from "@/web/components/config-editor/components/sections/link-section.vue";
 import { useLeftBarStore } from '@/web/store/left-bar';
 import { useRightBarStore } from '@/web/store/right-bar';
+import EditTypesConfigSection from '@/web/components/config-editor/components/sections/edit-types-config-section.vue';
 
 const leftBarStore = useLeftBarStore();
 const rightBarStore = useRightBarStore();
@@ -70,6 +71,7 @@ const activeAccordionItem = ref('collapse-world');
           <div v-if="rightBarStore.isOpened">
             <randomize-config-section v-if="rightBarStore.isMode(rightBarStore.modes.RANDOMIZE)" />
             <summary-section v-if="rightBarStore.isMode(rightBarStore.modes.SUMMARY)" />
+            <edit-types-config-section v-if="rightBarStore.isMode(rightBarStore.modes.EDIT_TYPES)" />
           </div>
         </template>
       </sidebar>

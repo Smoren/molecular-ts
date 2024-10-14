@@ -15,8 +15,9 @@ function createModesMap(input: Array<[BarModeAlias, string]>): BarModesMap {
 
 export const useRightBarStore = defineStore('rightBar', () => {
   const modesMap = createModesMap([
-    ['RANDOMIZE', 'Рандомизация'],
-    ['SUMMARY', 'Саммари'],
+    ['RANDOMIZE', 'Randomize types config'],
+    ['SUMMARY', 'Summary'],
+    ['EDIT_TYPES', 'Edit types config'],
   ]);
 
   const historyStore = useNavHistoryStore();

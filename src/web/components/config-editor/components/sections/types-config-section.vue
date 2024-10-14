@@ -76,8 +76,9 @@ const linkElasticFactorConfigDescription = computed(() => {
     <template #body>
       <div class="btn-group" role="group">
         <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.RANDOMIZE)">Randomize</button>
+        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.EDIT_TYPES)">Edit</button>
         <button class="btn btn-outline-secondary" @click="clean">Clean</button>
-        <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button>
+        <!-- <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button> -->
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
         <button class="btn btn-outline-secondary" @click="configStore.appendType">Add type</button>
       </div>
