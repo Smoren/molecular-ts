@@ -1,20 +1,30 @@
 <script setup lang="ts">
 
-import { useConfigStore } from "@/web/store/config";
-import ConfigSection from "@/web/components/config-editor/components/containers/config-section.vue";
 import { computed, ref, type Ref, watch } from 'vue';
-import type { TypesConfig } from '@/lib/types/config';
-import InputHeader from '@/web/components/config-editor/components/base/input-header.vue';
-import { Operation, OperationPipe } from '@/lib/operations/operation';
-import { OperationType } from '@/lib/operations/types';
-import { BINARY_OPERATOR_FACTORY, UNARY_OPERATOR_FACTORY } from '@/lib/math/operations';
-import { getTensorDimensions } from '@/lib/math/helpers';
 import type { Tensor } from '@/lib/math/types';
+import type { TypesConfig } from '@/lib/types/config';
+import { OperationType } from '@/lib/operations/types';
+import { Operation, OperationPipe } from '@/lib/operations/operation';
+import { useConfigStore } from "@/web/store/config";
+import { getTensorDimensions } from '@/lib/math/helpers';
+import { BINARY_OPERATOR_FACTORY, UNARY_OPERATOR_FACTORY } from '@/lib/math/operations';
+import ConfigSection from "@/web/components/config-editor/components/containers/config-section.vue";
+import InputHeader from '@/web/components/config-editor/components/base/input-header.vue';
+import Dropdown from "@/web/components/config-editor/components/inputs/dropdown.vue";
+import RadioGroup from "@/web/components/config-editor/components/inputs/radio-group.vue";
 
 type TypesConfigKey = keyof TypesConfig;
 type TypesConfigItem = {
   name: string;
   alias: TypesConfigKey;
+}
+type OperationItem = {
+  name: string;
+  alias: string;
+}
+type OperationTypeItem = {
+  name: string;
+  alias: OperationType;
 }
 
 const configStore = useConfigStore();
@@ -64,15 +74,24 @@ const applyOperation = () => {
   (configStore.typesConfig[inputType.value] as Tensor<number>) = pipe.value.run();
 }
 
-const getOperationFactories = (type: OperationType) => {
+const getOperationFactories = (type: OperationType): OperationItem[] => {
   if (type === OperationType.UNARY) {
-    return UNARY_OPERATOR_FACTORY;
+    return Object.keys(UNARY_OPERATOR_FACTORY).map((key) => ({ name: key, alias: key }));
   } else if (type === OperationType.BINARY) {
-    return BINARY_OPERATOR_FACTORY;
+    return Object.keys(BINARY_OPERATOR_FACTORY).map((key) => ({ name: key, alias: key }));
   }
+  throw new Error('Unknown operation type.');
 };
 
-const onChangeOperationType = (operation: Operation) => {
+const getOperationTypes = (): OperationTypeItem[] => {
+  return [
+    { name: 'UNARY', alias: OperationType.UNARY },
+    { name: 'BINARY', alias: OperationType.BINARY },
+  ];
+}
+
+const onChangeOperationType = (operation: Operation): void => {
+  console.log('operation', operation);
   if (operation.type === OperationType.UNARY) {
     operation.config.rightArgument = undefined;
   } else {
@@ -99,32 +118,34 @@ watch(() => inputType.value, () => {
       <br />
       <div>
         <input-header name="Config item to edit" />
-        <select v-model="inputType" style="width: 100%;">
-          <option v-for="(item, index) in typesAvailable" :key="index" :value="item.alias">
-            {{ item.name }}
-          </option>
-        </select>
+        <dropdown
+          v-model="inputType"
+          :options="typesAvailable"
+          value-key="alias"
+          title-key="name"
+        />
       </div>
-
       <hr v-if="pipe.operations.length" />
       <div v-for="(operation, index) in pipe.operations" :key="index">
         <input-header :name="`Operation ${index + 1}`" />
         <br />
         <div>
           <div style="display: inline-block; width: 50%">
-            <label>
-              <input type="radio" v-model="operation.type" :value="OperationType.UNARY" @change="onChangeOperationType(operation as Operation)" /> UNARY
-            </label>
-            &nbsp;
-            <label>
-              <input type="radio" v-model="operation.type" :value="OperationType.BINARY" @change="onChangeOperationType(operation as Operation)" /> BINARY
-            </label>
+            <radio-group
+              :options="getOperationTypes()"
+              v-model="operation.type"
+              @change="onChangeOperationType(operation as Operation)"
+              value-key="alias"
+              title-key="name"
+            />
           </div>
-          <select v-model="operation.factoryName" style="width: 50%;">
-            <option v-for="(_, operationName) in getOperationFactories(operation.config.type)" :key="index" :value="operationName">
-              {{ operationName }}
-            </option>
-          </select>
+          <dropdown
+            v-model="operation.factoryName"
+            :options="getOperationFactories(operation.type)"
+            value-key="alias"
+            title-key="name"
+            width="50%"
+          />
           <br /><br />
         </div>
         <div>
@@ -132,11 +153,12 @@ watch(() => inputType.value, () => {
             <tr v-if="operation.config.type === OperationType.BINARY">
               <td>Right argument</td>
               <td>
-                <select v-model="operation.config.rightArgument" style="width: 100%;">
-                  <option v-for="(item, index) in getItemsAvailable(inputType)" :key="index" :value="item.alias">
-                    {{ item.name }}
-                  </option>
-                </select>
+                <dropdown
+                  v-model="operation.config.rightArgument"
+                  :options="getItemsAvailable(inputType)"
+                  value-key="alias"
+                  title-key="name"
+                />
               </td>
             </tr>
             <tr v-for="(arg, index) in operation.factoryArgs" :key="index">
@@ -149,7 +171,6 @@ watch(() => inputType.value, () => {
         </div>
         <hr />
       </div>
-
       <div>
         <div class="btn-group" role="group">
           <button class="btn btn-outline-secondary" @click="addOperation">
