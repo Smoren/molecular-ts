@@ -9,7 +9,7 @@ import type {
   OperationPipeInterface,
 } from "./types";
 import { OperationType } from "./types";
-import { getFunctionArgNames } from "../math/helpers";
+import { getFunctionArgNames, getTensorDimensions } from "../math/helpers";
 import {
   UNARY_OPERATOR_FACTORY,
   BINARY_OPERATOR_FACTORY,
@@ -82,9 +82,15 @@ export class Operation implements OperationInterface {
 export class OperationPipe implements OperationPipeInterface {
   readonly config: OperationPipeConfig;
   readonly operations: OperationInterface[] = [];
+  private readonly typesConfig: TypesConfig;
 
-  constructor(config: OperationPipeConfig) {
+  constructor(config: OperationPipeConfig, typesConfig: TypesConfig) {
     this.config = config;
+    this.typesConfig = typesConfig;
+  }
+
+  get dimensions(): number {
+    return getTensorDimensions(this.typesConfig[this.config.inputArgument] as Tensor<number>);
   }
 
   push(operation: OperationInterface): void {
@@ -95,11 +101,11 @@ export class OperationPipe implements OperationPipeInterface {
     this.operations.pop();
   }
 
-  run(typesConfig: TypesConfig): Tensor<number> {
-    let current = typesConfig[this.config.inputArgument] as Tensor<number>;
+  run(): Tensor<number> {
+    let current = this.typesConfig[this.config.inputArgument] as Tensor<number>;
 
     this.operations.forEach((operation) => {
-      current = operation.run(typesConfig, current);
+      current = operation.run(this.typesConfig, current);
     });
 
     return current;

@@ -1,3 +1,5 @@
+import type { Tensor } from './types';
+
 let EPSILON = 0.0000001;
 
 export function changeEpsilon(value: number): void {
@@ -38,4 +40,19 @@ export function getFunctionArgNames(func: Function): string[] {
   const funcString = func.toString();
   const match = funcString.match(/\(([^)]*)\)/);
   return match ? match[1].split(',').map(arg => arg.trim()) : [];
+}
+
+export function getTensorDimensions(tensor: Tensor<number>): number {
+  let result = 0;
+  if (tensor.length === 0) {
+    return 0;
+  }
+  while (true) {
+    if (Array.isArray(tensor[0])) {
+      result++;
+      tensor = tensor[0];
+    } else {
+      return result;
+    }
+  }
 }

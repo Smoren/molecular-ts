@@ -1,6 +1,6 @@
-import type { UNARY_OPERATOR_FACTORY, BINARY_OPERATOR_FACTORY } from "@/lib/math/operations";
-import type { TypesConfig } from "@/lib/types/config";
-import type { Tensor } from "@/lib/math/types";
+import type { UNARY_OPERATOR_FACTORY, BINARY_OPERATOR_FACTORY } from "../math/operations";
+import type { TypesConfig } from "../types/config";
+import type { Tensor } from "../math/types";
 
 export enum OperationType {
   UNARY = 1,
@@ -21,7 +21,6 @@ export type ArgumentValue = Tensor<number>;
 
 export type OperationConfig = {
   type: OperationType;
-  dimensions: number;
   factoryName: FactoryName;
   rightArgument?: ArgumentName;
 }
@@ -39,8 +38,9 @@ export interface OperationInterface {
 
 export interface OperationPipeInterface {
   readonly config: OperationPipeConfig;
+  readonly dimensions: number;
   readonly operations: OperationInterface[];
-  run(typesConfig: TypesConfig): Tensor<number>;
+  run(): Tensor<number>;
   push(operation: OperationInterface): void;
   pop(): void;
 }

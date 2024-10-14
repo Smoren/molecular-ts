@@ -12,15 +12,13 @@ describe.each([
   'Operations Pipe Test',
   (typesConfig, inputArgumentName, operations, expected) => {
     it('', () => {
-      const pipe = new OperationPipe({
-        inputArgument: inputArgumentName,
-      });
+      const pipe = new OperationPipe({ inputArgument: inputArgumentName }, typesConfig);
 
       for (const operation of operations) {
         pipe.push(operation);
       }
 
-      const actual = pipe.run(typesConfig);
+      const actual = pipe.run();
       expect(actual).toEqual(expected);
     });
   },
@@ -37,7 +35,6 @@ function dataProviderForOperationsPipe(): Array<[TypesConfig, ArgumentName, Oper
       [
         new Operation({
           type: OperationType.UNARY,
-          dimensions: 1,
           factoryName: 'ADD',
         }).setFactoryArgValues([1]),
       ],
@@ -52,12 +49,10 @@ function dataProviderForOperationsPipe(): Array<[TypesConfig, ArgumentName, Oper
       [
         new Operation({
           type: OperationType.UNARY,
-          dimensions: 1,
           factoryName: 'MUL',
         }).setFactoryArgValues([2]),
         new Operation({
           type: OperationType.UNARY,
-          dimensions: 1,
           factoryName: 'MINMAX',
         }).setFactoryArgValues([4, 6]),
       ],
@@ -76,7 +71,6 @@ function dataProviderForOperationsPipe(): Array<[TypesConfig, ArgumentName, Oper
       [
         new Operation({
           type: OperationType.UNARY,
-          dimensions: 2,
           factoryName: 'SUB',
         }).setFactoryArgValues([1]),
       ],
@@ -99,12 +93,10 @@ function dataProviderForOperationsPipe(): Array<[TypesConfig, ArgumentName, Oper
       [
         new Operation({
           type: OperationType.UNARY,
-          dimensions: 2,
           factoryName: 'SUB',
         }).setFactoryArgValues([1]),
         new Operation({
           type: OperationType.UNARY,
-          dimensions: 2,
           factoryName: 'MINMAX',
         }).setFactoryArgValues([1, 7]),
       ],
@@ -132,7 +124,6 @@ function dataProviderForOperationsPipe(): Array<[TypesConfig, ArgumentName, Oper
       [
         new Operation({
           type: OperationType.BINARY,
-          dimensions: 2,
           factoryName: 'ADD',
           rightArgument: 'LINK_GRAVITY',
         }).setFactoryArgValues([1]),
@@ -161,13 +152,11 @@ function dataProviderForOperationsPipe(): Array<[TypesConfig, ArgumentName, Oper
       [
         new Operation({
           type: OperationType.BINARY,
-          dimensions: 2,
           factoryName: 'ADD',
           rightArgument: 'LINK_GRAVITY',
         }).setFactoryArgValues([1]),
         new Operation({
           type: OperationType.UNARY,
-          dimensions: 2,
           factoryName: 'MINMAX',
         }).setFactoryArgValues([3, 9]),
       ],
