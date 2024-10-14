@@ -8,6 +8,8 @@ import InputHeader from '@/web/components/config-editor/components/base/input-he
 import { Operation, OperationPipe } from '@/lib/operations/operation';
 import { OperationType } from '@/lib/operations/types';
 import { BINARY_OPERATOR_FACTORY, UNARY_OPERATOR_FACTORY } from '@/lib/math/operations';
+import { getTensorDimensions } from '@/lib/math/helpers';
+import type { Tensor } from '@/lib/math/types';
 
 type TypesConfigKey = keyof TypesConfig;
 type TypesConfigItem = {
@@ -21,11 +23,18 @@ const formatTypeName = (key: string): string => {
   return key.toLowerCase().split('_').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 };
 
-const getTypesAvailable = (): TypesConfigItem[] => {
+const getItemsAvailable = (item?: keyof TypesConfig): TypesConfigItem[] => {
   const excludeKeys = ['COLORS', 'TRANSFORMATION'];
-  return Object.keys(configStore.typesConfig)
+  const result = Object.keys(configStore.typesConfig)
     .filter((key) => !excludeKeys.includes(key))
     .map((key) => ({ name: formatTypeName(key), alias: key })) as TypesConfigItem[];
+
+  if (item === undefined) {
+    return result;
+  }
+
+  const itemDimensionsCount = getTensorDimensions(configStore.typesConfig[item] as Tensor<number>);
+  return result.filter((x) => getTensorDimensions(configStore.typesConfig[x.alias] as Tensor<number>) === itemDimensionsCount);
 };
 
 const createOperationPipe = (): OperationPipe => {
@@ -48,6 +57,13 @@ const removeOperation = () => {
   pipe.value.pop();
 }
 
+const applyOperation = () => {
+  if (!confirm('Are you sure?')) {
+    return;
+  }
+  (configStore.typesConfig[inputType.value] as Tensor<number>) = pipe.value.run();
+}
+
 const getOperationFactories = (type: OperationType) => {
   if (type === OperationType.UNARY) {
     return UNARY_OPERATOR_FACTORY;
@@ -56,7 +72,15 @@ const getOperationFactories = (type: OperationType) => {
   }
 };
 
-const typesAvailable = computed(() => getTypesAvailable());
+const onChangeOperationType = (operation: Operation) => {
+  if (operation.type === OperationType.UNARY) {
+    operation.config.rightArgument = undefined;
+  } else {
+    operation.config.rightArgument = inputType.value;
+  }
+};
+
+const typesAvailable = computed(() => getItemsAvailable());
 const inputType: Ref<keyof TypesConfig> = ref(typesAvailable.value[0].alias as keyof TypesConfig);
 const pipe = ref(createOperationPipe());
 
@@ -72,6 +96,7 @@ watch(() => inputType.value, () => {
       Edit types config
     </template>
     <template #body>
+      <br />
       <div>
         <input-header name="Input config item" />
         <select v-model="inputType" style="width: 100%;">
@@ -88,11 +113,11 @@ watch(() => inputType.value, () => {
         <div>
           <div style="display: inline-block; width: 50%">
             <label>
-              <input type="radio" v-model="operation.type" :value="OperationType.UNARY" /> UNARY
+              <input type="radio" v-model="operation.type" :value="OperationType.UNARY" @change="onChangeOperationType(operation as Operation)" /> UNARY
             </label>
             &nbsp;
             <label>
-              <input type="radio" v-model="operation.type" :value="OperationType.BINARY" /> BINARY
+              <input type="radio" v-model="operation.type" :value="OperationType.BINARY" @change="onChangeOperationType(operation as Operation)" /> BINARY
             </label>
           </div>
           <select v-model="operation.factoryName" style="width: 50%;">
@@ -108,7 +133,7 @@ watch(() => inputType.value, () => {
               <td>Right argument</td>
               <td>
                 <select v-model="operation.config.rightArgument" style="width: 100%;">
-                  <option v-for="(item, index) in typesAvailable" :key="index" :value="item.alias">
+                  <option v-for="(item, index) in getItemsAvailable(inputType)" :key="index" :value="item.alias">
                     {{ item.name }}
                   </option>
                 </select>
@@ -128,10 +153,13 @@ watch(() => inputType.value, () => {
       <div>
         <div class="btn-group" role="group">
           <button class="btn btn-outline-secondary" @click="addOperation">
-            Add operation
+            Append
           </button>
           <button class="btn btn-outline-secondary" @click="removeOperation">
-            Remove operation
+            Remove
+          </button>
+          <button class="btn btn-outline-primary" @click="applyOperation">
+            Apply
           </button>
         </div>
       </div>

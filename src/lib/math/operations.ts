@@ -2,6 +2,7 @@ import { createFilledMatrix, createFilledTensor } from './factories';
 import type { Tensor } from './types';
 
 export const UNARY_OPERATOR_FACTORY = {
+  ZEROS: () => () => 0,
   REV: () => (x: number) => 1 / x,
   NEG: () => (x: number) => -x,
   ABS: () => (x: number) => Math.abs(x),
@@ -20,6 +21,7 @@ export const BINARY_OPERATOR_FACTORY = {
   SUB: () => (lhs: number, rhs: number) => lhs - rhs,
   MUL: () => (lhs: number, rhs: number) => lhs * rhs,
   DIV: () => (lhs: number, rhs: number) => lhs / rhs,
+  REPLACE: () => (lhs: number, rhs: number) => rhs,
 };
 
 export function arrayUnaryOperation<T>(input: Array<T>, operator: (item: T) => T): Array<T> {
