@@ -15,7 +15,7 @@ import {
   createTransparentTypesConfig,
   removeIndexFromTypesConfig,
 } from "@/lib/config/types";
-import { fullCopyObject } from "@/lib/utils/functions";
+import { fullCopyObject, getViewModeConfig } from "@/lib/utils/functions";
 import { useFlash } from '@/web/hooks/use-flash';
 import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/types';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
@@ -44,6 +44,12 @@ export const useConfigStore = defineStore("config", () => {
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
     LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
   });
+
+  const syncConfigBounds = ref(true);
+
+  const setSyncConfigBounds = (value: boolean) => {
+    syncConfigBounds.value = value;
+  }
 
   const getConfigValues = () => {
     return {
@@ -242,14 +248,16 @@ export const useConfigStore = defineStore("config", () => {
     addTypesFromConfig(newTypeConfig);
   }
 
-  const updateWorldConfigBounds = (minBounds: number[], maxBounds: number[]) => {
-    if (worldConfig.value.VIEW_MODE === '3d') {
-      worldConfig.value.CONFIG_3D.BOUNDS.MIN_POSITION = [...minBounds];
-      worldConfig.value.CONFIG_3D.BOUNDS.MAX_POSITION = [...maxBounds];
-    } else {
-      worldConfig.value.CONFIG_2D.BOUNDS.MIN_POSITION = [...minBounds];
-      worldConfig.value.CONFIG_2D.BOUNDS.MAX_POSITION = [...maxBounds];
+  const handleSyncWorldConfigBounds = () => {
+    if (!syncConfigBounds.value) {
+        return;
     }
+
+    const currentConfig = getViewModeConfig(worldConfig.value);
+    const initialConfig = currentConfig.INITIAL;
+
+    currentConfig.BOUNDS.MIN_POSITION = [...initialConfig.MIN_POSITION];
+    currentConfig.BOUNDS.MAX_POSITION = [...initialConfig.MAX_POSITION];
   }
 
   watch(worldConfig, (newConfig: WorldConfig) => {
@@ -265,11 +273,13 @@ export const useConfigStore = defineStore("config", () => {
     typesConfig,
     randomTypesConfig,
     typesSymmetricConfig,
+    syncConfigBounds,
+    setSyncConfigBounds,
     getConfigValues,
     setViewMode,
     setTypesConfig,
     setWorldConfig,
-    updateWorldConfigBounds,
+    handleSyncWorldConfigBounds,
     randomizeTypesConfig,
     setDefaultTypesConfig,
     setRandomTypesConfig,

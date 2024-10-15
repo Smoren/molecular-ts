@@ -36,18 +36,19 @@ watch(() => configStore.worldConfig, () => {
   initialConfig.value = getActualInitialConfig();
 }, { deep: true });
 
+watch(() => syncWithWorldConfigBounds.value, () => {
+  configStore.setSyncConfigBounds(syncWithWorldConfigBounds.value);
+});
+
+watch(() => configStore.syncConfigBounds, () => {
+  syncWithWorldConfigBounds.value = configStore.syncConfigBounds;
+});
+
 const refill = () => {
   if (confirm('Are you sure?')) {
-    handleSyncBounds();
     refillAtoms!();
   }
 };
-
-const handleSyncBounds = () => {
-  if (syncWithWorldConfigBounds.value) {
-    configStore.updateWorldConfigBounds(initialConfig.value.MIN_POSITION, initialConfig.value.MAX_POSITION);
-  }
-}
 
 </script>
 
@@ -73,10 +74,11 @@ const handleSyncBounds = () => {
         <config-coords-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" />
       </div>
 
+      <div>
+        <flag title="Sync with world config bounds" v-model="syncWithWorldConfigBounds" />
+      </div>
+
       <div v-if="withButtons">
-        <div>
-          <flag title="Sync with world config bounds" v-model="syncWithWorldConfigBounds" />
-        </div>
         <br />
         <div class="btn-group" role="group">
           <button class="btn btn-outline-secondary" @click="refill">

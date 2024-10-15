@@ -85,6 +85,7 @@ export const useSimulationStore = defineStore("simulation", () => {
   }
 
   const refillAtoms = (globally: boolean = false) => {
+    configStore.handleSyncWorldConfigBounds();
     if (globally) {
       simulation2d?.refill();
       simulation3d?.refill();
