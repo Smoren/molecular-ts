@@ -5,7 +5,7 @@ import ConfigSection from '@/web/components/config-editor/components/containers/
 import { useSimulationStore } from '@/web/store/simulation';
 import type { TimeSeriesConfig } from "@/web/components/config-editor/components/widgets/chart.vue";
 import Chart from "@/web/components/config-editor/components/widgets/chart.vue";
-import Flag from '@/web/components/config-editor/inputs/flag.vue';
+import Flag from '@/web/components/inputs/flag.vue';
 
 const { getCurrentSimulation } = useSimulationStore();
 

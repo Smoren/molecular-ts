@@ -5,8 +5,8 @@ const logo = new URL('./assets/logo.png', import.meta.url).href
 
 import { ref } from 'vue';
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
-import Navbar from "@/web/components/config-editor/containers/navbar.vue";
-import Sidebar from "@/web/components/config-editor/containers/sidebar.vue";
+import Navbar from "@/web/components/containers/navbar.vue";
+import Sidebar from "@/web/components/containers/sidebar.vue";
 import InitialConfigSection from "@/web/components/config-editor/components/sections/initial-config-section.vue";
 import RandomizeConfigSection from "@/web/components/config-editor/components/sections/randomize-config-section.vue";
 import TypesConfigSection from '@/web/components/config-editor/components/sections/types-config-section.vue';

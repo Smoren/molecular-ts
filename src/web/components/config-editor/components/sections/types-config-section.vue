@@ -5,10 +5,10 @@ import { useConfigStore } from '@/web/store/config';
 import { useSimulationStore } from "@/web/store/simulation";
 import { clearInactiveParams, creatDefaultTypesConfig } from "@/lib/config/types";
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
-import ConfigMatrix from '@/web/components/config-editor/inputs/config-matrix.vue';
-import ConfigList from '@/web/components/config-editor/inputs/config-list.vue';
+import ConfigMatrix from '@/web/components/inputs/config-matrix.vue';
+import ConfigList from '@/web/components/inputs/config-list.vue';
 import InputHeader from "@/web/components/base/input-header.vue";
-import ConfigTensor from "@/web/components/config-editor/inputs/config-tensor.vue";
+import ConfigTensor from "@/web/components/inputs/config-tensor.vue";
 import TransformationConfig from "@/web/components/config-editor/components/widgets/transformation-config.vue";
 import { useRightBarStore } from '@/web/store/right-bar';
 

@@ -2,8 +2,8 @@
 
 import { useConfigStore } from "@/web/store/config";
 import { useSimulationStore } from "@/web/store/simulation";
-import Flag from "@/web/components/config-editor/inputs/flag.vue";
-import ConfigCoordsBounds from "@/web/components/config-editor/inputs/config-coords-bounds.vue";
+import Flag from "@/web/components/inputs/flag.vue";
+import ConfigCoordsBounds from "@/web/components/inputs/config-coords-bounds.vue";
 import ConfigSection from "@/web/components/config-editor/components/containers/config-section.vue";
 import InputHeader from "@/web/components/base/input-header.vue";
 import type { InitialConfig } from "@/lib/types/config";

@@ -4,9 +4,9 @@ import { computed, type Ref, ref, watch } from "vue";
 import { useConfigStore } from "@/web/store/config";
 import { useSimulationStore } from "@/web/store/simulation";
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
-import ConfigBounds from "@/web/components/config-editor/inputs/config-bounds.vue";
+import ConfigBounds from "@/web/components/inputs/config-bounds.vue";
 import InitialConfigSection from "@/web/components/config-editor/components/sections/initial-config-section.vue";
-import Flag from "@/web/components/config-editor/inputs/flag.vue";
+import Flag from "@/web/components/inputs/flag.vue";
 import InputHeader from "@/web/components/base/input-header.vue";
 import RandomizeConfigSnippets from "@/web/components/config-editor/components/widgets/randomize-config-snippets.vue";
 

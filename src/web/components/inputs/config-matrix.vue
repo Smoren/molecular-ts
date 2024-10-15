@@ -74,6 +74,6 @@ watch(symmetric, () => {
 
 <style scoped lang="scss">
 
-@import "../assets/config-editor";
+@import "../config-editor/assets/config-editor";
 
 </style>
