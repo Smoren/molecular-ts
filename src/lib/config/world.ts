@@ -26,18 +26,18 @@ export function createBaseWorldConfig(): WorldConfig {
       INITIAL: {
         ATOMS_COUNT: 2000,
         MIN_POSITION: [0, 0],
-        MAX_POSITION: [2500, 2000],
+        MAX_POSITION: [2500, 2500],
       },
     },
     CONFIG_3D: {
       BOUNDS: {
         MIN_POSITION: [0, 0, 0],
-        MAX_POSITION: [500, 500, 500],
+        MAX_POSITION: [700, 700, 700],
       },
       INITIAL: {
         ATOMS_COUNT: 1000,
         MIN_POSITION: [0, 0, 0],
-        MAX_POSITION: [500, 500, 500],
+        MAX_POSITION: [700, 700, 700],
       },
     },
     TEMPERATURE_FUNCTION: (c: NumericVector, t: number) => {
