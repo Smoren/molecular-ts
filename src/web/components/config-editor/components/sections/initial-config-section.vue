@@ -26,7 +26,7 @@ const getActualInitialConfig = () => {
 }
 
 const initialConfig: Ref<InitialConfig> = ref(getActualInitialConfig());
-const syncWithWorldConfigBounds: Ref<boolean> = ref(false);
+const syncWithWorldConfigBounds: Ref<boolean> = ref(true);
 
 watch(() => configStore.worldConfig.VIEW_MODE, () => {
   initialConfig.value = getActualInitialConfig();
@@ -38,11 +38,12 @@ watch(() => configStore.worldConfig, () => {
 
 const refill = () => {
   if (confirm('Are you sure?')) {
+    handleSyncBounds();
     refillAtoms!();
   }
 };
 
-const onChange = (values: number[]) => {
+const handleSyncBounds = (values: number[]) => {
   if (syncWithWorldConfigBounds.value) {
     configStore.updateWorldConfigBounds(initialConfig.value.MIN_POSITION, initialConfig.value.MAX_POSITION);
   }
@@ -73,7 +74,7 @@ const onChange = (values: number[]) => {
       </div>
 
       <div>
-        <flag title="Sync with world config bounds" v-model="syncWithWorldConfigBounds" @change="onChange" />
+        <flag title="Sync with world config bounds" v-model="syncWithWorldConfigBounds" />
       </div>
 
       <div v-if="withButtons">
