@@ -73,11 +73,10 @@ const handleSyncBounds = () => {
         <config-coords-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" />
       </div>
 
-      <div>
-        <flag title="Sync with world config bounds" v-model="syncWithWorldConfigBounds" />
-      </div>
-
       <div v-if="withButtons">
+        <div>
+          <flag title="Sync with world config bounds" v-model="syncWithWorldConfigBounds" />
+        </div>
         <br />
         <div class="btn-group" role="group">
           <button class="btn btn-outline-secondary" @click="refill">
