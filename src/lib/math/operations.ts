@@ -1,5 +1,6 @@
 import { createFilledMatrix, createFilledTensor } from './factories';
 import type { OperatorFactory, Tensor } from './types';
+import { round } from "@/lib/math/helpers";
 
 export const UNARY_OPERATOR_FACTORY: Record<string, OperatorFactory> = {
   ZEROS: {
@@ -21,6 +22,10 @@ export const UNARY_OPERATOR_FACTORY: Record<string, OperatorFactory> = {
   ABS: {
     arguments: [],
     call: () => (x: number) => Math.abs(x),
+  },
+  ROUND: {
+    arguments: ['precision'],
+    call: (precision: number) => (x: number) => round(x, precision),
   },
   LOG: {
     arguments: [],
