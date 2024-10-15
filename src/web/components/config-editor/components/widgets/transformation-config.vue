@@ -2,7 +2,7 @@
 
 import type { TransformationConfig } from "@/lib/types/config";
 import { ref, watch } from "vue";
-import TypeSelect from "@/web/components/config-editor/components/inputs/type-select.vue";
+import TypeSelect from "@/web/components/config-editor/inputs/type-select.vue";
 
 const modelValue = defineModel<TransformationConfig>();
 defineProps<{

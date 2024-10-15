@@ -9,9 +9,9 @@ import { useConfigStore } from "@/web/store/config";
 import { getTensorDimensions } from '@/lib/math/helpers';
 import { BINARY_OPERATOR_FACTORY, UNARY_OPERATOR_FACTORY } from '@/lib/math/operations';
 import ConfigSection from "@/web/components/config-editor/components/containers/config-section.vue";
-import InputHeader from '@/web/components/config-editor/components/base/input-header.vue';
-import Dropdown from "@/web/components/config-editor/components/inputs/dropdown.vue";
-import RadioGroup from "@/web/components/config-editor/components/inputs/radio-group.vue";
+import InputHeader from '@/web/components/base/input-header.vue';
+import Dropdown from "@/web/components/config-editor/inputs/dropdown.vue";
+import RadioGroup from "@/web/components/config-editor/inputs/radio-group.vue";
 
 type TypesConfigKey = keyof TypesConfig;
 type TypesConfigItem = {

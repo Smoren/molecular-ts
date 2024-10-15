@@ -2,7 +2,7 @@
 
 import { getColorString } from '@/web/components/config-editor/utils';
 import { watch } from "vue";
-import Tooltip from "@/web/components/config-editor/components/base/tooltip.vue";
+import Tooltip from "@/web/components/base/tooltip.vue";
 
 const symmetric = defineModel<boolean | undefined>('symmetric');
 
@@ -74,6 +74,6 @@ watch(symmetric, () => {
 
 <style scoped lang="scss">
 
-@import "../../assets/config-editor";
+@import "../assets/config-editor";
 
 </style>

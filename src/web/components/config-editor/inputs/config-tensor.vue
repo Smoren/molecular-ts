@@ -9,7 +9,7 @@ import {
   MDBTabPane,
 } from 'mdb-vue-ui-kit';
 import { getColorString } from '@/web/components/config-editor/utils';
-import ConfigMatrix from '@/web/components/config-editor/components/inputs/config-matrix.vue';
+import ConfigMatrix from '@/web/components/config-editor/inputs/config-matrix.vue';
 
 const symmetric = defineModel<boolean | undefined>('symmetric');
 
@@ -57,8 +57,8 @@ const activeTabId = ref('tab-0');
 
 <style scoped lang="scss">
 
-@import "../../assets/config-editor";
-@import "bootstrap/scss/bootstrap-utilities";
+@import "../assets/config-editor";
+@import "../../../../../node_modules/bootstrap/scss/bootstrap-utilities";
 
 .my-tab-pane {
   padding: 15px;

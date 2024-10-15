@@ -5,7 +5,7 @@ import { useConfigStore } from '@/web/store/config';
 import { useSimulationStore } from "@/web/store/simulation";
 import { usePhysicsStore } from '@/web/store/physics';
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
-import InputHeader from "@/web/components/config-editor/components/base/input-header.vue";
+import InputHeader from "@/web/components/base/input-header.vue";
 import { useRightBarStore } from '@/web/store/right-bar';
 
 const physicsStore = usePhysicsStore();
