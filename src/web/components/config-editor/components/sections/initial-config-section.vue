@@ -43,7 +43,7 @@ const refill = () => {
   }
 };
 
-const handleSyncBounds = (values: number[]) => {
+const handleSyncBounds = () => {
   if (syncWithWorldConfigBounds.value) {
     configStore.updateWorldConfigBounds(initialConfig.value.MIN_POSITION, initialConfig.value.MAX_POSITION);
   }
@@ -66,11 +66,11 @@ const handleSyncBounds = (values: number[]) => {
 
       <div>
         <input-header name="Min Position" />
-        <config-coords-bounds name="Min Position" :step="1" :values="initialConfig.MIN_POSITION" @change="onChange" />
+        <config-coords-bounds name="Min Position" :step="1" :values="initialConfig.MIN_POSITION" />
       </div>
       <div>
         <input-header name="Max Position" />
-        <config-coords-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" @change="onChange" />
+        <config-coords-bounds name="Max Position" :step="1" :values="initialConfig.MAX_POSITION" />
       </div>
 
       <div>
