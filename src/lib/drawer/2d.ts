@@ -176,7 +176,6 @@ export class Drawer2d implements DrawerInterface {
         transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
       );
       this.eventManager.triggerClick({ coords, extraKey: keyDown, ctrlKey: event.ctrlKey });
-      console.log(keyDown, coords);
     });
 
     this.domElement.addEventListener('wheel', (event: WheelEvent) => {

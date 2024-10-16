@@ -15,6 +15,7 @@ import type { Compound } from './types/analysis';
 import { CompoundsCollector } from './analysis/compounds';
 import { PreventException } from "@/lib/drawer/utils";
 import { toVector } from "@/lib/math";
+import { createCompoundGraph } from "@/lib/graph/functions";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -232,7 +233,8 @@ export class Simulation implements SimulationInterface {
         this.config.worldConfig.ATOM_RADIUS*2,
       );
       if (grabbedAtom) {
-        console.log('ATOM FOUND', grabbedAtom);
+        const graph = createCompoundGraph(grabbedAtom);
+        console.log('ATOM FOUND', grabbedAtom, graph);
       }
       throw new PreventException('prevent exception');
     });
