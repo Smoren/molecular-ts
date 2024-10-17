@@ -1,6 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 import { measureBilateralSymmetry } from "../../src/lib/analysis/symmetry";
 import type { GraphConfig } from "../../src/lib/graph/types";
+import { createGraph } from "../../src/lib/graph/functions";
 
 describe.each([
   ...dataProviderForBilateralSymmetry(),
@@ -10,8 +11,8 @@ describe.each([
     graphs: GraphConfig[],
   ) => {
     it('', () => {
-      for (const graph of graphs) {
-        const symmetryScore = measureBilateralSymmetry(graph);
+      for (const config of graphs) {
+        const symmetryScore = measureBilateralSymmetry(createGraph(config));
         expect(symmetryScore).toBeGreaterThan(0);
       }
     });
@@ -23,200 +24,68 @@ function dataProviderForBilateralSymmetry(): Array<[GraphConfig[]]> {
     [
       [
         {
+          typesCount: 3,
           vertexes: [
-            {
-              id: 2352,
-              type: 4
-            },
-            {
-              id: 1835,
-              type: 4
-            },
-            {
-              id: 2200,
-              type: 0
-            },
-            {
-              id: 1280,
-              type: 1
-            },
-            {
-              id: 1816,
-              type: 4
-            },
-            {
-              id: 2655,
-              type: 0
-            },
-            {
-              id: 1630,
-              type: 1
-            },
-            {
-              id: 2812,
-              type: 2
-            },
-            {
-              id: 1802,
-              type: 0
-            },
-            {
-              id: 1143,
-              type: 2
-            }
+            { id: 2888, type: 0 },
+            { id: 2593, type: 0 },
+            { id: 2560, type: 2 },
+            { id: 2427, type: 1 },
+            { id: 1141, type: 2 },
+            { id: 1897, type: 0 },
+            { id: 2142, type: 2 },
+            { id: 2441, type: 1 },
+            { id: 2301, type: 2 },
           ],
           edges: [
-            {
-              lhsId: 1802,
-              rhsId: 2352
-            },
-            {
-              lhsId: 1816,
-              rhsId: 2352
-            },
-            {
-              lhsId: 1835,
-              rhsId: 2352
-            },
-            {
-              lhsId: 1816,
-              rhsId: 1835
-            },
-            {
-              lhsId: 1835,
-              rhsId: 2200
-            },
-            {
-              lhsId: 1280,
-              rhsId: 2200
-            },
-            {
-              lhsId: 1816,
-              rhsId: 2655
-            },
-            {
-              lhsId: 1630,
-              rhsId: 2655
-            },
-            {
-              lhsId: 1143,
-              rhsId: 1630
-            },
-            {
-              lhsId: 1630,
-              rhsId: 1802
-            },
-            {
-              lhsId: 1630,
-              rhsId: 2812
-            }
-          ]
+            { lhsId: 1141, rhsId: 2888 },
+            { lhsId: 1897, rhsId: 2888 },
+            { lhsId: 2593, rhsId: 2888 },
+            { lhsId: 1897, rhsId: 2593 },
+            { lhsId: 2560, rhsId: 2593 },
+            { lhsId: 2427, rhsId: 2560 },
+            { lhsId: 1141, rhsId: 2427 },
+            { lhsId: 1897, rhsId: 2142 },
+            { lhsId: 2142, rhsId: 2441 },
+            { lhsId: 2301, rhsId: 2441 },
+          ],
         },
         {
+          typesCount: 3,
           vertexes: [
-            {
-              id: 2123,
-              type: 4
-            },
-            {
-              id: 2874,
-              type: 4
-            },
-            {
-              id: 1582,
-              type: 4
-            },
-            {
-              id: 2795,
-              type: 0
-            },
-            {
-              id: 1282,
-              type: 1
-            },
-            {
-              id: 1532,
-              type: 0
-            },
-            {
-              id: 2267,
-              type: 4
-            },
-            {
-              id: 1194,
-              type: 0
-            },
-            {
-              id: 1051,
-              type: 1
-            },
-            {
-              id: 2614,
-              type: 0
-            },
-            {
-              id: 2822,
-              type: 1
-            },
-            {
-              id: 2494,
-              type: 2
-            }
+            { id: 111136, type: 0 },
+            { id: 111476, type: 2 },
+            { id: 111442, type: 2 },
+            { id: 111250, type: 0 },
+            { id: 112734, type: 0 },
+            { id: 112266, type: 1 },
+            { id: 111359, type: 1 },
+            { id: 111066, type: 2 },
+            { id: 111857, type: 2 },
+            { id: 111266, type: 0 },
+            { id: 112377, type: 2 },
+            { id: 111992, type: 0 },
+            { id: 112005, type: 0 },
+            { id: 111746, type: 2 },
+            { id: 112209, type: 0 },
           ],
           edges: [
-            {
-              lhsId: 2123,
-              rhsId: 2267
-            },
-            {
-              lhsId: 2123,
-              rhsId: 2614
-            },
-            {
-              lhsId: 2123,
-              rhsId: 2874
-            },
-            {
-              lhsId: 1532,
-              rhsId: 2874
-            },
-            {
-              lhsId: 1582,
-              rhsId: 2874
-            },
-            {
-              lhsId: 1582,
-              rhsId: 2267
-            },
-            {
-              lhsId: 1582,
-              rhsId: 2795
-            },
-            {
-              lhsId: 1282,
-              rhsId: 2795
-            },
-            {
-              lhsId: 1282,
-              rhsId: 1532
-            },
-            {
-              lhsId: 1194,
-              rhsId: 2267
-            },
-            {
-              lhsId: 1051,
-              rhsId: 1194
-            },
-            {
-              lhsId: 2614,
-              rhsId: 2822
-            },
-            {
-              lhsId: 2494,
-              rhsId: 2822
-            }
-          ]
+            { lhsId: 111066, rhsId: 111136 },
+            { lhsId: 111136, rhsId: 111359 },
+            { lhsId: 111136, rhsId: 111476 },
+            { lhsId: 111442, rhsId: 111476 },
+            { lhsId: 111250, rhsId: 111442 },
+            { lhsId: 111250, rhsId: 112266 },
+            { lhsId: 111250, rhsId: 112734 },
+            { lhsId: 111359, rhsId: 112266 },
+            { lhsId: 111066, rhsId: 111857 },
+            { lhsId: 111266, rhsId: 111857 },
+            { lhsId: 111266, rhsId: 112209 },
+            { lhsId: 111266, rhsId: 112377 },
+            { lhsId: 111992, rhsId: 112377 },
+            { lhsId: 111746, rhsId: 111992 },
+            { lhsId: 111992, rhsId: 112005 },
+            { lhsId: 111746, rhsId: 112209 },
+          ],
         },
       ],
     ],

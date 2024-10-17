@@ -1,68 +1,79 @@
-import type { GraphConfig } from "../graph/types";
+import type { GraphInterface, Vertex } from "../graph/types";
 
-export function measureBilateralSymmetry(graph: GraphConfig): number {
-  // Build adjacency map
-  const adjacencyMap: Map<number, Set<number>> = new Map();
-  for (const vertex of graph.vertexes) {
-    adjacencyMap.set(vertex.id, new Set());
-  }
-  for (const edge of graph.edges) {
-    adjacencyMap.get(edge.lhsId)!.add(edge.rhsId);
-    adjacencyMap.get(edge.rhsId)!.add(edge.lhsId);
-  }
+/**
+ * Computes a quantitative measure of bilateral symmetry for a given graph.
+ * The score ranges from 0 (no symmetry) to 1 (perfect bilateral symmetry).
+ *
+ * @param graph - The graph to be evaluated for bilateral symmetry.
+ * @returns A number representing the symmetry score.
+ */
+export function measureBilateralSymmetry(graph: GraphInterface): number {
+  const { vertexes, edges } = graph;
+  const n = vertexes.length;
+
+  if (n === 0) return 1; // An empty graph is perfectly symmetric
+
+  // Create a map from vertex id to vertex object for quick lookup
+  const vertexMap: Map<number, Vertex> = new Map();
+  vertexes.forEach(v => vertexMap.set(v.id, v));
+
+  // Create adjacency list
+  const adjacency: Map<number, Set<number>> = new Map();
+  vertexes.forEach(v => adjacency.set(v.id, new Set()));
+  edges.forEach(e => {
+    adjacency.get(e.lhsId)!.add(e.rhsId);
+    adjacency.get(e.rhsId)!.add(e.lhsId);
+  });
 
   // Group vertices by type
-  const typeToVertices: Map<number, number[]> = new Map();
-  for (const vertex of graph.vertexes) {
-    if (!typeToVertices.has(vertex.type)) {
-      typeToVertices.set(vertex.type, []);
+  const typeGroups: Map<number, Vertex[]> = new Map();
+  vertexes.forEach(v => {
+    if (!typeGroups.has(v.type)) {
+      typeGroups.set(v.type, []);
     }
-    typeToVertices.get(vertex.type)!.push(vertex.id);
-  }
+    typeGroups.get(v.type)!.push(v);
+  });
 
-  // Build involutive mapping σ: V → V
-  const mapping: Map<number, number> = new Map();
-  for (const [type, vertices] of typeToVertices.entries()) {
-    // Try to pair vertices of the same type
-    const ids = vertices.slice();
-    while (ids.length >= 2) {
-      const u = ids.pop()!;
-      const v = ids.pop()!;
-      mapping.set(u, v);
-      mapping.set(v, u);
-    }
-    // If an odd number, map the last vertex to itself
-    if (ids.length === 1) {
-      const u = ids.pop()!;
-      mapping.set(u, u);
-    }
-  }
+  // To have bilateral symmetry, each type group should have an even number of vertices
+  // We'll attempt to pair vertices within each type group
+  let totalPairs = 0;
+  let matchedPairs = 0;
 
-  // Check involutive property σ² = identity
-  let isInvolutive = true;
-  for (const [u, v] of mapping.entries()) {
-    if (mapping.get(v)! !== u) {
-      isInvolutive = false;
-      break;
-    }
-  }
-  if (!isInvolutive) {
-    console.error('Mapping is not involutive');
-    return 0;
-  }
+  typeGroups.forEach(group => {
+    const size = group.length;
+    if (size < 2) return; // Cannot form a pair
 
-  // Count preserved edges
-  let preservedEdges = 0;
-  for (const edge of graph.edges) {
-    const u = edge.lhsId;
-    const v = edge.rhsId;
-    const mappedU = mapping.get(u)!;
-    const mappedV = mapping.get(v)!;
-    if (adjacencyMap.get(mappedU)!.has(mappedV)) {
-      preservedEdges += 1;
-    }
-  }
+    // Attempt to pair vertices with identical adjacency patterns
+    // For simplicity, we'll consider adjacency based on types
+    const adjacencyTypes: Map<string, Vertex[]> = new Map();
 
-  // Compute symmetry measure
-  return preservedEdges / graph.edges.length;
+    group.forEach(v => {
+      // Create a signature based on sorted types of adjacent vertices
+      const adjacentTypes = Array.from(adjacency.get(v.id)!)
+        .map(adjId => vertexMap.get(adjId)!.type)
+        .sort((a, b) => a - b)
+        .join(',');
+
+      if (!adjacencyTypes.has(adjacentTypes)) {
+        adjacencyTypes.set(adjacentTypes, []);
+      }
+      adjacencyTypes.get(adjacentTypes)!.push(v);
+    });
+
+    // For each adjacency signature, count how many pairs can be formed
+    adjacencyTypes.forEach(pairGroup => {
+      const pairs = Math.floor(pairGroup.length / 2);
+      totalPairs += pairs;
+      matchedPairs += pairs;
+    });
+  });
+
+  // The symmetry score is based on how many matched pairs exist over the total possible pairs
+  const maxPairs = Math.floor(n / 2);
+  if (maxPairs === 0) return 1; // Single vertex is perfectly symmetric
+
+  const symmetryScore = matchedPairs / maxPairs;
+
+  // Ensure the score is between 0 and 1
+  return Math.min(Math.max(symmetryScore, 0), 1);
 }
