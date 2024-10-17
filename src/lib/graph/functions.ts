@@ -1,4 +1,4 @@
-import type { Edge, Graph, Vertex } from "../types/graph";
+import type { Edge, Graph, VertexMap } from "../types/graph";
 import type { AtomInterface } from "../types/atomic";
 import { createFilledArray, createVector } from "../math";
 import { getPairIndex, getPairsCount } from "../math/helpers";
@@ -38,8 +38,8 @@ export function createCompoundGraph(atom: AtomInterface, typesCount: number): Gr
   return { typesCount, vertexes, edges };
 }
 
-export function createVertexMap(graph: Graph): Record<number, Vertex> {
-  const result: Record<number, Vertex> = {};
+export function createVertexMap(graph: Graph): VertexMap {
+  const result: VertexMap = {};
   for (const vertex of graph.vertexes) {
     result[vertex.id] = vertex;
   }
@@ -54,8 +54,8 @@ export function countVertexesGroupedByType(graph: Graph): NumericVector {
   return result;
 }
 
-export function countEdgesGroupedByVertexTypes(graph: Graph): NumericVector {
-  const vertexMap = createVertexMap(graph);
+export function countEdgesGroupedByVertexTypes(graph: Graph, vertexMap?: VertexMap): NumericVector {
+  vertexMap = vertexMap ?? createVertexMap(graph);
   const result = createVector(createFilledArray(getPairsCount(graph.typesCount), 0));
   for (const edge of graph.edges) {
     result[getPairIndex([vertexMap[edge.lhsId].type, vertexMap[edge.rhsId].type], graph.typesCount)]++;

@@ -13,3 +13,5 @@ export type Graph = {
   vertexes: Vertex[];
   edges: Edge[];
 };
+
+export type VertexMap = Record<number, Vertex>;
