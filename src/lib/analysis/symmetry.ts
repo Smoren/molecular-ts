@@ -1,6 +1,6 @@
-import type { Graph } from "../types/graph";
+import type { GraphConfig } from "../graph/types";
 
-export function measureBilateralSymmetry(graph: Graph): number {
+export function measureBilateralSymmetry(graph: GraphConfig): number {
   // Build adjacency map
   const adjacencyMap: Map<number, Set<number>> = new Map();
   for (const vertex of graph.vertexes) {

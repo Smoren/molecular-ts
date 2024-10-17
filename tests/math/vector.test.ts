@@ -296,3 +296,23 @@ function dataProviderForIsNormalizedFalse(): Array<unknown> {
     [[0.1, 2, 5]],
   ];
 }
+
+describe.each([
+  ...dataProviderForConcat(),
+] as Array<[NumericVector, NumericVector, NumericVector]>)(
+  'Concat test',
+  (lhs: NumericVector, rhs: NumericVector, expected: NumericVector) => {
+    it('', () => {
+      expect(toVector(lhs).concat(rhs)).toEqual(expected);
+    });
+  },
+);
+
+function dataProviderForConcat(): Array<unknown> {
+  return [
+    [[], [], []],
+    [[0], [], [0]],
+    [[], [0], [0]],
+    [[1, 2, 3], [4, 5, 6], [1, 2, 3, 4, 5, 6]],
+  ];
+}

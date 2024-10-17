@@ -119,6 +119,11 @@ export interface VectorInterface extends NumericVector {
    * Clones vector
    */
   clone(): VectorInterface;
+
+  /**
+   * Concatenates with another vector
+   */
+  concat(v: NumericVector): VectorInterface;
 }
 
 /**

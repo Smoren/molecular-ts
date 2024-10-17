@@ -134,4 +134,12 @@ export class Vector extends Array implements VectorInterface {
   clone(): VectorInterface {
     return new Vector(this);
   }
+
+  concat(v: NumericVector): VectorInterface {
+    for (const c of v) {
+      this.push(c);
+    }
+    return this;
+  }
+
 }

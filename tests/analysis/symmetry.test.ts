@@ -1,13 +1,13 @@
 import { describe, expect, it } from '@jest/globals';
 import { measureBilateralSymmetry } from "../../src/lib/analysis/symmetry";
-import type { Graph } from "../../src/lib/types/graph";
+import type { GraphConfig } from "../../src/lib/graph/types";
 
 describe.each([
   ...dataProviderForBilateralSymmetry(),
-] as Array<[Graph[]]>)(
+] as Array<[GraphConfig[]]>)(
   'Bilateral Symmetry Test',
   (
-    graphs: Graph[],
+    graphs: GraphConfig[],
   ) => {
     it('', () => {
       for (const graph of graphs) {
@@ -18,7 +18,7 @@ describe.each([
   },
 );
 
-function dataProviderForBilateralSymmetry(): Array<[Graph[]]> {
+function dataProviderForBilateralSymmetry(): Array<[GraphConfig[]]> {
   return [
     [
       [

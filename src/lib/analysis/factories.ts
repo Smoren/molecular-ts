@@ -1,8 +1,8 @@
 import type { AtomInterface } from "../types/atomic";
-import type { Edge, Graph } from "../types/graph";
-import { createEdge, getEdgeId } from "../graph/functions";
+import type { Edge, GraphInterface } from "../graph/types";
+import { createEdge, createGraph, getEdgeId } from "../graph/functions";
 
-export function createCompoundGraph(atom: AtomInterface, typesCount: number): Graph {
+export function createCompoundGraph(atom: AtomInterface, typesCount: number): GraphInterface {
   const atoms: Set<AtomInterface> = new Set();
   const edgeMap: Record<string, Edge> = {};
 
@@ -21,7 +21,7 @@ export function createCompoundGraph(atom: AtomInterface, typesCount: number): Gr
     }
   }
 
-  const vertexes = Array.from(atoms).map((atom) => ({ id: atom.id, type: atom.type }));
+  const vertexes = [...atoms].map((atom) => ({ id: atom.id, type: atom.type }));
   const edges = Object.values(edgeMap);
-  return { typesCount, vertexes, edges };
+  return createGraph({ typesCount, vertexes, edges });
 }
