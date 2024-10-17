@@ -1,4 +1,4 @@
-import type { GraphInterface, Vertex } from "../graph/types";
+import type { GraphConfig, GraphInterface, Vertex } from "../graph/types";
 
 /**
  * Computes a quantitative measure of bilateral symmetry for a given graph.
@@ -76,4 +76,62 @@ export function measureBilateralSymmetry(graph: GraphInterface): number {
 
   // Ensure the score is between 0 and 1
   return Math.min(Math.max(symmetryScore, 0), 1);
+}
+
+type SubgraphCount = {
+  graph: GraphConfig;
+  count: number;
+};
+
+export function findDuplicatedGraphParts(graph: GraphConfig): SubgraphCount[] {
+  const subgraphsMap = new Map<string, { graph: GraphConfig, count: number }>();
+
+  // Генерируем все возможные подграфы
+  function generateSubgraphs(currentGraph: GraphConfig, startVertex: Vertex, visited: Set<number>, currentSubgraph: GraphConfig) {
+    if (visited.has(startVertex.id)) return;
+
+    visited.add(startVertex.id);
+    currentSubgraph.vertexes.push(startVertex);
+
+    const connectedEdges = graph.edges.filter(edge => edge.lhsId === startVertex.id || edge.rhsId === startVertex.id);
+    for (const edge of connectedEdges) {
+      if (!currentSubgraph.edges.includes(edge)) {
+        currentSubgraph.edges.push(edge);
+        const nextVertexId = edge.lhsId === startVertex.id ? edge.rhsId : edge.lhsId;
+        const nextVertex = graph.vertexes.find(v => v.id === nextVertexId);
+
+        if (nextVertex) {
+          generateSubgraphs(currentGraph, nextVertex, visited, currentSubgraph);
+        }
+      }
+    }
+  }
+
+  // Проверяем каждый подграф с каждого старта
+  for (const vertex of graph.vertexes) {
+    const visited = new Set<number>();
+    const currentSubgraph: GraphConfig = { vertexes: [], edges: [], typesCount: graph.typesCount };
+    generateSubgraphs(graph, vertex, visited, currentSubgraph);
+
+    const key = generateSubgraphKey(currentSubgraph);
+    if (subgraphsMap.has(key)) {
+      subgraphsMap.get(key)!.count += 1;
+    } else {
+      subgraphsMap.set(key, { graph: currentSubgraph, count: 1 });
+    }
+  }
+
+  return Array.from(subgraphsMap.values());
+}
+
+function generateSubgraphKey(subgraph: GraphConfig): string {
+  const vertexTypesKey = subgraph.vertexes
+    .map(vertex => vertex.type)
+    .sort()
+    .join(',');
+  const edgesKey = subgraph.edges
+    .map(edge => `${Math.min(edge.lhsId, edge.rhsId)}-${Math.max(edge.lhsId, edge.rhsId)}`)
+    .sort()
+    .join(',');
+  return `${vertexTypesKey}|${edgesKey}`;
 }
