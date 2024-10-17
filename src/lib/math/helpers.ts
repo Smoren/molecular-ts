@@ -51,15 +51,14 @@ export function getTensorDimensions(tensor: Tensor<number>): number {
   }
 }
 
-export function convertToDecimal(digits: number[], base: number): number {
-  return digits.reduce((accumulator, currentValue, index) => {
-    return accumulator + currentValue * Math.pow(base, index);
-  }, 0);
+export function getPairIndex(pair: [number, number], base: number): number {
+  const sortedPair = pair.sort((a, b) => a - b);
+  const [i, j] = sortedPair;
+
+  const s = base * i - (i * (i - 1)) / 2;
+  return s + (j - i);
 }
 
-export function getNumberSetIndex(numbers: number[], base: number): number {
-  // TODO fix
-  const sortedNumbers = numbers.sort((a, b) => a - b);
-  const count = (sortedNumbers.length * (sortedNumbers.length + 1)) / 2;
-  return count - (base - Math.max(...sortedNumbers));
+export function getPairsCount(base: number): number {
+  return getPairIndex([base-1, base-1], base) + 1;
 }
