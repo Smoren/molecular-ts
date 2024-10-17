@@ -56,3 +56,10 @@ export function convertToDecimal(digits: number[], base: number): number {
     return accumulator + currentValue * Math.pow(base, index);
   }, 0);
 }
+
+export function getNumberSetId(numbers: number[], base: number): number {
+  // TODO fix
+  const sortedNumbers = numbers.sort((a, b) => a - b);
+  const count = (sortedNumbers.length * (sortedNumbers.length + 1)) / 2;
+  return count - (base - Math.max(...sortedNumbers));
+}
