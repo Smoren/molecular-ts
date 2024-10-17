@@ -15,7 +15,8 @@ import type { Compound } from './types/analysis';
 import { CompoundsCollector } from './analysis/compounds';
 import { PreventException } from "@/lib/drawer/utils";
 import { toVector } from "@/lib/math";
-import { createCompoundGraph } from "@/lib/graph/functions";
+import { createCompoundGraph } from "@/lib/analysis/factories";
+import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "@/lib/graph/functions";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -234,7 +235,13 @@ export class Simulation implements SimulationInterface {
       );
       if (grabbedAtom) {
         const graph = createCompoundGraph(grabbedAtom, this.config.typesConfig.FREQUENCIES.length);
-        console.log('ATOM FOUND', grabbedAtom, graph);
+        console.log(
+          'ATOM FOUND',
+          grabbedAtom,
+          graph,
+          countVertexesGroupedByType(graph),
+          countEdgesGroupedByVertexTypes(graph),
+        );
       }
       throw new PreventException('prevent exception');
     });
