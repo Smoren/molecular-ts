@@ -13,10 +13,10 @@ import { SummaryManager } from './analysis/summary';
 import type { NumericVector } from './math/types';
 import type { Compound } from './types/analysis';
 import { CompoundsCollector } from './analysis/compounds';
-import { PreventException } from "@/lib/drawer/utils";
-import { toVector } from "@/lib/math";
-import { createCompoundGraph } from "@/lib/analysis/factories";
-import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "@/lib/graph/functions";
+import { PreventException } from "./drawer/utils";
+import { toVector } from "./math";
+import { createCompoundGraph } from "./analysis/factories";
+import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/functions";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;

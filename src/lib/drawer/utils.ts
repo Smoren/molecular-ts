@@ -1,5 +1,5 @@
 import type { EventManagerInterface, MouseEventData, MouseEventListenerCallback } from '../types/drawer';
-import type { NumericVector } from "@/lib/math/types";
+import type { NumericVector } from "../math/types";
 
 type ListenersStorage = {
   onClick: MouseEventListenerCallback[];
