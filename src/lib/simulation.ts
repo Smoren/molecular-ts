@@ -233,7 +233,7 @@ export class Simulation implements SimulationInterface {
         this.config.worldConfig.ATOM_RADIUS*2,
       );
       if (grabbedAtom) {
-        const graph = createCompoundGraph(grabbedAtom);
+        const graph = createCompoundGraph(grabbedAtom, this.config.typesConfig.FREQUENCIES.length);
         console.log('ATOM FOUND', grabbedAtom, graph);
       }
       throw new PreventException('prevent exception');

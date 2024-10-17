@@ -9,6 +9,7 @@ export type Edge = {
 };
 
 export type Graph = {
+  typesCount: number;
   vertexes: Vertex[];
   edges: Edge[];
 };

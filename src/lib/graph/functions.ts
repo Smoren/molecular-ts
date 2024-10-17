@@ -11,7 +11,7 @@ export function getEdgeId(edge: Edge): string {
   return `${edge.lhsId}-${edge.rhsId}`;
 }
 
-export function createCompoundGraph(atom: AtomInterface): Graph {
+export function createCompoundGraph(atom: AtomInterface, typesCount: number): Graph {
   const atoms: Set<AtomInterface> = new Set();
   const edgeMap: Record<string, Edge> = {};
 
@@ -32,5 +32,5 @@ export function createCompoundGraph(atom: AtomInterface): Graph {
 
   const vertexes = Array.from(atoms).map((atom) => ({ id: atom.id, type: atom.type }));
   const edges = Object.values(edgeMap);
-  return { vertexes, edges };
+  return { typesCount, vertexes, edges };
 }
