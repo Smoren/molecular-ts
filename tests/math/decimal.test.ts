@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals'
-import { convertToDecimal, getNumberSetId } from "../../src/lib/math/helpers";
+import { convertToDecimal, getNumberSetIndex } from "../../src/lib/math/helpers";
 
 describe.each([
   ...dataProviderForConvertToDecimal(),
@@ -78,18 +78,18 @@ function dataProviderForConvertToDecimal(): Array<[number[], number, number]> {
 }
 
 describe.each([
-  ...dataProviderForGetNumberSetId(),
+  ...dataProviderForGetNumberSetIndex(),
 ] as Array<[number[], number, number]>)(
-  'Get Number Set Id Test',
+  'Get Number Set Index Test',
   (digits: number[], base: number, expected: number) => {
     it('', () => {
-      const result = getNumberSetId(digits, base);
+      const result = getNumberSetIndex(digits, base);
       expect(result).toEqual(expected);
     });
   },
 );
 
-function dataProviderForGetNumberSetId(): Array<[number[], number, number]> {
+function dataProviderForGetNumberSetIndex(): Array<[number[], number, number]> {
   return [
     [[0], 2, 0],
   ];

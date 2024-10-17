@@ -57,7 +57,7 @@ export function convertToDecimal(digits: number[], base: number): number {
   }, 0);
 }
 
-export function getNumberSetId(numbers: number[], base: number): number {
+export function getNumberSetIndex(numbers: number[], base: number): number {
   // TODO fix
   const sortedNumbers = numbers.sort((a, b) => a - b);
   const count = (sortedNumbers.length * (sortedNumbers.length + 1)) / 2;
