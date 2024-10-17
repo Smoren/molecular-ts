@@ -50,3 +50,9 @@ export function getTensorDimensions(tensor: Tensor<number>): number {
     }
   }
 }
+
+export function convertToDecimal(digits: number[], base: number): number {
+  return digits.reduce((accumulator, currentValue, index) => {
+    return accumulator + currentValue * Math.pow(base, index);
+  }, 0);
+}
