@@ -1,6 +1,6 @@
 import { createFilledMatrix, createFilledTensor } from './factories';
 import type { OperatorFactory, Tensor } from './types';
-import { round } from "@/lib/math/helpers";
+import { round } from "./helpers";
 
 export const UNARY_OPERATOR_FACTORY: Record<string, OperatorFactory> = {
   ZEROS: {
