@@ -1,4 +1,4 @@
-import type { GraphConfig, GraphInterface, Vertex } from "../graph/types";
+import type { Edge, GraphConfig, GraphInterface, Vertex } from "../graph/types";
 
 /**
  * Computes a quantitative measure of bilateral symmetry for a given graph.
@@ -79,59 +79,165 @@ export function measureBilateralSymmetry(graph: GraphInterface): number {
 }
 
 type SubgraphCount = {
-  graph: GraphConfig;
+  subgraph: GraphConfig;
   count: number;
 };
 
-export function findDuplicatedGraphParts(graph: GraphConfig): SubgraphCount[] {
-  const subgraphsMap = new Map<string, { graph: GraphConfig, count: number }>();
+export function findDuplicatedGraphParts(graph: GraphConfig, maxSize: number = 6): SubgraphCount[] {
+  const subgraphCounts: Map<string, { subgraph: GraphConfig; count: number }> = new Map();
 
-  // Генерируем все возможные подграфы
-  function generateSubgraphs(currentGraph: GraphConfig, startVertex: Vertex, visited: Set<number>, currentSubgraph: GraphConfig) {
-    if (visited.has(startVertex.id)) return;
+  // Build adjacency list for the graph
+  const adjacencyList: Map<number, Set<number>> = new Map();
+  for (const vertex of graph.vertexes) {
+    adjacencyList.set(vertex.id, new Set());
+  }
+  for (const edge of graph.edges) {
+    adjacencyList.get(edge.lhsId)!.add(edge.rhsId);
+    adjacencyList.get(edge.rhsId)!.add(edge.lhsId);
+  }
 
-    visited.add(startVertex.id);
-    currentSubgraph.vertexes.push(startVertex);
+  // For memoization to avoid duplicate subgraphs
+  const memo: Set<string> = new Set();
 
-    const connectedEdges = graph.edges.filter(edge => edge.lhsId === startVertex.id || edge.rhsId === startVertex.id);
-    for (const edge of connectedEdges) {
-      if (!currentSubgraph.edges.includes(edge)) {
-        currentSubgraph.edges.push(edge);
-        const nextVertexId = edge.lhsId === startVertex.id ? edge.rhsId : edge.lhsId;
-        const nextVertex = graph.vertexes.find(v => v.id === nextVertexId);
+  // Generate connected subgraphs up to maxSize
+  for (const vertex of graph.vertexes) {
+    generateSubgraphs(
+      graph,
+      adjacencyList,
+      [vertex.id],
+      new Set([vertex.id]),
+      maxSize,
+      memo,
+      subgraphCounts
+    );
+  }
 
-        if (nextVertex) {
-          generateSubgraphs(currentGraph, nextVertex, visited, currentSubgraph);
+  // Convert the map to an array and filter subgraphs that occur more than once
+  return Array.from(subgraphCounts.values()).filter((item) => item.count > 1 && item.subgraph.edges.length > 3);
+}
+
+function generateSubgraphs(
+  graph: GraphConfig,
+  adjacencyList: Map<number, Set<number>>,
+  currentPath: number[],
+  visited: Set<number>,
+  maxSize: number,
+  memo: Set<string>,
+  subgraphCounts: Map<string, { subgraph: GraphConfig; count: number }>
+) {
+  if (currentPath.length > maxSize) {
+    return;
+  }
+
+  // Generate canonical label for the current subgraph
+  const subgraphVertices = [...visited];
+  const subgraphEdges = getSubgraphEdges(graph.edges, subgraphVertices);
+  const subgraph: GraphConfig = {
+    vertexes: graph.vertexes.filter((v) => visited.has(v.id)),
+    edges: subgraphEdges,
+    typesCount: graph.typesCount
+  };
+  const canonicalLabel = getCanonicalLabel(subgraph);
+  if (memo.has(canonicalLabel)) {
+    // Increment count if subgraph already exists
+    const existing = subgraphCounts.get(canonicalLabel)!;
+    existing.count += 1;
+  } else {
+    memo.add(canonicalLabel);
+    subgraphCounts.set(canonicalLabel, { subgraph, count: 1 });
+  }
+
+  // Expand the subgraph
+  for (const vid of currentPath) {
+    for (const neighbor of adjacencyList.get(vid)!) {
+      if (!visited.has(neighbor)) {
+        visited.add(neighbor);
+        currentPath.push(neighbor);
+        generateSubgraphs(
+          graph,
+          adjacencyList,
+          currentPath,
+          visited,
+          maxSize,
+          memo,
+          subgraphCounts
+        );
+        currentPath.pop();
+        visited.delete(neighbor);
+      }
+    }
+  }
+}
+
+function getSubgraphEdges(edges: Edge[], vertexIds: number[]): Edge[] {
+  const vertexSet = new Set(vertexIds);
+  return edges.filter(
+    (e) => vertexSet.has(e.lhsId) && vertexSet.has(e.rhsId)
+  );
+}
+
+function getCanonicalLabel(subgraph: GraphConfig): string {
+  // Generate adjacency matrix
+  const vertices = subgraph.vertexes;
+  const vertexIds = vertices.map((v) => v.id);
+  const idToIndex: Map<number, number> = new Map();
+  vertexIds.forEach((id, idx) => idToIndex.set(id, idx));
+  const size = vertices.length;
+  const adjMatrix: number[][] = Array.from({ length: size }, () =>
+    Array(size).fill(0)
+  );
+
+  for (const edge of subgraph.edges) {
+    const i = idToIndex.get(edge.lhsId)!;
+    const j = idToIndex.get(edge.rhsId)!;
+    adjMatrix[i][j] = adjMatrix[j][i] = 1;
+  }
+
+  // Get all permutations of indices to generate canonical label
+  const indices = [...Array(size).keys()];
+  const permutations = permute(indices);
+  let minCode = '';
+
+  for (const perm of permutations) {
+    // Map old indices to new ones
+    const permutedTypes = perm.map((idx) => vertices[idx].type);
+    const permutedMatrix = perm.map((i) => perm.map((j) => adjMatrix[i][j]));
+    const code = serializeGraph(permutedTypes, permutedMatrix);
+    if (!minCode || code < minCode) {
+      minCode = code;
+    }
+  }
+  return minCode;
+}
+
+function serializeGraph(types: number[], adjMatrix: number[][]): string {
+  // Serialize the types and adjacency matrix into a string
+  const typeStr = types.join(',');
+  const adjStr = adjMatrix.map((row) => row.join('')).join(';');
+  return `T:${typeStr}|A:${adjStr}`;
+}
+
+function permute(arr: number[]): number[][] {
+  const result: number[][] = [];
+  const n = arr.length;
+
+  function generate(k: number, a: number[]) {
+    if (k === 1) {
+      result.push([...a]);
+    } else {
+      generate(k - 1, a);
+      for (let i = 0; i < k - 1; i++) {
+        if (k % 2 === 0) {
+          [a[i], a[k - 1]] = [a[k - 1], a[i]];
+        } else {
+          [a[0], a[k - 1]] = [a[k - 1], a[0]];
         }
+        generate(k - 1, a);
       }
     }
   }
 
-  // Проверяем каждый подграф с каждого старта
-  for (const vertex of graph.vertexes) {
-    const visited = new Set<number>();
-    const currentSubgraph: GraphConfig = { vertexes: [], edges: [], typesCount: graph.typesCount };
-    generateSubgraphs(graph, vertex, visited, currentSubgraph);
-
-    const key = generateSubgraphKey(currentSubgraph);
-    if (subgraphsMap.has(key)) {
-      subgraphsMap.get(key)!.count += 1;
-    } else {
-      subgraphsMap.set(key, { graph: currentSubgraph, count: 1 });
-    }
-  }
-
-  return Array.from(subgraphsMap.values());
+  generate(n, arr.slice());
+  return result;
 }
 
-function generateSubgraphKey(subgraph: GraphConfig): string {
-  const vertexTypesKey = subgraph.vertexes
-    .map(vertex => vertex.type)
-    .sort()
-    .join(',');
-  const edgesKey = subgraph.edges
-    .map(edge => `${Math.min(edge.lhsId, edge.rhsId)}-${Math.max(edge.lhsId, edge.rhsId)}`)
-    .sort()
-    .join(',');
-  return `${vertexTypesKey}|${edgesKey}`;
-}
