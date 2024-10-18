@@ -21,7 +21,11 @@ export function createCompoundGraph(atom: AtomInterface, typesCount: number): Gr
     }
   }
 
-  const vertexes = [...atoms].map((atom) => ({ id: atom.id, type: atom.type }));
+  const vertexes = [...atoms].map((atom) => ({
+    id: atom.id,
+    type: atom.type,
+    position: atom.position,
+  }));
   const edges = Object.values(edgeMap);
   return createGraph({ typesCount, vertexes, edges });
 }

@@ -1,6 +1,9 @@
+import type { NumericVector } from "../math/types";
+
 export type Vertex = {
   id: number;
   type: number;
+  position: NumericVector;
 };
 
 export type Edge = {
