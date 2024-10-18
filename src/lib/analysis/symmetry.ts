@@ -25,7 +25,7 @@ function getAzimuth(vertex: Vertex, centroid: NumericVector): number {
   ) % Math.PI;
 }
 
-function sortVertexes(vertexes: Vertex[], centroid: NumericVector): Vertex[] {
+function getSortedVertexes(vertexes: Vertex[], centroid: NumericVector): Vertex[] {
   // reordered = sorted(vertexes, key=azimuth)
   return [...vertexes].sort(
     (lhs, rhs) => getAzimuth(lhs, centroid) - getAzimuth(rhs, centroid)
