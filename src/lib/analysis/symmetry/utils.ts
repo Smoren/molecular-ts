@@ -2,7 +2,7 @@ import { infinite, single } from "itertools-ts";
 import type { GraphInterface, Vertex } from "../../graph/types";
 import type { NumericVector, VectorInterface } from "../../math/types";
 import { createVector } from "../../math";
-import { createGraph } from "@/lib/graph/functions";
+import { createGraph } from "../../graph/functions";
 
 export function getCentroid(graph: GraphInterface): NumericVector {
   // Найдем точку M — центр масс графа.
