@@ -24,14 +24,32 @@ export class Graph implements GraphInterface {
     return this.config.typesCount;
   }
 
-  public hasEdge(lhsId: number, rhsId: number): boolean {
-    return this.edgeMap[lhsId]?.[rhsId] !== undefined;
+  public hasVertex(id: number): boolean {
+    return this.vertexMap[id] !== undefined;
   }
 
-  public getEdge(lhsId: number, rhsId: number): Edge {
-    if (!this.hasEdge(lhsId, rhsId)) {
-      throw new Error(`There is no edge between vertexes ${lhsId} and ${rhsId}`);
+  public getVertex(id: number): Vertex {
+    if (!this.hasVertex(id)) {
+      throw new Error(`There is no vertex with id ${id}`);
     }
-    return this.edgeMap[lhsId][rhsId];
+    return this.vertexMap[id];
+  }
+
+  public hasEdge(lhsVertexId: number, rhsVertexId: number): boolean {
+    return this.edgeMap[lhsVertexId]?.[rhsVertexId] !== undefined;
+  }
+
+  public getEdge(lhsVertexId: number, rhsVertexId: number): Edge {
+    if (!this.hasEdge(lhsVertexId, rhsVertexId)) {
+      throw new Error(`There is no edge between vertexes ${lhsVertexId} and ${rhsVertexId}`);
+    }
+    return this.edgeMap[lhsVertexId][rhsVertexId];
+  }
+
+  public getEdges(vertexId: number): Edge[] {
+    if (this.edgeMap[vertexId] === undefined) {
+      throw new Error(`There is no vertex with id ${vertexId}`);
+    }
+    return Object.keys(this.edgeMap[vertexId]).map((id) => this.edgeMap[vertexId][Number(id)]);
   }
 }
