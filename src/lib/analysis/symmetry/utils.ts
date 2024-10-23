@@ -2,6 +2,7 @@ import { infinite, single } from "itertools-ts";
 import type { GraphInterface, Vertex } from "../../graph/types";
 import type { NumericVector, VectorInterface } from "../../math/types";
 import { createVector } from "../../math";
+import { createGraph } from "@/lib/graph/functions";
 
 export function getCentroid(graph: GraphInterface): NumericVector {
   // Найдем точку M — центр масс графа.
@@ -79,15 +80,42 @@ export function splitVertexesByLine(vertexes: Vertex[], k: number, b: number, mi
   return [vertexesAbove, vertexesBelow, vertexesMiddle];
 }
 
-export function checkSymmetryAxis(graph: GraphInterface, k: number, b: number, radius: number, magic: number) {
-  // Если расстояние от точки (вершина) до прямой (ось-кандидат с коэффициентом k) не превышает R * MAGIC,
-  // где MAGIC — некая экспериментально подобранная константа, считаем, что эта вершина лежит на оси симметрии
-  // minDistance = R * MAGIC
+export function splitGraphByLine(graph: GraphInterface, k: number, b: number, minDistance: number): [GraphInterface, GraphInterface] {
   const [
     vertexesAbove,
     vertexesBelow,
     vertexesMiddle,
-  ] = splitVertexesByLine(graph.vertexes, k, b, radius*magic);
+  ] = splitVertexesByLine(graph.vertexes, k, b, minDistance);
+
+  const lhsGraph = createGraph({
+    typesCount: graph.typesCount,
+    vertexes: [...vertexesAbove, ...vertexesMiddle],
+    edges: [],
+  });
+
+  const rhsGraph = createGraph({
+    typesCount: graph.typesCount,
+    vertexes: [...vertexesBelow, ...vertexesMiddle],
+    edges: [],
+  });
+
+  for (const edge of graph.edges) {
+    if (lhsGraph.hasVertex(edge.lhsId) && rhsGraph.hasVertex(edge.rhsId)) {
+      lhsGraph.addEdge(edge);
+    }
+    if (lhsGraph.hasVertex(edge.rhsId) && rhsGraph.hasVertex(edge.lhsId)) {
+      rhsGraph.addEdge(edge);
+    }
+  }
+
+  return [lhsGraph, rhsGraph];
+}
+
+export function checkSymmetryAxis(graph: GraphInterface, k: number, b: number, radius: number, magic: number) {
+  // Если расстояние от точки (вершина) до прямой (ось-кандидат с коэффициентом k) не превышает R * MAGIC,
+  // где MAGIC — некая экспериментально подобранная константа, считаем, что эта вершина лежит на оси симметрии
+  // minDistance = R * MAGIC
+  const [lhsGraph, rhsGraph] = splitGraphByLine(graph, k, b, radius*magic);
 }
 
 // TODO rename function

@@ -67,6 +67,14 @@ export class Graph implements GraphInterface {
       throw new Error(`Edge between vertexes ${edge.lhsId} and ${edge.rhsId} already exists`);
     }
 
+    if (!this.hasVertex(edge.lhsId)) {
+      throw new Error(`There is no vertex with id ${edge.lhsId}`);
+    }
+
+    if (!this.hasVertex(edge.rhsId)) {
+      throw new Error(`There is no vertex with id ${edge.rhsId}`);
+    }
+
     this.config.edges.push(edge);
     if (this.edgeMap[edge.lhsId] === undefined) {
       this.edgeMap[edge.lhsId] = {};
