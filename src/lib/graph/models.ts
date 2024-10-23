@@ -35,6 +35,15 @@ export class Graph implements GraphInterface {
     return this.vertexMap[id];
   }
 
+  public addVertex(vertex: Vertex): void {
+    if (this.hasVertex(vertex.id)) {
+      throw new Error(`Vertex with id ${vertex.id} already exists`);
+    }
+
+    this.config.vertexes.push(vertex);
+    this.vertexMap[vertex.id] = vertex;
+  }
+
   public hasEdge(lhsVertexId: number, rhsVertexId: number): boolean {
     return this.edgeMap[lhsVertexId]?.[rhsVertexId] !== undefined;
   }
@@ -51,5 +60,22 @@ export class Graph implements GraphInterface {
       throw new Error(`There is no vertex with id ${vertexId}`);
     }
     return Object.keys(this.edgeMap[vertexId]).map((id) => this.edgeMap[vertexId][Number(id)]);
+  }
+
+  public addEdge(edge: Edge): void {
+    if (this.hasEdge(edge.lhsId, edge.rhsId)) {
+      throw new Error(`Edge between vertexes ${edge.lhsId} and ${edge.rhsId} already exists`);
+    }
+
+    this.config.edges.push(edge);
+    if (this.edgeMap[edge.lhsId] === undefined) {
+      this.edgeMap[edge.lhsId] = {};
+    }
+    this.edgeMap[edge.lhsId][edge.rhsId] = edge;
+
+    if (this.edgeMap[edge.rhsId] === undefined) {
+      this.edgeMap[edge.rhsId] = {};
+    }
+    this.edgeMap[edge.rhsId][edge.lhsId] = edge;
   }
 }

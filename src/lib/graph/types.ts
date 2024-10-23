@@ -26,7 +26,9 @@ export interface GraphInterface extends GraphConfig {
   readonly config: GraphConfig;
   hasVertex(id: number): boolean;
   getVertex(id: number): Vertex;
+  addVertex(vertex: Vertex): void;
   hasEdge(lhsId: number, rhsId: number): boolean;
   getEdge(lhsId: number, rhsId: number): Edge;
   getEdges(vertexId: number): Edge[];
+  addEdge(edge: Edge): void;
 }
