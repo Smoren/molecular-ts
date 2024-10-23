@@ -52,19 +52,18 @@ export function distanceToLine(point: NumericVector, k: number, b: number): numb
   return numerator / denominator;
 }
 
-export function splitVertexesByLine(vertexes: Vertex[], k: number, b: number, radius: number, magic: number): [Vertex[], Vertex[]] {
+export function splitVertexesByLine(vertexes: Vertex[], k: number, b: number, minDistance: number): [Vertex[], Vertex[], Vertex[]] {
   // Сгруппируем вершины по положению относительно прямой
   const vertexesAbove: Vertex[] = [];
   const vertexesBelow: Vertex[] = [];
+  const vertexesMiddle: Vertex[] = [];
 
   // Перебираем все вершины:
   for (const vertex of vertexes) {
     const dist = distanceToLine(vertex.position, k, b);
 
-    // Если расстояние от точки (вершина) до прямой (ось-кандидат с коэффициентом k) не превышает R * MAGIC,
-    // где MAGIC — некая экспериментально подобранная константа, считаем, что эта вершина лежит на оси симметрии,
-    // и игнорируем ее.
-    if (dist <= radius * magic) {
+    if (dist < minDistance) {
+      vertexesMiddle.push(vertex);
       continue;
     }
 
@@ -77,7 +76,18 @@ export function splitVertexesByLine(vertexes: Vertex[], k: number, b: number, ra
     }
   }
 
-  return [vertexesAbove, vertexesBelow];
+  return [vertexesAbove, vertexesBelow, vertexesMiddle];
+}
+
+export function checkSymmetryAxis(graph: GraphInterface, k: number, b: number, radius: number, magic: number) {
+  // Если расстояние от точки (вершина) до прямой (ось-кандидат с коэффициентом k) не превышает R * MAGIC,
+  // где MAGIC — некая экспериментально подобранная константа, считаем, что эта вершина лежит на оси симметрии
+  // minDistance = R * MAGIC
+  const [
+    vertexesAbove,
+    vertexesBelow,
+    vertexesMiddle,
+  ] = splitVertexesByLine(graph.vertexes, k, b, radius*magic);
 }
 
 // TODO rename function
@@ -100,11 +110,13 @@ export function iterateSortedVertexes(graph: GraphInterface): void {
     const k1 = Math.tan(getAzimuth(lhs, centroid));
     const p1 = lhs.position;
     const b1 = p1[1] - k1 * p1[0]; // y = kx + b => b = y - kx
+    checkSymmetryAxis(graph, k1, b1, radius, 0.5);
 
     // Проверим ось симметрии с угловым коэффициентом tan((azimuth(a) + azimuth(b)) * 0.5) — пытаемся провести
     // посередине между a и b (собственно, ради этого и затевалась сортировка по азимутам).
     const k2 = Math.tan(getAzimuth(lhs, centroid) + getAzimuth(rhs, centroid)) * 0.5;
     const p2 = createVector(lhs.position).add(rhs.position).div(2);
     const b2 = p2[1] - k2 * p2[0]; // y = kx + b => b = y - kx
+    checkSymmetryAxis(graph, k2, b2, radius, 0.5);
   });
 }

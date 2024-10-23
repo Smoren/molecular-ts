@@ -239,30 +239,36 @@ function dataProviderForDistanceToLine(): Array<[NumericVector, NumericVector, n
 
 describe.each([
   ...dataProviderForSplitVertexesByLine(),
-] as Array<[GraphConfig, NumericVector, number, NumericVector[], NumericVector[]]>)(
+] as Array<[GraphConfig, NumericVector, number, NumericVector[], NumericVector[], NumericVector[]]>)(
   'Function splitVertexesByLine Test',
-  (config, [k, b], magic, aboveExpected, belowExpected) => {
+  (config, [k, b], minDistance, aboveExpected, belowExpected, middleExpected) => {
     it('', () => {
       const graph = new Graph(config);
-      const centroid = getCentroid(graph);
-      const radius = getAverageRadius(graph, centroid);
-      const [aboveVertexesActual, belowVertexesActual] = splitVertexesByLine(graph.vertexes, k, b, radius, magic);
+      const [
+        aboveVertexesActual,
+        belowVertexesActual,
+        middleVertexesActual,
+      ] = splitVertexesByLine(graph.vertexes, k, b, minDistance);
 
       const aboveActual = aboveVertexesActual.map((v) => v.position);
       const belowActual = belowVertexesActual.map((v) => v.position);
+      const middleActual = middleVertexesActual.map((v) => v.position);
 
       aboveActual.sort();
       belowActual.sort();
+      middleActual.sort();
       aboveExpected.sort();
       belowExpected.sort();
+      middleExpected.sort();
 
       expect(aboveActual).toEqual(aboveExpected);
       expect(belowActual).toEqual(belowExpected);
+      expect(middleActual).toEqual(middleExpected);
     });
   },
 );
 
-function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector, number, NumericVector[], NumericVector[]]> {
+function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector, number, NumericVector[], NumericVector[], NumericVector[]]> {
   return [
     [
       {
@@ -289,6 +295,7 @@ function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector
         [1, 0],
         [1, -1],
       ],
+      [],
     ],
     [
       {
@@ -315,6 +322,7 @@ function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector
         [2, 1],
         [3, -1],
       ],
+      [],
     ],
     [
       {
@@ -341,6 +349,7 @@ function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector
         [1, -3],
         [4, -10],
       ],
+      [],
     ],
     [
       {
@@ -358,7 +367,7 @@ function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector
         edges: [],
       },
       [1, 0],
-      0.5,
+      1,
       [
         [1, 3],
         [2, 6],
@@ -368,6 +377,10 @@ function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector
         [3, 1],
         [4, 2],
         [6, 3],
+      ],
+      [
+        [4, 3],
+        [3, 4],
       ],
     ],
   ];
