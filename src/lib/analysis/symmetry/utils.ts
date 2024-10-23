@@ -1,16 +1,27 @@
-import type { GraphInterface, Vertex } from "../graph/types";
-import type { NumericVector, VectorInterface } from "../math/types";
-import { createVector } from "../math";
 import { infinite, single } from "itertools-ts";
+import type { GraphInterface, Vertex } from "../../graph/types";
+import type { NumericVector, VectorInterface } from "../../math/types";
+import { createVector } from "../../math";
 
-function getCentroid(graph: GraphInterface): NumericVector {
+export function getCentroid(graph: GraphInterface): NumericVector {
+  // Найдем точку M — центр масс графа.
+  if (graph.vertexes.length === 0) {
+    // FIXME maybe throw exception?
+    return [0, 0];
+  }
+
   return graph.vertexes.reduce<VectorInterface>(
     (acc, v) => acc.add(v.position),
     createVector([0, 0]),
   ).div(graph.vertexes.length);
 }
 
-function getAverageRadius(graph: GraphInterface, centroid: NumericVector): number {
+export function getAverageRadius(graph: GraphInterface, centroid: NumericVector): number {
+  // Вычислим R = avg([dist(v, M) for v in vertexes]), где avg(arr) — среднее арифметическое.
+  if (graph.vertexes.length === 0) {
+    return 0;
+  }
+
   const radiusSum = graph.vertexes
     .map((v) => createVector(v.position).sub(centroid).abs)
     .reduce((acc, x) => acc + x, 0);
@@ -18,7 +29,7 @@ function getAverageRadius(graph: GraphInterface, centroid: NumericVector): numbe
   return radiusSum / graph.vertexes.length;
 }
 
-function getAzimuth(vertex: Vertex, centroid: NumericVector): number {
+export function getAzimuth(vertex: Vertex, centroid: NumericVector): number {
   // Определим функцию azimuth(v) = atan2(v.y - M.y, v.x - M.x) % PI.
   // (Смысл взятия по модулю — спроецировать все точки в верхнюю полуплоскость относительно точки M.)
   return Math.atan2(
@@ -26,21 +37,26 @@ function getAzimuth(vertex: Vertex, centroid: NumericVector): number {
   ) % Math.PI;
 }
 
-function getSortedVertexes(vertexes: Vertex[], centroid: NumericVector): Vertex[] {
+export function getSortedVertexes(vertexes: Vertex[], centroid: NumericVector): Vertex[] {
   // reordered = sorted(vertexes, key=azimuth)
   return [...vertexes].sort(
     (lhs, rhs) => getAzimuth(lhs, centroid) - getAzimuth(rhs, centroid)
   );
 }
 
-function distanceToLine(point: NumericVector, k: number, b: number): number {
+export function distanceToLine(point: NumericVector, k: number, b: number): number {
+  // Определим расстояние от точки до прямой
   const [x0, y0] = point;
   const numerator = Math.abs(k * x0 - y0 + b);
   const denominator = Math.sqrt(k * k + 1);
   return numerator / denominator;
 }
 
-function checkSlopeCoefficient(vertexes: Vertex[], k: number, b: number, radius: number, magic: number): boolean {
+export function groupVertexesByLine(vertexes: Vertex[], k: number, b: number, radius: number, magic: number): [Vertex[], Vertex[]] {
+  // Сгруппируем вершины по положению относительно прямой
+  const vertexesAbove: Vertex[] = [];
+  const vertexesBelow: Vertex[] = [];
+
   // Перебираем все вершины:
   for (const vertex of vertexes) {
     const dist = distanceToLine(vertex.position, k, b);
@@ -52,17 +68,26 @@ function checkSlopeCoefficient(vertexes: Vertex[], k: number, b: number, radius:
       continue;
     }
 
+    const [x, y] = vertex.position;
+    const position = k * x - y + b;
+    if (position > 0) {
+      vertexesAbove.push(vertex);
+    } else if (position < 0) {
+      vertexesBelow.push(vertex);
+    }
   }
+
+  return [vertexesAbove, vertexesBelow];
 }
 
 // TODO rename function
-function iterateSortedVertexes(graph: GraphInterface): void {
+export function iterateSortedVertexes(graph: GraphInterface): void {
   // Найдем точку M — центр масс графа. Если граф действительно симметричен, ось симметрии будет проходить через M —
   // нам остаётся найти ее угловой коэффициент.
   const centroid = getCentroid(graph);
 
   // Вычислим R = avg([dist(v, M) for v in vertexes]), где avg(arr) — среднее арифметическое.
-  const radius = getAverageRadius(graph);
+  const radius = getAverageRadius(graph, centroid);
 
   // Вычислим reordered = sorted(vertexes, key=azimuth).
   const sortedVertexes = getSortedVertexes(graph.vertexes, centroid);
