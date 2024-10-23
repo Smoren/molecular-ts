@@ -52,7 +52,7 @@ export function distanceToLine(point: NumericVector, k: number, b: number): numb
   return numerator / denominator;
 }
 
-export function groupVertexesByLine(vertexes: Vertex[], k: number, b: number, radius: number, magic: number): [Vertex[], Vertex[]] {
+export function splitVertexesByLine(vertexes: Vertex[], k: number, b: number, radius: number, magic: number): [Vertex[], Vertex[]] {
   // Сгруппируем вершины по положению относительно прямой
   const vertexesAbove: Vertex[] = [];
   const vertexesBelow: Vertex[] = [];
@@ -71,9 +71,9 @@ export function groupVertexesByLine(vertexes: Vertex[], k: number, b: number, ra
     const [x, y] = vertex.position;
     const position = k * x - y + b;
     if (position > 0) {
-      vertexesAbove.push(vertex);
-    } else if (position < 0) {
       vertexesBelow.push(vertex);
+    } else if (position < 0) {
+      vertexesAbove.push(vertex);
     }
   }
 
