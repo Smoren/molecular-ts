@@ -1,35 +1,37 @@
-import type { Edge, GraphConfig, GraphInterface, Vertex, VertexMap } from "./types";
-import { createVertexMap } from "./functions";
+import type { Edge, EdgeMap, GraphConfig, GraphInterface, Vertex, VertexMap } from "./types";
+import { createEdgeMap, createVertexMap } from "./functions";
 
 export class Graph implements GraphInterface {
-  private readonly _config: GraphConfig;
-  private _vertexMap: VertexMap | undefined;
+  public readonly config: GraphConfig;
+  public readonly vertexMap: VertexMap;
+  public readonly edgeMap: EdgeMap;
 
   constructor(config: GraphConfig) {
-    this._config = config;
-    this._vertexMap = createVertexMap(config);
+    this.config = config;
+    this.vertexMap = createVertexMap(config);
+    this.edgeMap = createEdgeMap(config);
   }
 
   get vertexes(): Vertex[] {
-    return this._config.vertexes;
+    return this.config.vertexes;
   }
 
   get edges(): Edge[] {
-    return this._config.edges;
+    return this.config.edges;
   }
 
   get typesCount(): number {
-    return this._config.typesCount;
+    return this.config.typesCount;
   }
 
-  get vertexMap(): VertexMap {
-    if (this._vertexMap === undefined) {
-      this._vertexMap = createVertexMap(this._config);
+  public hasEdge(lhsId: number, rhsId: number): boolean {
+    return this.edgeMap[lhsId]?.[rhsId] !== undefined;
+  }
+
+  public getEdge(lhsId: number, rhsId: number): Edge {
+    if (!this.hasEdge(lhsId, rhsId)) {
+      throw new Error(`There is no edge between vertexes ${lhsId} and ${rhsId}`);
     }
-    return this._vertexMap;
-  }
-
-  get config(): GraphConfig {
-    return this._config;
+    return this.edgeMap[lhsId][rhsId];
   }
 }
