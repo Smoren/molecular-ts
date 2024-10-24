@@ -1,21 +1,21 @@
 import { describe, expect, it } from "@jest/globals";
 import type { Edge, GraphConfig, Vertex } from "../../src/lib/graph/types";
-import type { NumericVector } from "../../src/lib/math/types";
+import type { LineCoefficients, NumericVector } from "../../src/lib/math/types";
 import { Graph } from "../../src/lib/graph/models";
 import { hasBreaks, splitGraphByLine, splitVertexesByLine } from "../../src/lib/graph/utils";
 
 describe.each([
   ...dataProviderForSplitVertexesByLine(),
-] as Array<[GraphConfig, NumericVector, number, NumericVector[], NumericVector[], NumericVector[]]>)(
+] as Array<[GraphConfig, LineCoefficients, number, NumericVector[], NumericVector[], NumericVector[]]>)(
   'Function splitVertexesByLine Test',
-  (config, [k, b], minDistance, aboveExpected, belowExpected, middleExpected) => {
+  (config, line, minDistance, aboveExpected, belowExpected, middleExpected) => {
     it('', () => {
       const graph = new Graph(config);
       const [
         aboveVertexesActual,
         belowVertexesActual,
         middleVertexesActual,
-      ] = splitVertexesByLine(graph.vertexes, k, b, minDistance);
+      ] = splitVertexesByLine(graph.vertexes, line, minDistance);
 
       const aboveActual = aboveVertexesActual.map((v) => v.position);
       const belowActual = belowVertexesActual.map((v) => v.position);
@@ -35,7 +35,7 @@ describe.each([
   },
 );
 
-function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector, number, NumericVector[], NumericVector[], NumericVector[]]> {
+function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, LineCoefficients, number, NumericVector[], NumericVector[], NumericVector[]]> {
   return [
     [
       {
@@ -155,15 +155,15 @@ function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector
 
 describe.each([
   ...dataProviderForSplitGraphByLine(),
-] as Array<[GraphConfig, NumericVector, number, GraphConfig, GraphConfig, [boolean, boolean]]>)(
+] as Array<[GraphConfig, LineCoefficients, number, GraphConfig, GraphConfig, [boolean, boolean]]>)(
   'Function splitGraphByLine Test',
-  (config, [k, b], minDistance, aboveExpected, belowExpected, [lhsHasBreaks, rhsHasBreaks]) => {
+  (config, line, minDistance, aboveExpected, belowExpected, [lhsHasBreaks, rhsHasBreaks]) => {
     it('', () => {
       const graph = new Graph(config);
       const [
         aboveGraphActual,
         belowGraphActual,
-      ] = splitGraphByLine(graph, k, b, minDistance);
+      ] = splitGraphByLine(graph, line, minDistance);
 
       const vertexComparator = (lhs: Vertex, rhs: Vertex) => lhs.id - rhs.id;
       const edgeComparator = (lhs: Edge, rhs: Edge) => lhs.lhsId - rhs.lhsId || lhs.rhsId - rhs.rhsId;
@@ -187,7 +187,7 @@ describe.each([
   },
 );
 
-function dataProviderForSplitGraphByLine(): Array<[GraphConfig, NumericVector, number, GraphConfig, GraphConfig, [boolean, boolean]]> {
+function dataProviderForSplitGraphByLine(): Array<[GraphConfig, LineCoefficients, number, GraphConfig, GraphConfig, [boolean, boolean]]> {
   return [
     [
       {

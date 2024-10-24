@@ -1,5 +1,5 @@
 import type { GraphInterface, Vertex } from "./types";
-import type { NumericVector, VectorInterface } from "../math/types";
+import type { LineCoefficients, NumericVector, VectorInterface } from "../math/types";
 import { createGraph } from "./factories";
 import { distanceToLine } from "../math/geometry";
 import { createFilledArray, createVector, toVector } from "../math";
@@ -46,7 +46,9 @@ export function getVertexesSortedByAzimuth(vertexes: Vertex[], centroid: Numeric
   );
 }
 
-export function splitVertexesByLine(vertexes: Vertex[], k: number, b: number, minDistance: number): [Vertex[], Vertex[], Vertex[]] {
+export function splitVertexesByLine(vertexes: Vertex[], line: LineCoefficients, minDistance: number): [Vertex[], Vertex[], Vertex[]] {
+  const [k, b] = line;
+
   // Сгруппируем вершины по положению относительно прямой
   const vertexesAbove: Vertex[] = [];
   const vertexesBelow: Vertex[] = [];
@@ -73,12 +75,12 @@ export function splitVertexesByLine(vertexes: Vertex[], k: number, b: number, mi
   return [vertexesAbove, vertexesBelow, vertexesMiddle];
 }
 
-export function splitGraphByLine(graph: GraphInterface, k: number, b: number, minDistance: number): [GraphInterface, GraphInterface] {
+export function splitGraphByLine(graph: GraphInterface, line: LineCoefficients, minDistance: number): [GraphInterface, GraphInterface] {
   const [
     vertexesAbove,
     vertexesBelow,
     vertexesMiddle,
-  ] = splitVertexesByLine(graph.vertexes, k, b, minDistance);
+  ] = splitVertexesByLine(graph.vertexes, line, minDistance);
 
   const lhsGraph = createGraph({
     typesCount: graph.typesCount,
