@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
-import type { StatSummary } from "../../src/lib/types/analysis";
+import type { ExtendedStatSummary, StatSummary } from "../../src/lib/types/analysis";
 import { createAtom } from '../../src/lib/utils/functions';
 import { Link } from '../../src/lib/atomic';
 
@@ -40,19 +40,27 @@ export function expectSameArraysOfSets(actual: Set<AtomInterface>[], expected: S
 }
 
 export function createCompoundsSummary(
-  size: number,
-  frequency: number,
   min: number,
   max: number,
   mean: number,
+  p25: number,
   median: number,
+  p75: number,
 ): StatSummary {
   return {
-    size: size,
-    frequency: frequency,
     min: min,
     max: max,
     mean: mean,
+    p25: p25,
     median: median,
+    p75: p75,
   }
+}
+
+export function extendStatSummary(summary: StatSummary, size: number, frequency: number): ExtendedStatSummary {
+  return {
+    size: size,
+    frequency: frequency,
+    ...summary,
+  };
 }

@@ -2,7 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
 import type { StatSummary } from "../../src/lib/types/analysis";
 import { CompoundsAnalyzer, CompoundsCollector } from '../../src/lib/analysis/compounds';
-import { createCompoundsSummary, expectSameArraysOfSets, prepareCompoundsData } from './helpers';
+import { createCompoundsSummary, expectSameArraysOfSets, extendStatSummary, prepareCompoundsData } from './helpers';
 import { round } from "../../src/lib/math";
 
 describe.each([
@@ -59,6 +59,7 @@ function dataProviderForCompounds(): Array<[
   StatSummary[],
 ]> {
   const s = createCompoundsSummary;
+  const e = extendStatSummary;
   const r = (value: number) => round(value, 4);
   const linkData: Array<[
     number[],
@@ -75,11 +76,11 @@ function dataProviderForCompounds(): Array<[
       [[0, 1, 2, 3], [5, 6]],
       2,
       [2, 1, 1],
-      s(2, r(2/7), 2, 4, 3, 4),
+      s(2, 4, 3, 2, 4, 4),
       [
-        s(2, r(2/3), 2, 4, 3, 4),
-        s(1, r(1/2), 4, 4, 4, 4),
-        s(1, r(1/2), 2, 2, 2, 2),
+        e(s(2, 4, 3, 2, 4, 4), 2, r(2/3)),
+        e(s(4, 4, 4, 4, 4, 4), 1, r(1/2)),
+        e(s(2, 2, 2, 2, 2, 2), 1, r(1/2)),
       ],
     ],
   ];
