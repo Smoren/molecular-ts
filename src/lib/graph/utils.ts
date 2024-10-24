@@ -92,13 +92,45 @@ export function splitGraphByLine(graph: GraphInterface, k: number, b: number, mi
   });
 
   for (const edge of graph.edges) {
-    if (lhsGraph.hasVertex(edge.lhsId) && rhsGraph.hasVertex(edge.rhsId)) {
+    if (lhsGraph.hasVertex(edge.lhsId) && lhsGraph.hasVertex(edge.rhsId)) {
       lhsGraph.addEdge(edge);
     }
-    if (lhsGraph.hasVertex(edge.rhsId) && rhsGraph.hasVertex(edge.lhsId)) {
+    if (rhsGraph.hasVertex(edge.rhsId) && rhsGraph.hasVertex(edge.lhsId)) {
       rhsGraph.addEdge(edge);
     }
   }
 
   return [lhsGraph, rhsGraph];
+}
+
+export function hasBreaks(graph: GraphInterface): boolean {
+  const { vertexes, edgeMap } = graph;
+
+  if (vertexes.length === 0) {
+    return false;
+  }
+
+  const visited: Set<number> = new Set();
+  const queue: number[] = [];
+
+  const startVertex = vertexes[0].id;
+  queue.push(startVertex);
+  visited.add(startVertex);
+
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    const neighbors = edgeMap[current];
+
+    if (neighbors) {
+      for (const neighborId in neighbors) {
+        const neighbor = Number(neighborId);
+        if (!visited.has(neighbor)) {
+          visited.add(neighbor);
+          queue.push(neighbor);
+        }
+      }
+    }
+  }
+
+  return visited.size !== vertexes.length;
 }

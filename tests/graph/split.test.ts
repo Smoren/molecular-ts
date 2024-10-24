@@ -1,8 +1,8 @@
 import { describe, expect, it } from "@jest/globals";
-import type { GraphConfig } from "../../src/lib/graph/types";
+import type { Edge, GraphConfig, Vertex } from "../../src/lib/graph/types";
 import type { NumericVector } from "../../src/lib/math/types";
 import { Graph } from "../../src/lib/graph/models";
-import { splitGraphByLine, splitVertexesByLine } from "../../src/lib/graph/utils";
+import { hasBreaks, splitGraphByLine, splitVertexesByLine } from "../../src/lib/graph/utils";
 
 describe.each([
   ...dataProviderForSplitVertexesByLine(),
@@ -155,9 +155,9 @@ function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector
 
 describe.each([
   ...dataProviderForSplitGraphByLine(),
-] as Array<[GraphConfig, NumericVector, number, GraphConfig, GraphConfig]>)(
+] as Array<[GraphConfig, NumericVector, number, GraphConfig, GraphConfig, [boolean, boolean]]>)(
   'Function splitGraphByLine Test',
-  (config, [k, b], minDistance, aboveExpected, belowExpected) => {
+  (config, [k, b], minDistance, aboveExpected, belowExpected, [lhsHasBreaks, rhsHasBreaks]) => {
     it('', () => {
       const graph = new Graph(config);
       const [
@@ -165,13 +165,29 @@ describe.each([
         belowGraphActual,
       ] = splitGraphByLine(graph, k, b, minDistance);
 
+      const vertexComparator = (lhs: Vertex, rhs: Vertex) => lhs.id - rhs.id;
+      const edgeComparator = (lhs: Edge, rhs: Edge) => lhs.lhsId - rhs.lhsId || lhs.rhsId - rhs.rhsId;
+
+      expect(lhsHasBreaks).toBe(hasBreaks(aboveGraphActual));
+      expect(rhsHasBreaks).toBe(hasBreaks(belowGraphActual));
+
+      aboveGraphActual.vertexes.sort(vertexComparator);
+      belowGraphActual.vertexes.sort(vertexComparator);
+      aboveExpected.vertexes.sort(vertexComparator);
+      belowExpected.vertexes.sort(vertexComparator);
+
+      aboveGraphActual.edges.sort(edgeComparator);
+      belowGraphActual.edges.sort(edgeComparator);
+      aboveExpected.edges.sort(edgeComparator);
+      belowExpected.edges.sort(edgeComparator);
+
       expect(aboveGraphActual.config).toEqual(aboveExpected);
       expect(belowGraphActual.config).toEqual(belowExpected);
     });
   },
 );
 
-function dataProviderForSplitGraphByLine(): Array<[GraphConfig, NumericVector, number, GraphConfig, GraphConfig]> {
+function dataProviderForSplitGraphByLine(): Array<[GraphConfig, NumericVector, number, GraphConfig, GraphConfig, [boolean, boolean]]> {
   return [
     [
       {
@@ -191,27 +207,284 @@ function dataProviderForSplitGraphByLine(): Array<[GraphConfig, NumericVector, n
         vertexes: [],
         edges: [],
       },
+      [false, false],
     ],
-    // [
-    //   {
-    //     typesCount: 2,
-    //     vertexes: [
-    //
-    //     ],
-    //     edges: [],
-    //   },
-    //   [10000, 0],
-    //   0.5,
-    //   {
-    //     typesCount: 2,
-    //     vertexes: [],
-    //     edges: [],
-    //   },
-    //   {
-    //     typesCount: 2,
-    //     vertexes: [],
-    //     edges: [],
-    //   },
-    // ],
+    [
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 103, position: [0, 3], type: 0 },
+          { id: 102, position: [0, 2], type: 0 },
+          { id: -11, position: [-1, 1], type: 0 },
+          { id: 111, position: [1, 1], type: 0 },
+          { id: 122, position: [2, 2], type: 1 },
+          { id: -22, position: [-2, 2], type: 1 },
+          { id: 120, position: [2, 0], type: 1 },
+          { id: -20, position: [-2, 0], type: 1 },
+        ],
+        edges: [
+          { lhsId: 103, rhsId: 102 },
+          { lhsId: 102, rhsId: 111 },
+          { lhsId: 102, rhsId: -11 },
+          { lhsId: 111, rhsId: -11 },
+          { lhsId: -11, rhsId: -22 },
+          { lhsId: -11, rhsId: -20 },
+          { lhsId: 111, rhsId: 122 },
+          { lhsId: 111, rhsId: 120 },
+        ],
+      },
+      [0, -5],
+      0.5,
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 103, position: [0, 3], type: 0 },
+          { id: 102, position: [0, 2], type: 0 },
+          { id: -11, position: [-1, 1], type: 0 },
+          { id: 111, position: [1, 1], type: 0 },
+          { id: 122, position: [2, 2], type: 1 },
+          { id: -22, position: [-2, 2], type: 1 },
+          { id: 120, position: [2, 0], type: 1 },
+          { id: -20, position: [-2, 0], type: 1 },
+        ],
+        edges: [
+          { lhsId: 103, rhsId: 102 },
+          { lhsId: 102, rhsId: 111 },
+          { lhsId: 102, rhsId: -11 },
+          { lhsId: 111, rhsId: -11 },
+          { lhsId: -11, rhsId: -22 },
+          { lhsId: -11, rhsId: -20 },
+          { lhsId: 111, rhsId: 122 },
+          { lhsId: 111, rhsId: 120 },
+        ],
+      },
+      {
+        typesCount: 2,
+        vertexes: [],
+        edges: [],
+      },
+      [false, false],
+    ],
+    [
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 103, position: [0, 3], type: 0 },
+          { id: 102, position: [0, 2], type: 0 },
+          { id: -11, position: [-1, 1], type: 0 },
+          { id: 111, position: [1, 1], type: 0 },
+          { id: 122, position: [2, 2], type: 1 },
+          { id: -22, position: [-2, 2], type: 1 },
+          { id: 120, position: [2, 0], type: 1 },
+          { id: -20, position: [-2, 0], type: 1 },
+        ],
+        edges: [
+          { lhsId: 103, rhsId: 102 },
+          { lhsId: 102, rhsId: 111 },
+          { lhsId: 102, rhsId: -11 },
+          { lhsId: 111, rhsId: -11 },
+          { lhsId: -11, rhsId: -22 },
+          { lhsId: -11, rhsId: -20 },
+          { lhsId: 111, rhsId: 122 },
+          { lhsId: 111, rhsId: 120 },
+        ],
+      },
+      [0, 5],
+      0.5,
+      {
+        typesCount: 2,
+        vertexes: [],
+        edges: [],
+      },
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 103, position: [0, 3], type: 0 },
+          { id: 102, position: [0, 2], type: 0 },
+          { id: -11, position: [-1, 1], type: 0 },
+          { id: 111, position: [1, 1], type: 0 },
+          { id: 122, position: [2, 2], type: 1 },
+          { id: -22, position: [-2, 2], type: 1 },
+          { id: 120, position: [2, 0], type: 1 },
+          { id: -20, position: [-2, 0], type: 1 },
+        ],
+        edges: [
+          { lhsId: 103, rhsId: 102 },
+          { lhsId: 102, rhsId: 111 },
+          { lhsId: 102, rhsId: -11 },
+          { lhsId: 111, rhsId: -11 },
+          { lhsId: -11, rhsId: -22 },
+          { lhsId: -11, rhsId: -20 },
+          { lhsId: 111, rhsId: 122 },
+          { lhsId: 111, rhsId: 120 },
+        ],
+      },
+      [false, false],
+    ],
+    [
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 103, position: [0, 3], type: 0 },
+          { id: 102, position: [0, 2], type: 0 },
+          { id: -11, position: [-1, 1], type: 0 },
+          { id: 111, position: [1, 1], type: 0 },
+          { id: 122, position: [2, 2], type: 1 },
+          { id: -22, position: [-2, 2], type: 1 },
+          { id: 120, position: [2, 0], type: 1 },
+          { id: -20, position: [-2, 0], type: 1 },
+        ],
+        edges: [
+          { lhsId: 103, rhsId: 102 },
+          { lhsId: 102, rhsId: 111 },
+          { lhsId: 102, rhsId: -11 },
+          { lhsId: 111, rhsId: -11 },
+          { lhsId: -11, rhsId: -22 },
+          { lhsId: -11, rhsId: -20 },
+          { lhsId: 111, rhsId: 122 },
+          { lhsId: 111, rhsId: 120 },
+        ],
+      },
+      [0, 2],
+      0.5,
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 103, position: [0, 3], type: 0 },
+          { id: 102, position: [0, 2], type: 0 },
+          { id: 122, position: [2, 2], type: 1 },
+          { id: -22, position: [-2, 2], type: 1 },
+        ],
+        edges: [
+          { lhsId: 103, rhsId: 102 },
+        ],
+      },
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 102, position: [0, 2], type: 0 },
+          { id: -11, position: [-1, 1], type: 0 },
+          { id: 111, position: [1, 1], type: 0 },
+          { id: 122, position: [2, 2], type: 1 },
+          { id: -22, position: [-2, 2], type: 1 },
+          { id: 120, position: [2, 0], type: 1 },
+          { id: -20, position: [-2, 0], type: 1 },
+        ],
+        edges: [
+          { lhsId: 102, rhsId: 111 },
+          { lhsId: 102, rhsId: -11 },
+          { lhsId: 111, rhsId: -11 },
+          { lhsId: -11, rhsId: -22 },
+          { lhsId: -11, rhsId: -20 },
+          { lhsId: 111, rhsId: 122 },
+          { lhsId: 111, rhsId: 120 },
+        ],
+      },
+      [true, false],
+    ],
+    [
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 103, position: [0, 3], type: 0 },
+          { id: 102, position: [0, 2], type: 0 },
+          { id: -11, position: [-1, 1], type: 0 },
+          { id: 111, position: [1, 1], type: 0 },
+          { id: 122, position: [2, 2], type: 1 },
+          { id: -22, position: [-2, 2], type: 1 },
+          { id: 120, position: [2, 0], type: 1 },
+          { id: -20, position: [-2, 0], type: 1 },
+        ],
+        edges: [
+          { lhsId: 103, rhsId: 102 },
+          { lhsId: 102, rhsId: 111 },
+          { lhsId: 102, rhsId: -11 },
+          { lhsId: 111, rhsId: -11 },
+          { lhsId: -11, rhsId: -22 },
+          { lhsId: -11, rhsId: -20 },
+          { lhsId: 111, rhsId: 122 },
+          { lhsId: 111, rhsId: 120 },
+        ],
+      },
+      [10000, 0],
+      0.5,
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 103, position: [0, 3], type: 0 },
+          { id: 102, position: [0, 2], type: 0 },
+          { id: -11, position: [-1, 1], type: 0 },
+          { id: -22, position: [-2, 2], type: 1 },
+          { id: -20, position: [-2, 0], type: 1 },
+        ],
+        edges: [
+          { lhsId: 103, rhsId: 102 },
+          { lhsId: 102, rhsId: -11 },
+          { lhsId: -11, rhsId: -22 },
+          { lhsId: -11, rhsId: -20 },
+        ],
+      },
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 103, position: [0, 3], type: 0 },
+          { id: 102, position: [0, 2], type: 0 },
+          { id: 111, position: [1, 1], type: 0 },
+          { id: 122, position: [2, 2], type: 1 },
+          { id: 120, position: [2, 0], type: 1 },
+        ],
+        edges: [
+          { lhsId: 103, rhsId: 102 },
+          { lhsId: 102, rhsId: 111 },
+          { lhsId: 111, rhsId: 122 },
+          { lhsId: 111, rhsId: 120 },
+        ],
+      },
+      [false, false],
+    ],
+    [
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 100, position: [0, 0], type: 0 },
+          { id: 101, position: [0, 1], type: 0 },
+          { id: 110, position: [1, 0], type: 1 },
+          { id: 111, position: [1, 1], type: 1 },
+        ],
+        edges: [
+          { lhsId: 100, rhsId: 101 },
+          { lhsId: 100, rhsId: 110 },
+          { lhsId: 101, rhsId: 111 },
+          { lhsId: 110, rhsId: 111 },
+        ],
+      },
+      [1, 0.1],
+      0.2,
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 100, position: [0, 0], type: 0 },
+          { id: 101, position: [0, 1], type: 0 },
+          { id: 111, position: [1, 1], type: 1 },
+        ],
+        edges: [
+          { lhsId: 100, rhsId: 101 },
+          { lhsId: 101, rhsId: 111 },
+        ],
+      },
+      {
+        typesCount: 2,
+        vertexes: [
+          { id: 100, position: [0, 0], type: 0 },
+          { id: 110, position: [1, 0], type: 1 },
+          { id: 111, position: [1, 1], type: 1 },
+        ],
+        edges: [
+          { lhsId: 100, rhsId: 110 },
+          { lhsId: 110, rhsId: 111 },
+        ],
+      },
+      [false, false],
+    ],
   ];
 }
