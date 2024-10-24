@@ -5,7 +5,8 @@ import {
   calcDistanceBetweenGraphsByEdgeTypes,
   calcDistanceBetweenGraphsByVertexTypes,
   countEdgesGroupedByVertexTypes,
-  countVertexesGroupedByType, createGraph
+  countVertexesGroupedByType,
+  createGraph
 } from "../../src/lib/graph/functions";
 
 describe.each([

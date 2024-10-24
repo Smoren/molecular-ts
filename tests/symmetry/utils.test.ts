@@ -3,13 +3,13 @@ import type { GraphConfig } from "../../src/lib/graph/types";
 import type { NumericVector } from "../../src/lib/math/types";
 import { Graph } from "../../src/lib/graph/models";
 import {
-  distanceToLine,
   getAverageRadius,
   getCentroid,
-  splitVertexesByLine,
 } from "../../src/lib/analysis/symmetry/utils";
 import { expectVectorToBeCloseTo } from "../helpers";
 import { createVector } from "../../src/lib/math";
+import { distanceToLine } from "../../src/lib/math/geometry";
+import { splitVertexesByLine } from "../../src/lib/graph/utils";
 
 describe.each([
   ...dataProviderForGetCentroid(),
