@@ -167,3 +167,5 @@ export interface PositionalVectorInterface {
    */
   includes(coords: NumericVector): boolean;
 }
+
+export type LineCoefficients = [number, number];
