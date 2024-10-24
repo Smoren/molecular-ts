@@ -2,7 +2,7 @@ import { describe, expect, it } from "@jest/globals";
 import type { GraphConfig } from "../../src/lib/graph/types";
 import type { NumericVector } from "../../src/lib/math/types";
 import { Graph } from "../../src/lib/graph/models";
-import { splitVertexesByLine } from "../../src/lib/graph/utils";
+import { splitGraphByLine, splitVertexesByLine } from "../../src/lib/graph/utils";
 
 describe.each([
   ...dataProviderForSplitVertexesByLine(),
@@ -150,5 +150,68 @@ function dataProviderForSplitVertexesByLine(): Array<[GraphConfig, NumericVector
         [3, 4],
       ],
     ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForSplitGraphByLine(),
+] as Array<[GraphConfig, NumericVector, number, GraphConfig, GraphConfig]>)(
+  'Function splitGraphByLine Test',
+  (config, [k, b], minDistance, aboveExpected, belowExpected) => {
+    it('', () => {
+      const graph = new Graph(config);
+      const [
+        aboveGraphActual,
+        belowGraphActual,
+      ] = splitGraphByLine(graph, k, b, minDistance);
+
+      expect(aboveGraphActual.config).toEqual(aboveExpected);
+      expect(belowGraphActual.config).toEqual(belowExpected);
+    });
+  },
+);
+
+function dataProviderForSplitGraphByLine(): Array<[GraphConfig, NumericVector, number, GraphConfig, GraphConfig]> {
+  return [
+    [
+      {
+        typesCount: 2,
+        vertexes: [],
+        edges: [],
+      },
+      [10000, 0],
+      0.5,
+      {
+        typesCount: 2,
+        vertexes: [],
+        edges: [],
+      },
+      {
+        typesCount: 2,
+        vertexes: [],
+        edges: [],
+      },
+    ],
+    // [
+    //   {
+    //     typesCount: 2,
+    //     vertexes: [
+    //
+    //     ],
+    //     edges: [],
+    //   },
+    //   [10000, 0],
+    //   0.5,
+    //   {
+    //     typesCount: 2,
+    //     vertexes: [],
+    //     edges: [],
+    //   },
+    //   {
+    //     typesCount: 2,
+    //     vertexes: [],
+    //     edges: [],
+    //   },
+    // ],
   ];
 }
