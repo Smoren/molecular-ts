@@ -12,6 +12,9 @@ import {
 } from "../graph/utils";
 import { getLineByPoints } from "../math/geometry";
 
+// TODO parametrize type+edges_count
+// TODO parametrize type+linked_types
+
 export function scoreSymmetryAxis(
   graph: GraphInterface,
   line: LineCoefficients,
