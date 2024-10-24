@@ -1,6 +1,49 @@
 import type { GraphInterface, Vertex } from "./types";
+import type { NumericVector, VectorInterface } from "../math/types";
 import { createGraph } from "./functions";
 import { distanceToLine } from "../math/geometry";
+import { createVector } from "../math";
+
+export function getGraphCentroid(graph: GraphInterface): NumericVector {
+  // Найдем точку M — центр масс графа.
+  if (graph.vertexes.length === 0) {
+    // FIXME maybe throw exception?
+    return [0, 0];
+  }
+
+  return graph.vertexes.reduce<VectorInterface>(
+    (acc, v) => acc.add(v.position),
+    createVector([0, 0]),
+  ).div(graph.vertexes.length);
+}
+
+export function getGraphAverageRadius(graph: GraphInterface, centroid: NumericVector): number {
+  // Вычислим R = avg([dist(v, M) for v in vertexes]), где avg(arr) — среднее арифметическое.
+  if (graph.vertexes.length === 0) {
+    return 0;
+  }
+
+  const radiusSum = graph.vertexes
+    .map((v) => createVector(v.position).sub(centroid).abs)
+    .reduce((acc, x) => acc + x, 0);
+
+  return radiusSum / graph.vertexes.length;
+}
+
+export function getVertexAzimuth(vertex: Vertex, centroid: NumericVector): number {
+  // Определим функцию azimuth(v) = atan2(v.y - M.y, v.x - M.x) % PI.
+  // (Смысл взятия по модулю — спроецировать все точки в верхнюю полуплоскость относительно точки M.)
+  return Math.atan2(
+    ...createVector(vertex.position).sub(centroid).reverse() as [number, number]
+  ) % Math.PI;
+}
+
+export function getVertexesSortedByAzimuth(vertexes: Vertex[], centroid: NumericVector): Vertex[] {
+  // reordered = sorted(vertexes, key=azimuth)
+  return [...vertexes].sort(
+    (lhs, rhs) => getVertexAzimuth(lhs, centroid) - getVertexAzimuth(rhs, centroid)
+  );
+}
 
 export function splitVertexesByLine(vertexes: Vertex[], k: number, b: number, minDistance: number): [Vertex[], Vertex[], Vertex[]] {
   // Сгруппируем вершины по положению относительно прямой
