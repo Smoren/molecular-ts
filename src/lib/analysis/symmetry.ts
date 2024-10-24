@@ -26,13 +26,14 @@ export function scoreSymmetryAxis(
   return -calcDistanceBetweenGraphsByTypesCombined(lhsGraph, rhsGraph);
 }
 
-export function scoreBilateralSymmetry(graph: GraphInterface): [number, LineCoefficients] {
+export function scoreBilateralSymmetry(graph: GraphInterface, magic: number = 0.1): [number, LineCoefficients] {
   // Найдем точку M — центр масс графа. Если граф действительно симметричен, ось симметрии будет проходить через M —
   // нам остаётся найти ее угловой коэффициент.
-  const centroid = getGraphCentroid(graph);
+  const centroid = createVector(getGraphCentroid(graph));
 
   // Вычислим R = avg([dist(v, M) for v in vertexes]), где avg(arr) — среднее арифметическое.
   const radius = getGraphAverageRadius(graph, centroid);
+  const eps = radius * 1e-10;
 
   // Вычислим reordered = sorted(vertexes, key=azimuth).
   const sortedVertexes = getVertexesSortedByAzimuth(graph.vertexes, centroid);
@@ -43,12 +44,15 @@ export function scoreBilateralSymmetry(graph: GraphInterface): [number, LineCoef
   let bestScore: number = -Infinity;
   let bestAxis: LineCoefficients = [0, 0];
 
-  single.map(single.pairwise(iter), ([lhs, rhs]) => {
-    const magic = 0.5;
-
+  for (const [lhs, rhs] of single.pairwise(iter)) {
     // Проверим ось симметрии через точки M и a
-    if (lhs.position[0] !== rhs.position[0]) {
-      const axis1 = getLineByPoints(centroid, lhs.position);
+    const candidate1 = createVector(lhs.position);
+    if (!centroid.isEqual(candidate1)) {
+      if (centroid[0] === candidate1[0]) {
+        candidate1.add([eps, 0]);
+      }
+
+      const axis1 = getLineByPoints(centroid, candidate1);
       const score = scoreSymmetryAxis(graph, axis1, radius, magic);
 
       if (score > bestScore) {
@@ -58,8 +62,13 @@ export function scoreBilateralSymmetry(graph: GraphInterface): [number, LineCoef
     }
 
     // Проверим ось симметрии через точку M и посередине между точками a и b
-    if (lhs.position[0] !== rhs.position[0]) {
-      const axis2 = getLineByPoints(centroid, createVector(lhs.position).add(rhs.position).div(2));
+    const candidate2 = createVector(lhs.position).add(rhs.position).div(2);
+    if (!centroid.isEqual(candidate2)) {
+      if (centroid[0] === candidate2[0]) {
+        candidate2.add([eps, 0]);
+      }
+
+      const axis2 = getLineByPoints(centroid, candidate2);
       const score = scoreSymmetryAxis(graph, axis2, radius, magic);
 
       if (score > bestScore) {
@@ -80,7 +89,7 @@ export function scoreBilateralSymmetry(graph: GraphInterface): [number, LineCoef
     // const p2 = createVector(lhs.position).add(rhs.position).div(2);
     // const b2 = p2[1] - k2 * p2[0]; // y = kx + b => b = y - kx
     // checkSymmetryAxis(graph, [k2, b2], radius, 0.5);
-  });
+  }
 
   return [bestScore, bestAxis];
 }
