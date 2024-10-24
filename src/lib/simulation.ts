@@ -16,7 +16,7 @@ import { CompoundsCollector } from './analysis/compounds';
 import { PreventException } from "./drawer/utils";
 import { toVector } from "./math";
 import { createCompoundGraph } from "./analysis/factories";
-import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/functions";
+import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/utils";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;

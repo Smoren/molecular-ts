@@ -1,5 +1,5 @@
 import type { Edge, EdgeMap, GraphConfig, GraphInterface, Vertex, VertexMap } from "./types";
-import { createEdgeMap, createVertexMap } from "./functions";
+import { createEdgeMap, createVertexMap } from "./factories";
 
 export class Graph implements GraphInterface {
   public readonly config: GraphConfig;

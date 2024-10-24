@@ -1,13 +1,13 @@
 import { describe, expect, it } from "@jest/globals";
 import type { GraphInterface } from "../../src/lib/graph/types";
 import type { NumericVector } from "../../src/lib/math/types";
+import { createGraph } from "../../src/lib/graph/factories";
 import {
   calcDistanceBetweenGraphsByEdgeTypes,
   calcDistanceBetweenGraphsByVertexTypes,
   countEdgesGroupedByVertexTypes,
   countVertexesGroupedByType,
-  createGraph
-} from "../../src/lib/graph/functions";
+} from "../../src/lib/graph/utils";
 
 describe.each([
   ...dataProviderForCountVertexesAndEdges(),

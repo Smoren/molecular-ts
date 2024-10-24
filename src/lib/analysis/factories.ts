@@ -1,6 +1,6 @@
 import type { AtomInterface } from "../types/atomic";
 import type { Edge, GraphInterface } from "../graph/types";
-import { createEdge, createGraph, getEdgeId } from "../graph/functions";
+import { createEdge, createGraph, getEdgeId } from "../graph/factories";
 
 export function createCompoundGraph(atom: AtomInterface, typesCount: number): GraphInterface {
   const atoms: Set<AtomInterface> = new Set();

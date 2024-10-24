@@ -1,8 +1,9 @@
 import type { GraphInterface, Vertex } from "./types";
 import type { NumericVector, VectorInterface } from "../math/types";
-import { createGraph } from "./functions";
+import { createGraph } from "./factories";
 import { distanceToLine } from "../math/geometry";
-import { createVector } from "../math";
+import { createFilledArray, createVector, toVector } from "../math";
+import { getPairIndex, getPairsCount } from "../math/helpers";
 
 export function getGraphCentroid(graph: GraphInterface): NumericVector {
   // Найдем точку M — центр масс графа.
@@ -133,4 +134,37 @@ export function hasBreaks(graph: GraphInterface): boolean {
   }
 
   return visited.size !== vertexes.length;
+}
+
+export function countVertexesGroupedByType(graph: GraphInterface): NumericVector {
+  const result = createVector(createFilledArray(graph.typesCount, 0));
+  for (const vertex of graph.vertexes) {
+    result[vertex.type]++;
+  }
+  return result;
+}
+
+export function countEdgesGroupedByVertexTypes(graph: GraphInterface): NumericVector {
+  const vertexMap = graph.vertexMap;
+  const result = createVector(createFilledArray(getPairsCount(graph.typesCount), 0));
+  for (const edge of graph.edges) {
+    const index = getPairIndex([vertexMap[edge.lhsId].type, vertexMap[edge.rhsId].type], graph.typesCount)
+    result[index]++;
+  }
+  return result;
+}
+
+export function calcDistanceBetweenGraphsByVertexTypes(lhs: GraphInterface, rhs: GraphInterface): number {
+  return toVector(countVertexesGroupedByType(lhs)).sub(countVertexesGroupedByType(rhs)).abs;
+}
+
+export function calcDistanceBetweenGraphsByEdgeTypes(lhs: GraphInterface, rhs: GraphInterface): number {
+  return toVector(countEdgesGroupedByVertexTypes(lhs)).sub(countEdgesGroupedByVertexTypes(rhs)).abs;
+}
+
+export function calcDistanceBetweenGraphsByTypesCombined(lhs: GraphInterface, rhs: GraphInterface): number {
+  const lhsVector = toVector(countVertexesGroupedByType(lhs)).concat(countEdgesGroupedByVertexTypes(lhs));
+  const rhsVector = toVector(countVertexesGroupedByType(rhs)).concat(countEdgesGroupedByVertexTypes(rhs));
+
+  return lhsVector.sub(rhsVector).abs;
 }
