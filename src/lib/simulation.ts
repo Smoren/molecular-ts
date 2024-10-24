@@ -17,6 +17,7 @@ import { PreventException } from "./drawer/utils";
 import { toVector } from "./math";
 import { createCompoundGraph } from "./analysis/factories";
 import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/utils";
+import { scoreBilateralSymmetry } from "./analysis/symmetry";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -235,13 +236,12 @@ export class Simulation implements SimulationInterface {
       );
       if (grabbedAtom) {
         const graph = createCompoundGraph(grabbedAtom, this.config.typesConfig.FREQUENCIES.length);
-        console.log(
-          'ATOM FOUND',
-          grabbedAtom,
-          graph,
-          countVertexesGroupedByType(graph),
-          countEdgesGroupedByVertexTypes(graph),
-        );
+        const symmetryData = scoreBilateralSymmetry(graph);
+        console.log('ATOM', grabbedAtom);
+        console.log('GRAPH', graph);
+        console.log('COUNT VERTEXES', countVertexesGroupedByType(graph));
+        console.log('COUNT EDGES', countEdgesGroupedByVertexTypes(graph));
+        console.log('SYMMETRY', symmetryData);
       }
       throw new PreventException('prevent exception');
     });
