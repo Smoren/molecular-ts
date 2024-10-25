@@ -20,3 +20,17 @@ export function getLineByPoints(lhs: NumericVector, ths: NumericVector): LineCoe
 
   return [k, b];
 }
+
+export function findOrthogonalLine(line: LineCoefficients, x: number): LineCoefficients {
+  let [k, b] = line;
+  const y = k * x + b;
+
+  if (k === 0) {
+    k = 1e-10;
+  }
+
+  const kOrthogonal = -1 / k;
+  const bOrthogonal = y - kOrthogonal * x;
+
+  return [kOrthogonal, bOrthogonal];
+}

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "@jest/globals";
 import type { LineCoefficients, NumericVector } from "../../src/lib/math/types";
-import { distanceToLine, getLineByPoints } from "../../src/lib/math/geometry";
+import { distanceToLine, findOrthogonalLine, getLineByPoints } from "../../src/lib/math/geometry";
+import { expectVectorToBeCloseTo } from "../helpers";
 
 describe.each([
   ...dataProviderForDistanceToLine(),
@@ -78,6 +79,48 @@ function dataProviderForGetLineByPoints(): Array<[NumericVector, NumericVector]>
     [
       [1, 2],
       [1.00000000001, 2],
+    ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForFindOrthogonalLine(),
+] as Array<[LineCoefficients, number, LineCoefficients]>)(
+  'Function findOrthogonalLine Test',
+  (line, x, expected) => {
+    it('', () => {
+      const actual = findOrthogonalLine(line, x);
+      expectVectorToBeCloseTo(actual, expected, 4);
+    });
+  },
+);
+
+function dataProviderForFindOrthogonalLine(): Array<[LineCoefficients, number, LineCoefficients]> {
+  return [
+    [
+      [1, 0],
+      0,
+      [-1, 0],
+    ],
+    [
+      [1, 0],
+      1,
+      [-1, 2],
+    ],
+    [
+      [2, -3],
+      3,
+      [-0.5, 4.5],
+    ],
+    [
+      [-2, 5],
+      -3,
+      [0.5, 12.5],
+    ],
+    [
+      [0, 2],
+      -3,
+      [-10000000000, -29999999998],
     ],
   ];
 }
