@@ -64,6 +64,7 @@ export function scoreBilateralSymmetry(
   graph: GraphInterface,
   scoreAxisFunction: ScoreSymmetryAxisFunction,
   magic: number = 0.1,
+  eps: number = 1e-10,
 ): [number, LineCoefficients] {
   // Найдем точку M — центр масс графа. Если граф действительно симметричен, ось симметрии будет проходить через M —
   // нам остаётся найти ее угловой коэффициент.
@@ -71,7 +72,6 @@ export function scoreBilateralSymmetry(
 
   // Вычислим R = avg([dist(v, M) for v in vertexes]), где avg(arr) — среднее арифметическое.
   const radius = getGraphAverageRadius(graph, centroid);
-  const eps = radius * 1e-10;
 
   // Вычислим reordered = sorted(vertexes, key=azimuth).
   const sortedVertexes = getVertexesSortedByAzimuth(graph.vertexes, centroid);
@@ -91,7 +91,7 @@ export function scoreBilateralSymmetry(
       candidates.push(candidate1);
     }
 
-    // Проверим ось симметрии через точки M и a
+    // Проверим ось симметрии через точку M и середину между точками a и b
     const candidate2 = createVector(lhs.position).add(rhs.position).div(2);
     if (!centroid.isEqual(candidate2)) {
       candidates.push(candidate2);
