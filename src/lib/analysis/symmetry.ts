@@ -1,5 +1,5 @@
 import { infinite, single } from "itertools-ts";
-import type { LineCoefficients } from "../math/types";
+import type { LineCoefficients, NumericVector, VectorInterface } from "../math/types";
 import type { GraphInterface } from "../graph/types";
 import { createVector, toVector } from "../math";
 import {
@@ -16,23 +16,39 @@ import { getLineByPoints } from "../math/geometry";
 // TODO parametrize type+linked_types
 // TODO bilateral: perpendicular axis for another check
 
-type ScoreSymmetryAxisFunction = (
-  graph: GraphInterface,
-  line: LineCoefficients,
-  radius: number,
-  magic: number,
-) => number;
+type ScoreSymmetryAxisFunctionArguments = {
+  graph: GraphInterface;
+  axis: LineCoefficients;
+  centroid: NumericVector;
+  radius: number;
+  magic: number;
+}
 
-export function scoreSymmetryAxis(
-  graph: GraphInterface,
-  line: LineCoefficients,
-  radius: number,
-  magic: number,
-): number {
+type ScoreSymmetryAxisFunction = (params: ScoreSymmetryAxisFunctionArguments) => number;
+
+export function scoreSymmetryAxis({
+  graph,
+  axis,
+  radius,
+  magic,
+}: ScoreSymmetryAxisFunctionArguments): number {
   // Если расстояние от точки (вершина) до прямой (ось-кандидат с коэффициентом k) не превышает R * MAGIC,
   // где MAGIC — некая экспериментально подобранная константа, считаем, что эта вершина лежит на оси симметрии
   // minDistance = R * MAGIC
-  const [lhsGraph, rhsGraph] = splitGraphByLine(graph, line, radius*magic);
+  const [lhsGraph, rhsGraph] = splitGraphByLine(graph, axis, radius*magic);
+
+  return -calcDistanceBetweenGraphsByTypesCombined(lhsGraph, rhsGraph);
+}
+
+export function scoreSymmetryAxisExtended({
+  graph,
+  axis,
+  centroid,
+  radius,
+  magic,
+}: ScoreSymmetryAxisFunctionArguments): number {
+  // TODO implement
+  const [lhsGraph, rhsGraph] = splitGraphByLine(graph, axis, radius*magic);
 
   return -calcDistanceBetweenGraphsByTypesCombined(lhsGraph, rhsGraph);
 }
@@ -60,35 +76,37 @@ export function scoreBilateralSymmetry(
   let bestAxis: LineCoefficients = [0, 0];
 
   for (const [lhs, rhs] of single.pairwise(iter)) {
+    const candidates: VectorInterface[] = [];
+
     // Проверим ось симметрии через точки M и a
     const candidate1 = createVector(lhs.position);
     if (!centroid.isEqual(candidate1)) {
-      if (centroid[0] === candidate1[0]) {
-        candidate1.add([eps, 0]);
-      }
-
-      const axis1 = getLineByPoints(centroid, candidate1);
-      const score = scoreAxisFunction(graph, axis1, radius, magic);
-
-      if (score > bestScore) {
-        bestScore = score;
-        bestAxis = axis1;
-      }
+      candidates.push(candidate1);
     }
 
-    // Проверим ось симметрии через точку M и посередине между точками a и b
+    // Проверим ось симметрии через точки M и a
     const candidate2 = createVector(lhs.position).add(rhs.position).div(2);
     if (!centroid.isEqual(candidate2)) {
-      if (centroid[0] === candidate2[0]) {
-        candidate2.add([eps, 0]);
+      candidates.push(candidate2);
+    }
+
+    for (const candidate of candidates) {
+      if (centroid[0] === candidate[0]) {
+        candidate.add([eps, 0]);
       }
 
-      const axis2 = getLineByPoints(centroid, candidate2);
-      const score = scoreAxisFunction(graph, axis2, radius, magic);
+      const axis = getLineByPoints(centroid, candidate);
+      const score = scoreAxisFunction({
+        graph,
+        axis,
+        centroid,
+        radius,
+        magic,
+      });
 
       if (score > bestScore) {
         bestScore = score;
-        bestAxis = axis2;
+        bestAxis = axis;
       }
     }
 
