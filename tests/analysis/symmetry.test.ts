@@ -2,7 +2,7 @@ import { describe, expect, it } from "@jest/globals";
 import type { GraphConfig } from "../../src/lib/graph/types";
 import type { LineCoefficients } from "../../src/lib/math/types";
 import { Graph } from "../../src/lib/graph/models";
-import { scoreBilateralSymmetry } from "../../src/lib/analysis/symmetry";
+import { scoreBilateralSymmetry, scoreSymmetryAxis } from "../../src/lib/analysis/symmetry";
 import { expectVectorToBeCloseTo } from "../helpers";
 
 describe.each([
@@ -12,7 +12,7 @@ describe.each([
   (config, lineExpected, scoreExpected) => {
     it('', () => {
       const graph = new Graph(config);
-      const [scoreActual, lineActual] = scoreBilateralSymmetry(graph);
+      const [scoreActual, lineActual] = scoreBilateralSymmetry(graph, scoreSymmetryAxis);
       expectVectorToBeCloseTo(lineActual, lineExpected, 4);
       expect(scoreActual).toBeCloseTo(scoreExpected, 4);
     });

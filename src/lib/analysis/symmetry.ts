@@ -16,6 +16,13 @@ import { getLineByPoints } from "../math/geometry";
 // TODO parametrize type+linked_types
 // TODO bilateral: perpendicular axis for another check
 
+type ScoreSymmetryAxisFunction = (
+  graph: GraphInterface,
+  line: LineCoefficients,
+  radius: number,
+  magic: number,
+) => number;
+
 export function scoreSymmetryAxis(
   graph: GraphInterface,
   line: LineCoefficients,
@@ -30,7 +37,11 @@ export function scoreSymmetryAxis(
   return -calcDistanceBetweenGraphsByTypesCombined(lhsGraph, rhsGraph);
 }
 
-export function scoreBilateralSymmetry(graph: GraphInterface, magic: number = 0.1): [number, LineCoefficients] {
+export function scoreBilateralSymmetry(
+  graph: GraphInterface,
+  scoreAxisFunction: ScoreSymmetryAxisFunction,
+  magic: number = 0.1,
+): [number, LineCoefficients] {
   // Найдем точку M — центр масс графа. Если граф действительно симметричен, ось симметрии будет проходить через M —
   // нам остаётся найти ее угловой коэффициент.
   const centroid = createVector(getGraphCentroid(graph));
@@ -57,7 +68,7 @@ export function scoreBilateralSymmetry(graph: GraphInterface, magic: number = 0.
       }
 
       const axis1 = getLineByPoints(centroid, candidate1);
-      const score = scoreSymmetryAxis(graph, axis1, radius, magic);
+      const score = scoreAxisFunction(graph, axis1, radius, magic);
 
       if (score > bestScore) {
         bestScore = score;
@@ -73,7 +84,7 @@ export function scoreBilateralSymmetry(graph: GraphInterface, magic: number = 0.
       }
 
       const axis2 = getLineByPoints(centroid, candidate2);
-      const score = scoreSymmetryAxis(graph, axis2, radius, magic);
+      const score = scoreAxisFunction(graph, axis2, radius, magic);
 
       if (score > bestScore) {
         bestScore = score;
