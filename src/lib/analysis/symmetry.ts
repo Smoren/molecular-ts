@@ -14,6 +14,7 @@ import { getLineByPoints } from "../math/geometry";
 
 // TODO parametrize type+edges_count
 // TODO parametrize type+linked_types
+// TODO bilateral: perpendicular axis for another check
 
 export function scoreSymmetryAxis(
   graph: GraphInterface,
