@@ -40,17 +40,24 @@ export function scoreSymmetryAxis({
   return -calcDistanceBetweenGraphsByTypesCombined(lhsGraph, rhsGraph);
 }
 
-export function scoreSymmetryAxisExtended({
+export function scoreSymmetryAxisByQuartering({
   graph,
   axis,
   centroid,
   radius,
   magic,
 }: ScoreSymmetryAxisFunctionArguments): number {
-  // TODO implement
   const [lhsGraph, rhsGraph] = splitGraphByLine(graph, axis, radius*magic);
 
-  return -calcDistanceBetweenGraphsByTypesCombined(lhsGraph, rhsGraph);
+  // TODO new axis is perpendicular
+  const orthogonalAxis = axis;
+
+  const [lhsLhsGraph, rhsLhsGraph] = splitGraphByLine(lhsGraph, orthogonalAxis, radius*magic);
+  const [lhsRhsGraph, rhsRhsGraph] = splitGraphByLine(rhsGraph, orthogonalAxis, radius*magic);
+
+  return -calcDistanceBetweenGraphsByTypesCombined(lhsGraph, rhsGraph) +
+    -calcDistanceBetweenGraphsByTypesCombined(lhsLhsGraph, lhsRhsGraph) +
+    -calcDistanceBetweenGraphsByTypesCombined(rhsLhsGraph, rhsRhsGraph);
 }
 
 export function scoreBilateralSymmetry(
