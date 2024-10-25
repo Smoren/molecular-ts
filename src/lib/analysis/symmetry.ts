@@ -10,7 +10,7 @@ import {
   getVertexesSortedByAzimuth,
   splitGraphByLine,
 } from "../graph/utils";
-import { getLineByPoints } from "../math/geometry";
+import { findOrthogonalLine, getLineByPoints } from "../math/geometry";
 
 // TODO parametrize type+edges_count
 // TODO parametrize type+linked_types
@@ -49,8 +49,7 @@ export function scoreSymmetryAxisByQuartering({
 }: ScoreSymmetryAxisFunctionArguments): number {
   const [lhsGraph, rhsGraph] = splitGraphByLine(graph, axis, radius*magic);
 
-  // TODO new axis is perpendicular
-  const orthogonalAxis = axis;
+  const orthogonalAxis = findOrthogonalLine(axis, centroid[0]);
 
   const [lhsLhsGraph, rhsLhsGraph] = splitGraphByLine(lhsGraph, orthogonalAxis, radius*magic);
   const [lhsRhsGraph, rhsRhsGraph] = splitGraphByLine(rhsGraph, orthogonalAxis, radius*magic);
