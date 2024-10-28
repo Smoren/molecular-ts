@@ -15,8 +15,12 @@ import type { Compound } from './types/analysis';
 import { CompoundsCollector } from './analysis/compounds';
 import { PreventException } from "./drawer/utils";
 import { toVector } from "./math";
-import { createCompoundGraph } from "./analysis/factories";
-import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/utils";
+import { createCompoundGraph, createCompoundGraphByAtom } from "./analysis/factories";
+import {
+  calcDistanceBetweenGraphsByTypesCombined,
+  countEdgesGroupedByVertexTypes,
+  countVertexesGroupedByType,
+} from "./graph/utils";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./analysis/symmetry";
 import { clusterGraphs } from "./graph/clusterization";
 
@@ -227,29 +231,34 @@ export class Simulation implements SimulationInterface {
     });
 
     this.drawer.eventManager.onMouseDown((event) => {
-      if (!event.ctrlKey) {
-        return;
-      }
-      grabbedAtom = this.clusterManager.findAtomByCoords(
+      const atom = this.clusterManager.findAtomByCoords(
         event.coords,
         this.config.typesConfig.RADIUS,
         this.config.worldConfig.ATOM_RADIUS*2,
       );
-      if (grabbedAtom) {
-        const graph = createCompoundGraph(grabbedAtom, this.config.typesConfig.FREQUENCIES.length);
-        const symmetryData = scoreBilateralSymmetry(graph, scoreSymmetryAxisByQuartering);
 
-        // TODO
-        // const graphs = this.exportCompounds().map((compound) => createCompoundGraph(compound[0], this.config.typesConfig.FREQUENCIES.length));
-        // const clusters = clusterGraphs(graphs, symmetryData);
+      if (event.ctrlKey) {
+        grabbedAtom = atom;
+        throw new PreventException('prevent exception');
+      }
+
+      if (atom) {
+        const graph = createCompoundGraphByAtom(atom, this.config.typesConfig.FREQUENCIES.length);
+        const symmetryData = scoreBilateralSymmetry(graph, scoreSymmetryAxisByQuartering);
 
         console.log('ATOM', grabbedAtom);
         console.log('GRAPH', graph);
         console.log('COUNT VERTEXES', countVertexesGroupedByType(graph));
         console.log('COUNT EDGES', countEdgesGroupedByVertexTypes(graph));
         console.log('SYMMETRY', symmetryData);
+
+        if (event.shiftKey) {
+          const graphs = this.exportCompounds()
+            .map((compound) => createCompoundGraph(compound, this.config.typesConfig.FREQUENCIES.length));
+          const clusters = clusterGraphs(graphs, calcDistanceBetweenGraphsByTypesCombined);
+          console.log('COMPOUNDS CLUSTERS', clusters);
+        }
       }
-      throw new PreventException('prevent exception');
     });
 
     this.drawer.eventManager.onMouseGrab((event) => {

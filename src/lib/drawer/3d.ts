@@ -312,6 +312,7 @@ export class Drawer3d implements DrawerInterface {
             coords: [pos.x, pos.y, pos.z],
             extraKey: keyDown,
             ctrlKey: event.ctrlKey,
+            shiftKey: event.shiftKey,
           });
         } catch (e) {
         }
@@ -325,6 +326,7 @@ export class Drawer3d implements DrawerInterface {
           coords: [pos.x, pos.y, pos.z],
           extraKey: keyDown,
           ctrlKey: event.ctrlKey,
+          shiftKey: event.shiftKey,
         });
       }
     };
@@ -336,6 +338,7 @@ export class Drawer3d implements DrawerInterface {
           coords: [pos.x, pos.y, pos.z],
           extraKey: keyDown,
           ctrlKey: event.ctrlKey,
+          shiftKey: event.shiftKey,
         });
       } catch (e) {
       }

@@ -175,7 +175,12 @@ export class Drawer2d implements DrawerInterface {
       const coords = createVector(
         transposeCoordsBackward([event.offsetX, event.offsetY], this.viewConfig.offset, this.viewConfig.scale),
       );
-      this.eventManager.triggerClick({ coords, extraKey: keyDown, ctrlKey: event.ctrlKey });
+      this.eventManager.triggerClick({
+        coords,
+        extraKey: keyDown,
+        ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
+      });
     });
 
     this.domElement.addEventListener('wheel', (event: WheelEvent) => {
@@ -217,6 +222,7 @@ export class Drawer2d implements DrawerInterface {
           coords: transposeCoordsBackward(coords, this.viewConfig.offset, this.viewConfig.scale),
           extraKey: keyDown,
           ctrlKey: event.ctrlKey,
+          shiftKey: event.shiftKey,
         });
       } catch (e) {
         return;
@@ -235,6 +241,7 @@ export class Drawer2d implements DrawerInterface {
         coords: transposeCoordsBackward(coords, this.viewConfig.offset, this.viewConfig.scale),
         extraKey: keyDown,
         ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
       });
     };
     const mouseMoveHandler = (event: MouseEvent | TouchEvent) => {
@@ -246,6 +253,7 @@ export class Drawer2d implements DrawerInterface {
         coords: transposeCoordsBackward(coords, this.viewConfig.offset, this.viewConfig.scale),
         extraKey: keyDown,
         ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
       });
 
       if (mouseDownVector === undefined) {
@@ -256,6 +264,7 @@ export class Drawer2d implements DrawerInterface {
         coords: transposeCoordsBackward(coords, this.viewConfig.offset, this.viewConfig.scale),
         extraKey: keyDown,
         ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
       });
 
       const diff = coords.clone().sub(mouseDownVector);

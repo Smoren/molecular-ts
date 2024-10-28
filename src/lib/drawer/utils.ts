@@ -89,6 +89,7 @@ export class EventManager implements EventManagerInterface {
         coords: this.lastPoint as NumericVector,
         extraKey: undefined,
         ctrlKey: false,
+        shiftKey: false,
       }, false);
     }, 30);
   }

@@ -12,6 +12,7 @@ export type MouseEventData = {
   coords: NumericVector;
   extraKey: number | undefined;
   ctrlKey: boolean;
+  shiftKey: boolean;
 }
 
 export type MouseEventListenerCallback = (event: MouseEventData) => void;
