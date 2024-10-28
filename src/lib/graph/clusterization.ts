@@ -1,56 +1,119 @@
 import type { GraphInterface } from "./types";
 import { calcDistanceBetweenGraphsByTypesCombined } from "./utils";
-import { kMeans, TSNE } from '../math/clusterization';
 
-export function clusterGraphs(graphs: GraphInterface[]): GraphInterface[][] {
-  if (graphs.length === 0) return [];
+export function clusterGraphs(graphs: GraphInterface[], epsilon: number = 1.0, minPts: number = 2): GraphInterface[][] {
+  const clusters: Array<Set<GraphInterface>> = [];
+  const visited = new Set<number>();
+  const clusterAssignments: Map<number, number> = new Map(); // Maps graph index to cluster index
 
-  // Step 1: Select landmarks
-  const NUM_LANDMARKS = Math.min(30, graphs.length); // Adjust as needed
-  const landmarks = graphs.slice(0, NUM_LANDMARKS);
+  for (let i = 0; i < graphs.length; i++) {
+    const graph = graphs[i];
+    if (visited.has(i)) {
+      continue;
+    }
 
-  // Step 2: Create feature vectors based on distances to landmarks
-  const featureVectors: number[][] = graphs.map((graph) => {
-    return landmarks.map((landmark) => calcDistanceBetweenGraphsByTypesCombined(graph, landmark));
-  });
+    visited.add(i);
+    const neighborIndices = regionQuery(graphs, i, epsilon);
 
-  // Optional: Normalize feature vectors
-  // For simplicity, we'll skip normalization, but it's recommended based on your data
+    if (neighborIndices.length < minPts) {
+      // Point is considered noise (optional to handle)
+      continue;
+    }
 
-  // Step 3: Apply t-SNE to reduce dimensions to 2
-  const tsne = new TSNE({
-    dim: 2,
-    perplexity: 30,
-    learningRate: 200,
-    nIter: 300, // Adjust based on convergence
-    momentum: 0.5,
-    initialMomentum: 0.5,
-  });
-
-  const tsneResult = tsne.run(featureVectors);
-  const embeddings = tsneResult.output; // Array of [x, y] points
-
-  // Step 4: Perform K-Means clustering on embeddings
-  // Decide the number of clusters
-  const NUM_CLUSTERS = Math.ceil(Math.sqrt(graphs.length / 2)); // Example heuristic
-
-  const kmeansResult = kMeans(embeddings, NUM_CLUSTERS, 100);
-  const assignments = kmeansResult.clusters;
-
-  // Step 5: Group graphs into clusters
-  const clusters: GraphInterface[][] = [];
-  for (let i = 0; i < NUM_CLUSTERS; i++) {
-    clusters.push([]);
+    // Start a new cluster
+    const clusterIndex = clusters.length;
+    clusters.push(new Set());
+    expandCluster(
+      graphs,
+      i,
+      neighborIndices,
+      clusters[clusterIndex],
+      clusterIndex,
+      visited,
+      clusterAssignments,
+      epsilon,
+      minPts
+    );
   }
 
-  assignments.forEach((clusterIndex, graphIndex) => {
-    if (clusters[clusterIndex]) {
-      clusters[clusterIndex].push(graphs[graphIndex]);
-    } else {
-      // In case of unexpected cluster index
-      clusters.push([graphs[graphIndex]]);
-    }
-  });
+  return clusters.map((cluster) => [...cluster]);
+}
 
-  return clusters;
+/**
+ * Expands the cluster to include density-reachable items.
+ * @param graphs - The array of all graphs.
+ * @param index - The index of the current graph.
+ * @param neighborIndices - Neighboring graph indices of the current graph.
+ * @param cluster - The current cluster being expanded.
+ * @param clusterIndex - The index of the current cluster.
+ * @param visited - Set of visited graph indices.
+ * @param clusterAssignments - Map of graph indices to their cluster indices.
+ * @param epsilon - The maximum distance for neighborhood.
+ * @param minPts - The minimum number of points to form a dense region.
+ */
+function expandCluster(
+  graphs: GraphInterface[],
+  index: number,
+  neighborIndices: number[],
+  cluster: Set<GraphInterface>,
+  clusterIndex: number,
+  visited: Set<number>,
+  clusterAssignments: Map<number, number>,
+  epsilon: number,
+  minPts: number
+) {
+  // Add the starting point to the cluster
+  cluster.add(graphs[index]);
+  clusterAssignments.set(index, clusterIndex);
+
+  let i = 0;
+  while (i < neighborIndices.length) {
+    const neighborIndex = neighborIndices[i];
+
+    if (!visited.has(neighborIndex)) {
+      visited.add(neighborIndex);
+      const neighborNeighborIndices = regionQuery(graphs, neighborIndex, epsilon);
+
+      if (neighborNeighborIndices.length >= minPts) {
+        // Add new neighbors to the list if they are not already included
+        for (const nIdx of neighborNeighborIndices) {
+          if (!neighborIndices.includes(nIdx)) {
+            neighborIndices.push(nIdx);
+          }
+        }
+      }
+    }
+
+    if (!clusterAssignments.has(neighborIndex)) {
+      // Assign the neighbor to the cluster
+      cluster.add(graphs[neighborIndex]);
+      clusterAssignments.set(neighborIndex, clusterIndex);
+    }
+
+    i++;
+  }
+}
+
+/**
+ * Finds the neighbors of a given graph within the epsilon distance.
+ * @param graphs - The array of all graphs.
+ * @param index - The index of the graph to find neighbors for.
+ * @param epsilon - The maximum distance for neighborhood.
+ * @returns An array of indices of neighboring graphs.
+ */
+function regionQuery(graphs: GraphInterface[], index: number, epsilon: number): number[] {
+  const neighbors: number[] = [];
+
+  for (let i = 0; i < graphs.length; i++) {
+    if (i === index) {
+      continue;
+    }
+
+    const distance = calcDistanceBetweenGraphsByTypesCombined(graphs[index], graphs[i]);
+    if (distance <= epsilon) {
+      neighbors.push(i);
+    }
+  }
+
+  return neighbors;
 }

@@ -253,6 +253,8 @@ export class Simulation implements SimulationInterface {
         console.log('SYMMETRY', symmetryData);
 
         if (event.shiftKey) {
+          // TODO похоже, что работает неправильно
+          console.log(this.exportCompounds().filter((compound) => compound.size > 4));
           const graphs = this.exportCompounds()
             .filter((compound) => compound.size > 4)
             .map((compound) => createCompoundGraph(compound, this.config.typesConfig.FREQUENCIES.length))
