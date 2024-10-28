@@ -171,3 +171,18 @@ export function calcDistanceBetweenGraphsByEdgeTypes(lhs: GraphInterface, rhs: G
 export function calcDistanceBetweenGraphsByTypesCombined(lhs: GraphInterface, rhs: GraphInterface): number {
   return calcGraphParametricPosition(lhs).sub(calcGraphParametricPosition(rhs)).abs;
 }
+
+export function calcGraphsClusterAverageDifference(graphs: GraphInterface[]): number {
+  let sum = 0;
+  let divider = 0;
+  for (const lhs of graphs) {
+    for (const rhs of graphs) {
+      if (lhs === rhs) {
+        continue;
+      }
+      sum += calcDistanceBetweenGraphsByTypesCombined(lhs, rhs);
+      divider++;
+    }
+  }
+  return sum / divider;
+}

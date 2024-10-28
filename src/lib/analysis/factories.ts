@@ -3,6 +3,24 @@ import type { Edge, GraphInterface } from "../graph/types";
 import { createEdge, createGraph, getEdgeId } from "../graph/factories";
 import type { Compound } from '../types/analysis';
 
+export function createCompoundByAtom(atom: AtomInterface): Compound {
+  const compound: Compound = new Set();
+  const atomsToHandle = [atom];
+
+  while (atomsToHandle.length > 0) {
+    const lhsAtom = atomsToHandle.pop()!;
+    compound.add(lhsAtom);
+
+    for (const rhsAtom of Object.values(lhsAtom.bonds.getStorage())) {
+      if (!compound.has(rhsAtom)) {
+        atomsToHandle.push(rhsAtom);
+      }
+    }
+  }
+
+  return compound;
+}
+
 export function createCompoundGraphByAtom(atom: AtomInterface, typesCount: number): GraphInterface {
   const atoms: Set<AtomInterface> = new Set();
   const edgeMap: Record<string, Edge> = {};

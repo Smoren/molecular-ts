@@ -88,8 +88,8 @@ export type ExtendedStatSummary = {
 } & StatSummary;
 
 export interface CompoundsCollectorInterface {
-  handleLinks(links: Iterable<LinkInterface>): void;
-  handleLink(link: LinkInterface): void;
+  handleAtoms(atoms: Iterable<AtomInterface>): void;
+  handleAtom(atom: AtomInterface): void;
   getCompounds(): Array<Compound>;
 }
 

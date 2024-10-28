@@ -1,4 +1,4 @@
-import type { AtomInterface, LinkInterface } from '../types/atomic';
+import type { AtomInterface } from '../types/atomic';
 import type {
   Compound,
   CompoundsAnalyzerSummary,
@@ -7,48 +7,37 @@ import type {
   StatSummary,
 } from '../types/analysis';
 import { createFilledArray, createVector, round } from '../math';
+import { createCompoundByAtom } from './factories';
 
 export class CompoundsCollector implements CompoundsCollectorInterface {
-  private atomCompoundsMap: Map<AtomInterface, number> = new Map();
+  private visited: Set<AtomInterface> = new Set();
   private compounds: Array<Compound> = [];
 
-  public handleLinks(links: Iterable<LinkInterface>): void {
-    for (const link of links) {
-      this.handleLink(link);
+  public handleAtoms(atoms: Iterable<AtomInterface>): void {
+    for (const atom of atoms) {
+      this.handleAtom(atom);
     }
   }
 
-  public handleLink(link: LinkInterface): void {
-    const compoundId = this.getCompoundId(link);
+  public handleAtom(atom: AtomInterface): void {
+    if (this.visited.has(atom)) {
+      return;
+    }
 
-    this.atomCompoundsMap.set(link.lhs, compoundId);
-    this.atomCompoundsMap.set(link.rhs, compoundId);
+    const compound = createCompoundByAtom(atom);
+    for (const atom of compound) {
+      this.visited.add(atom);
+    }
 
-    this.compounds[compoundId].add(link.lhs);
-    this.compounds[compoundId].add(link.rhs);
+    if (compound.size < 2) {
+      return;
+    }
+
+    this.compounds.push(compound);
   }
 
   getCompounds(): Array<Compound> {
     return this.compounds;
-  }
-
-  private getCompoundId(link: LinkInterface): number {
-    if (this.atomCompoundsMap.has(link.lhs)) {
-      return this.atomCompoundsMap.get(link.lhs) as number;
-    }
-
-    if (this.atomCompoundsMap.has(link.rhs)) {
-      return this.atomCompoundsMap.get(link.rhs) as number;
-    }
-
-    const id = this.getNextId();
-    this.compounds.push(new Set());
-
-    return id;
-  }
-
-  private getNextId(): number {
-    return this.compounds.length;
   }
 }
 

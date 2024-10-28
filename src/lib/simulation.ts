@@ -1,3 +1,4 @@
+import { reduce } from "itertools-ts";
 import type { SimulationConfig, SimulationInterface } from './types/simulation';
 import type { AtomInterface } from './types/atomic';
 import type { DrawerInterface } from './types/drawer';
@@ -17,7 +18,7 @@ import { PreventException } from "./drawer/utils";
 import { toVector } from "./math";
 import { createCompoundGraph, createCompoundGraphByAtom } from "./analysis/factories";
 import {
-  calcDistanceBetweenGraphsByTypesCombined,
+  calcGraphsClusterAverageDifference,
   countEdgesGroupedByVertexTypes,
   countVertexesGroupedByType,
 } from "./graph/utils";
@@ -168,8 +169,8 @@ export class Simulation implements SimulationInterface {
   }
 
   exportCompounds(): Compound[] {
-    const collector = new CompoundsCollector()
-    collector.handleLinks(this._links);
+    const collector = new CompoundsCollector();
+    collector.handleAtoms(this._atoms);
     return collector.getCompounds();
   }
 
@@ -253,13 +254,27 @@ export class Simulation implements SimulationInterface {
         console.log('SYMMETRY', symmetryData);
 
         if (event.shiftKey) {
-          // TODO похоже, что работает неправильно
-          console.log(this.exportCompounds().filter((compound) => compound.size > 4));
           const graphs = this.exportCompounds()
             .filter((compound) => compound.size > 4)
             .map((compound) => createCompoundGraph(compound, this.config.typesConfig.FREQUENCIES.length))
+
           const clusters = clusterGraphs(graphs);
+          clusters.sort((lhs, rhs) => rhs.length - lhs.length);
+          console.log('TOTAL COMPOUNDS', graphs.length);
+          console.log('NON-CLUSTERED COMPOUNDS', graphs.length - reduce.toSum(clusters.map((cluster) => cluster.length)));
           console.log('COMPOUNDS CLUSTERS', clusters);
+
+          const clusterMarks = clusters.map((cluster) => {
+            const symmetry = reduce.toAverage(cluster.map((graph) => scoreBilateralSymmetry(graph, scoreSymmetryAxisByQuartering)[0]));
+            return {
+              'size': cluster.length,
+              'difference': calcGraphsClusterAverageDifference(cluster),
+              'symmetry': symmetry,
+              'vertexes_bounds': reduce.toMinMax(cluster.map((graph) => graph.vertexes.length)),
+              'edges_bounds': reduce.toMinMax(cluster.map((graph) => graph.edges.length)),
+            };
+          });
+          console.log('CLUSTER MARKS', clusterMarks);
         }
       }
     });

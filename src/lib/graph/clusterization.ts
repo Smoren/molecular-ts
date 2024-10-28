@@ -7,7 +7,6 @@ export function clusterGraphs(graphs: GraphInterface[], epsilon: number = 1.0, m
   const clusterAssignments: Map<number, number> = new Map(); // Maps graph index to cluster index
 
   for (let i = 0; i < graphs.length; i++) {
-    const graph = graphs[i];
     if (visited.has(i)) {
       continue;
     }
