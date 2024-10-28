@@ -32,3 +32,5 @@ export interface GraphInterface extends GraphConfig {
   getEdges(vertexId: number): Edge[];
   addEdge(edge: Edge): void;
 }
+
+export type GraphDistanceFunction = (lhs: GraphInterface, rhs: GraphInterface) => number;
