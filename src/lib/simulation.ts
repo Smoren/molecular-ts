@@ -246,7 +246,7 @@ export class Simulation implements SimulationInterface {
         const graph = createCompoundGraphByAtom(atom, this.config.typesConfig.FREQUENCIES.length);
         const symmetryData = scoreBilateralSymmetry(graph, scoreSymmetryAxisByQuartering);
 
-        console.log('ATOM', grabbedAtom);
+        console.log('ATOM', atom);
         console.log('GRAPH', graph);
         console.log('COUNT VERTEXES', countVertexesGroupedByType(graph));
         console.log('COUNT EDGES', countEdgesGroupedByVertexTypes(graph));
