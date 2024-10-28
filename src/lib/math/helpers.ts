@@ -62,3 +62,12 @@ export function getPairIndex(pair: [number, number], base: number): number {
 export function getPairsCount(base: number): number {
   return getPairIndex([base-1, base-1], base) + 1;
 }
+
+export function shuffleArray<T>(array: T[]): T[] {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}

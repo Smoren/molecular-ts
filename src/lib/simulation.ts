@@ -254,8 +254,9 @@ export class Simulation implements SimulationInterface {
 
         if (event.shiftKey) {
           const graphs = this.exportCompounds()
-            .map((compound) => createCompoundGraph(compound, this.config.typesConfig.FREQUENCIES.length));
-          const clusters = clusterGraphs(graphs, calcDistanceBetweenGraphsByTypesCombined);
+            .filter((compound) => compound.size > 4)
+            .map((compound) => createCompoundGraph(compound, this.config.typesConfig.FREQUENCIES.length))
+          const clusters = clusterGraphs(graphs);
           console.log('COMPOUNDS CLUSTERS', clusters);
         }
       }
