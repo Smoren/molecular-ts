@@ -156,6 +156,13 @@ export function countEdgesGroupedByVertexTypes(graph: GraphInterface): NumericVe
   return result;
 }
 
+export function calcGraphParametricPosition(lhs: GraphInterface, rhs: GraphInterface): VectorInterface {
+  const lhsVector = toVector(countVertexesGroupedByType(lhs)).concat(countEdgesGroupedByVertexTypes(lhs));
+  const rhsVector = toVector(countVertexesGroupedByType(rhs)).concat(countEdgesGroupedByVertexTypes(rhs));
+
+  return lhsVector.sub(rhsVector);
+}
+
 export function calcDistanceBetweenGraphsByVertexTypes(lhs: GraphInterface, rhs: GraphInterface): number {
   return toVector(countVertexesGroupedByType(lhs)).sub(countVertexesGroupedByType(rhs)).abs;
 }
@@ -165,8 +172,5 @@ export function calcDistanceBetweenGraphsByEdgeTypes(lhs: GraphInterface, rhs: G
 }
 
 export function calcDistanceBetweenGraphsByTypesCombined(lhs: GraphInterface, rhs: GraphInterface): number {
-  const lhsVector = toVector(countVertexesGroupedByType(lhs)).concat(countEdgesGroupedByVertexTypes(lhs));
-  const rhsVector = toVector(countVertexesGroupedByType(rhs)).concat(countEdgesGroupedByVertexTypes(rhs));
-
-  return lhsVector.sub(rhsVector).abs;
+  return calcGraphParametricPosition(lhs, rhs).abs;
 }

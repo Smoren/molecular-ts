@@ -1,4 +1,4 @@
-import type { NumericVector } from "../math/types";
+import type { NumericVector, VectorInterface } from "../math/types";
 
 export type Vertex = {
   id: number;
@@ -33,4 +33,5 @@ export interface GraphInterface extends GraphConfig {
   addEdge(edge: Edge): void;
 }
 
+export type GraphPositionFunction = (lhs: GraphInterface, rhs: GraphInterface) => VectorInterface;
 export type GraphDistanceFunction = (lhs: GraphInterface, rhs: GraphInterface) => number;
