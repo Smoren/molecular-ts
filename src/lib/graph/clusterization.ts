@@ -6,7 +6,7 @@ type GraphPair = {
   distance: number;
 }
 
-function clusterGraphs(graphs: GraphInterface[], distanceFunction: GraphDistanceFunction): GraphInterface[][] {
+export function clusterGraphs(graphs: GraphInterface[], distanceFunction: GraphDistanceFunction): GraphInterface[][] {
   if (graphs.length === 0) return [];
 
   // Шаг 1: Вычисление всех попарных расстояний

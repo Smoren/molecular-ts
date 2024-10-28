@@ -17,7 +17,8 @@ import { PreventException } from "./drawer/utils";
 import { toVector } from "./math";
 import { createCompoundGraph } from "./analysis/factories";
 import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/utils";
-import { scoreBilateralSymmetry, scoreSymmetryAxis, scoreSymmetryAxisByQuartering } from "./analysis/symmetry";
+import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./analysis/symmetry";
+import { clusterGraphs } from "./graph/clusterization";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -237,6 +238,11 @@ export class Simulation implements SimulationInterface {
       if (grabbedAtom) {
         const graph = createCompoundGraph(grabbedAtom, this.config.typesConfig.FREQUENCIES.length);
         const symmetryData = scoreBilateralSymmetry(graph, scoreSymmetryAxisByQuartering);
+
+        // TODO
+        // const graphs = this.exportCompounds().map((compound) => createCompoundGraph(compound[0], this.config.typesConfig.FREQUENCIES.length));
+        // const clusters = clusterGraphs(graphs, symmetryData);
+
         console.log('ATOM', grabbedAtom);
         console.log('GRAPH', graph);
         console.log('COUNT VERTEXES', countVertexesGroupedByType(graph));
