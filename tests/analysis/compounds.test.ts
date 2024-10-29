@@ -28,7 +28,7 @@ describe.each([
   ) => {
     it('', () => {
       const collector = new CompoundsCollector();
-      collector.handleLinks(links);
+      collector.handleAtoms(atoms);
 
       const atomTypesCount = (new Set(atoms.map(atom => atom.type))).size;
 
