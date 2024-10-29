@@ -1,4 +1,3 @@
-import { reduce } from "itertools-ts";
 import type { SimulationConfig, SimulationInterface } from './types/simulation';
 import type { AtomInterface } from './types/atomic';
 import type { DrawerInterface } from './types/drawer';
@@ -7,7 +6,6 @@ import type { InteractionManagerInterface, PhysicModelInterface } from './types/
 import type { ClusterManagerInterface } from './types/cluster';
 import type { WorldSummary, SummaryManagerInterface } from './types/analysis';
 import { ClusterManager } from './cluster';
-import { createAtom } from './utils/functions';
 import { LinkManager, RulesHelper, RunningState } from './utils/structs';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from './analysis/summary';
@@ -16,14 +14,11 @@ import type { Compound } from './types/analysis';
 import { CompoundsCollector } from './analysis/compounds';
 import { PreventException } from "./drawer/utils";
 import { toVector } from "./math";
-import { createCompoundGraph, createCompoundGraphByAtom } from "./analysis/factories";
-import {
-  calcGraphsClusterAverageDifference,
-  countEdgesGroupedByVertexTypes,
-  countVertexesGroupedByType,
-} from "./graph/utils";
+import { createAtom } from './utils/functions';
+import { createCompoundGraphByAtom } from "./analysis/factories";
+import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/utils";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./analysis/symmetry";
-import { clusterGraphs } from "./graph/clusterization";
+import { gradeCompoundClusters } from "./analysis/utils";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -252,30 +247,15 @@ export class Simulation implements SimulationInterface {
         console.log('COUNT VERTEXES', countVertexesGroupedByType(graph));
         console.log('COUNT EDGES', countEdgesGroupedByVertexTypes(graph));
         console.log('SYMMETRY', symmetryData);
+      }
 
-        if (event.shiftKey) {
-          const graphs = this.exportCompounds()
-            .filter((compound) => compound.size > 4)
-            .map((compound) => createCompoundGraph(compound, this.config.typesConfig.FREQUENCIES.length))
-
-          const clusters = clusterGraphs(graphs);
-          clusters.sort((lhs, rhs) => rhs.length - lhs.length);
-          console.log('TOTAL COMPOUNDS', graphs.length);
-          console.log('NON-CLUSTERED COMPOUNDS', graphs.length - reduce.toSum(clusters.map((cluster) => cluster.length)));
-          console.log('COMPOUNDS CLUSTERS', clusters);
-
-          const clusterMarks = clusters.map((cluster) => {
-            const symmetry = reduce.toAverage(cluster.map((graph) => scoreBilateralSymmetry(graph, scoreSymmetryAxisByQuartering)[0]));
-            return {
-              'size': cluster.length,
-              'difference': calcGraphsClusterAverageDifference(cluster),
-              'symmetry': symmetry,
-              'vertexes_bounds': reduce.toMinMax(cluster.map((graph) => graph.vertexes.length)),
-              'edges_bounds': reduce.toMinMax(cluster.map((graph) => graph.edges.length)),
-            };
-          });
-          console.log('CLUSTER MARKS', clusterMarks);
-        }
+      if (event.shiftKey) {
+        const clustersSummary = gradeCompoundClusters(
+          this.exportCompounds(),
+          this.config.typesConfig.FREQUENCIES.length,
+          5,
+        );
+        console.log('CLUSTERIZATION GRADE', clustersSummary);
       }
     });
 

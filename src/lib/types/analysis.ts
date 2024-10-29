@@ -1,6 +1,8 @@
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type { QueueInterface } from './utils';
 import type { TypesConfig, WorldConfig } from '../types/config';
+import { calcGraphsClusterAverageDifference } from "@/lib/graph/utils";
+import { reduce } from "itertools-ts";
 
 export type WorldSummary<T> = {
   ATOMS_COUNT: T;
@@ -134,4 +136,20 @@ export type SummaryMatrixRowObject = {
   compoundLengthSummary: StatSummary;
   compoundSpeedSummary: StatSummary;
   compoundDensitySummary: StatSummary;
+}
+
+export type CompoundsClusterGrade = {
+  size: number;
+  difference: number;
+  symmetry: number;
+  vertexes_bounds: [number, number];
+  edges_bounds: [number, number];
+}
+
+export type CompoundsClusterizationSummary = {
+  clusters: CompoundsClusterGrade[];
+  inputCount: number;
+  filteredCount: number;
+  clusteredCount: number;
+  notClusteredCount: number;
 }
