@@ -19,8 +19,8 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
       size: cluster.length,
       difference: calcGraphsClusterAverageDifference(cluster),
       symmetry: symmetry!,
-      vertexes_bounds: reduce.toMinMax(cluster.map((graph) => graph.vertexes.length)) as [number, number],
-      edges_bounds: reduce.toMinMax(cluster.map((graph) => graph.edges.length)) as [number, number],
+      vertexesBounds: reduce.toMinMax(cluster.map((graph) => graph.vertexes.length)) as [number, number],
+      edgesBounds: reduce.toMinMax(cluster.map((graph) => graph.edges.length)) as [number, number],
     };
   });
 
