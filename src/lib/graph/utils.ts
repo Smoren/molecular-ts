@@ -151,6 +151,10 @@ export function hasBreaks(graph: GraphInterface): boolean {
   return visited.size !== vertexes.length;
 }
 
+export function countUniqueTypes(graph: GraphInterface): number {
+  return new Set(graph.vertexes.map((v) => v.type)).size;
+}
+
 export function countVertexesGroupedByType(graph: GraphInterface): NumericVector {
   const result = createVector(createFilledArray(graph.typesCount, 0));
   for (const vertex of graph.vertexes) {

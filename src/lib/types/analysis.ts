@@ -145,6 +145,7 @@ export type CompoundsClusterGrade = {
   symmetry: number;
   vertexesBounds: [number, number];
   edgesBounds: [number, number];
+  typesCountBounds: [number, number],
 }
 
 export type CompoundsClusterizationSummary = {

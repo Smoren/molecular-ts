@@ -1,10 +1,9 @@
 import { reduce } from "itertools-ts";
 import type { CompoundsClusterGrade, Compound, CompoundsClusterizationSummary } from "../types/analysis";
 import { clusterGraphs } from "../graph/clusterization";
-import { calcGraphsClusterAverageDifference } from "../graph/utils";
+import { calcGraphsClusterAverageDifference, countUniqueTypes } from "../graph/utils";
 import { createCompoundGraph } from "./factories";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetry";
-import { createVector } from '@/lib/math';
 
 export function gradeCompoundClusters(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds
@@ -25,6 +24,7 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
       symmetry: symmetry!,
       vertexesBounds: reduce.toMinMax(cluster.map((graph) => graph.vertexes.length)) as [number, number],
       edgesBounds: reduce.toMinMax(cluster.map((graph) => graph.edges.length)) as [number, number],
+      typesCountBounds: reduce.toMinMax(cluster.map((graph) => countUniqueTypes(graph))) as [number, number],
     };
   });
 
@@ -45,7 +45,8 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
 export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): number {
   const averageVertexesCount = reduce.toAverage(clusterGrade.vertexesBounds)!;
   const averageEdgesCount = reduce.toAverage(clusterGrade.edgesBounds)!;
-  return averageVertexesCount * averageEdgesCount * clusterGrade.symmetry;
+  const averageTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)!;
+  return averageVertexesCount * averageEdgesCount * (averageTypesCount - 1) * clusterGrade.symmetry;
 }
 
 export function scoreCompoundClustersSummary(summary: CompoundsClusterizationSummary): number {
