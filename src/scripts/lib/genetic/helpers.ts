@@ -9,13 +9,6 @@ export function getNormalizedLossesSummary(losses: number[]): [number, number, n
   return [minLoss, meanLoss, medianLoss, maxLoss];
 }
 
-export function getAbsoluteLossesSummary(losses: number[]): [number, number] {
-  const minLoss = round(losses[0], 2);
-  const meanLoss = round(losses.reduce((a, b) => a + b, 0) / losses.length, 2);
-
-  return [minLoss, meanLoss];
-}
-
 export function formatJsonString(jsonStr: string) {
   const regex = /(\[)([\d\s.,-]+)(])/g;
   jsonStr = jsonStr.replace(regex, function(_, p1, p2, p3) {

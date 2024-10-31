@@ -5,7 +5,7 @@ import type {
   StrategyConfig,
   GeneticSearchInterface,
   GenerationCallback,
-  GenerationResult,
+  GenerationScores,
   Genome,
   Population,
 } from '../types/genetic';
@@ -27,7 +27,7 @@ abstract class GeneticSearch implements GeneticSearchInterface {
     this.population = this.createPopulation(this.config.populationSize);
   }
 
-  public abstract runGenerationStep(): Promise<GenerationResult>;
+  public abstract runGenerationStep(): Promise<GenerationScores>;
 
   public async run(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
     for (let i=0; i<generationsCount; i++) {
@@ -107,18 +107,18 @@ export class ComposedGeneticSearch extends GeneticSearch implements GeneticSearc
     this.referenceConfig = referenceConfig;
   }
 
-  public async runGenerationStep(): Promise<GenerationResult> {
+  public async runGenerationStep(): Promise<GenerationScores> {
     const results = await this.strategy.runner.run(this.population);
+
     const [normalizedLosses, absoluteLosses] = this.calcLosses(results);
     const [
       sortedPopulation,
-      sortNormalizedLosses,
-      sortAbsoluteLosses,
+      sortedNormalizedLosses,
     ] = this.sortPopulation(normalizedLosses, absoluteLosses);
 
     this.refreshPopulation(sortedPopulation);
 
-    return [sortNormalizedLosses, sortAbsoluteLosses];
+    return sortedNormalizedLosses;
   }
 
   private sortPopulation(normalizedLosses: number[], absoluteLosses: number[]): [Population, number[], number[]] {

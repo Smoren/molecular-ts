@@ -58,12 +58,12 @@ export const actionGeneticClarify = async (...args: string[]) => {
     console.log('[START] Running genetic search');
     let bestId: number = 0;
 
-    await geneticSearch.run(generationsCount, (i, [normalizedLosses]) => {
-      const [normMinLoss, normMeanLoss, normMedianLoss, normMaxLoss] = getNormalizedLossesSummary(normalizedLosses);
+    await geneticSearch.run(generationsCount, (i, scores) => {
+      const [minScore, meanScore, medianScore, maxScore] = getNormalizedLossesSummary(scores);
 
       const bestGenome = geneticSearch.getBestGenome();
       console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
-      console.log(`\tnormalized losses:\tmin=${normMinLoss}\tmean=${normMeanLoss}\tmedian=${normMedianLoss}\tmax=${normMaxLoss}`);
+      console.log(`\tscores:\tmin=${minScore}\tmean=${meanScore}\tmedian=${medianScore}\tmax=${maxScore}`);
 
       if (bestGenome.id > bestId) {
         bestId = bestGenome.id;

@@ -1,7 +1,7 @@
 import os from 'os';
 import { ArgsParser } from "@/scripts/lib/router";
 import type { GeneticSearchByTypesConfigFactoryConfig } from "@/lib/types/genetic";
-import { getAbsoluteLossesSummary, getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
+import { getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,
   getTypesConfig,
@@ -56,15 +56,12 @@ export const actionGeneticSearch = async (...args: string[]) => {
     console.log('[START] Running genetic search');
     let bestId: number = 0;
 
-    await geneticSearch.run(generationsCount, (i, [normalizedLosses, absoluteLosses]) => {
-      const [normMinLoss, normMeanLoss, normMedianLoss, normMaxLoss] = getNormalizedLossesSummary(normalizedLosses);
-      const [absMinLoss, absMeanLoss] = getAbsoluteLossesSummary(absoluteLosses);
+    await geneticSearch.run(generationsCount, (i, scores) => {
+      const [minScore, meanScore, medianScore, maxScore] = getNormalizedLossesSummary(scores);
 
       const bestGenome = geneticSearch.getBestGenome();
       console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
-      console.log(`\tnormalized losses:\tmin=${normMinLoss}\tmean=${normMeanLoss}\tmedian=${normMedianLoss}\tmax=${normMaxLoss}`);
-      // console.log(`\tBest absolute losses:\t[${absoluteLosses.slice(0, 5).map((x) => round(x, 2)).join(', ')}]`);
-      // console.log(`\tBest normalized losses:\t[${normalizedLosses.slice(0, 5).map((x) => round(x, 2)).join(', ')}]`);
+      console.log(`\tnormalized losses:\tmin=${minScore}\tmean=${meanScore}\tmedian=${medianScore}\tmax=${maxScore}`);
 
       if (bestGenome.id > bestId) {
         bestId = bestGenome.id;

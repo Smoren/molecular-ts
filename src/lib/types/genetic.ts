@@ -76,12 +76,12 @@ export type SimulationMainConfig = {
   runner: RunnerStrategyConfig;
 }
 
-export type GenerationResult = [number[], number[]];
-export type GenerationCallback = (generation: number, result: GenerationResult) => void;
+export type GenerationScores = number[];
+export type GenerationCallback = (generation: number, result: GenerationScores) => void;
 
 export interface GeneticSearchInterface {
   run(generationsCount: number, afterStep: GenerationCallback): Promise<void>;
-  runGenerationStep(): Promise<GenerationResult>;
+  runGenerationStep(): Promise<GenerationScores>;
   getBestGenome(): Genome;
   getPopulation(): Population;
   setPopulation(population: Population): void;
