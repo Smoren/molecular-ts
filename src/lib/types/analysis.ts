@@ -104,6 +104,7 @@ export type CompoundsAnalyzerSummary = {
 export type TotalSummary = {
   WORLD: WorldSummary<number[]>;
   COMPOUNDS: CompoundsAnalyzerSummary;
+  CLUSTERS: number;
 }
 
 export type TotalSummaryWeights = {
@@ -119,6 +120,7 @@ export type TotalSummaryWeights = {
   COMPOUND_LENGTH_SUMMARY: StatSummary;
   COMPOUND_SPEED_SUMMARY: StatSummary;
   COMPOUND_DENSITY_SUMMARY: StatSummary;
+  CLUSTERS_SCORE: number;
 }
 
 export type SummaryMatrixRowObject = {
@@ -134,6 +136,7 @@ export type SummaryMatrixRowObject = {
   compoundLengthSummary: StatSummary;
   compoundSpeedSummary: StatSummary;
   compoundDensitySummary: StatSummary;
+  clustersScore: number;
 }
 
 export type CompoundsClusterGrade = {

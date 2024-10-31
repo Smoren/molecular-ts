@@ -3,7 +3,13 @@ import { repeatTestSimulation } from './helpers';
 
 export type SimulationTaskConfig = [number, WorldConfig, TypesConfig, number[], number];
 
-export const simulationTaskMultiprocessing = async ([id, worldConfig, typesConfig, checkpoints, repeats]: SimulationTaskConfig): Promise<number[]> => {
+export const simulationTaskMultiprocessing = async ([
+  id,
+  worldConfig,
+  typesConfig,
+  checkpoints,
+  repeats,
+]: SimulationTaskConfig): Promise<number[]> => {
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');
@@ -12,7 +18,13 @@ export const simulationTaskMultiprocessing = async ([id, worldConfig, typesConfi
   return repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
 }
 
-export const simulationTaskSingle = async ([id, worldConfig, typesConfig, checkpoints, repeats]: SimulationTaskConfig): Promise<number[]> => {
+export const simulationTaskSingle = async ([
+  id,
+  worldConfig,
+  typesConfig,
+  checkpoints,
+  repeats,
+]: SimulationTaskConfig): Promise<number[]> => {
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
   return repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
 }

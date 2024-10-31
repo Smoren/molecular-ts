@@ -11,6 +11,7 @@ import { averageMatrixColumns } from '../math/operations';
 import { createDummyDrawer } from '../drawer/dummy';
 import { groupArray } from '../math/helpers';
 import { convertArrayToStatSummary, convertStatSummaryToArray } from '../analysis/helpers';
+import { gradeCompoundClusters, scoreCompoundClustersSummary } from "@/lib/analysis/utils";
 
 export function createTransparentWeights(): TotalSummaryWeights {
   return {
@@ -47,6 +48,7 @@ export function createTransparentWeights(): TotalSummaryWeights {
       median: 1,
       p75: 1,
     },
+    CLUSTERS_SCORE: 1000,
   };
 }
 
@@ -85,6 +87,7 @@ export function createZeroWeights(): TotalSummaryWeights {
       median: 0,
       p75: 0,
     },
+    CLUSTERS_SCORE: 0,
   };
 }
 
@@ -102,6 +105,7 @@ export function convertWeightsToSummaryMatrixRow(weights: TotalSummaryWeights, t
     ...convertStatSummaryToArray(weights.COMPOUND_LENGTH_SUMMARY),
     ...convertStatSummaryToArray(weights.COMPOUND_SPEED_SUMMARY),
     ...convertStatSummaryToArray(weights.COMPOUND_DENSITY_SUMMARY),
+    weights.CLUSTERS_SCORE,
   ];
 }
 
@@ -121,6 +125,7 @@ export function convertSummaryMatrixRowToObject(matrixRow: number[], typesCount:
       STAT_SUMMARY_ARRAY_SIZE,
       STAT_SUMMARY_ARRAY_SIZE,
       STAT_SUMMARY_ARRAY_SIZE,
+      1,
     ],
   );
 
@@ -137,6 +142,7 @@ export function convertSummaryMatrixRowToObject(matrixRow: number[], typesCount:
     compoundLengthSummary: convertArrayToStatSummary(buf[9]),
     compoundSpeedSummary: convertArrayToStatSummary(buf[10]),
     compoundDensitySummary: convertArrayToStatSummary(buf[11]),
+    clustersScore: buf[12][0],
   };
 }
 
@@ -154,6 +160,7 @@ export function convertSummaryMatrixRowObjectToArray(rowObject: SummaryMatrixRow
     ...convertStatSummaryToArray(rowObject.compoundLengthSummary),
     ...convertStatSummaryToArray(rowObject.compoundSpeedSummary),
     ...convertStatSummaryToArray(rowObject.compoundDensitySummary),
+    rowObject.clustersScore,
   ];
 }
 
@@ -163,6 +170,7 @@ export function convertTotalSummaryToSummaryMatrixRow(summary: TotalSummary): nu
   const compoundLengthSummary = convertStatSummaryToArray(summary.COMPOUNDS.itemLengthSummary);
   const compoundSpeedSummary = convertStatSummaryToArray(summary.COMPOUNDS.itemSpeedSummary);
   const compoundDensitySummary = convertStatSummaryToArray(summary.COMPOUNDS.itemDensitySummary);
+  const clustersScore = summary.CLUSTERS;
 
   return [
     summary.WORLD.ATOMS_MEAN_SPEED[0],
@@ -177,6 +185,7 @@ export function convertTotalSummaryToSummaryMatrixRow(summary: TotalSummary): nu
     ...compoundLengthSummary,
     ...compoundSpeedSummary,
     ...compoundDensitySummary,
+    clustersScore,
   ];
 }
 
@@ -207,10 +216,19 @@ export function testSimulation(worldConfig: WorldConfig, typesConfig: TypesConfi
   for (const stepsCount of checkpoints) {
     runner.runSteps(stepsCount);
 
-    const compounds = new CompoundsAnalyzer(sim.exportCompounds(), sim.atoms, typesConfig.FREQUENCIES.length);
+    const compounds = sim.exportCompounds();
+    const clustersSummary = gradeCompoundClusters(
+      compounds,
+      typesConfig.FREQUENCIES.length,
+      5,
+    );
+    const clustersScore = scoreCompoundClustersSummary(clustersSummary);
+
+    const compoundsAnalyzer = new CompoundsAnalyzer(compounds, sim.atoms, typesConfig.FREQUENCIES.length);
     const totalSummary: TotalSummary = {
       WORLD: sim.summary,
-      COMPOUNDS: compounds.summary,
+      COMPOUNDS: compoundsAnalyzer.summary,
+      CLUSTERS: clustersScore,
     };
     const rawMatrix = convertTotalSummaryToSummaryMatrixRow(totalSummary);
     summaryMatrix.push(rawMatrix);
