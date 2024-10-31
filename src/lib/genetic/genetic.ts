@@ -1,23 +1,22 @@
-import { multi, single, transform } from 'itertools-ts';
+import { multi, single } from 'itertools-ts';
 import type {
   GeneticSearchConfig,
   StrategyConfig,
   GeneticSearchInterface,
   GenerationCallback,
   GenerationScores,
-  Genome,
   Population,
 } from '../types/genetic';
 import { createNextIdGenerator } from './helpers';
 import { getRandomArrayItem } from '../math/random';
 
-export class GeneticSearch implements GeneticSearchInterface {
-  protected readonly strategy: StrategyConfig;
+export class GeneticSearch<TGenome> implements GeneticSearchInterface<TGenome> {
+  protected readonly strategy: StrategyConfig<TGenome>;
   protected readonly nextId: () => number;
   protected readonly config: GeneticSearchConfig;
-  protected population: Population;
+  protected population: Population<TGenome>;
 
-  constructor(config: GeneticSearchConfig, strategy: StrategyConfig) {
+  constructor(config: GeneticSearchConfig, strategy: StrategyConfig<TGenome>) {
     this.config = config;
     this.strategy = strategy;
     this.nextId = createNextIdGenerator();
@@ -45,35 +44,35 @@ export class GeneticSearch implements GeneticSearchInterface {
     return sortedNormalizedLosses;
   }
 
-  public getBestGenome(): Genome {
+  public getBestGenome(): TGenome {
     return this.population[0];
   }
 
-  public getPopulation(): Population {
+  public getPopulation(): Population<TGenome> {
     return this.population;
   }
 
-  public setPopulation(population: Population) {
+  public setPopulation(population: Population<TGenome>) {
     this.population = population;
   }
 
-  protected createPopulation(size: number): Population {
+  protected createPopulation(size: number): Population<TGenome> {
     return this.strategy.populate
       .populate(size)
       .map((x) => ({ ...x, id: this.nextId() }));
   }
 
-  protected sortPopulation(scores: number[]): [Population, number[]] {
+  protected sortPopulation(scores: number[]): [Population<TGenome>, number[]] {
     const zipped = multi.zip(this.population, scores);
     const sorted = single.sort(zipped, (lhs, rhs) => rhs[1] - lhs[1]);
-    const sortedArray = transform.toArray(sorted);
+    const sortedArray = [...sorted];
     return [
-      transform.toArray(single.map(sortedArray, (x) => x[0])),
-      transform.toArray(single.map(sortedArray, (x) => x[1])),
+      [...single.map(sortedArray, (x) => x[0])],
+      [...single.map(sortedArray, (x) => x[1])],
     ];
   }
 
-  protected crossover(genomes: Population, count: number): Population {
+  protected crossover(genomes: Population<TGenome>, count: number): Population<TGenome> {
     const newPopulation = [];
 
     for (let i = 0; i < count; i++) {
@@ -86,7 +85,7 @@ export class GeneticSearch implements GeneticSearchInterface {
     return newPopulation;
   }
 
-  protected clone(genomes: Population, count: number): Population {
+  protected clone(genomes: Population<TGenome>, count: number): Population<TGenome> {
     const newPopulation = [];
 
     for (let i = 0; i < count; i++) {
@@ -98,7 +97,7 @@ export class GeneticSearch implements GeneticSearchInterface {
     return newPopulation;
   }
 
-  protected refreshPopulation(sortedPopulation: Population): void {
+  protected refreshPopulation(sortedPopulation: Population<TGenome>): void {
     const [countToSurvive, countToCross, countToClone] = this.getSizes();
 
     const survivedPopulation = sortedPopulation.slice(0, countToSurvive);

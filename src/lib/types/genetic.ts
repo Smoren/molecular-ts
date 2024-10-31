@@ -24,14 +24,14 @@ export type Genome = {
   typesConfig: TypesConfig;
 }
 
-export type Population = Genome[];
+export type Population<TGenome> = TGenome[];
 
-export type StrategyConfig = {
-  populate: PopulateStrategyInterface;
-  runner: RunnerStrategyInterface;
+export type StrategyConfig<TGenome> = {
+  populate: PopulateStrategyInterface<TGenome>;
+  runner: RunnerStrategyInterface<TGenome>;
   scoring: ScoringStrategyInterface;
-  mutation: MutationStrategyInterface;
-  crossover: CrossoverStrategyInterface;
+  mutation: MutationStrategyInterface<TGenome>;
+  crossover: CrossoverStrategyInterface<TGenome>;
 }
 
 export type GeneticSearchByTypesConfigFactoryConfig = {
@@ -80,28 +80,28 @@ export type SimulationMainConfig = {
 export type GenerationScores = number[];
 export type GenerationCallback = (generation: number, result: GenerationScores) => void;
 
-export interface GeneticSearchInterface {
+export interface GeneticSearchInterface<TGenome> {
   run(generationsCount: number, afterStep: GenerationCallback): Promise<void>;
   runGenerationStep(): Promise<GenerationScores>;
-  getBestGenome(): Genome;
-  getPopulation(): Population;
-  setPopulation(population: Population): void;
+  getBestGenome(): TGenome;
+  getPopulation(): Population<TGenome>;
+  setPopulation(population: Population<TGenome>): void;
 }
 
-export interface PopulateStrategyInterface {
-  populate(size: number): Population;
+export interface PopulateStrategyInterface<TGenome> {
+  populate(size: number): Population<TGenome>;
 }
 
-export interface MutationStrategyInterface {
-  mutate(id: number, item: Genome): Genome;
+export interface MutationStrategyInterface<TGenome> {
+  mutate(id: number, item: TGenome): TGenome;
 }
 
-export interface CrossoverStrategyInterface {
-  cross(id: number, lhs: Genome, rhs: Genome): Genome;
+export interface CrossoverStrategyInterface<TGenome> {
+  cross(id: number, lhs: TGenome, rhs: TGenome): TGenome;
 }
 
-export interface RunnerStrategyInterface {
-  run(population: Population): Promise<number[][]>;
+export interface RunnerStrategyInterface<TGenome> {
+  run(population: Population<TGenome>): Promise<number[][]>;
 }
 
 export interface ScoringStrategyInterface {

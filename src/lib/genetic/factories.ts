@@ -4,6 +4,7 @@ import type {
   StrategyConfig,
   GeneticSearchByTypesConfigFactoryConfig,
   RandomSearchByTypesConfigFactoryConfig,
+  Genome,
 } from '../types/genetic';
 import {
   convertWeightsToSummaryMatrixRow,
@@ -13,16 +14,16 @@ import {
 } from '../genetic/helpers';
 import { GeneticSearch } from '../genetic/genetic';
 import {
-  CachedMultiprocessingRunnerStrategy,
-  ComposedCrossoverStrategy,
-  MutationStrategy,
-  RandomPopulateStrategy,
+  SimulationCachedMultiprocessingRunnerStrategy,
+  SimulationComposedCrossoverStrategy,
+  SimulationMutationStrategy,
+  SimulationRandomPopulateStrategy,
   ReferenceLossScoringStrategy,
-  SourceMutationPopulateStrategy,
+  SimulationSourceMutationPopulateStrategy,
   SourceMutationStrategy,
 } from '../genetic/strategies';
 
-export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface {
+export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<Genome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
   config.runnerStrategyConfig.worldConfig = config.worldConfig;
 
@@ -50,18 +51,18 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesCon
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  const strategyConfig: StrategyConfig = {
-    populate: new RandomPopulateStrategy(populateRandomTypesConfig),
+  const strategyConfig: StrategyConfig<Genome> = {
+    populate: new SimulationRandomPopulateStrategy(populateRandomTypesConfig),
     scoring: new ReferenceLossScoringStrategy(referenceConfig),
-    runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
-    mutation: new MutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
-    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
+    runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
+    mutation: new SimulationMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
+    crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
-  return new GeneticSearch(config.geneticSearchMacroConfig, strategyConfig);
+  return new GeneticSearch<Genome>(config.geneticSearchMacroConfig, strategyConfig);
 }
 
-export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface {
+export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface<Genome> {
   if (config.referenceSummaryRowObject === undefined) {
     if (config.referenceTypesConfig.FREQUENCIES.length !== config.sourceTypesConfig.FREQUENCIES.length) {
       throw new Error('Reference and source types must have same length');
@@ -99,17 +100,17 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  const strategyConfig: StrategyConfig = {
-    populate: new SourceMutationPopulateStrategy(
+  const strategyConfig: StrategyConfig<Genome> = {
+    populate: new SimulationSourceMutationPopulateStrategy(
       config.sourceTypesConfig,
       populateRandomTypesConfig,
       config.mutationStrategyConfig.probability,
     ),
     scoring: new ReferenceLossScoringStrategy(referenceConfig),
-    runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
+    runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
     mutation: new SourceMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
-    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
+    crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
-  return new GeneticSearch(config.geneticSearchMacroConfig, strategyConfig);
+  return new GeneticSearch<Genome>(config.geneticSearchMacroConfig, strategyConfig);
 }

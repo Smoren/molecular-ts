@@ -23,15 +23,58 @@ import { fullCopyObject } from '../utils/functions';
 import { simulationTaskMultiprocessing, simulationTaskSingle } from '../genetic/multiprocessing';
 import { normalizeSummaryMatrix } from "@/lib/genetic/helpers";
 
-export class RandomPopulateStrategy implements PopulateStrategyInterface {
+abstract class BaseMutationStrategy<TGenome> implements MutationStrategyInterface<TGenome> {
+  protected readonly config: MutationStrategyConfig;
+
+  protected constructor(config: MutationStrategyConfig) {
+    this.config = config;
+  }
+
+  public abstract mutate(id: number, genome: TGenome): TGenome;
+}
+
+abstract class BaseRunnerStrategy<TGenome, TTaskConfig> implements RunnerStrategyInterface<TGenome> {
+  protected readonly config: RunnerStrategyConfig;
+
+  constructor(config: RunnerStrategyConfig) {
+    this.config = config;
+  }
+
+  public async run(population: Population<TGenome>): Promise<number[][]> {
+    const inputs = this.createTasksInputList(population);
+    return await this.execTask(inputs);
+  }
+
+  protected abstract execTask(inputs: TTaskConfig[]): Promise<number[][]>;
+
+  protected abstract createTaskInput(id: number, genome: TGenome): TTaskConfig;
+
+  protected abstract getGenomeId(genome: TGenome): number;
+
+  protected createTasksInputList(population: Population<TGenome>): TTaskConfig[] {
+    return population.map((genome) => this.createTaskInput(this.getGenomeId(genome), genome));
+  }
+}
+
+abstract class BaseSimulationRunnerStrategy extends BaseRunnerStrategy<Genome, SimulationTaskConfig> {
+  protected createTaskInput(id: number, genome: Genome): SimulationTaskConfig {
+    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
+  }
+
+  protected getGenomeId(genome: Genome): number {
+    return genome.id;
+  }
+}
+
+export class SimulationRandomPopulateStrategy implements PopulateStrategyInterface<Genome> {
   private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(randomizeConfig: RandomTypesConfig) {
     this.randomizeConfig = randomizeConfig;
   }
 
-  public populate(size: number): Population {
-    const population: Population = [];
+  public populate(size: number): Population<Genome> {
+    const population: Population<Genome> = [];
     for (let i = 0; i < size; i++) {
       population.push({
         id: 0,
@@ -45,7 +88,7 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface {
   }
 }
 
-export class SourceMutationPopulateStrategy implements PopulateStrategyInterface {
+export class SimulationSourceMutationPopulateStrategy implements PopulateStrategyInterface<Genome> {
   private readonly sourceTypesConfig: TypesConfig;
   private readonly randomizeConfig: RandomTypesConfig;
   private readonly probability: number;
@@ -56,8 +99,8 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
     this.probability = probability;
   }
 
-  public populate(size: number): Population {
-    const population: Population = [];
+  public populate(size: number): Population<Genome> {
+    const population: Population<Genome> = [];
     for (let i = 0; i < size; i++) {
       const inputTypesConfig = fullCopyObject(this.sourceTypesConfig);
       const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
@@ -72,7 +115,7 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
   }
 }
 
-export class SubMatrixCrossoverStrategy implements CrossoverStrategyInterface {
+export class SimulationSubMatrixCrossoverStrategy implements CrossoverStrategyInterface<Genome> {
   private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(randomizeConfig: RandomTypesConfig) {
@@ -87,7 +130,7 @@ export class SubMatrixCrossoverStrategy implements CrossoverStrategyInterface {
   }
 }
 
-export class RandomCrossoverStrategy implements CrossoverStrategyInterface {
+export class SimulationRandomCrossoverStrategy implements CrossoverStrategyInterface<Genome> {
   public cross(id: number, lhs: Genome, rhs: Genome): Genome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
@@ -95,13 +138,13 @@ export class RandomCrossoverStrategy implements CrossoverStrategyInterface {
   }
 }
 
-export class ComposedCrossoverStrategy implements CrossoverStrategyInterface {
-  private readonly randomStrategy: CrossoverStrategyInterface;
-  private readonly subMatrixStrategy: CrossoverStrategyInterface;
+export class SimulationComposedCrossoverStrategy implements CrossoverStrategyInterface<Genome> {
+  private readonly randomStrategy: CrossoverStrategyInterface<Genome>;
+  private readonly subMatrixStrategy: CrossoverStrategyInterface<Genome>;
 
   constructor(randomizeConfig: RandomTypesConfig) {
-    this.randomStrategy = new RandomCrossoverStrategy();
-    this.subMatrixStrategy = new SubMatrixCrossoverStrategy(randomizeConfig);
+    this.randomStrategy = new SimulationRandomCrossoverStrategy();
+    this.subMatrixStrategy = new SimulationSubMatrixCrossoverStrategy(randomizeConfig);
   }
 
   public cross(id: number, lhs: Genome, rhs: Genome): Genome {
@@ -113,17 +156,7 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface {
   }
 }
 
-export abstract class BaseMutationStrategy implements MutationStrategyInterface {
-  protected readonly config: MutationStrategyConfig;
-
-  protected constructor(config: MutationStrategyConfig) {
-    this.config = config;
-  }
-
-  public abstract mutate(id: number, genome: Genome): Genome;
-}
-
-export class MutationStrategy extends BaseMutationStrategy implements MutationStrategyInterface {
+export class SimulationMutationStrategy extends BaseMutationStrategy<Genome> implements MutationStrategyInterface<Genome> {
   private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig) {
@@ -140,7 +173,7 @@ export class MutationStrategy extends BaseMutationStrategy implements MutationSt
   }
 }
 
-export class SourceMutationStrategy extends MutationStrategy implements MutationStrategyInterface {
+export class SourceMutationStrategy extends SimulationMutationStrategy implements MutationStrategyInterface<Genome> {
   private readonly sourceTypesConfig: TypesConfig;
 
   constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
@@ -153,34 +186,7 @@ export class SourceMutationStrategy extends MutationStrategy implements Mutation
   }
 }
 
-abstract class BaseRunnerStrategy<TTaskConfig> implements RunnerStrategyInterface {
-  protected readonly config: RunnerStrategyConfig;
-
-  constructor(config: RunnerStrategyConfig) {
-    this.config = config;
-  }
-
-  public async run(population: Population): Promise<number[][]> {
-    const inputs = this.createTasksInputList(population);
-    return await this.execTask(inputs);
-  }
-
-  protected abstract execTask(inputs: TTaskConfig[]): Promise<number[][]>;
-
-  protected abstract createTaskInput(id: number, genome: Genome): TTaskConfig;
-
-  protected createTasksInputList(population: Population): TTaskConfig[] {
-    return population.map((genome) => this.createTaskInput(genome.id, genome));
-  }
-}
-
-abstract class BaseSimulationRunnerStrategy extends BaseRunnerStrategy<SimulationTaskConfig> {
-  protected createTaskInput(id: number, genome: Genome): SimulationTaskConfig {
-    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
-  }
-}
-
-export class SimpleRunnerStrategy extends BaseSimulationRunnerStrategy implements RunnerStrategyInterface {
+export class SimulationSimpleRunnerStrategy extends BaseSimulationRunnerStrategy {
   protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
     const result = [];
     for (const input of inputs) {
@@ -190,7 +196,7 @@ export class SimpleRunnerStrategy extends BaseSimulationRunnerStrategy implement
   }
 }
 
-export class MultiprocessingRunnerStrategy extends BaseSimulationRunnerStrategy implements RunnerStrategyInterface {
+export class SimulationMultiprocessingRunnerStrategy extends BaseSimulationRunnerStrategy {
   constructor(config: RunnerStrategyConfig) {
     super(config);
   }
@@ -204,7 +210,7 @@ export class MultiprocessingRunnerStrategy extends BaseSimulationRunnerStrategy 
   }
 }
 
-export class CachedMultiprocessingRunnerStrategy extends MultiprocessingRunnerStrategy implements RunnerStrategyInterface {
+export class SimulationCachedMultiprocessingRunnerStrategy extends SimulationMultiprocessingRunnerStrategy {
   private readonly cache: Map<number, number[]> = new Map();
 
   protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
