@@ -27,12 +27,24 @@ abstract class GeneticSearch implements GeneticSearchInterface {
     this.population = this.createPopulation(this.config.populationSize);
   }
 
-  public abstract runGenerationStep(): Promise<GenerationScores>;
-
   public async run(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
     for (let i=0; i<generationsCount; i++) {
       afterStep(i, await this.runGenerationStep());
     }
+  }
+
+  public async runGenerationStep(): Promise<GenerationScores> {
+    const results = await this.strategy.runner.run(this.population);
+    const scores = this.calcScores(results);
+
+    const [
+      sortedPopulation,
+      sortedNormalizedLosses,
+    ] = this.sortPopulation(scores);
+
+    this.refreshPopulation(sortedPopulation);
+
+    return sortedNormalizedLosses;
   }
 
   public getBestGenome(): Genome {
@@ -47,6 +59,8 @@ abstract class GeneticSearch implements GeneticSearchInterface {
     this.population = population;
   }
 
+  protected abstract calcScores(results: number[][]): number[];
+
   protected createPopulation(size: number): Population {
     return this.strategy.populate
       .populate(size)
@@ -55,7 +69,7 @@ abstract class GeneticSearch implements GeneticSearchInterface {
 
   protected sortPopulation(scores: number[]): [Population, number[]] {
     const zipped = multi.zip(this.population, scores);
-    const sorted = single.sort(zipped, (lhs, rhs) => lhs[1] - rhs[1]);
+    const sorted = single.sort(zipped, (lhs, rhs) => rhs[1] - lhs[1]);
     const sortedArray = transform.toArray(sorted);
     return [
       transform.toArray(single.map(sortedArray, (x) => x[0])),
@@ -117,23 +131,9 @@ export class ComposedGeneticSearch extends GeneticSearch implements GeneticSearc
     this.referenceConfig = referenceConfig;
   }
 
-  public async runGenerationStep(): Promise<GenerationScores> {
-    const results = await this.strategy.runner.run(this.population);
-
-    const normalizedLosses = this.calcScores(results);
-    const [
-      sortedPopulation,
-      sortedNormalizedLosses,
-    ] = this.sortPopulation(normalizedLosses);
-
-    this.refreshPopulation(sortedPopulation);
-
-    return sortedNormalizedLosses;
-  }
-
-  private calcScores(results: number[][]): number[] {
+  protected calcScores(results: number[][]): number[] {
     const normalizedLosses = this.getNormalizedLosses(results);
-    return normalizedLosses.map((x) => arraySum(x));
+    return normalizedLosses.map((x) => -arraySum(x));
   }
 
   private getNormalizedLosses(results: number[][]): number[][] {
