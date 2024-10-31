@@ -68,7 +68,7 @@ export function scoreSymmetryAxisByQuartering({
 export function scoreBilateralSymmetry({
   graph,
   scoreAxisFunction,
-  magic = 0.1,
+  magic = 0.3,
   eps = 1e-10,
 }: ScoreSymmetryFunctionArguments): [number, LineCoefficients] {
   // Найдем точку M — центр масс графа. Если граф действительно симметричен, ось симметрии будет проходить через M —
