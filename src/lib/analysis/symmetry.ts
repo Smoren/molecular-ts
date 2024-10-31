@@ -114,10 +114,6 @@ export function scoreBilateralSymmetry({
     }
   }
 
-  const centerBetweenFarthest = createVector(farthestVertexPair[0].position)
-    .add(farthestVertexPair[1].position)
-    .div(2);
-
   for (const [lhs, rhs] of single.pairwise(cycledVertexes)) {
     const candidates: VectorInterface[] = [];
 
@@ -131,11 +127,6 @@ export function scoreBilateralSymmetry({
     const candidate2 = createVector(lhs.position).add(rhs.position).div(2);
     if (!centroid.isEqual(candidate2)) {
       candidates.push(candidate2);
-    }
-
-    const candidate3 = createVector(centerBetweenFarthest);
-    if (!centroid.isEqual(candidate3)) {
-      candidates.push(candidate3);
     }
 
     for (const candidate of candidates) {
