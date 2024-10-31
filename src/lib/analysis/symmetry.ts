@@ -82,12 +82,12 @@ export function scoreBilateralSymmetry({
   const sortedVertexes = getVertexesSortedByAzimuth(graph.vertexes, centroid);
 
   // Переберем соседние пары вершин (a = reordered[i]; b = reordered[(i + 1) % N])
-  const iter = single.limit(infinite.cycle(sortedVertexes), sortedVertexes.length+1);
+  const cycledVertexes = [...single.limit(infinite.cycle(sortedVertexes), sortedVertexes.length+1)];
 
   let bestScore: number = -Infinity;
   let bestAxis: LineCoefficients = [0, 0];
 
-  for (const [lhs, rhs] of single.pairwise(iter)) {
+  for (const [lhs, rhs] of single.pairwise(cycledVertexes)) {
     const candidates: VectorInterface[] = [];
 
     // Проверим ось симметрии через точки M и a
