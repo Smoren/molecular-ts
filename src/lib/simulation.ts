@@ -240,7 +240,10 @@ export class Simulation implements SimulationInterface {
 
       if (atom) {
         const graph = createCompoundGraphByAtom(atom, this.config.typesConfig.FREQUENCIES.length);
-        const symmetryData = scoreBilateralSymmetry(graph, scoreSymmetryAxisByQuartering);
+        const symmetryData = scoreBilateralSymmetry({
+          graph,
+          scoreAxisFunction: scoreSymmetryAxisByQuartering,
+        });
 
         console.log('ATOM', atom);
         console.log('GRAPH', graph);

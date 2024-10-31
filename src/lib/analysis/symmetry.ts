@@ -14,7 +14,6 @@ import { findOrthogonalLine, getLineByPoints } from "../math/geometry";
 
 // TODO parametrize type+edges_count
 // TODO parametrize type+linked_types
-// TODO bilateral: perpendicular axis for another check
 
 type ScoreSymmetryAxisFunctionArguments = {
   graph: GraphInterface;
@@ -22,6 +21,13 @@ type ScoreSymmetryAxisFunctionArguments = {
   centroid: NumericVector;
   radius: number;
   magic: number;
+}
+
+type ScoreSymmetryFunctionArguments = {
+  graph: GraphInterface;
+  scoreAxisFunction: ScoreSymmetryAxisFunction;
+  magic?: number;
+  eps?: number;
 }
 
 type ScoreSymmetryAxisFunction = (params: ScoreSymmetryAxisFunctionArguments) => number;
@@ -59,12 +65,12 @@ export function scoreSymmetryAxisByQuartering({
     -calcDistanceBetweenGraphsByTypesCombined(rhsLhsGraph, rhsRhsGraph);
 }
 
-export function scoreBilateralSymmetry(
-  graph: GraphInterface,
-  scoreAxisFunction: ScoreSymmetryAxisFunction,
-  magic: number = 0.1,
-  eps: number = 1e-10,
-): [number, LineCoefficients] {
+export function scoreBilateralSymmetry({
+  graph,
+  scoreAxisFunction,
+  magic = 0.1,
+  eps = 1e-10,
+}: ScoreSymmetryFunctionArguments): [number, LineCoefficients] {
   // Найдем точку M — центр масс графа. Если граф действительно симметричен, ось симметрии будет проходить через M —
   // нам остаётся найти ее угловой коэффициент.
   const centroid = createVector(getGraphCentroid(graph));

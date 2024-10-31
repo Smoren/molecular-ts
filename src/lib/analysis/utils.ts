@@ -13,7 +13,10 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
 
   const clusterGrades: CompoundsClusterGrade[] = clusters.map((cluster) => {
     const symmetry = reduce.toAverage(
-      cluster.map((graph) => scoreBilateralSymmetry(graph, scoreSymmetryAxisByQuartering)[0])
+      cluster.map((graph) => scoreBilateralSymmetry({
+        graph,
+        scoreAxisFunction: scoreSymmetryAxisByQuartering,
+      })[0])
     );
     return {
       size: cluster.length,

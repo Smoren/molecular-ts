@@ -12,7 +12,10 @@ describe.each([
   (config, lineExpected, scoreExpected) => {
     it('', () => {
       const graph = new Graph(config);
-      const [scoreActual, lineActual] = scoreBilateralSymmetry(graph, scoreSymmetryAxis);
+      const [scoreActual, lineActual] = scoreBilateralSymmetry({
+        graph,
+        scoreAxisFunction: scoreSymmetryAxis,
+      });
       expectVectorToBeCloseTo(lineActual, lineExpected, 4);
       expect(scoreActual).toBeCloseTo(scoreExpected, 4);
     });
