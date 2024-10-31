@@ -118,3 +118,50 @@ export class GeneticSearch<TGenome extends BaseGenome> implements GeneticSearchI
     return [countToSurvive, countToCross, countToClone];
   }
 }
+
+export class ComposedGeneticSearch<TGenome extends BaseGenome> implements GeneticSearchInterface<TGenome> {
+  private readonly eliminators: GeneticSearchInterface<TGenome>[];
+  private readonly final: GeneticSearchInterface<TGenome>;
+
+  constructor(eliminators: GeneticSearchInterface<TGenome>[], final: GeneticSearchInterface<TGenome>) {
+    this.eliminators = eliminators;
+    this.final = final;
+  }
+
+  public getPopulation(): Population<TGenome> {
+    const result: Population<TGenome> = [];
+    for (const eliminators of this.eliminators) {
+      result.push(...eliminators.getPopulation());
+    }
+    return result;
+  }
+
+  public setPopulation(population: Population<TGenome>): void {
+    for (const eliminator of this.eliminators) {
+      eliminator.setPopulation(population.slice(0, eliminator.getPopulation().length));
+      population = population.slice(eliminator.getPopulation().length);
+    }
+  }
+
+  public async run(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
+    for (let i=0; i<generationsCount; i++) {
+      afterStep(i, await this.runGenerationStep());
+    }
+  }
+
+  public async runGenerationStep(): Promise<GenerationScores> {
+    for (const eliminators of this.eliminators) {
+      await eliminators.runGenerationStep();
+    }
+    this.final.setPopulation(this.getBestGenomes());
+    return await this.final.runGenerationStep();
+  }
+
+  public getBestGenome(): TGenome {
+    return this.final.getBestGenome();
+  }
+
+  private getBestGenomes(): Population<TGenome> {
+    return this.eliminators.map((eliminators) => eliminators.getBestGenome());
+  }
+}
