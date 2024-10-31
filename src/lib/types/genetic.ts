@@ -29,6 +29,7 @@ export type Population = Genome[];
 export type StrategyConfig = {
   populate: PopulateStrategyInterface;
   runner: RunnerStrategyInterface;
+  scoring: ScoringStrategyInterface;
   mutation: MutationStrategyInterface;
   crossover: CrossoverStrategyInterface;
 }
@@ -88,17 +89,21 @@ export interface GeneticSearchInterface {
 }
 
 export interface PopulateStrategyInterface {
-  populate: (size: number) => Population;
+  populate(size: number): Population;
 }
 
 export interface MutationStrategyInterface {
-  mutate: (id: number, item: Genome) => Genome;
+  mutate(id: number, item: Genome): Genome;
 }
 
 export interface CrossoverStrategyInterface {
-  cross: (id: number, lhs: Genome, rhs: Genome) => Genome;
+  cross(id: number, lhs: Genome, rhs: Genome): Genome;
 }
 
 export interface RunnerStrategyInterface {
-  run: (population: Population) => Promise<number[][]>;
+  run(population: Population): Promise<number[][]>;
+}
+
+export interface ScoringStrategyInterface {
+  score(results: number[][]): number[];
 }

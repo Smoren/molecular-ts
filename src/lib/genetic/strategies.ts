@@ -8,7 +8,7 @@ import type {
   CrossoverStrategyInterface,
   MutationStrategyInterface,
   PopulateStrategyInterface,
-  RunnerStrategyInterface,
+  RunnerStrategyInterface, ScoringStrategyInterface, GeneticSearchReferenceConfig,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
 import type { SimulationTaskConfig } from '../genetic/multiprocessing';
@@ -18,9 +18,10 @@ import {
   randomCrossTypesConfigs,
   randomizeTypesConfig,
 } from '../config/types';
-import { createRandomInteger } from '../math';
+import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
 import { simulationTaskMultiprocessing, simulationTaskSingle } from '../genetic/multiprocessing';
+import { normalizeSummaryMatrix } from "@/lib/genetic/helpers";
 
 export class RandomPopulateStrategy implements PopulateStrategyInterface {
   private readonly randomizeConfig: RandomTypesConfig;
@@ -224,5 +225,26 @@ export class CachedMultiprocessingRunnerStrategy extends MultiprocessingRunnerSt
     }
 
     return results;
+  }
+}
+
+export class ReferenceLossScoringStrategy implements ScoringStrategyInterface {
+  private referenceConfig: GeneticSearchReferenceConfig;
+
+  constructor(referenceConfig: GeneticSearchReferenceConfig) {
+    this.referenceConfig = referenceConfig;
+  }
+
+  score(results: number[][]): number[] {
+    const normalizedLosses = this.getNormalizedLosses(results);
+    return normalizedLosses.map((x) => -arraySum(x));
+  }
+
+  private getNormalizedLosses(results: number[][]): number[][] {
+    return normalizeSummaryMatrix(results, this.referenceConfig.reference).map((result) => this.weighRow(result));
+  }
+
+  private weighRow(result: number[]): number[] {
+    return arrayBinaryOperation(result, this.referenceConfig.weights, (x, y) => x * y);
   }
 }

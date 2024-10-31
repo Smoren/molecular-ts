@@ -1,7 +1,6 @@
 import { multi, single, transform } from 'itertools-ts';
 import type {
   GeneticSearchConfig,
-  GeneticSearchReferenceConfig,
   StrategyConfig,
   GeneticSearchInterface,
   GenerationCallback,
@@ -9,17 +8,16 @@ import type {
   Genome,
   Population,
 } from '../types/genetic';
-import { createNextIdGenerator, normalizeSummaryMatrix } from './helpers';
-import { arrayBinaryOperation, arraySum } from '../math';
+import { createNextIdGenerator } from './helpers';
 import { getRandomArrayItem } from '../math/random';
 
-abstract class GeneticSearch implements GeneticSearchInterface {
+export class GeneticSearch implements GeneticSearchInterface {
   protected readonly strategy: StrategyConfig;
   protected readonly nextId: () => number;
   protected readonly config: GeneticSearchConfig;
   protected population: Population;
 
-  protected constructor(config: GeneticSearchConfig, strategy: StrategyConfig) {
+  constructor(config: GeneticSearchConfig, strategy: StrategyConfig) {
     this.config = config;
     this.strategy = strategy;
     this.nextId = createNextIdGenerator();
@@ -35,7 +33,7 @@ abstract class GeneticSearch implements GeneticSearchInterface {
 
   public async runGenerationStep(): Promise<GenerationScores> {
     const results = await this.strategy.runner.run(this.population);
-    const scores = this.calcScores(results);
+    const scores = this.strategy.scoring.score(results);
 
     const [
       sortedPopulation,
@@ -58,8 +56,6 @@ abstract class GeneticSearch implements GeneticSearchInterface {
   public setPopulation(population: Population) {
     this.population = population;
   }
-
-  protected abstract calcScores(results: number[][]): number[];
 
   protected createPopulation(size: number): Population {
     return this.strategy.populate
@@ -120,27 +116,5 @@ abstract class GeneticSearch implements GeneticSearchInterface {
     const countToClone = countToDie - countToCross;
 
     return [countToSurvive, countToCross, countToClone];
-  }
-}
-
-export class ComposedGeneticSearch extends GeneticSearch implements GeneticSearchInterface {
-  private referenceConfig: GeneticSearchReferenceConfig;
-
-  constructor(config: GeneticSearchConfig, referenceConfig: GeneticSearchReferenceConfig, strategy: StrategyConfig) {
-    super(config, strategy);
-    this.referenceConfig = referenceConfig;
-  }
-
-  protected calcScores(results: number[][]): number[] {
-    const normalizedLosses = this.getNormalizedLosses(results);
-    return normalizedLosses.map((x) => -arraySum(x));
-  }
-
-  private getNormalizedLosses(results: number[][]): number[][] {
-    return normalizeSummaryMatrix(results, this.referenceConfig.reference).map((result) => this.weighRow(result));
-  }
-
-  private weighRow(result: number[]): number[] {
-    return arrayBinaryOperation(result, this.referenceConfig.weights, (x, y) => x * y);
   }
 }

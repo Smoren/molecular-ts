@@ -11,12 +11,13 @@ import {
   convertSummaryMatrixRowObjectToArray,
   repeatTestSimulation,
 } from '../genetic/helpers';
-import { ComposedGeneticSearch } from '../genetic/genetic';
+import { GeneticSearch } from '../genetic/genetic';
 import {
   CachedMultiprocessingRunnerStrategy,
   ComposedCrossoverStrategy,
   MutationStrategy,
   RandomPopulateStrategy,
+  ReferenceLossScoringStrategy,
   SourceMutationPopulateStrategy,
   SourceMutationStrategy,
 } from '../genetic/strategies';
@@ -35,13 +36,6 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesCon
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const strategyConfig: StrategyConfig = {
-    populate: new RandomPopulateStrategy(populateRandomTypesConfig),
-    runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
-    mutation: new MutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
-    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
-  };
-
   const reference = config.referenceSummaryRowObject === undefined
     ? repeatTestSimulation(
       config.worldConfig,
@@ -51,12 +45,20 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesCon
     )
     : convertSummaryMatrixRowObjectToArray(config.referenceSummaryRowObject);
 
-  const geneticInputConfig: GeneticSearchReferenceConfig = {
+  const referenceConfig: GeneticSearchReferenceConfig = {
     reference,
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  return new ComposedGeneticSearch(config.geneticSearchMacroConfig, geneticInputConfig, strategyConfig);
+  const strategyConfig: StrategyConfig = {
+    populate: new RandomPopulateStrategy(populateRandomTypesConfig),
+    scoring: new ReferenceLossScoringStrategy(referenceConfig),
+    runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
+    mutation: new MutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
+    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
+  };
+
+  return new GeneticSearch(config.geneticSearchMacroConfig, strategyConfig);
 }
 
 export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface {
@@ -69,7 +71,6 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
       throw new Error('Reference and source types must have same length');
     }
   }
-
 
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
   config.runnerStrategyConfig.worldConfig = config.worldConfig;
@@ -84,17 +85,6 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const strategyConfig: StrategyConfig = {
-    populate: new SourceMutationPopulateStrategy(
-      config.sourceTypesConfig,
-      populateRandomTypesConfig,
-      config.mutationStrategyConfig.probability,
-    ),
-    runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
-    mutation: new SourceMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
-    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
-  };
-
   const reference = config.referenceSummaryRowObject === undefined
     ? repeatTestSimulation(
       config.worldConfig,
@@ -104,10 +94,22 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
     )
     : convertSummaryMatrixRowObjectToArray(config.referenceSummaryRowObject);
 
-  const geneticInputConfig: GeneticSearchReferenceConfig = {
+  const referenceConfig: GeneticSearchReferenceConfig = {
     reference,
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  return new ComposedGeneticSearch(config.geneticSearchMacroConfig, geneticInputConfig, strategyConfig);
+  const strategyConfig: StrategyConfig = {
+    populate: new SourceMutationPopulateStrategy(
+      config.sourceTypesConfig,
+      populateRandomTypesConfig,
+      config.mutationStrategyConfig.probability,
+    ),
+    scoring: new ReferenceLossScoringStrategy(referenceConfig),
+    runner: new CachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
+    mutation: new SourceMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
+    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
+  };
+
+  return new GeneticSearch(config.geneticSearchMacroConfig, strategyConfig);
 }
