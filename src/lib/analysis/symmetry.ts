@@ -4,6 +4,7 @@ import type { GraphInterface } from "../graph/types";
 import { createVector, toVector } from "../math";
 import {
   calcDistanceBetweenGraphsByTypesCombined,
+  findFarthestVertexPair,
   getGraphAverageRadius,
   getGraphCentroid,
   getVertexAzimuth,
@@ -87,6 +88,23 @@ export function scoreBilateralSymmetry({
   let bestScore: number = -Infinity;
   let bestAxis: LineCoefficients = [0, 0];
 
+  const farthestVertexPair = findFarthestVertexPair(graph.vertexes);
+  if (farthestVertexPair[0] !== farthestVertexPair[1]) {
+    const axis = getLineByPoints(farthestVertexPair[0].position, farthestVertexPair[1].position);
+    const score = scoreAxisFunction({
+      graph,
+      axis,
+      centroid,
+      radius,
+      magic,
+    });
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestAxis = axis;
+    }
+  }
+
   for (const [lhs, rhs] of single.pairwise(cycledVertexes)) {
     const candidates: VectorInterface[] = [];
 
@@ -100,6 +118,13 @@ export function scoreBilateralSymmetry({
     const candidate2 = createVector(lhs.position).add(rhs.position).div(2);
     if (!centroid.isEqual(candidate2)) {
       candidates.push(candidate2);
+    }
+
+    for (const vertex of farthestVertexPair) {
+      const candidate3 = createVector(vertex.position);
+      if (!centroid.isEqual(candidate3)) {
+        candidates.push(candidate3);
+      }
     }
 
     for (const candidate of candidates) {

@@ -186,3 +186,28 @@ export function calcGraphsClusterAverageDifference(graphs: GraphInterface[]): nu
   }
   return sum / divider;
 }
+
+export function findFarthestVertexPair(vertexes: Vertex[]): [Vertex, Vertex] {
+  if (vertexes.length < 2) {
+    throw new Error('Cannot find farthest vertexes pair because vertexes.length < 2');
+  }
+
+  let maxDistance = 0;
+  let farthestPair: [Vertex, Vertex] = [vertexes[0], vertexes[0]];
+
+  for (let i = 0; i < vertexes.length; i++) {
+    for (let j = i + 1; j < vertexes.length; j++) {
+      const lhs = vertexes[i];
+      const rhs = vertexes[j];
+
+      const distance = createVector(lhs.position).sub(rhs.position).abs2;
+
+      if (distance > maxDistance) {
+        maxDistance = distance;
+        farthestPair = [lhs, rhs];
+      }
+    }
+  }
+
+  return farthestPair;
+}
