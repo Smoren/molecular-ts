@@ -153,7 +153,7 @@ export class SourceMutationStrategy extends MutationStrategy implements Mutation
   }
 }
 
-export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
+abstract class BaseRunnerStrategy<TTaskConfig> implements RunnerStrategyInterface {
   protected readonly config: RunnerStrategyConfig;
 
   constructor(config: RunnerStrategyConfig) {
@@ -165,18 +165,22 @@ export abstract class BaseRunnerStrategy implements RunnerStrategyInterface {
     return await this.execTask(inputs);
   }
 
-  protected abstract execTask(inputs: SimulationTaskConfig[]): Promise<number[][]>;
+  protected abstract execTask(inputs: TTaskConfig[]): Promise<number[][]>;
 
-  protected createTasksInputList(population: Population): SimulationTaskConfig[] {
+  protected abstract createTaskInput(id: number, genome: Genome): TTaskConfig;
+
+  protected createTasksInputList(population: Population): TTaskConfig[] {
     return population.map((genome) => this.createTaskInput(genome.id, genome));
   }
+}
 
+abstract class BaseSimulationRunnerStrategy extends BaseRunnerStrategy<SimulationTaskConfig> {
   protected createTaskInput(id: number, genome: Genome): SimulationTaskConfig {
     return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
-export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
+export class SimpleRunnerStrategy extends BaseSimulationRunnerStrategy implements RunnerStrategyInterface {
   protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
     const result = [];
     for (const input of inputs) {
@@ -186,7 +190,7 @@ export class SimpleRunnerStrategy extends BaseRunnerStrategy implements RunnerSt
   }
 }
 
-export class MultiprocessingRunnerStrategy extends BaseRunnerStrategy implements RunnerStrategyInterface {
+export class MultiprocessingRunnerStrategy extends BaseSimulationRunnerStrategy implements RunnerStrategyInterface {
   constructor(config: RunnerStrategyConfig) {
     super(config);
   }
