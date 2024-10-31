@@ -1,18 +1,16 @@
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from './config';
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from '../types/analysis';
 
-export type GeneticSearchMacroConfig = {
+export type GeneticSearchConfig = {
   populationSize: number;
   survivalRate: number;
   crossoverRate: number;
 };
 
-export type GeneticSearchInputConfig = {
+export type GeneticSearchReferenceConfig = {
   reference: number[];
   weights: number[];
 };
-
-export type GeneticSearchConfig = GeneticSearchMacroConfig & GeneticSearchInputConfig;
 
 export type RunnerStrategyConfig = {
   worldConfig: WorldConfig;
@@ -36,7 +34,7 @@ export type StrategyConfig = {
 }
 
 export type GeneticSearchByTypesConfigFactoryConfig = {
-  geneticSearchMacroConfig: GeneticSearchMacroConfig;
+  geneticSearchMacroConfig: GeneticSearchConfig;
   runnerStrategyConfig: RunnerStrategyConfig;
   mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
@@ -49,7 +47,7 @@ export type GeneticSearchByTypesConfigFactoryConfig = {
 }
 
 export type RandomSearchByTypesConfigFactoryConfig = {
-  geneticSearchMacroConfig: GeneticSearchMacroConfig;
+  geneticSearchMacroConfig: GeneticSearchConfig;
   runnerStrategyConfig: RunnerStrategyConfig;
   mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
@@ -67,7 +65,7 @@ export type MutationStrategyConfig = {
 }
 
 export type GeneticMainConfig = {
-  macro: GeneticSearchMacroConfig;
+  macro: GeneticSearchConfig;
   initial: InitialConfig;
   runner: RunnerStrategyConfig;
   mutation: MutationStrategyConfig;

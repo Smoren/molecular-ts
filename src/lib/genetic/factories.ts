@@ -1,5 +1,5 @@
 import type {
-  GeneticSearchInputConfig,
+  GeneticSearchReferenceConfig,
   GeneticSearchInterface,
   StrategyConfig,
   GeneticSearchByTypesConfigFactoryConfig,
@@ -11,7 +11,7 @@ import {
   convertSummaryMatrixRowObjectToArray,
   repeatTestSimulation,
 } from '../genetic/helpers';
-import { GeneticSearch } from '../genetic/genetic';
+import { ComposedGeneticSearch } from '../genetic/genetic';
 import {
   CachedMultiprocessingRunnerStrategy,
   ComposedCrossoverStrategy,
@@ -51,12 +51,12 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesCon
     )
     : convertSummaryMatrixRowObjectToArray(config.referenceSummaryRowObject);
 
-  const geneticInputConfig: GeneticSearchInputConfig = {
+  const geneticInputConfig: GeneticSearchReferenceConfig = {
     reference,
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  return new GeneticSearch(config.geneticSearchMacroConfig, geneticInputConfig, strategyConfig);
+  return new ComposedGeneticSearch(config.geneticSearchMacroConfig, geneticInputConfig, strategyConfig);
 }
 
 export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface {
@@ -104,10 +104,10 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
     )
     : convertSummaryMatrixRowObjectToArray(config.referenceSummaryRowObject);
 
-  const geneticInputConfig: GeneticSearchInputConfig = {
+  const geneticInputConfig: GeneticSearchReferenceConfig = {
     reference,
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  return new GeneticSearch(config.geneticSearchMacroConfig, geneticInputConfig, strategyConfig);
+  return new ComposedGeneticSearch(config.geneticSearchMacroConfig, geneticInputConfig, strategyConfig);
 }
