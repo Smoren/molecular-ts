@@ -18,7 +18,7 @@ import { createAtom } from './utils/functions';
 import { createCompoundGraphByAtom } from "./analysis/factories";
 import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/utils";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./analysis/symmetry";
-import { gradeCompoundClusters } from "./analysis/utils";
+import { gradeCompoundClusters, scoreCompoundClustersSummary } from "./analysis/utils";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -259,7 +259,9 @@ export class Simulation implements SimulationInterface {
           this.config.typesConfig.FREQUENCIES.length,
           5,
         );
+        const score = scoreCompoundClustersSummary(clustersSummary);
         console.log('CLUSTERIZATION GRADE', clustersSummary);
+        console.log('CLUSTERIZATION SCORE', score);
       }
     });
 

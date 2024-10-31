@@ -4,6 +4,7 @@ import { clusterGraphs } from "../graph/clusterization";
 import { calcGraphsClusterAverageDifference } from "../graph/utils";
 import { createCompoundGraph } from "./factories";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetry";
+import { createVector } from '@/lib/math';
 
 export function gradeCompoundClusters(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds
@@ -39,4 +40,17 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
     clusteredCount,
     notClusteredCount,
   };
+}
+
+export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): number {
+  const averageVertexesCount = reduce.toAverage(clusterGrade.vertexesBounds)!;
+  const averageEdgesCount = reduce.toAverage(clusterGrade.edgesBounds)!;
+  return averageVertexesCount * averageEdgesCount * clusterGrade.symmetry;
+}
+
+export function scoreCompoundClustersSummary(summary: CompoundsClusterizationSummary): number {
+  const clustersScore = reduce.toSum(summary.clusters.map((c) => scoreCompoundCluster(c)));
+  const relativeClustered = summary.clusteredCount / summary.filteredCount;
+  const relativeFiltered = summary.filteredCount / summary.inputCount;
+  return clustersScore * relativeClustered * relativeFiltered;
 }
