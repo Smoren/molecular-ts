@@ -227,6 +227,7 @@ export class Simulation implements SimulationInterface {
     });
 
     this.drawer.eventManager.onMouseDown((event) => {
+      console.log('MOUSE COORDS', event.coords);
       const atom = this.clusterManager.findAtomByCoords(
         event.coords,
         this.config.typesConfig.RADIUS,

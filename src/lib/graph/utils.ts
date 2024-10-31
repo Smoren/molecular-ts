@@ -1,3 +1,4 @@
+import { multi } from 'itertools-ts';
 import type { GraphInterface, Vertex } from "./types";
 import type { LineCoefficients, NumericVector, VectorInterface } from "../math/types";
 import { createGraph } from "./factories";
@@ -5,17 +6,29 @@ import { distanceToLine } from "../math/geometry";
 import { createFilledArray, createVector, toVector } from "../math";
 import { getPairIndex, getPairsCount } from "../math/helpers";
 
-export function getGraphCentroid(graph: GraphInterface): NumericVector {
+export function getGraphCentroid(graph: GraphInterface): VectorInterface {
   // Найдем точку M — центр масс графа.
   if (graph.vertexes.length === 0) {
     // FIXME maybe throw exception?
-    return [0, 0];
+    return createVector([0, 0]);
   }
 
   return graph.vertexes.reduce<VectorInterface>(
     (acc, v) => acc.add(v.position),
     createVector([0, 0]),
   ).div(graph.vertexes.length);
+}
+
+export function getWeightedGraphCentroid(graph: GraphInterface, centroid: VectorInterface): VectorInterface {
+  const offsets = graph.vertexes.map((v) => createVector(v.position).sub(centroid));
+  const distances = offsets.map((v) => v.abs);
+  const maxDistance = Math.max(...distances);
+
+  for (const [offset, distance] of multi.zip(offsets, distances)) {
+    centroid.add(offset.mul((maxDistance - distance)/maxDistance));
+  }
+
+  return centroid;
 }
 
 export function getGraphAverageRadius(graph: GraphInterface, centroid: NumericVector): number {

@@ -9,6 +9,7 @@ import {
   getGraphCentroid,
   getVertexAzimuth,
   getVertexesSortedByAzimuth,
+  getWeightedGraphCentroid,
   splitGraphByLine,
 } from "../graph/utils";
 import { findOrthogonalLine, getLineByPoints } from "../math/geometry";
@@ -81,7 +82,8 @@ export function scoreBilateralSymmetry({
 }: ScoreSymmetryFunctionArguments): [number, LineCoefficients] {
   // Найдем точку M — центр масс графа. Если граф действительно симметричен, ось симметрии будет проходить через M —
   // нам остаётся найти ее угловой коэффициент.
-  const centroid = createVector(getGraphCentroid(graph));
+  const centroid = getGraphCentroid(graph);
+  // const centroid = getWeightedGraphCentroid(graph, getGraphCentroid(graph));
 
   // Вычислим R = avg([dist(v, M) for v in vertexes]), где avg(arr) — среднее арифметическое.
   const radius = getGraphAverageRadius(graph, centroid);
