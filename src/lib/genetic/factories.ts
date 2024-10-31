@@ -2,9 +2,9 @@ import type {
   GeneticSearchReferenceConfig,
   GeneticSearchInterface,
   StrategyConfig,
-  GeneticSearchByTypesConfigFactoryConfig,
-  RandomSearchByTypesConfigFactoryConfig,
-  Genome,
+  SimulationGeneticSearchByTypesConfigFactoryConfig,
+  SimulationRandomSearchByTypesConfigFactoryConfig,
+  SimulationGenome,
 } from '../types/genetic';
 import {
   convertWeightsToSummaryMatrixRow,
@@ -23,7 +23,7 @@ import {
   SourceMutationStrategy,
 } from '../genetic/strategies';
 
-export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<Genome> {
+export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
   config.runnerStrategyConfig.worldConfig = config.worldConfig;
 
@@ -51,7 +51,7 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesCon
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  const strategyConfig: StrategyConfig<Genome> = {
+  const strategyConfig: StrategyConfig<SimulationGenome> = {
     populate: new SimulationRandomPopulateStrategy(populateRandomTypesConfig),
     scoring: new ReferenceLossScoringStrategy(referenceConfig),
     runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
@@ -59,10 +59,10 @@ export function createGeneticSearchByTypesConfig(config: GeneticSearchByTypesCon
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
-  return new GeneticSearch<Genome>(config.geneticSearchMacroConfig, strategyConfig);
+  return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
 }
 
-export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface<Genome> {
+export function createRandomSearchByTypesConfig(config: SimulationRandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   if (config.referenceSummaryRowObject === undefined) {
     if (config.referenceTypesConfig.FREQUENCIES.length !== config.sourceTypesConfig.FREQUENCIES.length) {
       throw new Error('Reference and source types must have same length');
@@ -100,7 +100,7 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  const strategyConfig: StrategyConfig<Genome> = {
+  const strategyConfig: StrategyConfig<SimulationGenome> = {
     populate: new SimulationSourceMutationPopulateStrategy(
       config.sourceTypesConfig,
       populateRandomTypesConfig,
@@ -112,5 +112,5 @@ export function createRandomSearchByTypesConfig(config: RandomSearchByTypesConfi
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
-  return new GeneticSearch<Genome>(config.geneticSearchMacroConfig, strategyConfig);
+  return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
 }

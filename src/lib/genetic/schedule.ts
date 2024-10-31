@@ -1,13 +1,13 @@
-import type { GeneticSearchInterface } from '../types/genetic';
+import type { BaseGenome, GeneticSearchInterface } from '../types/genetic';
 
-type GeneticSearchSchedulerConfig<TGenome> = {
+type GeneticSearchSchedulerConfig<TGenome extends BaseGenome> = {
   schedule: [number, (algo: GeneticSearchInterface<TGenome>) => void][];
   stop: (algo: GeneticSearchInterface<TGenome>) => boolean;
 };
 
 export class StopSearchException extends Error {}
 
-export class GeneticSearchScheduler<TGenome> {
+export class GeneticSearchScheduler<TGenome extends BaseGenome> {
   private readonly config: GeneticSearchSchedulerConfig<TGenome>;
   private stepIndex: number;
 

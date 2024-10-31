@@ -2,13 +2,19 @@ import fs from "node:fs";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/types/analysis";
-import type { GeneticMainConfig, SimulationMainConfig } from "@/lib/types/genetic";
+import type { GradeGenerationTask, SimulationGeneticMainConfig, SimulationMainConfig } from "@/lib/types/genetic";
+import type { SimulationTaskConfig } from "@/lib/genetic/multiprocessing";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
 
-export function getGeneticMainConfig(fileName: string, poolSize: number): GeneticMainConfig {
-  const result = readJsonFile(`data/input/${fileName}`) as GeneticMainConfig;
+export function getGeneticMainConfig(
+  fileName: string,
+  poolSize: number,
+  task: GradeGenerationTask<SimulationTaskConfig>,
+): SimulationGeneticMainConfig {
+  const result = readJsonFile(`data/input/${fileName}`) as SimulationGeneticMainConfig;
   result.runner.poolSize = poolSize;
+  result.runner.task = task;
   return result;
 }
 

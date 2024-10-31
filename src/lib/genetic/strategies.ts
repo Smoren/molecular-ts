@@ -1,14 +1,18 @@
 import { Pool } from 'multiprocess-pool';
 import { multi } from 'itertools-ts';
 import type {
-  Genome,
+  SimulationGenome,
   Population,
   MutationStrategyConfig,
-  RunnerStrategyConfig,
+  SimulationRunnerStrategyConfig,
   CrossoverStrategyInterface,
   MutationStrategyInterface,
   PopulateStrategyInterface,
-  RunnerStrategyInterface, ScoringStrategyInterface, GeneticSearchReferenceConfig,
+  RunnerStrategyInterface,
+  ScoringStrategyInterface,
+  GeneticSearchReferenceConfig,
+  RunnerStrategyConfig,
+  BaseGenome,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
 import type { SimulationTaskConfig } from '../genetic/multiprocessing';
@@ -20,10 +24,9 @@ import {
 } from '../config/types';
 import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
-import { simulationTaskMultiprocessing, simulationTaskSingle } from '../genetic/multiprocessing';
 import { normalizeSummaryMatrix } from "@/lib/genetic/helpers";
 
-abstract class BaseMutationStrategy<TGenome> implements MutationStrategyInterface<TGenome> {
+abstract class BaseMutationStrategy<TGenome extends BaseGenome> implements MutationStrategyInterface<TGenome> {
   protected readonly config: MutationStrategyConfig;
 
   protected constructor(config: MutationStrategyConfig) {
@@ -33,10 +36,14 @@ abstract class BaseMutationStrategy<TGenome> implements MutationStrategyInterfac
   public abstract mutate(id: number, genome: TGenome): TGenome;
 }
 
-abstract class BaseRunnerStrategy<TGenome, TTaskConfig> implements RunnerStrategyInterface<TGenome> {
-  protected readonly config: RunnerStrategyConfig;
+abstract class BaseRunnerStrategy<
+  TGenome extends BaseGenome,
+  TConfig extends RunnerStrategyConfig<TTaskConfig>,
+  TTaskConfig,
+> implements RunnerStrategyInterface<TGenome> {
+  protected readonly config: TConfig;
 
-  constructor(config: RunnerStrategyConfig) {
+  constructor(config: TConfig) {
     this.config = config;
   }
 
@@ -45,187 +52,57 @@ abstract class BaseRunnerStrategy<TGenome, TTaskConfig> implements RunnerStrateg
     return await this.execTask(inputs);
   }
 
-  protected abstract execTask(inputs: TTaskConfig[]): Promise<number[][]>;
-
-  protected abstract createTaskInput(id: number, genome: TGenome): TTaskConfig;
-
-  protected abstract getGenomeId(genome: TGenome): number;
-
-  protected createTasksInputList(population: Population<TGenome>): TTaskConfig[] {
-    return population.map((genome) => this.createTaskInput(this.getGenomeId(genome), genome));
-  }
-}
-
-abstract class BaseSimulationRunnerStrategy extends BaseRunnerStrategy<Genome, SimulationTaskConfig> {
-  protected createTaskInput(id: number, genome: Genome): SimulationTaskConfig {
-    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
-  }
-
-  protected getGenomeId(genome: Genome): number {
-    return genome.id;
-  }
-}
-
-export class SimulationRandomPopulateStrategy implements PopulateStrategyInterface<Genome> {
-  private readonly randomizeConfig: RandomTypesConfig;
-
-  constructor(randomizeConfig: RandomTypesConfig) {
-    this.randomizeConfig = randomizeConfig;
-  }
-
-  public populate(size: number): Population<Genome> {
-    const population: Population<Genome> = [];
-    for (let i = 0; i < size; i++) {
-      population.push({
-        id: 0,
-        typesConfig: randomizeTypesConfig(
-          this.randomizeConfig,
-          createTransparentTypesConfig(this.randomizeConfig.TYPES_COUNT),
-        ),
-      });
-    }
-    return population;
-  }
-}
-
-export class SimulationSourceMutationPopulateStrategy implements PopulateStrategyInterface<Genome> {
-  private readonly sourceTypesConfig: TypesConfig;
-  private readonly randomizeConfig: RandomTypesConfig;
-  private readonly probability: number;
-
-  constructor(sourceTypesConfig: TypesConfig, randomizeConfig: RandomTypesConfig, probability: number) {
-    this.sourceTypesConfig = sourceTypesConfig;
-    this.randomizeConfig = randomizeConfig;
-    this.probability = probability;
-  }
-
-  public populate(size: number): Population<Genome> {
-    const population: Population<Genome> = [];
-    for (let i = 0; i < size; i++) {
-      const inputTypesConfig = fullCopyObject(this.sourceTypesConfig);
-      const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
-      const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.probability);
-
-      population.push({
-        id: 0,
-        typesConfig: mutatedTypesConfig,
-      });
-    }
-    return population;
-  }
-}
-
-export class SimulationSubMatrixCrossoverStrategy implements CrossoverStrategyInterface<Genome> {
-  private readonly randomizeConfig: RandomTypesConfig;
-
-  constructor(randomizeConfig: RandomTypesConfig) {
-    this.randomizeConfig = randomizeConfig;
-  }
-
-  public cross(id: number, lhs: Genome, rhs: Genome): Genome {
-    const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
-    const crossed = crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
-    const randomized = randomizeTypesConfig(this.randomizeConfig, crossed, separator);
-    return { id: id, typesConfig: randomized };
-  }
-}
-
-export class SimulationRandomCrossoverStrategy implements CrossoverStrategyInterface<Genome> {
-  public cross(id: number, lhs: Genome, rhs: Genome): Genome {
-    const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
-    const crossed = randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
-    return { id: id, typesConfig: crossed };
-  }
-}
-
-export class SimulationComposedCrossoverStrategy implements CrossoverStrategyInterface<Genome> {
-  private readonly randomStrategy: CrossoverStrategyInterface<Genome>;
-  private readonly subMatrixStrategy: CrossoverStrategyInterface<Genome>;
-
-  constructor(randomizeConfig: RandomTypesConfig) {
-    this.randomStrategy = new SimulationRandomCrossoverStrategy();
-    this.subMatrixStrategy = new SimulationSubMatrixCrossoverStrategy(randomizeConfig);
-  }
-
-  public cross(id: number, lhs: Genome, rhs: Genome): Genome {
-    if (Math.random() > 0.5) {
-      return this.randomStrategy.cross(id, lhs, rhs);
-    }
-
-    return this.subMatrixStrategy.cross(id, lhs, rhs);
-  }
-}
-
-export class SimulationMutationStrategy extends BaseMutationStrategy<Genome> implements MutationStrategyInterface<Genome> {
-  private readonly randomizeConfig: RandomTypesConfig;
-
-  constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig) {
-    super(config);
-    this.randomizeConfig = randomizeConfig;
-  }
-
-  mutate(id: number, genome: Genome): Genome {
-    const inputTypesConfig = fullCopyObject(genome.typesConfig);
-    const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
-    const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.config.probability);
-
-    return { id: id, typesConfig: mutatedTypesConfig };
-  }
-}
-
-export class SourceMutationStrategy extends SimulationMutationStrategy implements MutationStrategyInterface<Genome> {
-  private readonly sourceTypesConfig: TypesConfig;
-
-  constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
-    super(config, randomizeConfig);
-    this.sourceTypesConfig = sourceTypesConfig;
-  }
-
-  public mutate(id: number): Genome {
-    return super.mutate(id, { id: 0, typesConfig: this.sourceTypesConfig });
-  }
-}
-
-export class SimulationSimpleRunnerStrategy extends BaseSimulationRunnerStrategy {
-  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
+  protected async execTask(inputs: TTaskConfig[]): Promise<number[][]> {
     const result = [];
     for (const input of inputs) {
-      result.push(await simulationTaskSingle(input));
+      result.push(await this.config.task(input));
     }
     return result;
   }
+
+  protected abstract createTaskInput(id: number, genome: TGenome): TTaskConfig;
+
+  protected createTasksInputList(population: Population<TGenome>): TTaskConfig[] {
+    return population.map((genome) => this.createTaskInput(genome.id, genome));
+  }
 }
 
-export class SimulationMultiprocessingRunnerStrategy extends BaseSimulationRunnerStrategy {
-  constructor(config: RunnerStrategyConfig) {
-    super(config);
-  }
-
-  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
+abstract class BaseMultiprocessingRunnerStrategy<
+  TGenome extends BaseGenome,
+  TConfig extends RunnerStrategyConfig<TTaskConfig>,
+  TTaskConfig,
+> extends BaseRunnerStrategy<TGenome, TConfig, TTaskConfig> {
+  protected async execTask(inputs: TTaskConfig[]): Promise<number[][]> {
     const pool = new Pool(this.config.poolSize);
-    const result: number[][] = await pool.map(inputs, simulationTaskMultiprocessing);
+    const result: number[][] = await pool.map(inputs, this.config.task);
     pool.close();
 
     return result;
   }
 }
 
-export class SimulationCachedMultiprocessingRunnerStrategy extends SimulationMultiprocessingRunnerStrategy {
-  private readonly cache: Map<number, number[]> = new Map();
+abstract class BaseCachedMultiprocessingRunnerStrategy<
+  TGenome extends BaseGenome,
+  TConfig extends RunnerStrategyConfig<TTaskConfig>,
+  TTaskConfig,
+> extends BaseMultiprocessingRunnerStrategy<TGenome, TConfig, TTaskConfig> {
+  protected readonly cache: Map<number, number[]> = new Map();
 
-  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
-    const resultsMap = new Map(inputs.map((input) => [input[0], this.cache.get(input[0])]));
-    const inputsToRun = inputs.filter((input) => resultsMap.get(input[0]) === undefined);
+  protected abstract getTaskId(input: TTaskConfig): number;
+
+  protected async execTask(inputs: TTaskConfig[]): Promise<number[][]> {
+    const resultsMap = new Map(inputs.map((input) => [this.getTaskId(input), this.cache.get(this.getTaskId(input))]));
+    const inputsToRun = inputs.filter((input) => resultsMap.get(this.getTaskId(input)) === undefined);
     const newResults = await super.execTask(inputsToRun);
 
     for (const [input, result] of multi.zip(inputsToRun, newResults)) {
-      this.cache.set(input[0], result);
-      resultsMap.set(input[0], result);
+      this.cache.set(this.getTaskId(input), result);
+      resultsMap.set(this.getTaskId(input), result);
     }
 
     const results: number[][] = [];
     for (const input of inputs) {
-      results.push(resultsMap.get(input[0]) as number[]);
+      results.push(resultsMap.get(this.getTaskId(input)) as number[]);
     }
 
     for (const id of this.cache.keys()) {
@@ -256,5 +133,171 @@ export class ReferenceLossScoringStrategy implements ScoringStrategyInterface {
 
   private weighRow(result: number[]): number[] {
     return arrayBinaryOperation(result, this.referenceConfig.weights, (x, y) => x * y);
+  }
+}
+
+export class SimulationRandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
+  private readonly randomizeConfig: RandomTypesConfig;
+
+  constructor(randomizeConfig: RandomTypesConfig) {
+    this.randomizeConfig = randomizeConfig;
+  }
+
+  public populate(size: number): Population<SimulationGenome> {
+    const population: Population<SimulationGenome> = [];
+    for (let i = 0; i < size; i++) {
+      population.push({
+        id: 0,
+        typesConfig: randomizeTypesConfig(
+          this.randomizeConfig,
+          createTransparentTypesConfig(this.randomizeConfig.TYPES_COUNT),
+        ),
+      });
+    }
+    return population;
+  }
+}
+
+export class SimulationSourceMutationPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
+  private readonly sourceTypesConfig: TypesConfig;
+  private readonly randomizeConfig: RandomTypesConfig;
+  private readonly probability: number;
+
+  constructor(sourceTypesConfig: TypesConfig, randomizeConfig: RandomTypesConfig, probability: number) {
+    this.sourceTypesConfig = sourceTypesConfig;
+    this.randomizeConfig = randomizeConfig;
+    this.probability = probability;
+  }
+
+  public populate(size: number): Population<SimulationGenome> {
+    const population: Population<SimulationGenome> = [];
+    for (let i = 0; i < size; i++) {
+      const inputTypesConfig = fullCopyObject(this.sourceTypesConfig);
+      const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
+      const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.probability);
+
+      population.push({
+        id: 0,
+        typesConfig: mutatedTypesConfig,
+      });
+    }
+    return population;
+  }
+}
+
+export class SimulationSubMatrixCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
+  private readonly randomizeConfig: RandomTypesConfig;
+
+  constructor(randomizeConfig: RandomTypesConfig) {
+    this.randomizeConfig = randomizeConfig;
+  }
+
+  public cross(id: number, lhs: SimulationGenome, rhs: SimulationGenome): SimulationGenome {
+    const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
+    const crossed = crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
+    const randomized = randomizeTypesConfig(this.randomizeConfig, crossed, separator);
+    return { id: id, typesConfig: randomized };
+  }
+}
+
+export class SimulationRandomCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
+  public cross(id: number, lhs: SimulationGenome, rhs: SimulationGenome): SimulationGenome {
+    const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
+    const crossed = randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
+    return { id: id, typesConfig: crossed };
+  }
+}
+
+export class SimulationComposedCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
+  private readonly randomStrategy: CrossoverStrategyInterface<SimulationGenome>;
+  private readonly subMatrixStrategy: CrossoverStrategyInterface<SimulationGenome>;
+
+  constructor(randomizeConfig: RandomTypesConfig) {
+    this.randomStrategy = new SimulationRandomCrossoverStrategy();
+    this.subMatrixStrategy = new SimulationSubMatrixCrossoverStrategy(randomizeConfig);
+  }
+
+  public cross(id: number, lhs: SimulationGenome, rhs: SimulationGenome): SimulationGenome {
+    if (Math.random() > 0.5) {
+      return this.randomStrategy.cross(id, lhs, rhs);
+    }
+
+    return this.subMatrixStrategy.cross(id, lhs, rhs);
+  }
+}
+
+export class SimulationMutationStrategy extends BaseMutationStrategy<SimulationGenome> implements MutationStrategyInterface<SimulationGenome> {
+  private readonly randomizeConfig: RandomTypesConfig;
+
+  constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig) {
+    super(config);
+    this.randomizeConfig = randomizeConfig;
+  }
+
+  mutate(id: number, genome: SimulationGenome): SimulationGenome {
+    const inputTypesConfig = fullCopyObject(genome.typesConfig);
+    const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
+    const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.config.probability);
+
+    return { id: id, typesConfig: mutatedTypesConfig };
+  }
+}
+
+export class SourceMutationStrategy extends SimulationMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
+  private readonly sourceTypesConfig: TypesConfig;
+
+  constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
+    super(config, randomizeConfig);
+    this.sourceTypesConfig = sourceTypesConfig;
+  }
+
+  public mutate(id: number): SimulationGenome {
+    return super.mutate(id, { id: 0, typesConfig: this.sourceTypesConfig });
+  }
+}
+
+export class SimulationSimpleRunnerStrategy extends BaseRunnerStrategy<SimulationGenome, SimulationRunnerStrategyConfig, SimulationTaskConfig> {
+  protected createTaskInput(id: number, genome: SimulationGenome): SimulationTaskConfig {
+    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
+  }
+}
+
+export class SimulationMultiprocessingRunnerStrategy extends BaseMultiprocessingRunnerStrategy<SimulationGenome, SimulationRunnerStrategyConfig, SimulationTaskConfig> {
+  protected createTaskInput(id: number, genome: SimulationGenome): SimulationTaskConfig {
+    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
+  }
+}
+
+export class SimulationCachedMultiprocessingRunnerStrategy extends BaseCachedMultiprocessingRunnerStrategy<SimulationGenome, SimulationRunnerStrategyConfig, SimulationTaskConfig> {
+  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
+    const resultsMap = new Map(inputs.map((input) => [input[0], this.cache.get(input[0])]));
+    const inputsToRun = inputs.filter((input) => resultsMap.get(input[0]) === undefined);
+    const newResults = await super.execTask(inputsToRun);
+
+    for (const [input, result] of multi.zip(inputsToRun, newResults)) {
+      this.cache.set(input[0], result);
+      resultsMap.set(input[0], result);
+    }
+
+    const results: number[][] = [];
+    for (const input of inputs) {
+      results.push(resultsMap.get(input[0]) as number[]);
+    }
+
+    for (const id of this.cache.keys()) {
+      if (!resultsMap.has(id)) {
+        this.cache.delete(id);
+      }
+    }
+
+    return results;
+  }
+
+  protected createTaskInput(id: number, genome: SimulationGenome): SimulationTaskConfig {
+    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
+  }
+
+  protected getTaskId(input: SimulationTaskConfig): number {
+    return input[0];
   }
 }

@@ -1,6 +1,6 @@
 import os from 'os';
 import { ArgsParser } from "@/scripts/lib/router";
-import type { GeneticSearchByTypesConfigFactoryConfig } from "@/lib/types/genetic";
+import type { SimulationGeneticSearchByTypesConfigFactoryConfig } from "@/lib/types/genetic";
 import { getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,
@@ -12,6 +12,7 @@ import {
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
 import { createGeneticSearchByTypesConfig } from "@/lib/genetic/factories";
+import { simulationTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
 
 export const actionGeneticSearch = async (...args: string[]) => {
   const ts = Date.now();
@@ -35,8 +36,8 @@ export const actionGeneticSearch = async (...args: string[]) => {
     console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
 
-    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize);
-    const config: GeneticSearchByTypesConfigFactoryConfig = {
+    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, simulationTaskMultiprocessing);
+    const config: SimulationGeneticSearchByTypesConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
       runnerStrategyConfig: mainConfig.runner,
       mutationStrategyConfig: mainConfig.mutation,

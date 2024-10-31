@@ -1,5 +1,10 @@
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from './config';
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from '../types/analysis';
+import type { SimulationTaskConfig } from "@/lib/genetic/multiprocessing";
+
+export type BaseGenome = {
+  id: number;
+}
 
 export type GeneticSearchConfig = {
   populationSize: number;
@@ -7,26 +12,20 @@ export type GeneticSearchConfig = {
   crossoverRate: number;
 };
 
-export type GeneticSearchReferenceConfig = {
-  reference: number[];
-  weights: number[];
-};
-
-export type RunnerStrategyConfig = {
-  worldConfig: WorldConfig;
-  checkpoints: number[];
-  repeats: number;
-  poolSize: number;
-};
-
-export type Genome = {
-  id: number;
-  typesConfig: TypesConfig;
+export type MutationStrategyConfig = {
+  probability: number;
 }
 
-export type Population<TGenome> = TGenome[];
+export type GradeGenerationTask<TTaskConfig> = (data: TTaskConfig) => Promise<number[]>;
 
-export type StrategyConfig<TGenome> = {
+export type RunnerStrategyConfig<TTaskConfig> = {
+  poolSize: number;
+  task: GradeGenerationTask<TTaskConfig>;
+}
+
+export type Population<TGenome extends BaseGenome> = TGenome[];
+
+export type StrategyConfig<TGenome extends BaseGenome> = {
   populate: PopulateStrategyInterface<TGenome>;
   runner: RunnerStrategyInterface<TGenome>;
   scoring: ScoringStrategyInterface;
@@ -34,9 +33,56 @@ export type StrategyConfig<TGenome> = {
   crossover: CrossoverStrategyInterface<TGenome>;
 }
 
-export type GeneticSearchByTypesConfigFactoryConfig = {
+export type GeneticSearchReferenceConfig = {
+  reference: number[];
+  weights: number[];
+};
+
+export type GenerationScores = number[];
+export type GenerationCallback = (generation: number, result: GenerationScores) => void;
+
+export interface GeneticSearchInterface<TGenome extends BaseGenome> {
+  run(generationsCount: number, afterStep: GenerationCallback): Promise<void>;
+  runGenerationStep(): Promise<GenerationScores>;
+  getBestGenome(): TGenome;
+  getPopulation(): Population<TGenome>;
+  setPopulation(population: Population<TGenome>): void;
+}
+
+export interface PopulateStrategyInterface<TGenome extends BaseGenome> {
+  populate(size: number): Population<TGenome>;
+}
+
+export interface MutationStrategyInterface<TGenome extends BaseGenome> {
+  mutate(id: number, item: TGenome): TGenome;
+}
+
+export interface CrossoverStrategyInterface<TGenome extends BaseGenome> {
+  cross(id: number, lhs: TGenome, rhs: TGenome): TGenome;
+}
+
+export interface RunnerStrategyInterface<TGenome extends BaseGenome> {
+  run(population: Population<TGenome>): Promise<number[][]>;
+}
+
+export interface ScoringStrategyInterface {
+  score(results: number[][]): number[];
+}
+
+export type SimulationRunnerStrategyConfig = RunnerStrategyConfig<SimulationTaskConfig> & {
+  worldConfig: WorldConfig;
+  checkpoints: number[];
+  repeats: number;
+};
+
+export type SimulationGenome = {
+  id: number;
+  typesConfig: TypesConfig;
+}
+
+export type SimulationGeneticSearchByTypesConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
-  runnerStrategyConfig: RunnerStrategyConfig;
+  runnerStrategyConfig: SimulationRunnerStrategyConfig;
   mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
@@ -47,9 +93,9 @@ export type GeneticSearchByTypesConfigFactoryConfig = {
   worldConfig: WorldConfig;
 }
 
-export type RandomSearchByTypesConfigFactoryConfig = {
+export type SimulationRandomSearchByTypesConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
-  runnerStrategyConfig: RunnerStrategyConfig;
+  runnerStrategyConfig: SimulationRunnerStrategyConfig;
   mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
@@ -61,49 +107,14 @@ export type RandomSearchByTypesConfigFactoryConfig = {
   worldConfig: WorldConfig;
 }
 
-export type MutationStrategyConfig = {
-  probability: number;
-}
-
-export type GeneticMainConfig = {
+export type SimulationGeneticMainConfig = {
   macro: GeneticSearchConfig;
   initial: InitialConfig;
-  runner: RunnerStrategyConfig;
+  runner: SimulationRunnerStrategyConfig;
   mutation: MutationStrategyConfig;
 }
 
 export type SimulationMainConfig = {
   initial: InitialConfig;
-  runner: RunnerStrategyConfig;
-}
-
-export type GenerationScores = number[];
-export type GenerationCallback = (generation: number, result: GenerationScores) => void;
-
-export interface GeneticSearchInterface<TGenome> {
-  run(generationsCount: number, afterStep: GenerationCallback): Promise<void>;
-  runGenerationStep(): Promise<GenerationScores>;
-  getBestGenome(): TGenome;
-  getPopulation(): Population<TGenome>;
-  setPopulation(population: Population<TGenome>): void;
-}
-
-export interface PopulateStrategyInterface<TGenome> {
-  populate(size: number): Population<TGenome>;
-}
-
-export interface MutationStrategyInterface<TGenome> {
-  mutate(id: number, item: TGenome): TGenome;
-}
-
-export interface CrossoverStrategyInterface<TGenome> {
-  cross(id: number, lhs: TGenome, rhs: TGenome): TGenome;
-}
-
-export interface RunnerStrategyInterface<TGenome> {
-  run(population: Population<TGenome>): Promise<number[][]>;
-}
-
-export interface ScoringStrategyInterface {
-  score(results: number[][]): number[];
+  runner: SimulationRunnerStrategyConfig;
 }

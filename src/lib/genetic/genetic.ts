@@ -6,11 +6,12 @@ import type {
   GenerationCallback,
   GenerationScores,
   Population,
+  BaseGenome,
 } from '../types/genetic';
 import { createNextIdGenerator } from './helpers';
 import { getRandomArrayItem } from '../math/random';
 
-export class GeneticSearch<TGenome> implements GeneticSearchInterface<TGenome> {
+export class GeneticSearch<TGenome extends BaseGenome> implements GeneticSearchInterface<TGenome> {
   protected readonly strategy: StrategyConfig<TGenome>;
   protected readonly nextId: () => number;
   protected readonly config: GeneticSearchConfig;
