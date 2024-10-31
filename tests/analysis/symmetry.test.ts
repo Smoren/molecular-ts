@@ -49,7 +49,7 @@ function dataProviderForScoreBilateralSymmetry(): Array<[GraphConfig, LineCoeffi
         ],
       },
       [-13750000000, 1.375],
-      0,
+      1,
     ],
     // [
     //   {

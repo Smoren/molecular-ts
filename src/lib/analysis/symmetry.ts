@@ -15,6 +15,7 @@ import { findOrthogonalLine, getLineByPoints } from "../math/geometry";
 
 // TODO parametrize type+edges_count
 // TODO parametrize type+linked_types
+// TODO взвешенный поиск центра, когда более удаленные точки вносят меньший вклад
 
 type ScoreSymmetryAxisFunctionArguments = {
   graph: GraphInterface;
@@ -29,9 +30,14 @@ type ScoreSymmetryFunctionArguments = {
   scoreAxisFunction: ScoreSymmetryAxisFunction;
   magic?: number;
   eps?: number;
+  normCoefficient?: number;
 }
 
 type ScoreSymmetryAxisFunction = (params: ScoreSymmetryAxisFunctionArguments) => number;
+
+export function normSymmetryScore(x: number, normCoefficient: number = 0.5): number {
+  return 1 / (1 + Math.abs(x)*normCoefficient);
+}
 
 export function scoreSymmetryAxis({
   graph,
@@ -71,6 +77,7 @@ export function scoreBilateralSymmetry({
   scoreAxisFunction,
   magic = 0.3,
   eps = 1e-10,
+  normCoefficient = 0.5,
 }: ScoreSymmetryFunctionArguments): [number, LineCoefficients] {
   // Найдем точку M — центр масс графа. Если граф действительно симметричен, ось симметрии будет проходить через M —
   // нам остаётся найти ее угловой коэффициент.
@@ -161,5 +168,5 @@ export function scoreBilateralSymmetry({
     // checkSymmetryAxis(graph, [k2, b2], radius, 0.5);
   }
 
-  return [bestScore, bestAxis];
+  return [normSymmetryScore(bestScore, normCoefficient), bestAxis];
 }
