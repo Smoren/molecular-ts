@@ -53,6 +53,16 @@ abstract class GeneticSearch implements GeneticSearchInterface {
       .map((x) => ({ ...x, id: this.nextId() }));
   }
 
+  protected sortPopulation(scores: number[]): [Population, number[]] {
+    const zipped = multi.zip(this.population, scores);
+    const sorted = single.sort(zipped, (lhs, rhs) => lhs[1] - rhs[1]);
+    const sortedArray = transform.toArray(sorted);
+    return [
+      transform.toArray(single.map(sortedArray, (x) => x[0])),
+      transform.toArray(single.map(sortedArray, (x) => x[1])),
+    ];
+  }
+
   protected crossover(genomes: Population, count: number): Population {
     const newPopulation = [];
 
@@ -110,45 +120,24 @@ export class ComposedGeneticSearch extends GeneticSearch implements GeneticSearc
   public async runGenerationStep(): Promise<GenerationScores> {
     const results = await this.strategy.runner.run(this.population);
 
-    const [normalizedLosses, absoluteLosses] = this.calcLosses(results);
+    const normalizedLosses = this.calcScores(results);
     const [
       sortedPopulation,
       sortedNormalizedLosses,
-    ] = this.sortPopulation(normalizedLosses, absoluteLosses);
+    ] = this.sortPopulation(normalizedLosses);
 
     this.refreshPopulation(sortedPopulation);
 
     return sortedNormalizedLosses;
   }
 
-  private sortPopulation(normalizedLosses: number[], absoluteLosses: number[]): [Population, number[], number[]] {
-    const zipped = multi.zip(this.population, normalizedLosses, absoluteLosses);
-    const sorted = single.sort(zipped, (lhs, rhs) => lhs[1] - rhs[1]);
-    const sortedArray = transform.toArray(sorted);
-    return [
-      transform.toArray(single.map(sortedArray, (x) => x[0])),
-      transform.toArray(single.map(sortedArray, (x) => x[1])),
-      transform.toArray(single.map(sortedArray, (x) => x[2])),
-    ];
-  }
-
-  private calcLosses(results: number[][]): [number[], number[]] {
+  private calcScores(results: number[][]): number[] {
     const normalizedLosses = this.getNormalizedLosses(results);
-    const absoluteLosses = this.getAbsoluteLosses(results);
-
-    return [
-      normalizedLosses.map((x) => arraySum(x)),
-      absoluteLosses.map((x) => arraySum(x)),
-    ];
+    return normalizedLosses.map((x) => arraySum(x));
   }
 
   private getNormalizedLosses(results: number[][]): number[][] {
     return normalizeSummaryMatrix(results, this.referenceConfig.reference).map((result) => this.weighRow(result));
-  }
-
-  private getAbsoluteLosses(results: number[][]): number[][] {
-    const weightedReference = this.weighRow(this.referenceConfig.reference);
-    return results.map((result) => this.weighRow(result).map((x, i) => Math.abs(x - weightedReference[i])));
   }
 
   private weighRow(result: number[]): number[] {
