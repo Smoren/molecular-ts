@@ -1,6 +1,5 @@
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from './config';
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from '../types/analysis';
-import type { SimulationTaskConfig } from "@/lib/genetic/multiprocessing";
 
 export type BaseGenome = {
   id: number;
@@ -68,6 +67,8 @@ export interface RunnerStrategyInterface<TGenome extends BaseGenome> {
 export interface ScoringStrategyInterface {
   score(results: number[][]): number[];
 }
+
+export type SimulationTaskConfig = [number, WorldConfig, TypesConfig, number[], number];
 
 export type SimulationRunnerStrategyConfig = RunnerStrategyConfig<SimulationTaskConfig> & {
   worldConfig: WorldConfig;

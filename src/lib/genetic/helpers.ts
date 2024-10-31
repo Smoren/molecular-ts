@@ -11,7 +11,7 @@ import { averageMatrixColumns } from '../math/operations';
 import { createDummyDrawer } from '../drawer/dummy';
 import { groupArray } from '../math/helpers';
 import { convertArrayToStatSummary, convertStatSummaryToArray } from '../analysis/helpers';
-import { gradeCompoundClusters, scoreCompoundClustersSummary } from "@/lib/analysis/utils";
+import { gradeCompoundClusters, scoreCompoundClustersSummary } from "../analysis/utils";
 
 export function createTransparentWeights(): TotalSummaryWeights {
   return {

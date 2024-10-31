@@ -15,7 +15,7 @@ import type {
   BaseGenome,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
-import type { SimulationTaskConfig } from '../genetic/multiprocessing';
+import type { SimulationTaskConfig } from '../types/genetic';
 import {
   createTransparentTypesConfig,
   crossTypesConfigs,
@@ -24,7 +24,7 @@ import {
 } from '../config/types';
 import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
-import { normalizeSummaryMatrix } from "@/lib/genetic/helpers";
+import { normalizeSummaryMatrix } from "./helpers";
 
 abstract class BaseMutationStrategy<TGenome extends BaseGenome> implements MutationStrategyInterface<TGenome> {
   protected readonly config: MutationStrategyConfig;

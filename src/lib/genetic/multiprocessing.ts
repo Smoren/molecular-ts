@@ -1,7 +1,5 @@
-import type { TypesConfig, WorldConfig } from '../types/config';
-import { repeatTestSimulation } from './helpers';
-
-export type SimulationTaskConfig = [number, WorldConfig, TypesConfig, number[], number];
+import { repeatTestSimulation } from "./helpers";
+import type { SimulationTaskConfig } from "../types/genetic";
 
 export const simulationTaskMultiprocessing = async ([
   id,
