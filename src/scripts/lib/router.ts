@@ -63,6 +63,14 @@ export class ArgsParser {
     return parseInt(value);
   }
 
+  getNullableInt(key: string): number | undefined {
+    const value = this.get(key);
+    if (value === undefined) {
+      return undefined;
+    }
+    return parseInt(value);
+  }
+
   summary(): Record<string, string | string[]> {
     return Object.fromEntries(this.argsMap);
   }

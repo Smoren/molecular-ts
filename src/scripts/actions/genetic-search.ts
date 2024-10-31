@@ -32,6 +32,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
       referenceSummaryFileName,
       weightsFileName,
       worldConfigFileName,
+      targetClustersScore,
     } = argsMap;
     console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
@@ -48,6 +49,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
       referenceSummaryRowObject: getSummaryRowObject(referenceSummaryFileName),
       weights: getWeights(weightsFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
+      targetClustersScore,
     };
 
     console.log('[START] Building genetic search');
@@ -93,6 +95,8 @@ function parseArgs(argsParser: ArgsParser) {
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
 
+  const targetClustersScore = argsParser.getNullableInt('targetClustersScore');
+
   return {
     poolSize,
     generationsCount,
@@ -104,5 +108,6 @@ function parseArgs(argsParser: ArgsParser) {
     referenceSummaryFileName,
     weightsFileName,
     worldConfigFileName,
+    targetClustersScore,
   };
 }

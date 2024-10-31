@@ -92,6 +92,7 @@ export type SimulationGeneticSearchByTypesConfigFactoryConfig = {
   referenceSummaryRowObject?: SummaryMatrixRowObject;
   weights: TotalSummaryWeights;
   worldConfig: WorldConfig;
+  targetClustersScore?: number;
 }
 
 export type SimulationRandomSearchByTypesConfigFactoryConfig = {
@@ -106,6 +107,7 @@ export type SimulationRandomSearchByTypesConfigFactoryConfig = {
   referenceSummaryRowObject?: SummaryMatrixRowObject;
   weights: TotalSummaryWeights;
   worldConfig: WorldConfig;
+  targetClustersScore?: number;
 }
 
 export type SimulationGeneticMainConfig = {

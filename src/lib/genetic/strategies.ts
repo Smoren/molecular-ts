@@ -269,30 +269,6 @@ export class SimulationMultiprocessingRunnerStrategy extends BaseMultiprocessing
 }
 
 export class SimulationCachedMultiprocessingRunnerStrategy extends BaseCachedMultiprocessingRunnerStrategy<SimulationGenome, SimulationRunnerStrategyConfig, SimulationTaskConfig> {
-  protected async execTask(inputs: SimulationTaskConfig[]): Promise<number[][]> {
-    const resultsMap = new Map(inputs.map((input) => [input[0], this.cache.get(input[0])]));
-    const inputsToRun = inputs.filter((input) => resultsMap.get(input[0]) === undefined);
-    const newResults = await super.execTask(inputsToRun);
-
-    for (const [input, result] of multi.zip(inputsToRun, newResults)) {
-      this.cache.set(input[0], result);
-      resultsMap.set(input[0], result);
-    }
-
-    const results: number[][] = [];
-    for (const input of inputs) {
-      results.push(resultsMap.get(input[0]) as number[]);
-    }
-
-    for (const id of this.cache.keys()) {
-      if (!resultsMap.has(id)) {
-        this.cache.delete(id);
-      }
-    }
-
-    return results;
-  }
-
   protected createTaskInput(id: number, genome: SimulationGenome): SimulationTaskConfig {
     return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }

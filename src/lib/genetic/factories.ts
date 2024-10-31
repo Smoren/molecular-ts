@@ -11,6 +11,7 @@ import {
   setTypesCountToRandomizeConfigCollection,
   convertSummaryMatrixRowObjectToArray,
   repeatTestSimulation,
+  convertSummaryMatrixRowToObject,
 } from '../genetic/helpers';
 import { GeneticSearch } from '../genetic/genetic';
 import {
@@ -37,14 +38,18 @@ export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearch
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const reference = config.referenceSummaryRowObject === undefined
-    ? repeatTestSimulation(
-      config.worldConfig,
-      config.referenceTypesConfig,
-      config.runnerStrategyConfig.checkpoints,
-      config.runnerStrategyConfig.repeats,
-    )
-    : convertSummaryMatrixRowObjectToArray(config.referenceSummaryRowObject);
+  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatTestSimulation(
+    config.worldConfig,
+    config.referenceTypesConfig,
+    config.runnerStrategyConfig.checkpoints,
+    config.runnerStrategyConfig.repeats,
+  ), typesCount);
+
+  if (config.targetClustersScore !== undefined) {
+    summaryRowObject.clustersScore = config.targetClustersScore;
+  }
+
+  const reference = convertSummaryMatrixRowObjectToArray(summaryRowObject);
 
   const referenceConfig: GeneticSearchReferenceConfig = {
     reference,
@@ -86,14 +91,18 @@ export function createRandomSearchByTypesConfig(config: SimulationRandomSearchBy
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const reference = config.referenceSummaryRowObject === undefined
-    ? repeatTestSimulation(
-      config.worldConfig,
-      config.referenceTypesConfig,
-      config.runnerStrategyConfig.checkpoints,
-      config.runnerStrategyConfig.repeats,
-    )
-    : convertSummaryMatrixRowObjectToArray(config.referenceSummaryRowObject);
+  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatTestSimulation(
+    config.worldConfig,
+    config.referenceTypesConfig,
+    config.runnerStrategyConfig.checkpoints,
+    config.runnerStrategyConfig.repeats,
+  ), typesCount);
+
+  if (config.targetClustersScore !== undefined) {
+    summaryRowObject.clustersScore = config.targetClustersScore;
+  }
+
+  const reference = convertSummaryMatrixRowObjectToArray(summaryRowObject);
 
   const referenceConfig: GeneticSearchReferenceConfig = {
     reference,
