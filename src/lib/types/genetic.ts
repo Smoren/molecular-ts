@@ -49,7 +49,7 @@ export interface GeneticSearchInterface<TGenome extends BaseGenome> {
 }
 
 export interface PopulateStrategyInterface<TGenome extends BaseGenome> {
-  populate(size: number): Population<TGenome>;
+  populate(size: number, nextId: () => number): Population<TGenome>;
 }
 
 export interface MutationStrategyInterface<TGenome extends BaseGenome> {

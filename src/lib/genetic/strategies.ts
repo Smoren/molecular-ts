@@ -143,11 +143,11 @@ export class SimulationRandomPopulateStrategy implements PopulateStrategyInterfa
     this.randomizeConfig = randomizeConfig;
   }
 
-  public populate(size: number): Population<SimulationGenome> {
+  public populate(size: number, nextId: () => number): Population<SimulationGenome> {
     const population: Population<SimulationGenome> = [];
     for (let i = 0; i < size; i++) {
       population.push({
-        id: 0,
+        id: nextId(),
         typesConfig: randomizeTypesConfig(
           this.randomizeConfig,
           createTransparentTypesConfig(this.randomizeConfig.TYPES_COUNT),
@@ -169,7 +169,7 @@ export class SimulationSourceMutationPopulateStrategy implements PopulateStrateg
     this.probability = probability;
   }
 
-  public populate(size: number): Population<SimulationGenome> {
+  public populate(size: number, nextId: () => number): Population<SimulationGenome> {
     const population: Population<SimulationGenome> = [];
     for (let i = 0; i < size; i++) {
       const inputTypesConfig = fullCopyObject(this.sourceTypesConfig);
@@ -177,7 +177,7 @@ export class SimulationSourceMutationPopulateStrategy implements PopulateStrateg
       const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.probability);
 
       population.push({
-        id: 0,
+        id: nextId(),
         typesConfig: mutatedTypesConfig,
       });
     }

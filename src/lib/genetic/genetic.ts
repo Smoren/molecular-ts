@@ -58,9 +58,7 @@ export class GeneticSearch<TGenome extends BaseGenome> implements GeneticSearchI
   }
 
   protected createPopulation(size: number): Population<TGenome> {
-    return this.strategy.populate
-      .populate(size)
-      .map((x) => ({ ...x, id: this.nextId() }));
+    return this.strategy.populate.populate(size, this.nextId);
   }
 
   protected sortPopulation(scores: number[]): [Population<TGenome>, number[]] {
