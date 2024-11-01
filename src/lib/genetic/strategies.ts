@@ -60,10 +60,10 @@ abstract class BaseRunnerStrategy<
     return result;
   }
 
-  protected abstract createTaskInput(id: number, genome: TGenome): TTaskConfig;
+  protected abstract createTaskInput(genome: TGenome): TTaskConfig;
 
   protected createTasksInputList(population: Population<TGenome>): TTaskConfig[] {
-    return population.map((genome) => this.createTaskInput(genome.id, genome));
+    return population.map((genome) => this.createTaskInput(genome));
   }
 }
 
@@ -88,21 +88,21 @@ abstract class BaseCachedMultiprocessingRunnerStrategy<
 > extends BaseMultiprocessingRunnerStrategy<TGenome, TConfig, TTaskConfig> {
   protected readonly cache: Map<number, number[]> = new Map();
 
-  protected abstract getTaskId(input: TTaskConfig): number;
+  protected abstract getGenomeId(input: TTaskConfig): number;
 
   protected async execTask(inputs: TTaskConfig[]): Promise<number[][]> {
-    const resultsMap = new Map(inputs.map((input) => [this.getTaskId(input), this.cache.get(this.getTaskId(input))]));
-    const inputsToRun = inputs.filter((input) => resultsMap.get(this.getTaskId(input)) === undefined);
+    const resultsMap = new Map(inputs.map((input) => [this.getGenomeId(input), this.cache.get(this.getGenomeId(input))]));
+    const inputsToRun = inputs.filter((input) => resultsMap.get(this.getGenomeId(input)) === undefined);
     const newResults = await super.execTask(inputsToRun);
 
     for (const [input, result] of multi.zip(inputsToRun, newResults)) {
-      this.cache.set(this.getTaskId(input), result);
-      resultsMap.set(this.getTaskId(input), result);
+      this.cache.set(this.getGenomeId(input), result);
+      resultsMap.set(this.getGenomeId(input), result);
     }
 
     const results: number[][] = [];
     for (const input of inputs) {
-      results.push(resultsMap.get(this.getTaskId(input)) as number[]);
+      results.push(resultsMap.get(this.getGenomeId(input)) as number[]);
     }
 
     for (const id of this.cache.keys()) {
@@ -257,23 +257,23 @@ export class SimulationSourceMutationStrategy extends SimulationDefaultMutationS
 }
 
 export class SimulationSimpleRunnerStrategy extends BaseRunnerStrategy<SimulationGenome, SimulationRunnerStrategyConfig, SimulationTaskConfig> {
-  protected createTaskInput(id: number, genome: SimulationGenome): SimulationTaskConfig {
-    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
+  protected createTaskInput(genome: SimulationGenome): SimulationTaskConfig {
+    return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
 export class SimulationMultiprocessingRunnerStrategy extends BaseMultiprocessingRunnerStrategy<SimulationGenome, SimulationRunnerStrategyConfig, SimulationTaskConfig> {
-  protected createTaskInput(id: number, genome: SimulationGenome): SimulationTaskConfig {
-    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
+  protected createTaskInput(genome: SimulationGenome): SimulationTaskConfig {
+    return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
 export class SimulationCachedMultiprocessingRunnerStrategy extends BaseCachedMultiprocessingRunnerStrategy<SimulationGenome, SimulationRunnerStrategyConfig, SimulationTaskConfig> {
-  protected createTaskInput(id: number, genome: SimulationGenome): SimulationTaskConfig {
-    return [id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
+  protected createTaskInput(genome: SimulationGenome): SimulationTaskConfig {
+    return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 
-  protected getTaskId(input: SimulationTaskConfig): number {
+  protected getGenomeId(input: SimulationTaskConfig): number {
     return input[0];
   }
 }
