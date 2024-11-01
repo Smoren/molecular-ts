@@ -25,13 +25,13 @@ export class GeneticSearch<TGenome extends BaseGenome> implements GeneticSearchI
     this.population = this.createPopulation(this.config.populationSize);
   }
 
-  public async run(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
+  public async fit(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
     for (let i=0; i<generationsCount; i++) {
-      afterStep(i, await this.runGenerationStep());
+      afterStep(i, await this.step());
     }
   }
 
-  public async runGenerationStep(): Promise<GenerationScores> {
+  public async step(): Promise<GenerationScores> {
     const results = await this.strategy.runner.run(this.population);
     const scores = this.strategy.scoring.score(results);
 
@@ -141,18 +141,18 @@ export class ComposedGeneticSearch<TGenome extends BaseGenome> implements Geneti
     }
   }
 
-  public async run(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
+  public async fit(generationsCount: number, afterStep: GenerationCallback): Promise<void> {
     for (let i=0; i<generationsCount; i++) {
-      afterStep(i, await this.runGenerationStep());
+      afterStep(i, await this.step());
     }
   }
 
-  public async runGenerationStep(): Promise<GenerationScores> {
+  public async step(): Promise<GenerationScores> {
     for (const eliminators of this.eliminators) {
-      await eliminators.runGenerationStep();
+      await eliminators.step();
     }
     this.final.setPopulation(this.getBestGenomes());
-    return await this.final.runGenerationStep();
+    return await this.final.step();
   }
 
   public getBestGenome(): TGenome {

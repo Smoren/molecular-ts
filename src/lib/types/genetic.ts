@@ -41,8 +41,8 @@ export type GenerationScores = number[];
 export type GenerationCallback = (generation: number, result: GenerationScores) => void;
 
 export interface GeneticSearchInterface<TGenome extends BaseGenome> {
-  run(generationsCount: number, afterStep: GenerationCallback): Promise<void>;
-  runGenerationStep(): Promise<GenerationScores>;
+  fit(generationsCount: number, afterStep: GenerationCallback): Promise<void>;
+  step(): Promise<GenerationScores>;
   getBestGenome(): TGenome;
   getPopulation(): Population<TGenome>;
   setPopulation(population: Population<TGenome>): void;

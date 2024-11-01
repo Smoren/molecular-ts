@@ -61,7 +61,7 @@ export const actionGeneticClarify = async (...args: string[]) => {
     console.log('[START] Running genetic search');
     let bestId: number = 0;
 
-    await geneticSearch.run(generationsCount, (i, scores) => {
+    await geneticSearch.fit(generationsCount, (i, scores) => {
       const [bestScore, meanScore, medianScore, worstScore] = getNormalizedLossesSummary(scores);
 
       const bestGenome = geneticSearch.getBestGenome();
