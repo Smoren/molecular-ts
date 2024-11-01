@@ -17,11 +17,11 @@ import { GeneticSearch } from '../genetic/genetic';
 import {
   SimulationCachedMultiprocessingRunnerStrategy,
   SimulationComposedCrossoverStrategy,
-  SimulationMutationStrategy,
+  SimulationDefaultMutationStrategy,
   SimulationRandomPopulateStrategy,
   ReferenceLossScoringStrategy,
   SimulationSourceMutationPopulateStrategy,
-  SourceMutationStrategy,
+  SimulationSourceMutationStrategy,
 } from '../genetic/strategies';
 
 export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
@@ -60,7 +60,7 @@ export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearch
     populate: new SimulationRandomPopulateStrategy(populateRandomTypesConfig),
     scoring: new ReferenceLossScoringStrategy(referenceConfig),
     runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
-    mutation: new SimulationMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
+    mutation: new SimulationDefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
@@ -117,7 +117,7 @@ export function createRandomSearchByTypesConfig(config: SimulationRandomSearchBy
     ),
     scoring: new ReferenceLossScoringStrategy(referenceConfig),
     runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
-    mutation: new SourceMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
+    mutation: new SimulationSourceMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 

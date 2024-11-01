@@ -79,7 +79,7 @@ export class GeneticSearch<TGenome extends BaseGenome> implements GeneticSearchI
     for (let i = 0; i < count; i++) {
       const lhs = getRandomArrayItem(genomes);
       const rhs = getRandomArrayItem(genomes);
-      const crossedGenome = this.strategy.crossover.cross(this.nextId(), lhs, rhs);
+      const crossedGenome = this.strategy.crossover.cross(lhs, rhs, this.nextId());
       newPopulation.push(crossedGenome);
     }
 
@@ -91,7 +91,7 @@ export class GeneticSearch<TGenome extends BaseGenome> implements GeneticSearchI
 
     for (let i = 0; i < count; i++) {
       const genome = getRandomArrayItem(genomes);
-      const mutatedGenome = this.strategy.mutation.mutate(this.nextId(), genome);
+      const mutatedGenome = this.strategy.mutation.mutate(genome, this.nextId());
       newPopulation.push(mutatedGenome);
     }
 

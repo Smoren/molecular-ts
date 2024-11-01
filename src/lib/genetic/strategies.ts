@@ -33,7 +33,7 @@ abstract class BaseMutationStrategy<TGenome extends BaseGenome> implements Mutat
     this.config = config;
   }
 
-  public abstract mutate(id: number, genome: TGenome): TGenome;
+  public abstract mutate(genome: TGenome, newGenomeId: number): TGenome;
 }
 
 abstract class BaseRunnerStrategy<
@@ -192,19 +192,19 @@ export class SimulationSubMatrixCrossoverStrategy implements CrossoverStrategyIn
     this.randomizeConfig = randomizeConfig;
   }
 
-  public cross(id: number, lhs: SimulationGenome, rhs: SimulationGenome): SimulationGenome {
+  public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
     const randomized = randomizeTypesConfig(this.randomizeConfig, crossed, separator);
-    return { id: id, typesConfig: randomized };
+    return { id: newGenomeId, typesConfig: randomized };
   }
 }
 
 export class SimulationRandomCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
-  public cross(id: number, lhs: SimulationGenome, rhs: SimulationGenome): SimulationGenome {
+  public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
-    return { id: id, typesConfig: crossed };
+    return { id: newGenomeId, typesConfig: crossed };
   }
 }
 
@@ -217,16 +217,16 @@ export class SimulationComposedCrossoverStrategy implements CrossoverStrategyInt
     this.subMatrixStrategy = new SimulationSubMatrixCrossoverStrategy(randomizeConfig);
   }
 
-  public cross(id: number, lhs: SimulationGenome, rhs: SimulationGenome): SimulationGenome {
+  public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
     if (Math.random() > 0.5) {
-      return this.randomStrategy.cross(id, lhs, rhs);
+      return this.randomStrategy.cross(lhs, rhs, newGenomeId);
     }
 
-    return this.subMatrixStrategy.cross(id, lhs, rhs);
+    return this.subMatrixStrategy.cross(lhs, rhs, newGenomeId);
   }
 }
 
-export class SimulationMutationStrategy extends BaseMutationStrategy<SimulationGenome> implements MutationStrategyInterface<SimulationGenome> {
+export class SimulationDefaultMutationStrategy extends BaseMutationStrategy<SimulationGenome> implements MutationStrategyInterface<SimulationGenome> {
   private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig) {
@@ -234,16 +234,16 @@ export class SimulationMutationStrategy extends BaseMutationStrategy<SimulationG
     this.randomizeConfig = randomizeConfig;
   }
 
-  mutate(id: number, genome: SimulationGenome): SimulationGenome {
+  mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
     const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.config.probability);
 
-    return { id: id, typesConfig: mutatedTypesConfig };
+    return { id: newGenomeId, typesConfig: mutatedTypesConfig };
   }
 }
 
-export class SourceMutationStrategy extends SimulationMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
+export class SimulationSourceMutationStrategy extends SimulationDefaultMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfig: TypesConfig;
 
   constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
@@ -251,8 +251,8 @@ export class SourceMutationStrategy extends SimulationMutationStrategy implement
     this.sourceTypesConfig = sourceTypesConfig;
   }
 
-  public mutate(id: number): SimulationGenome {
-    return super.mutate(id, { id: 0, typesConfig: this.sourceTypesConfig });
+  public mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
+    return super.mutate({ id: genome.id, typesConfig: this.sourceTypesConfig }, newGenomeId);
   }
 }
 

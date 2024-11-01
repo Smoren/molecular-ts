@@ -53,11 +53,11 @@ export interface PopulateStrategyInterface<TGenome extends BaseGenome> {
 }
 
 export interface MutationStrategyInterface<TGenome extends BaseGenome> {
-  mutate(id: number, item: TGenome): TGenome;
+  mutate(genome: TGenome, newGenomeId: number): TGenome;
 }
 
 export interface CrossoverStrategyInterface<TGenome extends BaseGenome> {
-  cross(id: number, lhs: TGenome, rhs: TGenome): TGenome;
+  cross(lhs: TGenome, rhs: TGenome, newGenomeId: number): TGenome;
 }
 
 export interface RunnerStrategyInterface<TGenome extends BaseGenome> {
