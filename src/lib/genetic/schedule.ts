@@ -1,4 +1,4 @@
-import type { BaseGenome, GeneticSearchInterface } from '../types/genetic';
+import type { BaseGenome, GeneticSearchInterface } from "genetic-search";
 
 type GeneticSearchSchedulerConfig<TGenome extends BaseGenome> = {
   schedule: [number, (algo: GeneticSearchInterface<TGenome>) => void][];

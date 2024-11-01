@@ -1,8 +1,9 @@
 import fs from "node:fs";
+import type { GradeGenerationTask } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/types/analysis";
-import type { GradeGenerationTask, SimulationGeneticMainConfig, SimulationMainConfig } from "@/lib/types/genetic";
+import type { SimulationGeneticMainConfig, SimulationMainConfig } from "@/lib/types/genetic";
 import type { SimulationTaskConfig } from "@/lib/types/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";

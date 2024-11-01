@@ -1,7 +1,5 @@
+import type { GeneticSearchInterface, GeneticSearchReferenceConfig, StrategyConfig } from "genetic-search";
 import type {
-  GeneticSearchReferenceConfig,
-  GeneticSearchInterface,
-  StrategyConfig,
   SimulationGeneticSearchByTypesConfigFactoryConfig,
   SimulationRandomSearchByTypesConfigFactoryConfig,
   SimulationGenome,
@@ -13,16 +11,15 @@ import {
   repeatTestSimulation,
   convertSummaryMatrixRowToObject,
 } from '../genetic/helpers';
-import { GeneticSearch } from '../genetic/genetic';
 import {
   SimulationCachedMultiprocessingRunnerStrategy,
   SimulationComposedCrossoverStrategy,
   SimulationDefaultMutationStrategy,
   SimulationRandomPopulateStrategy,
-  ReferenceLossScoringStrategy,
   SimulationSourceMutationPopulateStrategy,
   SimulationSourceMutationStrategy,
 } from '../genetic/strategies';
+import { GeneticSearch, ReferenceLossScoringStrategy } from "genetic-search";
 
 export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;

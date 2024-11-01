@@ -28,7 +28,8 @@
     "smoothie": "^1.36.1",
     "unplugin-vue-macros": "^2.7.9",
     "vue": "^3.4.15",
-    "itertools-ts": "^1.27.1"
+    "itertools-ts": "^1.27.1",
+    "genetic-search": "^0.1.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

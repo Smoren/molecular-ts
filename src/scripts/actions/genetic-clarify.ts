@@ -1,4 +1,5 @@
 import os from 'os';
+import type { GeneticFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type { SimulationRandomSearchByTypesConfigFactoryConfig } from "@/lib/types/genetic";
 import { getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
@@ -61,18 +62,23 @@ export const actionGeneticClarify = async (...args: string[]) => {
     console.log('[START] Running genetic search');
     let bestId: number = 0;
 
-    await geneticSearch.fit(generationsCount, (i, scores) => {
-      const [bestScore, meanScore, medianScore, worstScore] = getNormalizedLossesSummary(scores);
+    const fitConfig: GeneticFitConfig = {
+      generationsCount,
+      afterStep: (i, scores) => {
+        const [bestScore, meanScore, medianScore, worstScore] = getNormalizedLossesSummary(scores);
 
-      const bestGenome = geneticSearch.getBestGenome();
-      console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
-      console.log(`\tscores:\tbest=${bestScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
+        const bestGenome = geneticSearch.bestGenome;
+        console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
+        console.log(`\tscores:\tbest=${bestScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
 
-      if (bestGenome.id > bestId) {
-        bestId = bestGenome.id;
-        writeJsonFile(`data/output/${runId}_generation_${i+1}_id_${bestId}.json`, geneticSearch.getBestGenome());
-      }
-    });
+        if (bestGenome.id > bestId) {
+          bestId = bestGenome.id;
+          writeJsonFile(`data/output/${runId}_generation_${i+1}_id_${bestId}.json`, geneticSearch.bestGenome);
+        }
+      },
+    }
+
+    await geneticSearch.fit(fitConfig);
   } catch (e) {
     console.error('[ERROR]', (e as Error).message);
   }
