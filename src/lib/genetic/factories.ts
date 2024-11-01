@@ -1,4 +1,4 @@
-import type { GeneticSearchInterface, GeneticSearchReferenceConfig, StrategyConfig } from "genetic-search";
+import type { GeneticSearchInterface, GeneticSearchReferenceConfig, GeneticSearchStrategyConfig } from "genetic-search";
 import type {
   SimulationGeneticSearchByTypesConfigFactoryConfig,
   SimulationRandomSearchByTypesConfigFactoryConfig,
@@ -53,7 +53,7 @@ export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearch
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  const strategyConfig: StrategyConfig<SimulationGenome> = {
+  const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new SimulationRandomPopulateStrategy(populateRandomTypesConfig),
     scoring: new ReferenceLossScoringStrategy(referenceConfig),
     runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
@@ -106,7 +106,7 @@ export function createRandomSearchByTypesConfig(config: SimulationRandomSearchBy
     weights: convertWeightsToSummaryMatrixRow(config.weights, typesCount),
   };
 
-  const strategyConfig: StrategyConfig<SimulationGenome> = {
+  const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new SimulationSourceMutationPopulateStrategy(
       config.sourceTypesConfig,
       populateRandomTypesConfig,

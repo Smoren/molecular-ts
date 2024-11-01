@@ -1,5 +1,5 @@
 import os from 'os';
-import type { GeneticFitConfig } from "genetic-search";
+import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type { SimulationRandomSearchByTypesConfigFactoryConfig } from "@/lib/types/genetic";
 import { getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
@@ -62,7 +62,7 @@ export const actionGeneticClarify = async (...args: string[]) => {
     console.log('[START] Running genetic search');
     let bestId: number = 0;
 
-    const fitConfig: GeneticFitConfig = {
+    const fitConfig: GeneticSearchFitConfig = {
       generationsCount,
       afterStep: (i, scores) => {
         const [bestScore, meanScore, medianScore, worstScore] = getNormalizedLossesSummary(scores);
