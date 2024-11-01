@@ -11,7 +11,7 @@ export type GeneticSearchConfig = {
   crossoverRate: number;
 };
 
-export type MutationStrategyConfig = {
+export type BaseMutationStrategyConfig = {
   probability: number;
 }
 
@@ -84,7 +84,7 @@ export type SimulationGenome = {
 export type SimulationGeneticSearchByTypesConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   runnerStrategyConfig: SimulationRunnerStrategyConfig;
-  mutationStrategyConfig: MutationStrategyConfig;
+  mutationStrategyConfig: BaseMutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
@@ -98,7 +98,7 @@ export type SimulationGeneticSearchByTypesConfigFactoryConfig = {
 export type SimulationRandomSearchByTypesConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   runnerStrategyConfig: SimulationRunnerStrategyConfig;
-  mutationStrategyConfig: MutationStrategyConfig;
+  mutationStrategyConfig: BaseMutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
@@ -114,7 +114,7 @@ export type SimulationGeneticMainConfig = {
   macro: GeneticSearchConfig;
   initial: InitialConfig;
   runner: SimulationRunnerStrategyConfig;
-  mutation: MutationStrategyConfig;
+  mutation: BaseMutationStrategyConfig;
 }
 
 export type SimulationMainConfig = {

@@ -3,7 +3,7 @@ import { multi } from 'itertools-ts';
 import type {
   SimulationGenome,
   Population,
-  MutationStrategyConfig,
+  BaseMutationStrategyConfig,
   SimulationRunnerStrategyConfig,
   CrossoverStrategyInterface,
   MutationStrategyInterface,
@@ -26,10 +26,13 @@ import { arrayBinaryOperation, arraySum, createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
 import { normalizeSummaryMatrix } from "./helpers";
 
-abstract class BaseMutationStrategy<TGenome extends BaseGenome> implements MutationStrategyInterface<TGenome> {
-  protected readonly config: MutationStrategyConfig;
+abstract class BaseMutationStrategy<
+  TGenome extends BaseGenome,
+  TConfig extends BaseMutationStrategyConfig,
+> implements MutationStrategyInterface<TGenome> {
+  protected readonly config: TConfig;
 
-  protected constructor(config: MutationStrategyConfig) {
+  protected constructor(config: TConfig) {
     this.config = config;
   }
 
@@ -226,10 +229,10 @@ export class SimulationComposedCrossoverStrategy implements CrossoverStrategyInt
   }
 }
 
-export class SimulationDefaultMutationStrategy extends BaseMutationStrategy<SimulationGenome> implements MutationStrategyInterface<SimulationGenome> {
+export class SimulationDefaultMutationStrategy extends BaseMutationStrategy<SimulationGenome, BaseMutationStrategyConfig> implements MutationStrategyInterface<SimulationGenome> {
   private readonly randomizeConfig: RandomTypesConfig;
 
-  constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig) {
+  constructor(config: BaseMutationStrategyConfig, randomizeConfig: RandomTypesConfig) {
     super(config);
     this.randomizeConfig = randomizeConfig;
   }
@@ -246,7 +249,7 @@ export class SimulationDefaultMutationStrategy extends BaseMutationStrategy<Simu
 export class SimulationSourceMutationStrategy extends SimulationDefaultMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfig: TypesConfig;
 
-  constructor(config: MutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
+  constructor(config: BaseMutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
     super(config, randomizeConfig);
     this.sourceTypesConfig = sourceTypesConfig;
   }
