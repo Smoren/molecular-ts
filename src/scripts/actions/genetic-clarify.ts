@@ -69,7 +69,7 @@ export const actionGeneticClarify = async (...args: string[]) => {
         const [bestScore, meanScore, medianScore, worstScore] = getNormalizedLossesSummary(scores);
 
         const bestGenome = geneticSearch.bestGenome;
-        console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
+        console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
         console.log(`\tscores:\tbest=${bestScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
