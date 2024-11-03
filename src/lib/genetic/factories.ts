@@ -1,4 +1,9 @@
-import type { GeneticSearchInterface, GeneticSearchReferenceConfig, GeneticSearchStrategyConfig } from "genetic-search";
+import type {
+  GeneticSearchInterface,
+  GeneticSearchReferenceConfig,
+  GeneticSearchStrategyConfig,
+  ComposedGeneticSearchConfig,
+} from "genetic-search";
 import type {
   SimulationGeneticSearchByTypesConfigFactoryConfig,
   SimulationRandomSearchByTypesConfigFactoryConfig,
@@ -19,7 +24,7 @@ import {
   SimulationSourceMutationPopulateStrategy,
   SimulationSourceMutationStrategy,
 } from '../genetic/strategies';
-import { GeneticSearch, ReferenceLossScoringStrategy } from "genetic-search";
+import { ComposedGeneticSearch, GeneticSearch, ReferenceLossScoringStrategy } from "genetic-search";
 
 export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
@@ -61,7 +66,21 @@ export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearch
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
-  return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
+  // TODO to config file
+  const composedConfig: ComposedGeneticSearchConfig = {
+    eliminators: {
+      populationSize: config.geneticSearchMacroConfig.populationSize / 5,
+      survivalRate: 0.5,
+      crossoverRate: 0.5,
+    },
+    final: {
+      populationSize: 5,
+      survivalRate: 0.5,
+      crossoverRate: 0.5,
+    },
+  }
+
+  return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
 }
 
 export function createRandomSearchByTypesConfig(config: SimulationRandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
