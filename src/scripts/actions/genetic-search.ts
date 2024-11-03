@@ -15,6 +15,8 @@ import {
 import { createGeneticSearchByTypesConfig } from "@/lib/genetic/factories";
 import { simulationTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
 
+// npm run tool genetic-search referenceConfigFileName=genetic-reference-config weightsFileName=default-genetic-weights-cluster poolSize=10  targetClustersScore=500 generationsCount=1000
+
 export const actionGeneticSearch = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
