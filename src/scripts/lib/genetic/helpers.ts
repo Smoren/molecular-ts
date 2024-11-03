@@ -1,10 +1,10 @@
 import { round } from "@/lib/math";
 
-export function getNormalizedLossesSummary(losses: number[]): [number, number, number, number] {
-  const bestLoss = round(losses[0], 2);
-  const meanLoss = round(losses.reduce((a, b) => a + b, 0) / losses.length, 2);
-  const medianLoss = round(losses[round(losses.length/2, 0)], 2);
-  const worstLoss = round(losses[losses.length-1], 2);
+export function getNormalizedLossesSummary(losses: number[], precision: number = 8): [number, number, number, number] {
+  const bestLoss = round(losses[0], precision);
+  const meanLoss = round(losses.reduce((a, b) => a + b, 0) / losses.length, precision);
+  const medianLoss = round(losses[round(losses.length/2, 0)], precision);
+  const worstLoss = round(losses[losses.length-1], precision);
 
   return [bestLoss, meanLoss, medianLoss, worstLoss];
 }
