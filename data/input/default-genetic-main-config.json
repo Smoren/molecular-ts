@@ -1,15 +1,15 @@
 {
   "macro": {
-    "populationSize": 100,
+    "populationSize": 150,
     "survivalRate": 0.3,
     "crossoverRate": 0.5
   },
   "runner": {
-    "checkpoints": [200, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 50, 1, 1, 1, 1, 1, 20, 1, 1, 1, 1, 1],
+    "checkpoints": [200, 1, 1, 1, 50, 1, 1, 1, 50, 1, 1, 1, 20, 1, 1, 1],
     "repeats": 3
   },
   "mutation": {
-    "probability": 0.1
+    "probability": 0.02
   },
   "initial": {
     "ATOMS_COUNT": 1000,
