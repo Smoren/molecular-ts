@@ -1,0 +1,36 @@
+{
+  "ATOMS_MEAN_SPEED": 1,
+  "ATOMS_TYPE_MEAN_SPEED": 0,
+  "ATOMS_TYPE_LINKS_MEAN_COUNT": 0,
+  "LINKS_CREATED_MEAN": 1,
+  "LINKS_DELETED_MEAN": 1,
+  "LINKS_TYPE_CREATED_MEAN": 0,
+  "LINKS_TYPE_DELETED_MEAN": 0,
+  "COMPOUNDS_PER_ATOM": 1,
+  "COMPOUNDS_PER_ATOM_BY_TYPES": 0,
+  "COMPOUND_LENGTH_SUMMARY": {
+    "min": 0,
+    "max": 0,
+    "mean": 0,
+    "p25": 0,
+    "median": 0,
+    "p75": 0
+  },
+  "COMPOUND_SPEED_SUMMARY": {
+    "min": 0,
+    "max": 0,
+    "mean": 1,
+    "p25": 0,
+    "median": 0,
+    "p75": 0
+  },
+  "COMPOUND_DENSITY_SUMMARY": {
+    "min": 0,
+    "max": 0,
+    "mean": 1,
+    "p25": 0,
+    "median": 0,
+    "p75": 0
+  },
+  "CLUSTERS_SCORE": 10
+}
