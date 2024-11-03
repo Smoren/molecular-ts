@@ -71,6 +71,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
         console.log(`\tscores:\tbest=${bestScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
+          foundGenomeIds.add(bestGenome.id);
           bestId = bestGenome.id;
           writeJsonFile(`data/output/${runId}_generation_${i+1}_id_${bestId}.json`, geneticSearch.bestGenome);
         }
