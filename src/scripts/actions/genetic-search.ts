@@ -101,7 +101,7 @@ function parseArgs(argsParser: ArgsParser) {
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
 
-  const targetClustersScore = argsParser.getNullableInt('targetClustersScore');
+  const targetClustersScore = argsParser.getInt('targetClustersScore', 1000000);
 
   return {
     poolSize,
