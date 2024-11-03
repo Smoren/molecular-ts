@@ -61,6 +61,7 @@ export const actionGeneticClarify = async (...args: string[]) => {
 
     console.log('[START] Running genetic search');
     let bestId: number = 0;
+    const foundGenomeIds: Set<number> = new Set();
 
     const fitConfig: GeneticSearchFitConfig = {
       generationsCount,
@@ -71,7 +72,8 @@ export const actionGeneticClarify = async (...args: string[]) => {
         console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
         console.log(`\tscores:\tbest=${bestScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
 
-        if (bestGenome.id > bestId) {
+        if (!foundGenomeIds.has(bestGenome.id)) {
+          foundGenomeIds.add(bestGenome.id);
           bestId = bestGenome.id;
           writeJsonFile(`data/output/${runId}_generation_${i+1}_id_${bestId}.json`, geneticSearch.bestGenome);
         }

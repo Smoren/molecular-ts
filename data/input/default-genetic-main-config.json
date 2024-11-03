@@ -12,8 +12,8 @@
     "probability": 0.1
   },
   "initial": {
-    "ATOMS_COUNT": 300,
+    "ATOMS_COUNT": 1000,
     "MIN_POSITION": [0, 0],
-    "MAX_POSITION": [800, 800]
+    "MAX_POSITION": [1800, 1800]
   }
 }
