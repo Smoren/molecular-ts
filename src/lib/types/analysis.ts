@@ -1,7 +1,7 @@
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type { QueueInterface } from './utils';
 import type { TypesConfig, WorldConfig } from '../types/config';
-import type { NumericVector } from "@/lib/math/types";
+import type { NumericVector } from "../math/types";
 
 export type WorldSummary<T> = {
   ATOMS_COUNT: T;

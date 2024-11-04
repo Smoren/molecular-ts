@@ -11,9 +11,9 @@ import {
 } from "../graph/utils";
 import { createCompoundGraph } from "./factories";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetry";
-import type { GraphInterface } from "@/lib/graph/types";
-import type { VectorInterface } from "@/lib/math/types";
-import { createFilledArray, createVector } from "@/lib/math";
+import type { GraphInterface } from "../graph/types";
+import type { VectorInterface } from "../math/types";
+import { createFilledArray, createVector } from "../math";
 
 export function gradeCompoundClusters(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds
