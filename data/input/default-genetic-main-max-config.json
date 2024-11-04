@@ -1,11 +1,11 @@
 {
   "macro": {
-    "populationSize": 200,
+    "populationSize": 1000,
     "survivalRate": 0.3,
     "crossoverRate": 0.5
   },
   "runner": {
-    "checkpoints": [200, 1, 1, 1, 50, 1, 1, 1, 50, 1, 1, 1, 20, 1, 1, 1],
+    "checkpoints": [200, 1, 1, 1, 200, 1, 1, 1, 50, 1, 1, 1, 50, 1, 1, 1, 20, 1, 1, 1],
     "repeats": 3
   },
   "mutation": {
