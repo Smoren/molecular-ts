@@ -1,6 +1,7 @@
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type { QueueInterface } from './utils';
 import type { TypesConfig, WorldConfig } from '../types/config';
+import type { NumericVector } from "@/lib/math/types";
 
 export type WorldSummary<T> = {
   ATOMS_COUNT: T;
@@ -146,6 +147,9 @@ export type CompoundsClusterGrade = {
   vertexesBounds: [number, number];
   edgesBounds: [number, number];
   typesCountBounds: [number, number],
+  vertexTypesVector: NumericVector;
+  edgeTypesVector: NumericVector;
+  radius: number;
 }
 
 export type CompoundsClusterizationSummary = {
