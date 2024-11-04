@@ -71,6 +71,14 @@ export class ArgsParser {
     return parseInt(value);
   }
 
+  getBool(key: string, defaultValue: boolean): boolean {
+    const value = this.get(key);
+    if (value === undefined) {
+      return defaultValue;
+    }
+    return Boolean(parseInt(value));
+  }
+
   summary(): Record<string, string | string[]> {
     return Object.fromEntries(this.argsMap);
   }

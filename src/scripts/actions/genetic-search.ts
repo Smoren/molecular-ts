@@ -37,6 +37,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
       weightsFileName,
       worldConfigFileName,
       targetClustersScore,
+      useAnsiCursor,
     } = argsMap;
     console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
@@ -64,7 +65,7 @@ export const actionGeneticSearch = async (...args: string[]) => {
     let bestId: number = 0;
     const foundGenomeIds: Set<number> = new Set();
 
-    const stdoutInterceptor = new StdoutInterceptor();
+    const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
     const formatString = (count: number) => `Genomes handled: ${count}`;
 
     // TODO before step
@@ -115,6 +116,7 @@ function parseArgs(argsParser: ArgsParser) {
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
 
   const targetClustersScore = argsParser.getInt('targetClustersScore', 1000000);
+  const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
   return {
     poolSize,
@@ -128,5 +130,6 @@ function parseArgs(argsParser: ArgsParser) {
     weightsFileName,
     worldConfigFileName,
     targetClustersScore,
+    useAnsiCursor,
   };
 }
