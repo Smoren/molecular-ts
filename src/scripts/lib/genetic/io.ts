@@ -16,6 +16,8 @@ export function getGeneticMainConfig(
   const result = readJsonFile(`data/input/${fileName}`) as SimulationGeneticMainConfig;
   result.runner.poolSize = poolSize;
   result.runner.task = task;
+  result.runner.onTaskResult = () => process.stdout.write('.');
+
   return result;
 }
 

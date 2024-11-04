@@ -14,6 +14,7 @@ import {
 } from "@/scripts/lib/genetic/io";
 import { createGeneticSearchByTypesConfig } from "@/lib/genetic/factories";
 import { simulationTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
+import { StdoutInterceptor } from "@/scripts/lib/stdout";
 
 // npm run tool genetic-search referenceConfigFileName=genetic-reference-config weightsFileName=default-genetic-weights-cluster poolSize=10  targetClustersScore=500 generationsCount=1000
 
@@ -63,13 +64,19 @@ export const actionGeneticSearch = async (...args: string[]) => {
     let bestId: number = 0;
     const foundGenomeIds: Set<number> = new Set();
 
+    const stdoutInterceptor = new StdoutInterceptor();
+    const formatString = (count: number) => `Genomes handled: ${count}`;
+
+    // TODO before step
     const fitConfig: GeneticSearchFitConfig = {
       generationsCount,
       afterStep: (i, scores) => {
+        stdoutInterceptor.finish();
+
         const [bestScore, meanScore, medianScore, worstScore] = getNormalizedLossesSummary(scores);
 
         const bestGenome = geneticSearch.bestGenome;
-        console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
+        console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
         console.log(`\tscores:\tbest=${bestScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
@@ -77,9 +84,11 @@ export const actionGeneticSearch = async (...args: string[]) => {
           bestId = bestGenome.id;
           writeJsonFile(`data/output/${runId}_generation_${i+1}_id_${bestId}.json`, geneticSearch.bestGenome);
         }
+        stdoutInterceptor.startCountDots(formatString);
       },
     }
 
+    stdoutInterceptor.startCountDots(formatString);
     await geneticSearch.fit(fitConfig);
   } catch (e) {
     console.error('[ERROR]', (e as Error).message);

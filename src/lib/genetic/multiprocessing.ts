@@ -13,11 +13,7 @@ export const simulationTaskMultiprocessing = async ([
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');
   const { repeatTestSimulation } = await import(`${dirName}/lib/genetic/helpers`);
 
-  const result = repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
-
-  process.stdout.write('.');
-
-  return result;
+  return repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
 }
 
 export const simulationTaskSingle = async ([

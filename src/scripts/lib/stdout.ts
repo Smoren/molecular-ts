@@ -21,15 +21,17 @@ export class StdoutInterceptor {
           process.stdout.clearLine(0);
           process.stdout.cursorTo(0);
           process.stdout.write(formatString(dotCount));
+          chunk = '';
         }
       }
 
-      // Возвращаем оригинальный метод записи
       return this.originalWrite(chunk, encoding as BufferEncoding, callback);
     };
   }
 
   finish() {
+    process.stdout.clearLine(0);
+    process.stdout.cursorTo(0);
     // @ts-ignore
     process.stdout.write = this.originalWrite;
   }
