@@ -1,6 +1,6 @@
 {
   "macro": {
-    "populationSize": 150,
+    "populationSize": 200,
     "survivalRate": 0.3,
     "crossoverRate": 0.5
   },
@@ -12,7 +12,7 @@
     "probability": 0.02
   },
   "initial": {
-    "ATOMS_COUNT": 1000,
+    "ATOMS_COUNT": 800,
     "MIN_POSITION": [0, 0],
     "MAX_POSITION": [1800, 1800]
   }
