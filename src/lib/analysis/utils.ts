@@ -51,6 +51,7 @@ export function scoreCompoundClustersSummary(summary: CompoundsClusterizationSum
 }
 
 export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsClusterGrade {
+  // TODO compound speed
   return {
     size: cluster.length,
     difference: calcGraphsClusterAverageDifference(cluster),
