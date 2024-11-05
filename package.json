@@ -10,7 +10,8 @@
     "type-check": "vue-tsc --noEmit",
     "test": "jest",
     "tool": "tsx --no-warnings src/scripts/tool.ts",
-    "calc": "npm run tool calc-simulation-summary"
+    "calc": "npm run tool calc-simulation-summary",
+    "cluster": "npm run tool cluster-grade-maximize"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
