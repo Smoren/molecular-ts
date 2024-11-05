@@ -178,5 +178,5 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
   // }
 
   return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
-  // return new ComposedGeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
+  // return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
 }
