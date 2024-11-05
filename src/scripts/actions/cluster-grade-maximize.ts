@@ -29,6 +29,8 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
       mutationRandomizeConfigFileName,
       crossoverRandomizeConfigFileName,
       worldConfigFileName,
+      useComposedAlgo,
+      composedFinalPopulation,
       useAnsiCursor,
     } = argsMap;
     console.log(`[START] genetic search action (process_id = ${runId})`);
@@ -44,6 +46,8 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       typesCount,
+      useComposedAlgo,
+      composedFinalPopulation,
     };
 
     console.log('[START] Building genetic search');
@@ -101,6 +105,9 @@ function parseArgs(argsParser: ArgsParser) {
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
 
+  const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
+  const composedFinalPopulation = argsParser.getInt('composedFinalPopulation', 5);
+
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
   return {
@@ -112,6 +119,8 @@ function parseArgs(argsParser: ArgsParser) {
     mutationRandomizeConfigFileName,
     crossoverRandomizeConfigFileName,
     worldConfigFileName,
+    useComposedAlgo,
+    composedFinalPopulation,
     useAnsiCursor,
   };
 }

@@ -62,6 +62,8 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   crossoverRandomizeConfig: RandomTypesConfig;
   worldConfig: WorldConfig;
   typesCount: number;
+  useComposedAlgo: boolean;
+  composedFinalPopulation: number;
 }
 
 export type SimulationGeneticMainConfig = {

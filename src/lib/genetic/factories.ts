@@ -163,20 +163,22 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
 
-  // TODO to config file
-  // const composedConfig: ComposedGeneticSearchConfig = {
-  //   eliminators: {
-  //     populationSize: config.geneticSearchMacroConfig.populationSize / 5,
-  //     survivalRate: 0.5,
-  //     crossoverRate: 0.5,
-  //   },
-  //   final: {
-  //     populationSize: 5,
-  //     survivalRate: 0.5,
-  //     crossoverRate: 0.5,
-  //   },
-  // }
+  if (config.useComposedAlgo) {
+    const composedConfig: ComposedGeneticSearchConfig = {
+      eliminators: {
+        populationSize: Math.round(config.geneticSearchMacroConfig.populationSize / config.composedFinalPopulation),
+        survivalRate: config.geneticSearchMacroConfig.survivalRate,
+        crossoverRate: config.geneticSearchMacroConfig.crossoverRate,
+      },
+      final: {
+        populationSize: config.composedFinalPopulation,
+        survivalRate: config.geneticSearchMacroConfig.survivalRate,
+        crossoverRate: config.geneticSearchMacroConfig.crossoverRate,
+      },
+    };
+
+    return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
+  }
 
   return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
-  // return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
 }
