@@ -5,9 +5,10 @@ import {
   getSimulationMainConfig,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
-import { convertSummaryMatrixRowToObject, repeatTestSimulation } from "@/lib/genetic/helpers";
+import { convertSummaryMatrixRowToObject } from "@/lib/genetic/helpers";
+import { repeatTestSimulationComplexGrade } from '@/lib/genetic/grade';
 
-export const actionCalcSummary = async (...args: string[]) => {
+export const actionComplexCalcSummary = async (...args: string[]) => {
   const ts = Date.now();
 
   try {
@@ -26,7 +27,7 @@ export const actionCalcSummary = async (...args: string[]) => {
     const referenceConfig = getTypesConfig(referenceConfigFileName);
     const typesCount = referenceConfig.FREQUENCIES.length;
 
-    const summaryMatrixRow = repeatTestSimulation(
+    const summaryMatrixRow = repeatTestSimulationComplexGrade(
       worldConfig,
       referenceConfig,
       mainConfig.runner.checkpoints,

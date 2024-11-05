@@ -1,12 +1,12 @@
 import { createRouter } from '@/scripts/lib/helpers';
-import { actionGeneticSearch } from '@/scripts/actions/genetic-search';
-import { actionGeneticClarify } from "@/scripts/actions/genetic-clarify";
-import { actionCalcSummary } from "@/scripts/actions/calc-summary";
+import { actionComplexGeneticSearch } from '@/scripts/actions/complex-genetic-search';
+import { actionComplexRandomSearch } from "@/scripts/actions/complex-random-search";
+import { actionComplexCalcSummary } from "@/scripts/actions/complex-calc-summary";
 
 const router = createRouter();
 
-router.add('genetic-search', actionGeneticSearch);
-router.add('genetic-clarify', actionGeneticClarify);
-router.add('calc-summary', actionCalcSummary);
+router.add('complex-genetic-search', actionComplexGeneticSearch);
+router.add('complex-random-search', actionComplexRandomSearch);
+router.add('complex-calc-summary', actionComplexCalcSummary);
 
 router.run(process.argv);

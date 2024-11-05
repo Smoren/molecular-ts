@@ -12,10 +12,10 @@ import {
   getGeneticMainConfig,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
-import { createRandomSearchByTypesConfig } from "@/lib/genetic/factories";
-import { simulationTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
+import { createReferenceRandomSearchByTypesConfig } from "@/lib/genetic/factories";
+import { simulationComplexGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
 
-export const actionGeneticClarify = async (...args: string[]) => {
+export const actionComplexRandomSearch = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
 
@@ -39,7 +39,7 @@ export const actionGeneticClarify = async (...args: string[]) => {
     console.log(`[START] random search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
 
-    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, simulationTaskMultiprocessing);
+    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, simulationComplexGradeTaskMultiprocessing);
     const config: SimulationRandomSearchByTypesConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
       runnerStrategyConfig: mainConfig.runner,
@@ -56,7 +56,7 @@ export const actionGeneticClarify = async (...args: string[]) => {
     };
 
     console.log('[START] Building genetic search');
-    const geneticSearch = createRandomSearchByTypesConfig(config);
+    const geneticSearch = createReferenceRandomSearchByTypesConfig(config);
     console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');

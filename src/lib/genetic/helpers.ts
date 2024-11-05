@@ -1,17 +1,9 @@
 import type { TotalSummary, TotalSummaryWeights, SummaryMatrixRowObject } from '../types/analysis';
-import type { RandomTypesConfig, TypesConfig, WorldConfig } from '../types/config';
+import type { RandomTypesConfig } from '../types/config';
 import { STAT_SUMMARY_ARRAY_SIZE } from '../types/analysis';
-import { Simulation } from '../simulation';
-import { Runner } from '../runner';
-import { CompoundsAnalyzer } from '../analysis/compounds';
-import { createFilledArray, normalizeMatrixColumns } from '../math';
-import { createPhysicModel } from '../utils/functions';
-import { create2dRandomDistribution } from '../config/atoms';
-import { averageMatrixColumns } from '../math/operations';
-import { createDummyDrawer } from '../drawer/dummy';
+import { createFilledArray } from '../math';
 import { groupArray } from '../math/helpers';
 import { convertArrayToStatSummary, convertStatSummaryToArray } from '../analysis/helpers';
-import { gradeCompoundClusters, scoreCompoundClustersSummary } from "../analysis/utils";
 
 export function createTransparentWeights(): TotalSummaryWeights {
   return {
@@ -194,60 +186,4 @@ export function setTypesCountToRandomizeConfigCollection(configs: RandomTypesCon
     config.TYPES_COUNT = typesCount;
     return config;
   });
-}
-
-export function normalizeSummaryMatrix(matrix: number[][], reference: number[]): number[][] {
-  return normalizeMatrixColumns(matrix, reference).map((row) => row.map((x) => Math.abs(x)));
-}
-
-export function testSimulation(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
-  const sim = new Simulation({
-    viewMode: '2d',
-    worldConfig: worldConfig,
-    typesConfig: typesConfig,
-    physicModel: createPhysicModel(worldConfig, typesConfig),
-    atomsFactory: create2dRandomDistribution,
-    drawer: createDummyDrawer(),
-  });
-
-  const runner = new Runner(sim);
-  const summaryMatrix: number[][] = [];
-
-  for (const stepsCount of checkpoints) {
-    runner.runSteps(stepsCount);
-
-    const compounds = sim.exportCompounds();
-    const clustersSummary = gradeCompoundClusters(
-      compounds,
-      typesConfig.FREQUENCIES.length,
-      5,
-    );
-    const clustersScore = scoreCompoundClustersSummary(clustersSummary);
-
-    const compoundsAnalyzer = new CompoundsAnalyzer(compounds, sim.atoms, typesConfig.FREQUENCIES.length);
-    const totalSummary: TotalSummary = {
-      WORLD: sim.summary,
-      COMPOUNDS: compoundsAnalyzer.summary,
-      CLUSTERS: clustersScore,
-    };
-    const rawMatrix = convertTotalSummaryToSummaryMatrixRow(totalSummary);
-    summaryMatrix.push(rawMatrix);
-  }
-
-  return averageMatrixColumns(summaryMatrix);
-}
-
-export function repeatTestSimulation(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[], repeats: number): number[] {
-  const result = [];
-  for (let i=0; i<repeats; i++) {
-    result.push(testSimulation(worldConfig, typesConfig, checkpoints));
-  }
-  return averageMatrixColumns(result);
-}
-
-export function createNextIdGenerator(): () => number {
-  return (() => {
-    let id = 0;
-    return () => ++id;
-  })();
 }

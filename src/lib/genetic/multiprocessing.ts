@@ -1,7 +1,7 @@
-import { repeatTestSimulation } from "./helpers";
 import type { SimulationTaskConfig } from "../types/genetic";
+import { repeatTestSimulationComplexGrade } from "./grade";
 
-export const simulationTaskMultiprocessing = async ([
+export const simulationComplexGradeTaskMultiprocessing = async ([
   id,
   worldConfig,
   typesConfig,
@@ -11,12 +11,12 @@ export const simulationTaskMultiprocessing = async ([
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');
-  const { repeatTestSimulation } = await import(`${dirName}/lib/genetic/helpers`);
+  const { repeatTestSimulationComplexGrade } = await import(`${dirName}/lib/genetic/grade`);
 
-  return repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
+  return repeatTestSimulationComplexGrade(worldConfig, typesConfig, checkpoints, repeats);
 }
 
-export const simulationTaskSingle = async ([
+export const simulationComplexGradeTaskSingle = async ([
   id,
   worldConfig,
   typesConfig,
@@ -24,5 +24,5 @@ export const simulationTaskSingle = async ([
   repeats,
 ]: SimulationTaskConfig): Promise<number[]> => {
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
-  return repeatTestSimulation(worldConfig, typesConfig, checkpoints, repeats);
+  return repeatTestSimulationComplexGrade(worldConfig, typesConfig, checkpoints, repeats);
 }

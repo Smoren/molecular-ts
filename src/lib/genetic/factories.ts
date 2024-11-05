@@ -13,7 +13,6 @@ import {
   convertWeightsToSummaryMatrixRow,
   setTypesCountToRandomizeConfigCollection,
   convertSummaryMatrixRowObjectToArray,
-  repeatTestSimulation,
   convertSummaryMatrixRowToObject,
 } from '../genetic/helpers';
 import {
@@ -25,8 +24,9 @@ import {
   SimulationSourceMutationStrategy,
 } from '../genetic/strategies';
 import { ComposedGeneticSearch, GeneticSearch, ReferenceLossScoringStrategy } from "genetic-search";
+import { repeatTestSimulationComplexGrade } from '@/lib/genetic/grade';
 
-export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+export function createReferenceGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
   config.runnerStrategyConfig.worldConfig = config.worldConfig;
 
@@ -40,7 +40,7 @@ export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearch
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatTestSimulation(
+  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatTestSimulationComplexGrade(
     config.worldConfig,
     config.referenceTypesConfig,
     config.runnerStrategyConfig.checkpoints,
@@ -83,7 +83,7 @@ export function createGeneticSearchByTypesConfig(config: SimulationGeneticSearch
   return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
 }
 
-export function createRandomSearchByTypesConfig(config: SimulationRandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+export function createReferenceRandomSearchByTypesConfig(config: SimulationRandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   if (config.referenceSummaryRowObject === undefined) {
     if (config.referenceTypesConfig.FREQUENCIES.length !== config.sourceTypesConfig.FREQUENCIES.length) {
       throw new Error('Reference and source types must have same length');
@@ -107,7 +107,7 @@ export function createRandomSearchByTypesConfig(config: SimulationRandomSearchBy
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatTestSimulation(
+  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatTestSimulationComplexGrade(
     config.worldConfig,
     config.referenceTypesConfig,
     config.runnerStrategyConfig.checkpoints,
