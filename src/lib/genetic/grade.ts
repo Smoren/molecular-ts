@@ -1,26 +1,13 @@
-import type { TypesConfig, WorldConfig } from '@/lib/types/config';
-import { Simulation } from '@/lib/simulation';
-import { createPhysicModel } from '@/lib/utils/functions';
-import { create2dRandomDistribution } from '@/lib/config/atoms';
-import { createDummyDrawer } from '@/lib/drawer/dummy';
-import { Runner } from '@/lib/runner';
-import { gradeCompoundClusters, scoreCompoundClustersSummary } from '@/lib/analysis/utils';
-import { CompoundsAnalyzer } from '@/lib/analysis/compounds';
-import type { TotalSummary } from '@/lib/types/analysis';
-import { averageMatrixColumns } from '@/lib/math/operations';
-import { convertTotalSummaryToSummaryMatrixRow } from '@/lib/genetic/helpers';
+import type { TypesConfig, WorldConfig } from '../types/config';
+import { gradeCompoundClusters, scoreCompoundClustersSummary } from '../analysis/utils';
+import { CompoundsAnalyzer } from '../analysis/compounds';
+import type { TotalSummary } from '../types/analysis';
+import { averageMatrixColumns } from '../math/operations';
+import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
 
 export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
-  const sim = new Simulation({
-    viewMode: '2d',
-    worldConfig: worldConfig,
-    typesConfig: typesConfig,
-    physicModel: createPhysicModel(worldConfig, typesConfig),
-    atomsFactory: create2dRandomDistribution,
-    drawer: createDummyDrawer(),
-  });
-
-  const runner = new Runner(sim);
+  const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
+  const sim = runner.simulation;
   const summaryMatrix: number[][] = [];
 
   for (const stepsCount of checkpoints) {
@@ -53,4 +40,26 @@ export function repeatRunSimulationForComplexGrade(worldConfig: WorldConfig, typ
     result.push(runSimulationForComplexGrade(worldConfig, typesConfig, checkpoints));
   }
   return averageMatrixColumns(result);
+}
+
+export function runSimulationForClusterGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
+  const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
+  const sim = runner.simulation;
+  const summaryMatrix: number[][] = [];
+
+  for (const stepsCount of checkpoints) {
+    runner.runSteps(stepsCount);
+
+    const compounds = sim.exportCompounds();
+    const clustersSummary = gradeCompoundClusters(
+      compounds,
+      typesConfig.FREQUENCIES.length,
+      5,
+    );
+    const clustersScore = scoreCompoundClustersSummary(clustersSummary);
+    const rawMatrix = [clustersScore];
+    summaryMatrix.push(rawMatrix);
+  }
+
+  return averageMatrixColumns(summaryMatrix);
 }

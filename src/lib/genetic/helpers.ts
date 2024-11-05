@@ -1,9 +1,14 @@
 import type { TotalSummary, TotalSummaryWeights, SummaryMatrixRowObject } from '../types/analysis';
-import type { RandomTypesConfig } from '../types/config';
+import type { RandomTypesConfig, TypesConfig, WorldConfig } from '../types/config';
 import { STAT_SUMMARY_ARRAY_SIZE } from '../types/analysis';
 import { createFilledArray } from '../math';
 import { groupArray } from '../math/helpers';
 import { convertArrayToStatSummary, convertStatSummaryToArray } from '../analysis/helpers';
+import { Simulation } from '../simulation';
+import { createPhysicModel } from '../utils/functions';
+import { create2dRandomDistribution } from '../config/atoms';
+import { createDummyDrawer } from '../drawer/dummy';
+import { Runner } from '../runner';
 
 export function createTransparentWeights(): TotalSummaryWeights {
   return {
@@ -186,4 +191,17 @@ export function setTypesCountToRandomizeConfigCollection(configs: RandomTypesCon
     config.TYPES_COUNT = typesCount;
     return config;
   });
+}
+
+export function createHeadless2dSimulationRunner(worldConfig: WorldConfig, typesConfig: TypesConfig): Runner {
+  const sim = new Simulation({
+    viewMode: '2d',
+    worldConfig: worldConfig,
+    typesConfig: typesConfig,
+    physicModel: createPhysicModel(worldConfig, typesConfig),
+    atomsFactory: create2dRandomDistribution,
+    drawer: createDummyDrawer(),
+  });
+
+  return new Runner(sim);
 }

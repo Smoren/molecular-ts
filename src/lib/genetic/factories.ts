@@ -24,7 +24,7 @@ import {
   SimulationSourceMutationStrategy,
 } from '../genetic/strategies';
 import { ComposedGeneticSearch, GeneticSearch, ReferenceLossScoringStrategy } from "genetic-search";
-import { repeatRunSimulationForComplexGrade } from '@/lib/genetic/grade';
+import { repeatRunSimulationForComplexGrade } from './grade';
 
 export function createComplexGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
