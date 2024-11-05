@@ -37,10 +37,14 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
 }
 
 export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): number {
+  // TODO weights as degrees
   const averageVertexesCount = reduce.toAverage(clusterGrade.vertexesBounds)!;
   const averageEdgesCount = reduce.toAverage(clusterGrade.edgesBounds)!;
-  const averageTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)!;
-  return averageVertexesCount * averageEdgesCount * (averageTypesCount - 1) * clusterGrade.symmetry;
+  const averageTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)! ** 2;
+  const averageDifference = 1 + clusterGrade.difference;
+  const averageRadius = clusterGrade.radius ** (1/3);
+  return averageVertexesCount * averageEdgesCount * (averageTypesCount - 1) * clusterGrade.symmetry
+    * averageRadius / averageDifference;
 }
 
 export function scoreCompoundClustersSummary(summary: CompoundsClusterizationSummary): number {
