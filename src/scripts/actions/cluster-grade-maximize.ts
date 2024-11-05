@@ -24,7 +24,7 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
       poolSize,
       typesCount,
       generationsCount,
-      geneticMainConfigFileName,
+      mainConfigFileName,
       populateRandomizeConfigFileName,
       mutationRandomizeConfigFileName,
       crossoverRandomizeConfigFileName,
@@ -34,7 +34,7 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
     console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
 
-    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, simulationClusterGradeTaskMultiprocessing);
+    const mainConfig = getGeneticMainConfig(mainConfigFileName, poolSize, simulationClusterGradeTaskMultiprocessing);
     const config: ClusterGradeMaximizeConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
       runnerStrategyConfig: mainConfig.runner,
@@ -92,7 +92,7 @@ function parseArgs(argsParser: ArgsParser) {
   const typesCount = argsParser.getInt('typesCount', 3);
   const generationsCount = argsParser.getInt('generationsCount', 100);
 
-  const geneticMainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
+  const mainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
   const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-genetic-randomize-config');
   const populateRandomizeConfigFileName = argsParser.getString('populateRandomizeConfigFileName', randomizeConfigFileName);
@@ -107,7 +107,7 @@ function parseArgs(argsParser: ArgsParser) {
     poolSize,
     typesCount,
     generationsCount,
-    geneticMainConfigFileName,
+    mainConfigFileName,
     populateRandomizeConfigFileName,
     mutationRandomizeConfigFileName,
     crossoverRandomizeConfigFileName,
