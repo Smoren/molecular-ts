@@ -10,7 +10,7 @@ import type { TotalSummary } from '@/lib/types/analysis';
 import { averageMatrixColumns } from '@/lib/math/operations';
 import { convertTotalSummaryToSummaryMatrixRow } from '@/lib/genetic/helpers';
 
-export function testSimulationComplexGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
+export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
   const sim = new Simulation({
     viewMode: '2d',
     worldConfig: worldConfig,
@@ -47,10 +47,10 @@ export function testSimulationComplexGrade(worldConfig: WorldConfig, typesConfig
   return averageMatrixColumns(summaryMatrix);
 }
 
-export function repeatTestSimulationComplexGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[], repeats: number): number[] {
+export function repeatRunSimulationForComplexGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[], repeats: number): number[] {
   const result = [];
   for (let i=0; i<repeats; i++) {
-    result.push(testSimulationComplexGrade(worldConfig, typesConfig, checkpoints));
+    result.push(runSimulationForComplexGrade(worldConfig, typesConfig, checkpoints));
   }
   return averageMatrixColumns(result);
 }

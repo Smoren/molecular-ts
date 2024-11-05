@@ -24,9 +24,9 @@ import {
   SimulationSourceMutationStrategy,
 } from '../genetic/strategies';
 import { ComposedGeneticSearch, GeneticSearch, ReferenceLossScoringStrategy } from "genetic-search";
-import { repeatTestSimulationComplexGrade } from '@/lib/genetic/grade';
+import { repeatRunSimulationForComplexGrade } from '@/lib/genetic/grade';
 
-export function createReferenceGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+export function createComplexGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
   config.runnerStrategyConfig.worldConfig = config.worldConfig;
 
@@ -40,7 +40,7 @@ export function createReferenceGeneticSearchByTypesConfig(config: SimulationGene
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatTestSimulationComplexGrade(
+  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatRunSimulationForComplexGrade(
     config.worldConfig,
     config.referenceTypesConfig,
     config.runnerStrategyConfig.checkpoints,
@@ -83,7 +83,7 @@ export function createReferenceGeneticSearchByTypesConfig(config: SimulationGene
   return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
 }
 
-export function createReferenceRandomSearchByTypesConfig(config: SimulationRandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+export function createComplexRandomSearchByTypesConfig(config: SimulationRandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   if (config.referenceSummaryRowObject === undefined) {
     if (config.referenceTypesConfig.FREQUENCIES.length !== config.sourceTypesConfig.FREQUENCIES.length) {
       throw new Error('Reference and source types must have same length');
@@ -107,7 +107,7 @@ export function createReferenceRandomSearchByTypesConfig(config: SimulationRando
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatTestSimulationComplexGrade(
+  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatRunSimulationForComplexGrade(
     config.worldConfig,
     config.referenceTypesConfig,
     config.runnerStrategyConfig.checkpoints,

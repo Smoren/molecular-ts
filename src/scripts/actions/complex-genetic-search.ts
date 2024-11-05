@@ -12,7 +12,7 @@ import {
   getGeneticMainConfig,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
-import { createReferenceGeneticSearchByTypesConfig } from "@/lib/genetic/factories";
+import { createComplexGeneticSearchByTypesConfig } from "@/lib/genetic/factories";
 import { simulationComplexGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 
@@ -56,7 +56,7 @@ export const actionComplexGeneticSearch = async (...args: string[]) => {
     };
 
     console.log('[START] Building genetic search');
-    const geneticSearch = createReferenceGeneticSearchByTypesConfig(config);
+    const geneticSearch = createComplexGeneticSearchByTypesConfig(config);
     console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');
