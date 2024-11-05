@@ -63,3 +63,11 @@ export function runSimulationForClusterGrade(worldConfig: WorldConfig, typesConf
 
   return averageMatrixColumns(summaryMatrix);
 }
+
+export function repeatRunSimulationForClusterGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[], repeats: number): number[] {
+  const result = [];
+  for (let i=0; i<repeats; i++) {
+    result.push(runSimulationForClusterGrade(worldConfig, typesConfig, checkpoints));
+  }
+  return averageMatrixColumns(result);
+}
