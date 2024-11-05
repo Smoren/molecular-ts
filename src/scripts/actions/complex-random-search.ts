@@ -2,7 +2,7 @@ import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type { ComplexRandomSearchConfigFactoryConfig } from "@/lib/types/genetic";
-import { getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
+import { getScoresSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,
   getTypesConfig,
@@ -66,7 +66,7 @@ export const actionComplexRandomSearch = async (...args: string[]) => {
     const fitConfig: GeneticSearchFitConfig = {
       generationsCount,
       afterStep: (i, scores) => {
-        const [bestScore, meanScore, medianScore, worstScore] = getNormalizedLossesSummary(scores);
+        const [bestScore, meanScore, medianScore, worstScore] = getScoresSummary(scores);
 
         const bestGenome = geneticSearch.bestGenome;
         console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
