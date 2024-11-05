@@ -5,8 +5,9 @@ import type {
   ComposedGeneticSearchConfig,
 } from "genetic-search";
 import type {
-  SimulationGeneticSearchByTypesConfigFactoryConfig,
-  SimulationRandomSearchByTypesConfigFactoryConfig,
+  ClusterGradeMaximizeConfigFactoryConfig,
+  ComplexGeneticSearchConfigFactoryConfig,
+  ComplexRandomSearchConfigFactoryConfig,
   SimulationGenome,
 } from '../types/genetic';
 import {
@@ -17,6 +18,7 @@ import {
 } from '../genetic/helpers';
 import {
   SimulationCachedMultiprocessingRunnerStrategy,
+  SimulationClusterScoringStrategy,
   SimulationComposedCrossoverStrategy,
   SimulationDefaultMutationStrategy,
   SimulationRandomPopulateStrategy,
@@ -26,7 +28,7 @@ import {
 import { ComposedGeneticSearch, GeneticSearch, ReferenceLossScoringStrategy } from "genetic-search";
 import { repeatRunSimulationForComplexGrade } from './grade';
 
-export function createComplexGeneticSearchByTypesConfig(config: SimulationGeneticSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+export function createComplexGeneticSearch(config: ComplexGeneticSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
   config.runnerStrategyConfig.worldConfig = config.worldConfig;
 
@@ -83,7 +85,7 @@ export function createComplexGeneticSearchByTypesConfig(config: SimulationGeneti
   return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
 }
 
-export function createComplexRandomSearchByTypesConfig(config: SimulationRandomSearchByTypesConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+export function createComplexRandomSearch(config: ComplexRandomSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   if (config.referenceSummaryRowObject === undefined) {
     if (config.referenceTypesConfig.FREQUENCIES.length !== config.sourceTypesConfig.FREQUENCIES.length) {
       throw new Error('Reference and source types must have same length');
@@ -138,4 +140,42 @@ export function createComplexRandomSearchByTypesConfig(config: SimulationRandomS
   };
 
   return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
+}
+
+export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+  config.runnerStrategyConfig.worldConfig = config.worldConfig;
+
+  const [
+    populateRandomTypesConfig,
+    mutationRandomTypesConfig,
+    crossoverRandomTypesConfig,
+  ] = setTypesCountToRandomizeConfigCollection([
+    config.populateRandomizeConfig,
+    config.mutationRandomizeConfig,
+    config.crossoverRandomizeConfig,
+  ], config.typesCount);
+
+  const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
+    populate: new SimulationRandomPopulateStrategy(populateRandomTypesConfig),
+    scoring: new SimulationClusterScoringStrategy(),
+    runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
+    mutation: new SimulationDefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
+    crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
+  };
+
+  // TODO to config file
+  const composedConfig: ComposedGeneticSearchConfig = {
+    eliminators: {
+      populationSize: config.geneticSearchMacroConfig.populationSize / 5,
+      survivalRate: 0.5,
+      crossoverRate: 0.5,
+    },
+    final: {
+      populationSize: 5,
+      survivalRate: 0.5,
+      crossoverRate: 0.5,
+    },
+  }
+
+  return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
 }

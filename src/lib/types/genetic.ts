@@ -24,7 +24,7 @@ export type SimulationGenome = {
   typesConfig: TypesConfig;
 }
 
-export type SimulationGeneticSearchByTypesConfigFactoryConfig = {
+export type ComplexGeneticSearchConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   runnerStrategyConfig: SimulationMultiprocessingRunnerStrategyConfig;
   mutationStrategyConfig: BaseMutationStrategyConfig;
@@ -38,7 +38,7 @@ export type SimulationGeneticSearchByTypesConfigFactoryConfig = {
   targetClustersScore?: number;
 }
 
-export type SimulationRandomSearchByTypesConfigFactoryConfig = {
+export type ComplexRandomSearchConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   runnerStrategyConfig: SimulationMultiprocessingRunnerStrategyConfig;
   mutationStrategyConfig: BaseMutationStrategyConfig;
@@ -51,6 +51,17 @@ export type SimulationRandomSearchByTypesConfigFactoryConfig = {
   weights: TotalSummaryWeights;
   worldConfig: WorldConfig;
   targetClustersScore?: number;
+}
+
+export type ClusterGradeMaximizeConfigFactoryConfig = {
+  geneticSearchMacroConfig: GeneticSearchConfig;
+  runnerStrategyConfig: SimulationMultiprocessingRunnerStrategyConfig;
+  mutationStrategyConfig: BaseMutationStrategyConfig;
+  populateRandomizeConfig: RandomTypesConfig;
+  mutationRandomizeConfig: RandomTypesConfig;
+  crossoverRandomizeConfig: RandomTypesConfig;
+  worldConfig: WorldConfig;
+  typesCount: number;
 }
 
 export type SimulationGeneticMainConfig = {

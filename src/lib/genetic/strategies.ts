@@ -1,9 +1,9 @@
 import type {
   BaseMutationStrategyConfig,
-  CrossoverStrategyInterface,
+  CrossoverStrategyInterface, GenerationGradeMatrix, GenerationScoreColumn,
   MutationStrategyInterface,
   PopulateStrategyInterface,
-  Population,
+  Population, ScoringStrategyInterface,
 } from "genetic-search";
 import type {
   SimulationGenome,
@@ -18,7 +18,7 @@ import {
   randomCrossTypesConfigs,
   randomizeTypesConfig,
 } from '../config/types';
-import { createRandomInteger } from '../math';
+import { arraySum, createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
 import {
   BaseCachedMultiprocessingRunnerStrategy,
@@ -166,5 +166,11 @@ export class SimulationCachedMultiprocessingRunnerStrategy extends BaseCachedMul
 
   protected getGenomeId(input: SimulationTaskConfig): number {
     return input[0];
+  }
+}
+
+export class SimulationClusterScoringStrategy implements ScoringStrategyInterface {
+  score(results: GenerationGradeMatrix): GenerationScoreColumn {
+    return results.map((result) => arraySum(result));
   }
 }

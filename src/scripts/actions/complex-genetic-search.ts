@@ -1,7 +1,7 @@
 import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
-import type { SimulationGeneticSearchByTypesConfigFactoryConfig } from "@/lib/types/genetic";
+import type { ComplexGeneticSearchConfigFactoryConfig } from "@/lib/types/genetic";
 import { getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,
@@ -12,7 +12,7 @@ import {
   getGeneticMainConfig,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
-import { createComplexGeneticSearchByTypesConfig } from "@/lib/genetic/factories";
+import { createComplexGeneticSearch } from "@/lib/genetic/factories";
 import { simulationComplexGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 
@@ -41,7 +41,7 @@ export const actionComplexGeneticSearch = async (...args: string[]) => {
     console.log('[INPUT PARAMS]', argsMap);
 
     const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, simulationComplexGradeTaskMultiprocessing);
-    const config: SimulationGeneticSearchByTypesConfigFactoryConfig = {
+    const config: ComplexGeneticSearchConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
       runnerStrategyConfig: mainConfig.runner,
       mutationStrategyConfig: mainConfig.mutation,
@@ -56,7 +56,7 @@ export const actionComplexGeneticSearch = async (...args: string[]) => {
     };
 
     console.log('[START] Building genetic search');
-    const geneticSearch = createComplexGeneticSearchByTypesConfig(config);
+    const geneticSearch = createComplexGeneticSearch(config);
     console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');

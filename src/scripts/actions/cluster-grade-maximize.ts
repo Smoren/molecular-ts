@@ -1,21 +1,19 @@
 import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
-import type { ComplexRandomSearchConfigFactoryConfig } from "@/lib/types/genetic";
+import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/types/genetic";
 import { getNormalizedLossesSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,
-  getTypesConfig,
-  getSummaryRowObject,
-  getWeights,
   getWorldConfig,
   getGeneticMainConfig,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
-import { createComplexRandomSearch } from "@/lib/genetic/factories";
-import { simulationComplexGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
+import { createClusterGradeMaximize } from "@/lib/genetic/factories";
+import { simulationClusterGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
+import { StdoutInterceptor } from "@/scripts/lib/stdout";
 
-export const actionComplexRandomSearch = async (...args: string[]) => {
+export const actionClusterGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
 
@@ -24,52 +22,51 @@ export const actionComplexRandomSearch = async (...args: string[]) => {
     const argsMap = parseArgs(argsParser);
     const {
       poolSize,
+      typesCount,
       generationsCount,
       geneticMainConfigFileName,
       populateRandomizeConfigFileName,
       mutationRandomizeConfigFileName,
       crossoverRandomizeConfigFileName,
-      sourceConfigFileName,
-      referenceConfigFileName,
-      referenceSummaryFileName,
-      weightsFileName,
       worldConfigFileName,
-      targetClustersScore,
+      useAnsiCursor,
     } = argsMap;
-    console.log(`[START] random search action (process_id = ${runId})`);
+    console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
 
-    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, simulationComplexGradeTaskMultiprocessing);
-    const config: ComplexRandomSearchConfigFactoryConfig = {
+    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, simulationClusterGradeTaskMultiprocessing);
+    const config: ClusterGradeMaximizeConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
       runnerStrategyConfig: mainConfig.runner,
       mutationStrategyConfig: mainConfig.mutation,
       populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
       mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
-      sourceTypesConfig: getTypesConfig(sourceConfigFileName),
-      referenceTypesConfig: getTypesConfig(referenceConfigFileName),
-      referenceSummaryRowObject: getSummaryRowObject(referenceSummaryFileName),
-      weights: getWeights(weightsFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
-      targetClustersScore,
+      typesCount,
     };
 
     console.log('[START] Building genetic search');
-    const geneticSearch = createComplexRandomSearch(config);
+    const geneticSearch = createClusterGradeMaximize(config);
     console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');
     let bestId: number = 0;
     const foundGenomeIds: Set<number> = new Set();
 
+    const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
+    const formatString = (count: number) => `Genomes handled: ${count}`;
+
+    // TODO before step
     const fitConfig: GeneticSearchFitConfig = {
       generationsCount,
       afterStep: (i, scores) => {
+        stdoutInterceptor.finish();
+
         const [bestScore, meanScore, medianScore, worstScore] = getNormalizedLossesSummary(scores);
 
         const bestGenome = geneticSearch.bestGenome;
-        console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
+        console.log(`[GENERATION ${i+1}] best id=${bestGenome.id}`);
         console.log(`\tscores:\tbest=${bestScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
@@ -77,9 +74,11 @@ export const actionComplexRandomSearch = async (...args: string[]) => {
           bestId = bestGenome.id;
           writeJsonFile(`data/output/${runId}_generation_${i+1}_id_${bestId}.json`, geneticSearch.bestGenome);
         }
+        stdoutInterceptor.startCountDots(formatString);
       },
     }
 
+    stdoutInterceptor.startCountDots(formatString);
     await geneticSearch.fit(fitConfig);
   } catch (e) {
     console.error('[ERROR]', (e as Error).message);
@@ -90,14 +89,10 @@ export const actionComplexRandomSearch = async (...args: string[]) => {
 
 function parseArgs(argsParser: ArgsParser) {
   const poolSize = argsParser.getInt('poolSize', os.cpus().length);
+  const typesCount = argsParser.getInt('typesCount', 3);
   const generationsCount = argsParser.getInt('generationsCount', 100);
 
   const geneticMainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
-
-  const sourceConfigFileName = argsParser.getString('sourceConfigFileName', 'default-genetic-source-config');
-  const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-genetic-reference-config');
-  const referenceSummaryFileName = argsParser.get('referenceSummaryFileName', undefined);
-  const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-weights');
 
   const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-genetic-randomize-config');
   const populateRandomizeConfigFileName = argsParser.getString('populateRandomizeConfigFileName', randomizeConfigFileName);
@@ -106,20 +101,17 @@ function parseArgs(argsParser: ArgsParser) {
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
 
-  const targetClustersScore = argsParser.getNullableInt('targetClustersScore');
+  const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
   return {
     poolSize,
+    typesCount,
     generationsCount,
     geneticMainConfigFileName,
     populateRandomizeConfigFileName,
     mutationRandomizeConfigFileName,
     crossoverRandomizeConfigFileName,
-    sourceConfigFileName,
-    referenceConfigFileName,
-    referenceSummaryFileName,
-    weightsFileName,
     worldConfigFileName,
-    targetClustersScore,
+    useAnsiCursor,
   };
 }
