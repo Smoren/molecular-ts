@@ -1,21 +1,21 @@
 import type {
   BaseMutationStrategyConfig,
   GeneticSearchConfig,
-  RunnerStrategyConfig,
-  MultiprocessingRunnerStrategyConfig,
+  MetricsStrategyConfig,
+  MultiprocessingMetricsStrategyConfig,
 } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from './config';
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from '../types/analysis';
 
 export type SimulationTaskConfig = [number, WorldConfig, TypesConfig, number[], number];
 
-export type SimulationRunnerStrategyConfig = RunnerStrategyConfig<SimulationTaskConfig> & {
+export type SimulationMetricsStrategyConfig = MetricsStrategyConfig<SimulationTaskConfig> & {
   worldConfig: WorldConfig;
   checkpoints: number[];
   repeats: number;
 };
 
-export type SimulationMultiprocessingRunnerStrategyConfig = SimulationRunnerStrategyConfig & MultiprocessingRunnerStrategyConfig<SimulationTaskConfig> & {
+export type SimulationMultiprocessingMetricsStrategyConfig = SimulationMetricsStrategyConfig & MultiprocessingMetricsStrategyConfig<SimulationTaskConfig> & {
   poolSize: number;
 };
 
@@ -26,7 +26,7 @@ export type SimulationGenome = {
 
 export type ComplexGeneticSearchConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
-  runnerStrategyConfig: SimulationMultiprocessingRunnerStrategyConfig;
+  runnerStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig;
   mutationStrategyConfig: BaseMutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
@@ -40,7 +40,7 @@ export type ComplexGeneticSearchConfigFactoryConfig = {
 
 export type ComplexRandomSearchConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
-  runnerStrategyConfig: SimulationMultiprocessingRunnerStrategyConfig;
+  runnerStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig;
   mutationStrategyConfig: BaseMutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
@@ -55,7 +55,7 @@ export type ComplexRandomSearchConfigFactoryConfig = {
 
 export type ClusterGradeMaximizeConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
-  runnerStrategyConfig: SimulationMultiprocessingRunnerStrategyConfig;
+  runnerStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig;
   mutationStrategyConfig: BaseMutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
@@ -69,11 +69,11 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
 export type SimulationGeneticMainConfig = {
   macro: GeneticSearchConfig;
   initial: InitialConfig;
-  runner: SimulationMultiprocessingRunnerStrategyConfig;
+  runner: SimulationMultiprocessingMetricsStrategyConfig;
   mutation: BaseMutationStrategyConfig;
 }
 
 export type SimulationMainConfig = {
   initial: InitialConfig;
-  runner: SimulationMultiprocessingRunnerStrategyConfig;
+  runner: SimulationMultiprocessingMetricsStrategyConfig;
 }

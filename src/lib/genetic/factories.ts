@@ -1,3 +1,4 @@
+import { ComposedGeneticSearch, GeneticSearch, ReferenceLossFitnessStrategy } from "genetic-search";
 import type {
   GeneticSearchInterface,
   GeneticSearchReferenceConfig,
@@ -17,15 +18,14 @@ import {
   convertSummaryMatrixRowToObject,
 } from '../genetic/helpers';
 import {
-  SimulationCachedMultiprocessingRunnerStrategy,
-  SimulationClusterScoringStrategy,
+  SimulationCachedMultiprocessingMetricsStrategy,
+  SimulationClusterFitnessStrategy,
   SimulationComposedCrossoverStrategy,
   SimulationDefaultMutationStrategy,
   SimulationRandomPopulateStrategy,
   SimulationSourceMutationPopulateStrategy,
   SimulationSourceMutationStrategy,
 } from '../genetic/strategies';
-import { ComposedGeneticSearch, GeneticSearch, ReferenceLossScoringStrategy } from "genetic-search";
 import { repeatRunSimulationForComplexGrade } from './grade';
 
 export function createComplexGeneticSearch(config: ComplexGeneticSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
@@ -62,8 +62,8 @@ export function createComplexGeneticSearch(config: ComplexGeneticSearchConfigFac
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new SimulationRandomPopulateStrategy(populateRandomTypesConfig),
-    scoring: new ReferenceLossScoringStrategy(referenceConfig),
-    runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
+    metrics: new SimulationCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig),
+    fitness: new ReferenceLossFitnessStrategy(referenceConfig),
     mutation: new SimulationDefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
@@ -133,8 +133,8 @@ export function createComplexRandomSearch(config: ComplexRandomSearchConfigFacto
       populateRandomTypesConfig,
       config.mutationStrategyConfig.probability,
     ),
-    scoring: new ReferenceLossScoringStrategy(referenceConfig),
-    runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
+    metrics: new SimulationCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig),
+    fitness: new ReferenceLossFitnessStrategy(referenceConfig),
     mutation: new SimulationSourceMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };
@@ -157,8 +157,8 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new SimulationRandomPopulateStrategy(populateRandomTypesConfig),
-    scoring: new SimulationClusterScoringStrategy(),
-    runner: new SimulationCachedMultiprocessingRunnerStrategy(config.runnerStrategyConfig),
+    metrics: new SimulationCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig),
+    fitness: new SimulationClusterFitnessStrategy(),
     mutation: new SimulationDefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
   };

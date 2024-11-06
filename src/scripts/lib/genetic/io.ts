@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import type { GradeGenerationTask } from "genetic-search";
+import type { CalcMetricsTask } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/types/analysis";
@@ -11,7 +11,7 @@ import { formatJsonString } from "./helpers";
 export function getGeneticMainConfig(
   fileName: string,
   poolSize: number,
-  task: GradeGenerationTask<SimulationTaskConfig>,
+  task: CalcMetricsTask<SimulationTaskConfig>,
 ): SimulationGeneticMainConfig {
   const result = readJsonFile(`data/input/${fileName}`) as SimulationGeneticMainConfig;
   result.runner.poolSize = poolSize;

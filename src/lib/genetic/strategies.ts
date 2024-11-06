@@ -1,17 +1,26 @@
 import type {
   BaseMutationStrategyConfig,
-  CrossoverStrategyInterface, GenerationGradeMatrix, GenerationScoreColumn,
+  CrossoverStrategyInterface,
+  FitnessStrategyInterface,
+  GenerationFitnessColumn,
+  GenerationMetricsMatrix,
   MutationStrategyInterface,
   PopulateStrategyInterface,
-  Population, ScoringStrategyInterface,
+  Population,
 } from "genetic-search";
 import type {
   SimulationGenome,
-  SimulationMultiprocessingRunnerStrategyConfig,
-  SimulationRunnerStrategyConfig,
+  SimulationMultiprocessingMetricsStrategyConfig,
+  SimulationMetricsStrategyConfig,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
 import type { SimulationTaskConfig } from '../types/genetic';
+import {
+  BaseCachedMultiprocessingMetricsStrategy,
+  BaseMetricsStrategy,
+  BaseMultiprocessingMetricsStrategy,
+  BaseMutationStrategy,
+} from "genetic-search";
 import {
   createTransparentTypesConfig,
   crossTypesConfigs,
@@ -20,12 +29,6 @@ import {
 } from '../config/types';
 import { arraySum, createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
-import {
-  BaseCachedMultiprocessingRunnerStrategy,
-  BaseMultiprocessingRunnerStrategy,
-  BaseMutationStrategy,
-  BaseRunnerStrategy
-} from "genetic-search";
 
 export class SimulationRandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly randomizeConfig: RandomTypesConfig;
@@ -147,19 +150,19 @@ export class SimulationSourceMutationStrategy extends SimulationDefaultMutationS
   }
 }
 
-export class SimulationSimpleRunnerStrategy extends BaseRunnerStrategy<SimulationGenome, SimulationRunnerStrategyConfig, SimulationTaskConfig> {
+export class SimulationSimpleMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig, SimulationTaskConfig> {
   protected createTaskInput(genome: SimulationGenome): SimulationTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
-export class SimulationMultiprocessingRunnerStrategy extends BaseMultiprocessingRunnerStrategy<SimulationGenome, SimulationMultiprocessingRunnerStrategyConfig, SimulationTaskConfig> {
+export class SimulationMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig, SimulationTaskConfig> {
   protected createTaskInput(genome: SimulationGenome): SimulationTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
-export class SimulationCachedMultiprocessingRunnerStrategy extends BaseCachedMultiprocessingRunnerStrategy<SimulationGenome, SimulationMultiprocessingRunnerStrategyConfig, SimulationTaskConfig> {
+export class SimulationCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig, SimulationTaskConfig> {
   protected createTaskInput(genome: SimulationGenome): SimulationTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
@@ -169,8 +172,8 @@ export class SimulationCachedMultiprocessingRunnerStrategy extends BaseCachedMul
   }
 }
 
-export class SimulationClusterScoringStrategy implements ScoringStrategyInterface {
-  score(results: GenerationGradeMatrix): GenerationScoreColumn {
+export class SimulationClusterFitnessStrategy implements FitnessStrategyInterface {
+  score(results: GenerationMetricsMatrix): GenerationFitnessColumn {
     return results.map((result) => arraySum(result));
   }
 }
