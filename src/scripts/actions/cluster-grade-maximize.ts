@@ -12,6 +12,7 @@ import {
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { simulationClusterGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
+import { addLeadingZeros, getGenerationResultFilePath } from '@/scripts/lib/helpers';
 
 export const actionClusterGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -55,7 +56,6 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
     console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');
-    let bestId: number = 0;
     const foundGenomeIds: Set<number> = new Set();
 
     const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
@@ -75,8 +75,10 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
 
         if (!foundGenomeIds.has(bestGenome.id)) {
           foundGenomeIds.add(bestGenome.id);
-          bestId = bestGenome.id;
-          writeJsonFile(`data/output/${runId}_generation_${i+1}_id_${bestId}.json`, geneticSearch.bestGenome);
+          writeJsonFile(
+            getGenerationResultFilePath(runId, i, bestGenome.id, mainConfig.macro.populationSize),
+            geneticSearch.bestGenome,
+          );
         }
         stdoutInterceptor.startCountDots(formatString);
       },
