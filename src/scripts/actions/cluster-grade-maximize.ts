@@ -12,7 +12,7 @@ import {
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { simulationClusterGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
-import { addLeadingZeros, getGenerationResultFilePath } from '@/scripts/lib/helpers';
+import { getGenerationResultFilePath } from '@/scripts/lib/helpers';
 
 export const actionClusterGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -76,7 +76,7 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
         if (!foundGenomeIds.has(bestGenome.id)) {
           foundGenomeIds.add(bestGenome.id);
           writeJsonFile(
-            getGenerationResultFilePath(runId, i, bestGenome.id, mainConfig.macro.populationSize),
+            getGenerationResultFilePath(runId, i, bestGenome.id, bestScore, mainConfig.macro.populationSize),
             geneticSearch.bestGenome,
           );
         }

@@ -255,12 +255,24 @@ export class Simulation implements SimulationInterface {
       }
 
       if (event.shiftKey) {
+        const weights = {
+          minCompoundSize: 5,
+          relativeFilteredCountWeight: 1,
+          relativeClusteredCountWeight: 1,
+          vertexesCountWeight: 1,
+          edgesCountWeight: 1,
+          uniqueTypesCountWeight: 2,
+          symmetryWeight: 1,
+          differenceWeight: 1,
+          radiusWeight: 1/3,
+        };
+
         const clustersSummary = gradeCompoundClusters(
           this.exportCompounds(),
           this.config.typesConfig.FREQUENCIES.length,
-          5,
+          weights.minCompoundSize,
         );
-        const score = scoreCompoundClustersSummary(clustersSummary);
+        const score = scoreCompoundClustersSummary(clustersSummary, weights);
         console.log('CLUSTERIZATION GRADE', clustersSummary);
         console.log('CLUSTERIZATION SCORE', score);
       }

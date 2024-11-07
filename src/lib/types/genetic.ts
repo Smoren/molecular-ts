@@ -78,7 +78,7 @@ export type SimulationMainConfig = {
   runner: SimulationMultiprocessingMetricsStrategyConfig;
 }
 
-export type ClusterWeightsConfig = {
+export type ClusterizationWeightsConfig = {
   minCompoundSize: number;
   relativeFilteredCountWeight: number;
   relativeClusteredCountWeight: number;

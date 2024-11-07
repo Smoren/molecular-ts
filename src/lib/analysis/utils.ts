@@ -14,7 +14,7 @@ import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetr
 import type { GraphInterface } from "../graph/types";
 import type { VectorInterface } from "../math/types";
 import { createFilledArray, createVector } from "../math";
-import type { ClusterWeightsConfig } from '@/lib/types/genetic';
+import type { ClusterizationWeightsConfig } from '@/lib/types/genetic';
 
 export function gradeCompoundClusters(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds
@@ -37,7 +37,7 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
   };
 }
 
-export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade, weights: ClusterWeightsConfig): number {
+export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade, weights: ClusterizationWeightsConfig): number {
   const averageVertexesCount = reduce.toAverage(clusterGrade.vertexesBounds)!;
   const averageEdgesCount = reduce.toAverage(clusterGrade.edgesBounds)!;
   const averageUniqueTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)! - 1;
@@ -54,7 +54,7 @@ export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade, weight
 
 export function scoreCompoundClustersSummary(
   summary: CompoundsClusterizationSummary,
-  weights: ClusterWeightsConfig,
+  weights: ClusterizationWeightsConfig,
 ): number {
   const clustersScore = reduce.toSum(
     summary.clusters.map((c) => scoreCompoundCluster(c, weights))

@@ -81,7 +81,7 @@ export const actionComplexGeneticSearch = async (...args: string[]) => {
         if (!foundGenomeIds.has(bestGenome.id)) {
           foundGenomeIds.add(bestGenome.id);
           writeJsonFile(
-            getGenerationResultFilePath(runId, i, bestGenome.id, mainConfig.macro.populationSize),
+            getGenerationResultFilePath(runId, i, bestGenome.id, bestScore, mainConfig.macro.populationSize),
             geneticSearch.bestGenome,
           );
         }

@@ -13,14 +13,8 @@ export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConf
   for (const stepsCount of checkpoints) {
     runner.runSteps(stepsCount);
 
-    const compounds = sim.exportCompounds();
-    const clustersSummary = gradeCompoundClusters(
-      compounds,
-      typesConfig.FREQUENCIES.length,
-      5,
-    );
-    const clustersScore = scoreCompoundClustersSummary(clustersSummary, {
-      minCompoundSize: 1,
+    const clusterizationWeights = {
+      minCompoundSize: 5,
       relativeFilteredCountWeight: 1,
       relativeClusteredCountWeight: 1,
       vertexesCountWeight: 1,
@@ -29,7 +23,15 @@ export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConf
       symmetryWeight: 1,
       differenceWeight: 1,
       radiusWeight: 1/3,
-    });
+    };
+
+    const compounds = sim.exportCompounds();
+    const clustersSummary = gradeCompoundClusters(
+      compounds,
+      typesConfig.FREQUENCIES.length,
+      clusterizationWeights.minCompoundSize,
+    );
+    const clustersScore = scoreCompoundClustersSummary(clustersSummary, clusterizationWeights);
 
     const compoundsAnalyzer = new CompoundsAnalyzer(compounds, sim.atoms, typesConfig.FREQUENCIES.length);
     const totalSummary: TotalSummary = {
@@ -60,14 +62,8 @@ export function runSimulationForClusterGrade(worldConfig: WorldConfig, typesConf
   for (const stepsCount of checkpoints) {
     runner.runSteps(stepsCount);
 
-    const compounds = sim.exportCompounds();
-    const clustersSummary = gradeCompoundClusters(
-      compounds,
-      typesConfig.FREQUENCIES.length,
-      5,
-    );
-    const clustersScore = scoreCompoundClustersSummary(clustersSummary, {
-      minCompoundSize: 1,
+    const weights = {
+      minCompoundSize: 5,
       relativeFilteredCountWeight: 1,
       relativeClusteredCountWeight: 1,
       vertexesCountWeight: 1,
@@ -76,7 +72,15 @@ export function runSimulationForClusterGrade(worldConfig: WorldConfig, typesConf
       symmetryWeight: 1,
       differenceWeight: 1,
       radiusWeight: 1/3,
-    });
+    };
+
+    const compounds = sim.exportCompounds();
+    const clustersSummary = gradeCompoundClusters(
+      compounds,
+      typesConfig.FREQUENCIES.length,
+      weights.minCompoundSize,
+    );
+    const clustersScore = scoreCompoundClustersSummary(clustersSummary, weights);
     const rawMatrix = [clustersScore];
     summaryMatrix.push(rawMatrix);
   }
