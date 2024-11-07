@@ -12,7 +12,7 @@ import {
 import { createCompoundGraph } from "./factories";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetry";
 import type { GraphInterface } from "../graph/types";
-import type { VectorInterface } from "../math/types";
+import type { NumericVector, VectorInterface } from "../math/types";
 import { createFilledArray, createVector } from "../math";
 import type { ClusterizationWeightsConfig } from '@/lib/types/genetic';
 
@@ -69,7 +69,6 @@ export function scoreCompoundClustersSummary(
 }
 
 export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsClusterGrade {
-  // TODO compound speed
   return {
     size: cluster.length,
     difference: calcGraphsClusterAverageDifference(cluster),
@@ -80,6 +79,8 @@ export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsC
     vertexTypesVector: calcAverageVertexTypesVector(cluster),
     edgeTypesVector: calcAverageEdgeTypesVector(cluster),
     radius: calcAverageGraphRadius(cluster),
+    speedBounds: calcSpeedBounds(cluster),
+    speedAverage: calcAverageSpeed(cluster),
   };
 }
 
@@ -118,6 +119,17 @@ export function calcAverageEdgeTypesVector(cluster: GraphInterface[]): VectorInt
 
 export function calcAverageGraphRadius(cluster: GraphInterface[]): number {
   return reduce.toAverage(cluster.map((graph) => calcGraphRadius(graph)))!;
+}
+
+export function calcSpeedBounds(cluster: GraphInterface[]): [number, number] {
+  const speeds = cluster.map((graph) => createVector(graph.speed).abs);
+  return reduce.toMinMax(speeds) as [number, number];
+}
+
+export function calcAverageSpeed(cluster: GraphInterface[]): number {
+  const speeds = cluster.map((graph) => createVector(graph.speed));
+  const speedSum = speeds.reduce((a, b) => a.add(b), createVector([0, 0]));
+  return speedSum.div(speeds.length).abs;
 }
 
 export function calcGraphRadius(graph: GraphInterface): number {

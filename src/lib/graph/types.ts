@@ -4,6 +4,7 @@ export type Vertex = {
   id: number;
   type: number;
   position: NumericVector;
+  speed: NumericVector;
 };
 
 export type Edge = {
@@ -24,6 +25,7 @@ export interface GraphInterface extends GraphConfig {
   readonly vertexMap: VertexMap;
   readonly edgeMap: EdgeMap;
   readonly config: GraphConfig;
+  readonly speed: VectorInterface;
   hasVertex(id: number): boolean;
   getVertex(id: number): Vertex;
   addVertex(vertex: Vertex): void;

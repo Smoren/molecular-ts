@@ -44,6 +44,7 @@ export function createCompoundGraphByAtom(atom: AtomInterface, typesCount: numbe
     id: atom.id,
     type: atom.type,
     position: atom.position,
+    speed: atom.speed,
   }));
   const edges = Object.values(edgeMap);
   return createGraph({ typesCount, vertexes, edges });

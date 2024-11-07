@@ -1,5 +1,7 @@
 import type { Edge, EdgeMap, GraphConfig, GraphInterface, Vertex, VertexMap } from "./types";
 import { createEdgeMap, createVertexMap } from "./factories";
+import type { VectorInterface } from "@/lib/math/types";
+import { createVector } from "@/lib/math";
 
 export class Graph implements GraphInterface {
   public readonly config: GraphConfig;
@@ -22,6 +24,12 @@ export class Graph implements GraphInterface {
 
   get typesCount(): number {
     return this.config.typesCount;
+  }
+
+  get speed(): VectorInterface {
+    const speeds = this.config.vertexes.map((vertex) => createVector(vertex.speed));
+    const speedSum = speeds.reduce((a, b) => a.add(b), createVector([0, 0]));
+    return speedSum.div(speeds.length);
   }
 
   public hasVertex(id: number): boolean {

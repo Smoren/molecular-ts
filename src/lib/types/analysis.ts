@@ -150,6 +150,8 @@ export type CompoundsClusterGrade = {
   vertexTypesVector: NumericVector;
   edgeTypesVector: NumericVector;
   radius: number;
+  speedBounds: [number, number];
+  speedAverage: number;
 }
 
 export type CompoundsClusterizationSummary = {
