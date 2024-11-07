@@ -7,7 +7,8 @@ import {
   getRandomizeConfig,
   getWorldConfig,
   getGeneticMainConfig,
-  writeJsonFile, getClusterizationWeights,
+  writeJsonFile,
+  getClusterizationWeights,
 } from "@/scripts/lib/genetic/io";
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { simulationClusterGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";

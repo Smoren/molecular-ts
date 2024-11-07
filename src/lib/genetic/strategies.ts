@@ -180,6 +180,10 @@ export class ClusterizationCachedMultiprocessingMetricsStrategy extends BaseCach
     this.weights = weights;
   }
 
+  clone(): ClusterizationCachedMultiprocessingMetricsStrategy {
+    return new ClusterizationCachedMultiprocessingMetricsStrategy(this.config, this.weights);
+  }
+
   protected createTaskInput(genome: SimulationGenome): SimulationClusterizationTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.weights, this.config.checkpoints, this.config.repeats];
   }
