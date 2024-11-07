@@ -16,6 +16,7 @@ export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConf
 
     const clusterizationWeights = {
       minCompoundSize: 5,
+      clustersCountWeight: 1,
       relativeFilteredCountWeight: 1,
       relativeClusteredCountWeight: 1,
       vertexesCountWeight: 1,

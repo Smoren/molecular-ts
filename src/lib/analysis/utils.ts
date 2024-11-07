@@ -59,9 +59,11 @@ export function scoreCompoundClustersSummary(
   const clustersScore = reduce.toSum(
     summary.clusters.map((c) => scoreCompoundCluster(c, weights))
   );
+  const clustersCount = summary.clusters.length;
   const relativeClustered = summary.clusteredCount / summary.filteredCount;
   const relativeFiltered = summary.filteredCount / summary.inputCount;
   return clustersScore
+    * clustersCount ** weights.clustersCountWeight
     * relativeClustered ** weights.relativeClusteredCountWeight
     * relativeFiltered ** weights.relativeFilteredCountWeight;
 }

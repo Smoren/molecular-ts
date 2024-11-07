@@ -82,6 +82,7 @@ export type SimulationMainConfig<TTaskConfig> = {
 
 export type ClusterizationWeightsConfig = {
   minCompoundSize: number;
+  clustersCountWeight: number;
   relativeFilteredCountWeight: number;
   relativeClusteredCountWeight: number;
   vertexesCountWeight: number;

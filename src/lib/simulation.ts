@@ -257,6 +257,7 @@ export class Simulation implements SimulationInterface {
       if (event.shiftKey) {
         const weights = {
           minCompoundSize: 5,
+          clustersCountWeight: 1,
           relativeFilteredCountWeight: 1,
           relativeClusteredCountWeight: 1,
           vertexesCountWeight: 1,
