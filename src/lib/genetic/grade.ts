@@ -19,7 +19,17 @@ export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConf
       typesConfig.FREQUENCIES.length,
       5,
     );
-    const clustersScore = scoreCompoundClustersSummary(clustersSummary);
+    const clustersScore = scoreCompoundClustersSummary(clustersSummary, {
+      minCompoundSize: 1,
+      relativeFilteredCountWeight: 1,
+      relativeClusteredCountWeight: 1,
+      vertexesCountWeight: 1,
+      edgesCountWeight: 1,
+      uniqueTypesCountWeight: 2,
+      symmetryWeight: 1,
+      differenceWeight: 1,
+      radiusWeight: 1/3,
+    });
 
     const compoundsAnalyzer = new CompoundsAnalyzer(compounds, sim.atoms, typesConfig.FREQUENCIES.length);
     const totalSummary: TotalSummary = {
@@ -56,7 +66,17 @@ export function runSimulationForClusterGrade(worldConfig: WorldConfig, typesConf
       typesConfig.FREQUENCIES.length,
       5,
     );
-    const clustersScore = scoreCompoundClustersSummary(clustersSummary);
+    const clustersScore = scoreCompoundClustersSummary(clustersSummary, {
+      minCompoundSize: 1,
+      relativeFilteredCountWeight: 1,
+      relativeClusteredCountWeight: 1,
+      vertexesCountWeight: 1,
+      edgesCountWeight: 1,
+      uniqueTypesCountWeight: 2,
+      symmetryWeight: 1,
+      differenceWeight: 1,
+      radiusWeight: 1/3,
+    });
     const rawMatrix = [clustersScore];
     summaryMatrix.push(rawMatrix);
   }

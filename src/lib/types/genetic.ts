@@ -77,3 +77,15 @@ export type SimulationMainConfig = {
   initial: InitialConfig;
   runner: SimulationMultiprocessingMetricsStrategyConfig;
 }
+
+export type ClusterWeightsConfig = {
+  minCompoundSize: number;
+  relativeFilteredCountWeight: number;
+  relativeClusteredCountWeight: number;
+  vertexesCountWeight: number;
+  edgesCountWeight: number;
+  uniqueTypesCountWeight: number;
+  symmetryWeight: number;
+  differenceWeight: number;
+  radiusWeight: number;
+}

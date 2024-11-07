@@ -14,6 +14,7 @@ import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetr
 import type { GraphInterface } from "../graph/types";
 import type { VectorInterface } from "../math/types";
 import { createFilledArray, createVector } from "../math";
+import type { ClusterWeightsConfig } from '@/lib/types/genetic';
 
 export function gradeCompoundClusters(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds
@@ -36,22 +37,33 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
   };
 }
 
-export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): number {
-  // TODO weights as degrees
+export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade, weights: ClusterWeightsConfig): number {
   const averageVertexesCount = reduce.toAverage(clusterGrade.vertexesBounds)!;
   const averageEdgesCount = reduce.toAverage(clusterGrade.edgesBounds)!;
-  const averageTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)! ** 2;
+  const averageUniqueTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)! - 1;
+  const symmetryGrade = clusterGrade.symmetry;
+  const averageRadius = clusterGrade.radius;
   const averageDifference = 1 + clusterGrade.difference;
-  const averageRadius = clusterGrade.radius ** (1/3);
-  return averageVertexesCount * averageEdgesCount * (averageTypesCount - 1) * clusterGrade.symmetry
-    * averageRadius / averageDifference;
+  return averageVertexesCount ** weights.vertexesCountWeight
+    * averageEdgesCount ** weights.edgesCountWeight
+    * averageUniqueTypesCount ** weights.uniqueTypesCountWeight
+    * symmetryGrade ** weights.symmetryWeight
+    * averageRadius ** weights.radiusWeight
+    / averageDifference ** weights.differenceWeight;
 }
 
-export function scoreCompoundClustersSummary(summary: CompoundsClusterizationSummary): number {
-  const clustersScore = reduce.toSum(summary.clusters.map((c) => scoreCompoundCluster(c)));
+export function scoreCompoundClustersSummary(
+  summary: CompoundsClusterizationSummary,
+  weights: ClusterWeightsConfig,
+): number {
+  const clustersScore = reduce.toSum(
+    summary.clusters.map((c) => scoreCompoundCluster(c, weights))
+  );
   const relativeClustered = summary.clusteredCount / summary.filteredCount;
   const relativeFiltered = summary.filteredCount / summary.inputCount;
-  return clustersScore * relativeClustered * relativeFiltered;
+  return clustersScore
+    * relativeClustered ** weights.relativeClusteredCountWeight
+    * relativeFiltered ** weights.relativeFilteredCountWeight;
 }
 
 export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsClusterGrade {
