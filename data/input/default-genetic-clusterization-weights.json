@@ -8,5 +8,6 @@
   "uniqueTypesCountWeight": 2,
   "symmetryWeight": 1,
   "differenceWeight": 1,
-  "radiusWeight": 0.333
+  "radiusWeight": 0.5,
+  "speedWeight": 0.5
 }

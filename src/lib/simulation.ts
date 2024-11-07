@@ -18,7 +18,11 @@ import { createAtom } from './utils/functions';
 import { createCompoundGraphByAtom } from "./analysis/factories";
 import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/utils";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./analysis/symmetry";
-import { gradeCompoundClusters, scoreCompoundClustersSummary } from "./analysis/utils";
+import {
+  createDefaultClusterizationWeightsConfig,
+  gradeCompoundClusters,
+  scoreCompoundClustersSummary
+} from "./analysis/utils";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -255,19 +259,7 @@ export class Simulation implements SimulationInterface {
       }
 
       if (event.shiftKey) {
-        const weights = {
-          minCompoundSize: 5,
-          clustersCountWeight: 1,
-          relativeFilteredCountWeight: 1,
-          relativeClusteredCountWeight: 1,
-          vertexesCountWeight: 1,
-          edgesCountWeight: 1,
-          uniqueTypesCountWeight: 2,
-          symmetryWeight: 1,
-          differenceWeight: 1,
-          radiusWeight: 1/3,
-        };
-
+        const weights = createDefaultClusterizationWeightsConfig();
         const clustersSummary = gradeCompoundClusters(
           this.exportCompounds(),
           this.config.typesConfig.FREQUENCIES.length,

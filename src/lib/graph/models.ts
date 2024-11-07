@@ -1,7 +1,7 @@
 import type { Edge, EdgeMap, GraphConfig, GraphInterface, Vertex, VertexMap } from "./types";
 import { createEdgeMap, createVertexMap } from "./factories";
-import type { VectorInterface } from "@/lib/math/types";
-import { createVector } from "@/lib/math";
+import type { VectorInterface } from "../math/types";
+import { createVector } from "../math";
 
 export class Graph implements GraphInterface {
   public readonly config: GraphConfig;

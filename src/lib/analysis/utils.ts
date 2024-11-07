@@ -12,9 +12,9 @@ import {
 import { createCompoundGraph } from "./factories";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetry";
 import type { GraphInterface } from "../graph/types";
-import type { NumericVector, VectorInterface } from "../math/types";
+import type { VectorInterface } from "../math/types";
 import { createFilledArray, createVector } from "../math";
-import type { ClusterizationWeightsConfig } from '@/lib/types/genetic';
+import type { ClusterizationWeightsConfig } from '../types/genetic';
 
 export function gradeCompoundClusters(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds
@@ -43,12 +43,15 @@ export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade, weight
   const averageUniqueTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)! - 1;
   const symmetryGrade = clusterGrade.symmetry;
   const averageRadius = clusterGrade.radius;
+  const averageSpeed = clusterGrade.speedAverage;
   const averageDifference = 1 + clusterGrade.difference;
+
   return averageVertexesCount ** weights.vertexesCountWeight
     * averageEdgesCount ** weights.edgesCountWeight
     * averageUniqueTypesCount ** weights.uniqueTypesCountWeight
     * symmetryGrade ** weights.symmetryWeight
     * averageRadius ** weights.radiusWeight
+    * averageSpeed ** weights.speedWeight
     / averageDifference ** weights.differenceWeight;
 }
 
@@ -134,4 +137,20 @@ export function calcAverageSpeed(cluster: GraphInterface[]): number {
 
 export function calcGraphRadius(graph: GraphInterface): number {
   return getGraphAverageRadius(graph, getGraphCentroid(graph));
+}
+
+export function createDefaultClusterizationWeightsConfig(): ClusterizationWeightsConfig {
+  return {
+    minCompoundSize: 5,
+    clustersCountWeight: 1,
+    relativeFilteredCountWeight: 1,
+    relativeClusteredCountWeight: 1,
+    vertexesCountWeight: 1,
+    edgesCountWeight: 1,
+    uniqueTypesCountWeight: 1,
+    symmetryWeight: 1,
+    differenceWeight: 1,
+    radiusWeight: 0.5,
+    speedWeight: 0.5,
+  };
 }

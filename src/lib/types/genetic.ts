@@ -91,4 +91,5 @@ export type ClusterizationWeightsConfig = {
   symmetryWeight: number;
   differenceWeight: number;
   radiusWeight: number;
+  speedWeight: number;
 }

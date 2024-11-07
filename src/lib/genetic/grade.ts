@@ -1,10 +1,14 @@
 import type { TypesConfig, WorldConfig } from '../types/config';
-import { gradeCompoundClusters, scoreCompoundClustersSummary } from '../analysis/utils';
+import {
+  createDefaultClusterizationWeightsConfig,
+  gradeCompoundClusters,
+  scoreCompoundClustersSummary,
+} from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../types/analysis';
 import { averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
-import type { ClusterizationWeightsConfig } from '@/lib/types/genetic';
+import type { ClusterizationWeightsConfig } from '../types/genetic';
 
 export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
   const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
@@ -14,19 +18,7 @@ export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConf
   for (const stepsCount of checkpoints) {
     runner.runSteps(stepsCount);
 
-    const clusterizationWeights = {
-      minCompoundSize: 5,
-      clustersCountWeight: 1,
-      relativeFilteredCountWeight: 1,
-      relativeClusteredCountWeight: 1,
-      vertexesCountWeight: 1,
-      edgesCountWeight: 1,
-      uniqueTypesCountWeight: 2,
-      symmetryWeight: 1,
-      differenceWeight: 1,
-      radiusWeight: 1/3,
-    };
-
+    const clusterizationWeights = createDefaultClusterizationWeightsConfig();
     const compounds = sim.exportCompounds();
     const clustersSummary = gradeCompoundClusters(
       compounds,
