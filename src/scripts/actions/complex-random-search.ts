@@ -99,7 +99,7 @@ function parseArgs(argsParser: ArgsParser) {
   const sourceConfigFileName = argsParser.getString('sourceConfigFileName', 'default-genetic-source-config');
   const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-genetic-reference-config');
   const referenceSummaryFileName = argsParser.get('referenceSummaryFileName', undefined);
-  const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-weights');
+  const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-reference-weights');
 
   const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-genetic-randomize-config');
   const populateRandomizeConfigFileName = argsParser.getString('populateRandomizeConfigFileName', randomizeConfigFileName);
