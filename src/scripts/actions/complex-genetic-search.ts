@@ -7,7 +7,7 @@ import {
   getRandomizeConfig,
   getTypesConfig,
   getSummaryRowObject,
-  getWeights,
+  getReferenceWeights,
   getWorldConfig,
   getGeneticMainConfig,
   writeJsonFile,
@@ -51,7 +51,7 @@ export const actionComplexGeneticSearch = async (...args: string[]) => {
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
       referenceTypesConfig: getTypesConfig(referenceConfigFileName),
       referenceSummaryRowObject: getSummaryRowObject(referenceSummaryFileName),
-      weights: getWeights(weightsFileName),
+      weights: getReferenceWeights(weightsFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       targetClustersScore,
     };
@@ -72,11 +72,11 @@ export const actionComplexGeneticSearch = async (...args: string[]) => {
       afterStep: (i, scores) => {
         stdoutInterceptor.finish();
 
-        const [bestScore, meanScore, medianScore, worstScore] = getScoresSummary(scores);
+        const [bestScore, secondScore, meanScore, medianScore, worstScore] = getScoresSummary(scores);
 
         const bestGenome = geneticSearch.bestGenome;
         console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
-        console.log(`\tscores:\tbest=${bestScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
+        console.log(`\tscores:\tbest=${bestScore}\tsecond=${secondScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
           foundGenomeIds.add(bestGenome.id);

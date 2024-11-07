@@ -7,7 +7,7 @@ import {
   getRandomizeConfig,
   getWorldConfig,
   getGeneticMainConfig,
-  writeJsonFile,
+  writeJsonFile, getClusterizationWeights,
 } from "@/scripts/lib/genetic/io";
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { simulationClusterGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
@@ -30,6 +30,7 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
       mutationRandomizeConfigFileName,
       crossoverRandomizeConfigFileName,
       worldConfigFileName,
+      weightsFileName,
       useComposedAlgo,
       composedFinalPopulation,
       useAnsiCursor,
@@ -46,6 +47,7 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
       mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
+      weightsConfig: getClusterizationWeights(weightsFileName),
       typesCount,
       useComposedAlgo,
       composedFinalPopulation,
@@ -67,11 +69,11 @@ export const actionClusterGradeMaximize = async (...args: string[]) => {
       afterStep: (i, scores) => {
         stdoutInterceptor.finish();
 
-        const [bestScore, meanScore, medianScore, worstScore] = getScoresSummary(scores);
+        const [bestScore, secondScore, meanScore, medianScore, worstScore] = getScoresSummary(scores);
 
         const bestGenome = geneticSearch.bestGenome;
         console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
-        console.log(`\tscores:\tbest=${bestScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
+        console.log(`\tscores:\tbest=${bestScore}\tsecond=${secondScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
           foundGenomeIds.add(bestGenome.id);
@@ -106,6 +108,7 @@ function parseArgs(argsParser: ArgsParser) {
   const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
+  const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-clusterization-weights');
 
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = argsParser.getInt('composedFinalPopulation', 5);
@@ -121,6 +124,7 @@ function parseArgs(argsParser: ArgsParser) {
     mutationRandomizeConfigFileName,
     crossoverRandomizeConfigFileName,
     worldConfigFileName,
+    weightsFileName,
     useComposedAlgo,
     composedFinalPopulation,
     useAnsiCursor,

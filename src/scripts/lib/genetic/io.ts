@@ -3,17 +3,20 @@ import type { CalcMetricsTask } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/types/analysis";
-import type { SimulationGeneticMainConfig, SimulationMainConfig } from "@/lib/types/genetic";
-import type { SimulationTaskConfig } from "@/lib/types/genetic";
+import type {
+  ClusterizationWeightsConfig,
+  SimulationGeneticMainConfig,
+  SimulationMainConfig,
+} from "@/lib/types/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
 
-export function getGeneticMainConfig(
+export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
   poolSize: number,
-  task: CalcMetricsTask<SimulationTaskConfig>,
-): SimulationGeneticMainConfig {
-  const result = readJsonFile(`data/input/${fileName}`) as SimulationGeneticMainConfig;
+  task: CalcMetricsTask<TTaskConfig>,
+): SimulationGeneticMainConfig<TTaskConfig> {
+  const result = readJsonFile(`data/input/${fileName}`) as SimulationGeneticMainConfig<TTaskConfig>;
   result.runner.poolSize = poolSize;
   result.runner.task = task;
   result.runner.onTaskResult = () => process.stdout.write('.');
@@ -21,8 +24,8 @@ export function getGeneticMainConfig(
   return result;
 }
 
-export function getSimulationMainConfig(fileName: string): SimulationMainConfig {
-  return readJsonFile(`data/input/${fileName}`) as SimulationMainConfig;
+export function getSimulationMainConfig<TTaskConfig>(fileName: string): SimulationMainConfig<TTaskConfig> {
+  return readJsonFile(`data/input/${fileName}`) as SimulationMainConfig<TTaskConfig>;
 }
 
 export function getTypesConfig(fileName: string): TypesConfig {
@@ -47,8 +50,12 @@ export function getWorldConfig(fileName: string, initialConfig: InitialConfig): 
   return createWorldConfig2d(initialConfig, worldConfig);
 }
 
-export function getWeights(fileName: string): TotalSummaryWeights {
+export function getReferenceWeights(fileName: string): TotalSummaryWeights {
   return readJsonFile(`data/input/${fileName}`) as TotalSummaryWeights;
+}
+
+export function getClusterizationWeights(fileName: string): ClusterizationWeightsConfig {
+  return readJsonFile(`data/input/${fileName}`) as ClusterizationWeightsConfig;
 }
 
 export function readJsonFile(path: string) {

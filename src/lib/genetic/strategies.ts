@@ -3,7 +3,7 @@ import type {
   CrossoverStrategyInterface,
   FitnessStrategyInterface,
   GenerationFitnessColumn,
-  GenerationMetricsMatrix,
+  GenerationMetricsMatrix, MetricsStrategyConfig,
   MutationStrategyInterface,
   PopulateStrategyInterface,
   Population,
@@ -11,10 +11,10 @@ import type {
 import type {
   SimulationGenome,
   SimulationMultiprocessingMetricsStrategyConfig,
-  SimulationMetricsStrategyConfig,
+  SimulationMetricsStrategyConfig, SimulationClusterizationTaskConfig, ClusterizationWeightsConfig,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
-import type { SimulationTaskConfig } from '../types/genetic';
+import type { SimulationReferenceTaskConfig } from '../types/genetic';
 import {
   BaseCachedMultiprocessingMetricsStrategy,
   BaseMetricsStrategy,
@@ -150,24 +150,41 @@ export class SimulationSourceMutationStrategy extends SimulationDefaultMutationS
   }
 }
 
-export class SimulationSimpleMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig, SimulationTaskConfig> {
-  protected createTaskInput(genome: SimulationGenome): SimulationTaskConfig {
+export class SimulationSimpleMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
+  protected createTaskInput(genome: SimulationGenome): SimulationReferenceTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
-export class SimulationMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig, SimulationTaskConfig> {
-  protected createTaskInput(genome: SimulationGenome): SimulationTaskConfig {
+export class SimulationMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
+  protected createTaskInput(genome: SimulationGenome): SimulationReferenceTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
-export class SimulationCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig, SimulationTaskConfig> {
-  protected createTaskInput(genome: SimulationGenome): SimulationTaskConfig {
+export class SimulationCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
+  protected createTaskInput(genome: SimulationGenome): SimulationReferenceTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 
-  protected getGenomeId(input: SimulationTaskConfig): number {
+  protected getGenomeId(input: SimulationReferenceTaskConfig): number {
+    return input[0];
+  }
+}
+
+export class ClusterizationCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationClusterizationTaskConfig>, SimulationClusterizationTaskConfig> {
+  private weights: ClusterizationWeightsConfig;
+
+  constructor(config: SimulationMultiprocessingMetricsStrategyConfig<SimulationClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
+    super(config);
+    this.weights = weights;
+  }
+
+  protected createTaskInput(genome: SimulationGenome): SimulationClusterizationTaskConfig {
+    return [genome.id, this.config.worldConfig, genome.typesConfig, this.weights, this.config.checkpoints, this.config.repeats];
+  }
+
+  protected getGenomeId(input: SimulationClusterizationTaskConfig): number {
     return input[0];
   }
 }

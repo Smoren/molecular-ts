@@ -1,0 +1,11 @@
+{
+  "minCompoundSize": 5,
+  "relativeFilteredCountWeight": 1,
+  "relativeClusteredCountWeight": 1,
+  "vertexesCountWeight": 1,
+  "edgesCountWeight": 1,
+  "uniqueTypesCountWeight": 2,
+  "symmetryWeight": 1,
+  "differenceWeight": 1,
+  "radiusWeight": 0.333
+}

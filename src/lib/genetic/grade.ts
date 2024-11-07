@@ -4,6 +4,7 @@ import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../types/analysis';
 import { averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
+import type { ClusterizationWeightsConfig } from '@/lib/types/genetic';
 
 export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
   const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
@@ -54,25 +55,18 @@ export function repeatRunSimulationForComplexGrade(worldConfig: WorldConfig, typ
   return averageMatrixColumns(result);
 }
 
-export function runSimulationForClusterGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
+export function runSimulationForClusterGrade(
+  worldConfig: WorldConfig,
+  typesConfig: TypesConfig,
+  weights: ClusterizationWeightsConfig,
+  checkpoints: number[],
+): number[] {
   const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
   const sim = runner.simulation;
   const summaryMatrix: number[][] = [];
 
   for (const stepsCount of checkpoints) {
     runner.runSteps(stepsCount);
-
-    const weights = {
-      minCompoundSize: 5,
-      relativeFilteredCountWeight: 1,
-      relativeClusteredCountWeight: 1,
-      vertexesCountWeight: 1,
-      edgesCountWeight: 1,
-      uniqueTypesCountWeight: 2,
-      symmetryWeight: 1,
-      differenceWeight: 1,
-      radiusWeight: 1/3,
-    };
 
     const compounds = sim.exportCompounds();
     const clustersSummary = gradeCompoundClusters(
@@ -88,10 +82,16 @@ export function runSimulationForClusterGrade(worldConfig: WorldConfig, typesConf
   return averageMatrixColumns(summaryMatrix);
 }
 
-export function repeatRunSimulationForClusterGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[], repeats: number): number[] {
+export function repeatRunSimulationForClusterGrade(
+  worldConfig: WorldConfig,
+  typesConfig: TypesConfig,
+  weights: ClusterizationWeightsConfig,
+  checkpoints: number[],
+  repeats: number,
+): number[] {
   const result = [];
   for (let i=0; i<repeats; i++) {
-    result.push(runSimulationForClusterGrade(worldConfig, typesConfig, checkpoints));
+    result.push(runSimulationForClusterGrade(worldConfig, typesConfig, weights, checkpoints));
   }
   return averageMatrixColumns(result);
 }

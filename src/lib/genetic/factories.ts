@@ -18,6 +18,7 @@ import {
   convertSummaryMatrixRowToObject,
 } from '../genetic/helpers';
 import {
+  ClusterizationCachedMultiprocessingMetricsStrategy,
   SimulationCachedMultiprocessingMetricsStrategy,
   SimulationClusterFitnessStrategy,
   SimulationComposedCrossoverStrategy,
@@ -157,7 +158,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new SimulationRandomPopulateStrategy(populateRandomTypesConfig),
-    metrics: new SimulationCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig),
+    metrics: new ClusterizationCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new SimulationClusterFitnessStrategy(),
     mutation: new SimulationDefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
     crossover: new SimulationComposedCrossoverStrategy(crossoverRandomTypesConfig),
