@@ -103,10 +103,9 @@ function parseArgs(argsParser: ArgsParser) {
 
   const mainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
-  const randomizeConfigCollectionFileName = argsParser.getString('randomizeConfigCollectionFileName', 'default-randomize-config-collection');
-  const populateRandomizeConfigCollectionFileName = argsParser.getString('populateRandomizeConfigCollectionFileName', randomizeConfigCollectionFileName);
-  const mutationRandomizeConfigCollectionFileName = argsParser.getString('mutationRandomizeConfigCollectionFileName', randomizeConfigCollectionFileName);
-  const crossoverRandomizeConfigCollectionFileName = argsParser.getString('crossoverRandomizeConfigCollectionFileName', randomizeConfigCollectionFileName);
+  const populateRandomizeConfigCollectionFileName = argsParser.getString('populateRandomizeConfigCollectionFileName', 'default-randomize-config-populate-collection');
+  const mutationRandomizeConfigCollectionFileName = argsParser.getString('mutationRandomizeConfigCollectionFileName', 'default-randomize-config-mutate-collection');
+  const crossoverRandomizeConfigCollectionFileName = argsParser.getString('crossoverRandomizeConfigCollectionFileName', 'default-randomize-config-crossover-collection');
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
   const weightsFileName = argsParser.getString('weightsFileName', 'default-clusterization-weights');
