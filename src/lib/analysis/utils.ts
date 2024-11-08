@@ -1,4 +1,4 @@
-import { reduce } from "itertools-ts";
+import { multi, reduce, single } from "itertools-ts";
 import type { CompoundsClusterGrade, Compound, CompoundsClusterizationSummary } from "../types/analysis";
 import { clusterGraphs } from "../graph/clusterization";
 import {
@@ -59,11 +59,11 @@ export function scoreCompoundClustersSummary(
   summary: CompoundsClusterizationSummary,
   weights: ClusterizationWeightsConfig,
 ): number {
-  const clustersScore = reduce.toSum(
-    summary.clusters.map((c) => scoreCompoundCluster(c, weights))
-  );
-  const clustersSIzes = summary.clusters.map((c) => c.size);
-  // TODO use it!
+  const clustersRelativeSizes = summary.clusters.map((c) => c.size / summary.clusteredCount);
+  const clustersScore = reduce.toSum(single.map(
+    multi.zip(summary.clusters, clustersRelativeSizes),
+    ([cluster, relativeSize]) => (relativeSize ** weights.clusterSizeWeight) * scoreCompoundCluster(cluster, weights),
+  ));
 
   const clustersCount = summary.clusters.length;
   const relativeClustered = summary.clusteredCount / summary.filteredCount;
@@ -146,6 +146,7 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
   return {
     minCompoundSize: 5,
     clustersCountWeight: 1,
+    clusterSizeWeight: 1,
     relativeFilteredCountWeight: 1,
     relativeClusteredCountWeight: 1,
     vertexesCountWeight: 1,
