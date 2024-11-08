@@ -62,11 +62,11 @@ export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig
   };
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
-    populate: new RandomPopulateStrategy(populateRandomTypesConfig),
+    populate: new RandomPopulateStrategy([populateRandomTypesConfig]),
     metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
-    mutation: new DefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
-    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
+    mutation: new DefaultMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig]),
+    crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
   };
 
   // TODO to config file
@@ -131,13 +131,13 @@ export function createReferenceRandomSearch(config: ReferenceRandomSearchConfigF
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new SourceMutationPopulateStrategy(
       config.sourceTypesConfig,
-      populateRandomTypesConfig,
+      [populateRandomTypesConfig],
       config.mutationStrategyConfig.probability,
     ),
     metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
-    mutation: new SourceMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
-    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
+    mutation: new SourceMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig], config.sourceTypesConfig),
+    crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
   };
 
   return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
@@ -157,11 +157,11 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
   ], config.typesCount);
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
-    populate: new RandomPopulateStrategy(populateRandomTypesConfig),
+    populate: new RandomPopulateStrategy([populateRandomTypesConfig]),
     metrics: new ClusterizationCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(),
-    mutation: new DefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
-    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
+    mutation: new DefaultMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig]),
+    crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
   };
 
   if (config.useComposedAlgo) {

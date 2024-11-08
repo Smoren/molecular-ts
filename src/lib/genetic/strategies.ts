@@ -29,22 +29,24 @@ import {
 } from '../config/types';
 import { arraySum, createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
+import { getRandomArrayItem } from "@/lib/math/random";
 
 export class RandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
-  private readonly randomizeConfig: RandomTypesConfig;
+  private readonly randomizeConfigCollection: RandomTypesConfig[];
 
-  constructor(randomizeConfig: RandomTypesConfig) {
-    this.randomizeConfig = randomizeConfig;
+  constructor(randomizeConfigCollection: RandomTypesConfig[]) {
+    this.randomizeConfigCollection = randomizeConfigCollection;
   }
 
   public populate(size: number, nextId: () => number): Population<SimulationGenome> {
     const population: Population<SimulationGenome> = [];
     for (let i = 0; i < size; i++) {
+      const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
       population.push({
         id: nextId(),
         typesConfig: randomizeTypesConfig(
-          this.randomizeConfig,
-          createTransparentTypesConfig(this.randomizeConfig.TYPES_COUNT),
+          randomizeConfig,
+          createTransparentTypesConfig(randomizeConfig.TYPES_COUNT),
         ),
       });
     }
@@ -54,20 +56,21 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface<Simulat
 
 export class SourceMutationPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfig: TypesConfig;
-  private readonly randomizeConfig: RandomTypesConfig;
+  private readonly randomizeConfigCollection: RandomTypesConfig[];
   private readonly probability: number;
 
-  constructor(sourceTypesConfig: TypesConfig, randomizeConfig: RandomTypesConfig, probability: number) {
+  constructor(sourceTypesConfig: TypesConfig, randomizeConfigCollection: RandomTypesConfig[], probability: number) {
     this.sourceTypesConfig = sourceTypesConfig;
-    this.randomizeConfig = randomizeConfig;
+    this.randomizeConfigCollection = randomizeConfigCollection;
     this.probability = probability;
   }
 
   public populate(size: number, nextId: () => number): Population<SimulationGenome> {
     const population: Population<SimulationGenome> = [];
     for (let i = 0; i < size; i++) {
+      const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
       const inputTypesConfig = fullCopyObject(this.sourceTypesConfig);
-      const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
+      const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig);
       const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.probability);
 
       population.push({
@@ -80,16 +83,17 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
 }
 
 export class SubmatrixCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
-  private readonly randomizeConfig: RandomTypesConfig;
+  private readonly randomizeConfigCollection: RandomTypesConfig[];
 
-  constructor(randomizeConfig: RandomTypesConfig) {
-    this.randomizeConfig = randomizeConfig;
+  constructor(randomizeConfigCollection: RandomTypesConfig[]) {
+    this.randomizeConfigCollection = randomizeConfigCollection;
   }
 
   public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
+    const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
-    const randomized = randomizeTypesConfig(this.randomizeConfig, crossed, separator);
+    const randomized = randomizeTypesConfig(randomizeConfig, crossed, separator);
     return { id: newGenomeId, typesConfig: randomized };
   }
 }
@@ -106,9 +110,9 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface<Sim
   private readonly randomStrategy: CrossoverStrategyInterface<SimulationGenome>;
   private readonly subMatrixStrategy: CrossoverStrategyInterface<SimulationGenome>;
 
-  constructor(randomizeConfig: RandomTypesConfig) {
+  constructor(randomizeConfigCollection: RandomTypesConfig[]) {
     this.randomStrategy = new RandomCrossoverStrategy();
-    this.subMatrixStrategy = new SubmatrixCrossoverStrategy(randomizeConfig);
+    this.subMatrixStrategy = new SubmatrixCrossoverStrategy(randomizeConfigCollection);
   }
 
   public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
@@ -121,16 +125,17 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface<Sim
 }
 
 export class DefaultMutationStrategy extends BaseMutationStrategy<SimulationGenome, BaseMutationStrategyConfig> implements MutationStrategyInterface<SimulationGenome> {
-  private readonly randomizeConfig: RandomTypesConfig;
+  private readonly randomizeConfigCollection: RandomTypesConfig[];
 
-  constructor(config: BaseMutationStrategyConfig, randomizeConfig: RandomTypesConfig) {
+  constructor(config: BaseMutationStrategyConfig, randomizeConfigCollection: RandomTypesConfig[]) {
     super(config);
-    this.randomizeConfig = randomizeConfig;
+    this.randomizeConfigCollection = randomizeConfigCollection;
   }
 
   mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
+    const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
-    const randomizedTypesConfig = randomizeTypesConfig(this.randomizeConfig, inputTypesConfig);
+    const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig);
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.config.probability);
 
     return { id: newGenomeId, typesConfig: mutatedTypesConfig };
@@ -140,8 +145,8 @@ export class DefaultMutationStrategy extends BaseMutationStrategy<SimulationGeno
 export class SourceMutationStrategy extends DefaultMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfig: TypesConfig;
 
-  constructor(config: BaseMutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
-    super(config, randomizeConfig);
+  constructor(config: BaseMutationStrategyConfig, randomizeConfigCollection: RandomTypesConfig[], sourceTypesConfig: TypesConfig) {
+    super(config, randomizeConfigCollection);
     this.sourceTypesConfig = sourceTypesConfig;
   }
 
