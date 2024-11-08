@@ -11,7 +11,7 @@ import {
   getClusterizationWeights,
 } from "@/scripts/lib/genetic/io";
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
-import { simulationClusterGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
+import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getGenerationResultFilePath } from '@/scripts/lib/helpers';
 
@@ -39,10 +39,10 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
 
-    const mainConfig = getGeneticMainConfig(mainConfigFileName, poolSize, simulationClusterGradeTaskMultiprocessing);
+    const mainConfig = getGeneticMainConfig(mainConfigFileName, poolSize, clusterizationGradeMultiprocessingTask);
     const config: ClusterGradeMaximizeConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
-      runnerStrategyConfig: mainConfig.runner,
+      runnerStrategyConfig: mainConfig.metrics,
       mutationStrategyConfig: mainConfig.mutation,
       populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
       mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),

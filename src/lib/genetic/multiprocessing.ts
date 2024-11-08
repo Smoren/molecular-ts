@@ -1,40 +1,40 @@
-import type { SimulationClusterizationTaskConfig, SimulationReferenceTaskConfig } from "../types/genetic";
-import { repeatRunSimulationForComplexGrade } from "./grade";
+import type { ClusterizationTaskConfig, ReferenceTaskConfig } from "../types/genetic";
+import { repeatRunSimulationForReferenceGrade } from "./grade";
 
-export const simulationComplexGradeTaskMultiprocessing = async ([
-  id,
+export const referenceGradeMultiprocessingTask = async ([
+  _,
   worldConfig,
   typesConfig,
   checkpoints,
   repeats,
-]: SimulationReferenceTaskConfig): Promise<number[]> => {
+]: ReferenceTaskConfig): Promise<number[]> => {
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');
-  const { repeatRunSimulationForComplexGrade } = await import(`${dirName}/lib/genetic/grade`);
+  const { repeatRunSimulationForReferenceGrade } = await import(`${dirName}/lib/genetic/grade`);
 
-  return repeatRunSimulationForComplexGrade(worldConfig, typesConfig, checkpoints, repeats);
+  return repeatRunSimulationForReferenceGrade(worldConfig, typesConfig, checkpoints, repeats);
 }
 
-export const simulationComplexGradeTaskSingle = async ([
-  id,
+export const referenceGradeTask = async ([
+  _,
   worldConfig,
   typesConfig,
   checkpoints,
   repeats,
-]: SimulationReferenceTaskConfig): Promise<number[]> => {
+]: ReferenceTaskConfig): Promise<number[]> => {
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
-  return repeatRunSimulationForComplexGrade(worldConfig, typesConfig, checkpoints, repeats);
+  return repeatRunSimulationForReferenceGrade(worldConfig, typesConfig, checkpoints, repeats);
 }
 
-export const simulationClusterGradeTaskMultiprocessing = async ([
-  id,
+export const clusterizationGradeMultiprocessingTask = async ([
+  _,
   worldConfig,
   typesConfig,
   weights,
   checkpoints,
   repeats,
-]: SimulationClusterizationTaskConfig): Promise<number[]> => {
+]: ClusterizationTaskConfig): Promise<number[]> => {
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');

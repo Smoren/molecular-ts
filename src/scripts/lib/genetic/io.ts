@@ -17,9 +17,9 @@ export function getGeneticMainConfig<TTaskConfig>(
   task: CalcMetricsTask<TTaskConfig>,
 ): SimulationGeneticMainConfig<TTaskConfig> {
   const result = readJsonFile(`data/input/${fileName}`) as SimulationGeneticMainConfig<TTaskConfig>;
-  result.runner.poolSize = poolSize;
-  result.runner.task = task;
-  result.runner.onTaskResult = () => process.stdout.write('.');
+  result.metrics.poolSize = poolSize;
+  result.metrics.task = task;
+  result.metrics.onTaskResult = () => process.stdout.write('.');
 
   return result;
 }

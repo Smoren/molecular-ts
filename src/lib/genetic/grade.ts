@@ -10,7 +10,7 @@ import { averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
 import type { ClusterizationWeightsConfig } from '../types/genetic';
 
-export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
+export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
   const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
   const sim = runner.simulation;
   const summaryMatrix: number[][] = [];
@@ -40,10 +40,10 @@ export function runSimulationForComplexGrade(worldConfig: WorldConfig, typesConf
   return averageMatrixColumns(summaryMatrix);
 }
 
-export function repeatRunSimulationForComplexGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[], repeats: number): number[] {
+export function repeatRunSimulationForReferenceGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[], repeats: number): number[] {
   const result = [];
   for (let i=0; i<repeats; i++) {
-    result.push(runSimulationForComplexGrade(worldConfig, typesConfig, checkpoints));
+    result.push(runSimulationForReferenceGrade(worldConfig, typesConfig, checkpoints));
   }
   return averageMatrixColumns(result);
 }

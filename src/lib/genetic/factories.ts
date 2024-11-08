@@ -7,8 +7,8 @@ import type {
 } from "genetic-search";
 import type {
   ClusterGradeMaximizeConfigFactoryConfig,
-  ComplexGeneticSearchConfigFactoryConfig,
-  ComplexRandomSearchConfigFactoryConfig,
+  ReferenceSearchConfigFactoryConfig,
+  ReferenceRandomSearchConfigFactoryConfig,
   SimulationGenome,
 } from '../types/genetic';
 import {
@@ -27,11 +27,11 @@ import {
   SourceMutationPopulateStrategy,
   SourceMutationStrategy,
 } from '../genetic/strategies';
-import { repeatRunSimulationForComplexGrade } from './grade';
+import { repeatRunSimulationForReferenceGrade } from './grade';
 
-export function createReferenceSearch(config: ComplexGeneticSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
-  config.runnerStrategyConfig.worldConfig = config.worldConfig;
+  config.metricsStrategyConfig.worldConfig = config.worldConfig;
 
   const [
     populateRandomTypesConfig,
@@ -43,11 +43,11 @@ export function createReferenceSearch(config: ComplexGeneticSearchConfigFactoryC
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatRunSimulationForComplexGrade(
+  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatRunSimulationForReferenceGrade(
     config.worldConfig,
     config.referenceTypesConfig,
-    config.runnerStrategyConfig.checkpoints,
-    config.runnerStrategyConfig.repeats,
+    config.metricsStrategyConfig.checkpoints,
+    config.metricsStrategyConfig.repeats,
   ), typesCount);
 
   if (config.targetClustersScore !== undefined) {
@@ -63,7 +63,7 @@ export function createReferenceSearch(config: ComplexGeneticSearchConfigFactoryC
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new RandomPopulateStrategy(populateRandomTypesConfig),
-    metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig),
+    metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
     mutation: new DefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),
@@ -86,7 +86,7 @@ export function createReferenceSearch(config: ComplexGeneticSearchConfigFactoryC
   return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
 }
 
-export function createReferenceRandomSearch(config: ComplexRandomSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+export function createReferenceRandomSearch(config: ReferenceRandomSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   if (config.referenceSummaryRowObject === undefined) {
     if (config.referenceTypesConfig.FREQUENCIES.length !== config.sourceTypesConfig.FREQUENCIES.length) {
       throw new Error('Reference and source types must have same length');
@@ -98,7 +98,7 @@ export function createReferenceRandomSearch(config: ComplexRandomSearchConfigFac
   }
 
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
-  config.runnerStrategyConfig.worldConfig = config.worldConfig;
+  config.metricsStrategyConfig.worldConfig = config.worldConfig;
 
   const [
     populateRandomTypesConfig,
@@ -110,11 +110,11 @@ export function createReferenceRandomSearch(config: ComplexRandomSearchConfigFac
     config.crossoverRandomizeConfig,
   ], typesCount);
 
-  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatRunSimulationForComplexGrade(
+  const summaryRowObject = config.referenceSummaryRowObject ?? convertSummaryMatrixRowToObject(repeatRunSimulationForReferenceGrade(
     config.worldConfig,
     config.referenceTypesConfig,
-    config.runnerStrategyConfig.checkpoints,
-    config.runnerStrategyConfig.repeats,
+    config.metricsStrategyConfig.checkpoints,
+    config.metricsStrategyConfig.repeats,
   ), typesCount);
 
   if (config.targetClustersScore !== undefined) {
@@ -134,7 +134,7 @@ export function createReferenceRandomSearch(config: ComplexRandomSearchConfigFac
       populateRandomTypesConfig,
       config.mutationStrategyConfig.probability,
     ),
-    metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig),
+    metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
     mutation: new SourceMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfig, config.sourceTypesConfig),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfig),

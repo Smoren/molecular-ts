@@ -1,7 +1,7 @@
 import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
-import type { ComplexGeneticSearchConfigFactoryConfig } from "@/lib/types/genetic";
+import type { ReferenceSearchConfigFactoryConfig } from "@/lib/types/genetic";
 import { getScoresSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,
@@ -13,7 +13,7 @@ import {
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
 import { createReferenceSearch } from "@/lib/genetic/factories";
-import { simulationComplexGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
+import { referenceGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getGenerationResultFilePath } from '@/scripts/lib/helpers';
 
@@ -41,10 +41,10 @@ export const actionReferenceSearch = async (...args: string[]) => {
     console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
 
-    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, simulationComplexGradeTaskMultiprocessing);
-    const config: ComplexGeneticSearchConfigFactoryConfig = {
+    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, referenceGradeMultiprocessingTask);
+    const config: ReferenceSearchConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
-      runnerStrategyConfig: mainConfig.runner,
+      metricsStrategyConfig: mainConfig.metrics,
       mutationStrategyConfig: mainConfig.mutation,
       populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
       mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),

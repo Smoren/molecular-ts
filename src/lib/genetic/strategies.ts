@@ -11,10 +11,10 @@ import type {
 import type {
   SimulationGenome,
   SimulationMultiprocessingMetricsStrategyConfig,
-  SimulationMetricsStrategyConfig, SimulationClusterizationTaskConfig, ClusterizationWeightsConfig,
+  SimulationMetricsStrategyConfig, ClusterizationTaskConfig, ClusterizationWeightsConfig,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
-import type { SimulationReferenceTaskConfig } from '../types/genetic';
+import type { ReferenceTaskConfig } from '../types/genetic';
 import {
   BaseCachedMultiprocessingMetricsStrategy,
   BaseMetricsStrategy,
@@ -150,32 +150,32 @@ export class SourceMutationStrategy extends DefaultMutationStrategy implements M
   }
 }
 
-export class ReferenceMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
-  protected createTaskInput(genome: SimulationGenome): SimulationReferenceTaskConfig {
+export class ReferenceMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig<ReferenceTaskConfig>, ReferenceTaskConfig> {
+  protected createTaskInput(genome: SimulationGenome): ReferenceTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
-export class ReferenceMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
-  protected createTaskInput(genome: SimulationGenome): SimulationReferenceTaskConfig {
+export class ReferenceMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>, ReferenceTaskConfig> {
+  protected createTaskInput(genome: SimulationGenome): ReferenceTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
-export class ReferenceCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
-  protected createTaskInput(genome: SimulationGenome): SimulationReferenceTaskConfig {
+export class ReferenceCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>, ReferenceTaskConfig> {
+  protected createTaskInput(genome: SimulationGenome): ReferenceTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 
-  protected getGenomeId(input: SimulationReferenceTaskConfig): number {
+  protected getGenomeId(input: ReferenceTaskConfig): number {
     return input[0];
   }
 }
 
-export class ClusterizationCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationClusterizationTaskConfig>, SimulationClusterizationTaskConfig> {
+export class ClusterizationCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
   private weights: ClusterizationWeightsConfig;
 
-  constructor(config: SimulationMultiprocessingMetricsStrategyConfig<SimulationClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
+  constructor(config: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
     super(config);
     this.weights = weights;
   }
@@ -184,11 +184,11 @@ export class ClusterizationCachedMultiprocessingMetricsStrategy extends BaseCach
     return new ClusterizationCachedMultiprocessingMetricsStrategy(this.config, this.weights);
   }
 
-  protected createTaskInput(genome: SimulationGenome): SimulationClusterizationTaskConfig {
+  protected createTaskInput(genome: SimulationGenome): ClusterizationTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.weights, this.config.checkpoints, this.config.repeats];
   }
 
-  protected getGenomeId(input: SimulationClusterizationTaskConfig): number {
+  protected getGenomeId(input: ClusterizationTaskConfig): number {
     return input[0];
   }
 }
