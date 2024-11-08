@@ -47,8 +47,8 @@ export const actionReferenceCalcSummary = async (...args: string[]) => {
 
 function parseArgs(argsParser: ArgsParser) {
   const geneticMainConfigFileName = argsParser.getString('mainConfigFileName', 'default-simulation-main-config');
-  const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
-  const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-genetic-reference-config');
+  const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
+  const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-reference-types-config');
 
   return {
     geneticMainConfigFileName,

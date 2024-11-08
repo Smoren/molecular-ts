@@ -104,16 +104,16 @@ function parseArgs(argsParser: ArgsParser) {
 
   const geneticMainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
-  const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-genetic-reference-config');
+  const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-reference-types-config');
   const referenceSummaryFileName = argsParser.get('referenceSummaryFileName', undefined);
-  const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-reference-weights');
+  const weightsFileName = argsParser.getString('weightsFileName', 'default-reference-weights');
 
-  const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-genetic-randomize-config');
+  const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-randomize-config');
   const populateRandomizeConfigFileName = argsParser.getString('populateRandomizeConfigFileName', randomizeConfigFileName);
   const mutationRandomizeConfigFileName = argsParser.getString('mutationRandomizeConfigFileName', randomizeConfigFileName);
   const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
 
-  const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
+  const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
 
   const targetClustersScore = argsParser.getInt('targetClustersScore', 1000000);
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);

@@ -103,13 +103,13 @@ function parseArgs(argsParser: ArgsParser) {
 
   const mainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
-  const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-genetic-randomize-config');
+  const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-randomize-config');
   const populateRandomizeConfigFileName = argsParser.getString('populateRandomizeConfigFileName', randomizeConfigFileName);
   const mutationRandomizeConfigFileName = argsParser.getString('mutationRandomizeConfigFileName', randomizeConfigFileName);
   const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
 
-  const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
-  const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-clusterization-weights');
+  const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
+  const weightsFileName = argsParser.getString('weightsFileName', 'default-clusterization-weights');
 
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = argsParser.getInt('composedFinalPopulation', 5);
