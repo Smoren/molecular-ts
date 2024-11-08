@@ -48,7 +48,7 @@ export function repeatRunSimulationForReferenceGrade(worldConfig: WorldConfig, t
   return averageMatrixColumns(result);
 }
 
-export function runSimulationForClusterGrade(
+export function runSimulationForClustersGrade(
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,
   weights: ClusterizationWeightsConfig,
@@ -75,7 +75,7 @@ export function runSimulationForClusterGrade(
   return averageMatrixColumns(summaryMatrix);
 }
 
-export function repeatRunSimulationForClusterGrade(
+export function repeatRunSimulationForClustersGrade(
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,
   weights: ClusterizationWeightsConfig,
@@ -84,7 +84,7 @@ export function repeatRunSimulationForClusterGrade(
 ): number[] {
   const result = [];
   for (let i=0; i<repeats; i++) {
-    result.push(runSimulationForClusterGrade(worldConfig, typesConfig, weights, checkpoints));
+    result.push(runSimulationForClustersGrade(worldConfig, typesConfig, weights, checkpoints));
   }
   return averageMatrixColumns(result);
 }

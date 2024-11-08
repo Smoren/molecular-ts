@@ -38,7 +38,7 @@ export const clusterizationGradeMultiprocessingTask = async ([
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');
-  const { repeatRunSimulationForClusterGrade } = await import(`${dirName}/lib/genetic/grade`);
+  const { repeatRunSimulationForClustersGrade } = await import(`${dirName}/lib/genetic/grade`);
 
-  return repeatRunSimulationForClusterGrade(worldConfig, typesConfig, weights, checkpoints, repeats);
+  return repeatRunSimulationForClustersGrade(worldConfig, typesConfig, weights, checkpoints, repeats);
 }
