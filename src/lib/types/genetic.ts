@@ -57,9 +57,9 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   runnerStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>;
   mutationStrategyConfig: BaseMutationStrategyConfig;
-  populateRandomizeConfig: RandomTypesConfig;
-  mutationRandomizeConfig: RandomTypesConfig;
-  crossoverRandomizeConfig: RandomTypesConfig;
+  populateRandomizeConfigCollection: RandomTypesConfig[];
+  mutationRandomizeConfigCollection: RandomTypesConfig[];
+  crossoverRandomizeConfigCollection: RandomTypesConfig[];
   worldConfig: WorldConfig;
   weightsConfig: ClusterizationWeightsConfig;
   typesCount: number;

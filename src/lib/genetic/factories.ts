@@ -146,22 +146,25 @@ export function createReferenceRandomSearch(config: ReferenceRandomSearchConfigF
 export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   config.runnerStrategyConfig.worldConfig = config.worldConfig;
 
-  const [
-    populateRandomTypesConfig,
-    mutationRandomTypesConfig,
-    crossoverRandomTypesConfig,
-  ] = setTypesCountToRandomizeConfigCollection([
-    config.populateRandomizeConfig,
-    config.mutationRandomizeConfig,
-    config.crossoverRandomizeConfig,
-  ], config.typesCount);
+  const populateRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
+    config.populateRandomizeConfigCollection,
+    config.typesCount,
+  );
+  const mutationRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
+    config.mutationRandomizeConfigCollection,
+    config.typesCount,
+  );
+  const crossoverRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
+    config.crossoverRandomizeConfigCollection,
+    config.typesCount,
+  );
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
-    populate: new RandomPopulateStrategy([populateRandomTypesConfig]),
+    populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
     metrics: new ClusterizationCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(),
-    mutation: new DefaultMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig]),
-    crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
+    mutation: new DefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
+    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
   };
 
   if (config.useComposedAlgo) {

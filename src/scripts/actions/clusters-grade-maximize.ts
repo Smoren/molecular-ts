@@ -8,7 +8,7 @@ import {
   getWorldConfig,
   getGeneticMainConfig,
   writeJsonFile,
-  getClusterizationWeights,
+  getClusterizationWeights, getRandomizeConfigCollection,
 } from "@/scripts/lib/genetic/io";
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
@@ -27,9 +27,9 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       typesCount,
       generationsCount,
       mainConfigFileName,
-      populateRandomizeConfigFileName,
-      mutationRandomizeConfigFileName,
-      crossoverRandomizeConfigFileName,
+      populateRandomizeConfigCollectionFileName,
+      mutationRandomizeConfigCollectionFileName,
+      crossoverRandomizeConfigCollectionFileName,
       worldConfigFileName,
       weightsFileName,
       useComposedAlgo,
@@ -44,9 +44,9 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       geneticSearchMacroConfig: mainConfig.macro,
       runnerStrategyConfig: mainConfig.metrics,
       mutationStrategyConfig: mainConfig.mutation,
-      populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
-      mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),
-      crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
+      populateRandomizeConfigCollection: getRandomizeConfigCollection(populateRandomizeConfigCollectionFileName),
+      mutationRandomizeConfigCollection: getRandomizeConfigCollection(mutationRandomizeConfigCollectionFileName),
+      crossoverRandomizeConfigCollection: getRandomizeConfigCollection(crossoverRandomizeConfigCollectionFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       weightsConfig: getClusterizationWeights(weightsFileName),
       typesCount,
@@ -103,10 +103,10 @@ function parseArgs(argsParser: ArgsParser) {
 
   const mainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
-  const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-randomize-config');
-  const populateRandomizeConfigFileName = argsParser.getString('populateRandomizeConfigFileName', randomizeConfigFileName);
-  const mutationRandomizeConfigFileName = argsParser.getString('mutationRandomizeConfigFileName', randomizeConfigFileName);
-  const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
+  const randomizeConfigCollectionFileName = argsParser.getString('randomizeConfigCollectionFileName', 'default-randomize-config-collection');
+  const populateRandomizeConfigCollectionFileName = argsParser.getString('populateRandomizeConfigCollectionFileName', randomizeConfigCollectionFileName);
+  const mutationRandomizeConfigCollectionFileName = argsParser.getString('mutationRandomizeConfigCollectionFileName', randomizeConfigCollectionFileName);
+  const crossoverRandomizeConfigCollectionFileName = argsParser.getString('crossoverRandomizeConfigCollectionFileName', randomizeConfigCollectionFileName);
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
   const weightsFileName = argsParser.getString('weightsFileName', 'default-clusterization-weights');
@@ -121,9 +121,9 @@ function parseArgs(argsParser: ArgsParser) {
     typesCount,
     generationsCount,
     mainConfigFileName,
-    populateRandomizeConfigFileName,
-    mutationRandomizeConfigFileName,
-    crossoverRandomizeConfigFileName,
+    populateRandomizeConfigCollectionFileName,
+    mutationRandomizeConfigCollectionFileName,
+    crossoverRandomizeConfigCollectionFileName,
     worldConfigFileName,
     weightsFileName,
     useComposedAlgo,
