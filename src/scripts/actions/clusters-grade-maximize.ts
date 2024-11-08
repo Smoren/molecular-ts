@@ -1,23 +1,21 @@
 import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
-import type { ComplexGeneticSearchConfigFactoryConfig } from "@/lib/types/genetic";
+import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/types/genetic";
 import { getScoresSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,
-  getTypesConfig,
-  getSummaryRowObject,
-  getReferenceWeights,
   getWorldConfig,
   getGeneticMainConfig,
   writeJsonFile,
+  getClusterizationWeights,
 } from "@/scripts/lib/genetic/io";
-import { createComplexGeneticSearch } from "@/lib/genetic/factories";
-import { simulationComplexGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
+import { createClusterGradeMaximize } from "@/lib/genetic/factories";
+import { simulationClusterGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getGenerationResultFilePath } from '@/scripts/lib/helpers';
 
-export const actionComplexGeneticSearch = async (...args: string[]) => {
+export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
 
@@ -26,38 +24,38 @@ export const actionComplexGeneticSearch = async (...args: string[]) => {
     const argsMap = parseArgs(argsParser);
     const {
       poolSize,
+      typesCount,
       generationsCount,
-      geneticMainConfigFileName,
+      mainConfigFileName,
       populateRandomizeConfigFileName,
       mutationRandomizeConfigFileName,
       crossoverRandomizeConfigFileName,
-      referenceConfigFileName,
-      referenceSummaryFileName,
-      weightsFileName,
       worldConfigFileName,
-      targetClustersScore,
+      weightsFileName,
+      useComposedAlgo,
+      composedFinalPopulation,
       useAnsiCursor,
     } = argsMap;
     console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
 
-    const mainConfig = getGeneticMainConfig(geneticMainConfigFileName, poolSize, simulationComplexGradeTaskMultiprocessing);
-    const config: ComplexGeneticSearchConfigFactoryConfig = {
+    const mainConfig = getGeneticMainConfig(mainConfigFileName, poolSize, simulationClusterGradeTaskMultiprocessing);
+    const config: ClusterGradeMaximizeConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
       runnerStrategyConfig: mainConfig.runner,
       mutationStrategyConfig: mainConfig.mutation,
       populateRandomizeConfig: getRandomizeConfig(populateRandomizeConfigFileName),
       mutationRandomizeConfig: getRandomizeConfig(mutationRandomizeConfigFileName),
       crossoverRandomizeConfig: getRandomizeConfig(crossoverRandomizeConfigFileName),
-      referenceTypesConfig: getTypesConfig(referenceConfigFileName),
-      referenceSummaryRowObject: getSummaryRowObject(referenceSummaryFileName),
-      weights: getReferenceWeights(weightsFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
-      targetClustersScore,
+      weightsConfig: getClusterizationWeights(weightsFileName),
+      typesCount,
+      useComposedAlgo,
+      composedFinalPopulation,
     };
 
     console.log('[START] Building genetic search');
-    const geneticSearch = createComplexGeneticSearch(config);
+    const geneticSearch = createClusterGradeMaximize(config);
     console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');
@@ -100,13 +98,10 @@ export const actionComplexGeneticSearch = async (...args: string[]) => {
 
 function parseArgs(argsParser: ArgsParser) {
   const poolSize = argsParser.getInt('poolSize', os.cpus().length);
+  const typesCount = argsParser.getInt('typesCount', 3);
   const generationsCount = argsParser.getInt('generationsCount', 100);
 
-  const geneticMainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
-
-  const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-genetic-reference-config');
-  const referenceSummaryFileName = argsParser.get('referenceSummaryFileName', undefined);
-  const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-reference-weights');
+  const mainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
   const randomizeConfigFileName = argsParser.getString('randomizeConfigFileName', 'default-genetic-randomize-config');
   const populateRandomizeConfigFileName = argsParser.getString('populateRandomizeConfigFileName', randomizeConfigFileName);
@@ -114,22 +109,25 @@ function parseArgs(argsParser: ArgsParser) {
   const crossoverRandomizeConfigFileName = argsParser.getString('crossoverRandomizeConfigFileName', randomizeConfigFileName);
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-genetic-world-config');
+  const weightsFileName = argsParser.getString('weightsFileName', 'default-genetic-clusterization-weights');
 
-  const targetClustersScore = argsParser.getInt('targetClustersScore', 1000000);
+  const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
+  const composedFinalPopulation = argsParser.getInt('composedFinalPopulation', 5);
+
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
   return {
     poolSize,
+    typesCount,
     generationsCount,
-    geneticMainConfigFileName,
+    mainConfigFileName,
     populateRandomizeConfigFileName,
     mutationRandomizeConfigFileName,
     crossoverRandomizeConfigFileName,
-    referenceConfigFileName,
-    referenceSummaryFileName,
-    weightsFileName,
     worldConfigFileName,
-    targetClustersScore,
+    weightsFileName,
+    useComposedAlgo,
+    composedFinalPopulation,
     useAnsiCursor,
   };
 }

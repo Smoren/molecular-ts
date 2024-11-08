@@ -12,11 +12,11 @@ import {
   getGeneticMainConfig,
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
-import { createComplexRandomSearch } from "@/lib/genetic/factories";
+import { createReferenceRandomSearch } from "@/lib/genetic/factories";
 import { simulationComplexGradeTaskMultiprocessing } from "@/lib/genetic/multiprocessing";
 import { getGenerationResultFilePath } from '@/scripts/lib/helpers';
 
-export const actionComplexRandomSearch = async (...args: string[]) => {
+export const actionReferenceRandomSearch = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
 
@@ -57,7 +57,7 @@ export const actionComplexRandomSearch = async (...args: string[]) => {
     };
 
     console.log('[START] Building genetic search');
-    const geneticSearch = createComplexRandomSearch(config);
+    const geneticSearch = createReferenceRandomSearch(config);
     console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');

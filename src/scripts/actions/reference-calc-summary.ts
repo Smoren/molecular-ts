@@ -8,7 +8,7 @@ import {
 import { convertSummaryMatrixRowToObject } from "@/lib/genetic/helpers";
 import { repeatRunSimulationForComplexGrade } from '@/lib/genetic/grade';
 
-export const actionComplexCalcSummary = async (...args: string[]) => {
+export const actionReferenceCalcSummary = async (...args: string[]) => {
   const ts = Date.now();
 
   try {

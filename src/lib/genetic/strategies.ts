@@ -30,7 +30,7 @@ import {
 import { arraySum, createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
 
-export class SimulationRandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
+export class RandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(randomizeConfig: RandomTypesConfig) {
@@ -52,7 +52,7 @@ export class SimulationRandomPopulateStrategy implements PopulateStrategyInterfa
   }
 }
 
-export class SimulationSourceMutationPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
+export class SourceMutationPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfig: TypesConfig;
   private readonly randomizeConfig: RandomTypesConfig;
   private readonly probability: number;
@@ -79,7 +79,7 @@ export class SimulationSourceMutationPopulateStrategy implements PopulateStrateg
   }
 }
 
-export class SimulationSubMatrixCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
+export class SubmatrixCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
   private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(randomizeConfig: RandomTypesConfig) {
@@ -94,7 +94,7 @@ export class SimulationSubMatrixCrossoverStrategy implements CrossoverStrategyIn
   }
 }
 
-export class SimulationRandomCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
+export class RandomCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
   public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
@@ -102,13 +102,13 @@ export class SimulationRandomCrossoverStrategy implements CrossoverStrategyInter
   }
 }
 
-export class SimulationComposedCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
+export class ComposedCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
   private readonly randomStrategy: CrossoverStrategyInterface<SimulationGenome>;
   private readonly subMatrixStrategy: CrossoverStrategyInterface<SimulationGenome>;
 
   constructor(randomizeConfig: RandomTypesConfig) {
-    this.randomStrategy = new SimulationRandomCrossoverStrategy();
-    this.subMatrixStrategy = new SimulationSubMatrixCrossoverStrategy(randomizeConfig);
+    this.randomStrategy = new RandomCrossoverStrategy();
+    this.subMatrixStrategy = new SubmatrixCrossoverStrategy(randomizeConfig);
   }
 
   public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
@@ -120,7 +120,7 @@ export class SimulationComposedCrossoverStrategy implements CrossoverStrategyInt
   }
 }
 
-export class SimulationDefaultMutationStrategy extends BaseMutationStrategy<SimulationGenome, BaseMutationStrategyConfig> implements MutationStrategyInterface<SimulationGenome> {
+export class DefaultMutationStrategy extends BaseMutationStrategy<SimulationGenome, BaseMutationStrategyConfig> implements MutationStrategyInterface<SimulationGenome> {
   private readonly randomizeConfig: RandomTypesConfig;
 
   constructor(config: BaseMutationStrategyConfig, randomizeConfig: RandomTypesConfig) {
@@ -137,7 +137,7 @@ export class SimulationDefaultMutationStrategy extends BaseMutationStrategy<Simu
   }
 }
 
-export class SimulationSourceMutationStrategy extends SimulationDefaultMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
+export class SourceMutationStrategy extends DefaultMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfig: TypesConfig;
 
   constructor(config: BaseMutationStrategyConfig, randomizeConfig: RandomTypesConfig, sourceTypesConfig: TypesConfig) {
@@ -150,19 +150,19 @@ export class SimulationSourceMutationStrategy extends SimulationDefaultMutationS
   }
 }
 
-export class SimulationSimpleMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
+export class ReferenceMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
   protected createTaskInput(genome: SimulationGenome): SimulationReferenceTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
-export class SimulationMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
+export class ReferenceMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
   protected createTaskInput(genome: SimulationGenome): SimulationReferenceTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
-export class SimulationCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
+export class ReferenceCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<SimulationReferenceTaskConfig>, SimulationReferenceTaskConfig> {
   protected createTaskInput(genome: SimulationGenome): SimulationReferenceTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
@@ -193,7 +193,7 @@ export class ClusterizationCachedMultiprocessingMetricsStrategy extends BaseCach
   }
 }
 
-export class SimulationClusterFitnessStrategy implements FitnessStrategyInterface {
+export class ClusterizationFitnessStrategy implements FitnessStrategyInterface {
   score(results: GenerationMetricsMatrix): GenerationFitnessColumn {
     return results.map((result) => arraySum(result));
   }
