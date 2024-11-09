@@ -22,7 +22,7 @@ import {
   ReferenceCachedMultiprocessingMetricsStrategy,
   ClusterizationFitnessStrategy,
   ComposedCrossoverStrategy,
-  DefaultMutationStrategy,
+  DynamicProbabilityMutationStrategy,
   RandomPopulateStrategy,
   SourceMutationPopulateStrategy,
   SourceMutationStrategy,
@@ -65,7 +65,7 @@ export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig
     populate: new RandomPopulateStrategy([populateRandomTypesConfig]),
     metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
-    mutation: new DefaultMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig]),
+    mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig]),
     crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
   };
 
@@ -132,7 +132,7 @@ export function createReferenceRandomSearch(config: ReferenceRandomSearchConfigF
     populate: new SourceMutationPopulateStrategy(
       config.sourceTypesConfig,
       [populateRandomTypesConfig],
-      config.mutationStrategyConfig.probability,
+      config.mutationStrategyConfig.probabilities,
     ),
     metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
@@ -163,7 +163,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
     metrics: new ClusterizationCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(),
-    mutation: new DefaultMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
+    mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
   };
 

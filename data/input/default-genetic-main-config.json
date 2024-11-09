@@ -9,7 +9,7 @@
     "repeats": 2
   },
   "mutation": {
-    "probability": 0.02
+    "probabilities": [0.01, 0.03, 0.2]
   },
   "initial": {
     "ATOMS_COUNT": 800,

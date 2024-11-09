@@ -11,7 +11,7 @@ import type {
 import type {
   SimulationGenome,
   SimulationMultiprocessingMetricsStrategyConfig,
-  SimulationMetricsStrategyConfig, ClusterizationTaskConfig, ClusterizationWeightsConfig,
+  SimulationMetricsStrategyConfig, ClusterizationTaskConfig, ClusterizationWeightsConfig, DynamicProbabilityMutationStrategyConfig,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
 import type { ReferenceTaskConfig } from '../types/genetic';
@@ -57,21 +57,22 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface<Simulat
 export class SourceMutationPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfig: TypesConfig;
   private readonly randomizeConfigCollection: RandomTypesConfig[];
-  private readonly probability: number;
+  private readonly probabilities: number[];
 
-  constructor(sourceTypesConfig: TypesConfig, randomizeConfigCollection: RandomTypesConfig[], probability: number) {
+  constructor(sourceTypesConfig: TypesConfig, randomizeConfigCollection: RandomTypesConfig[], probabilities: number[]) {
     this.sourceTypesConfig = sourceTypesConfig;
     this.randomizeConfigCollection = randomizeConfigCollection;
-    this.probability = probability;
+    this.probabilities = probabilities;
   }
 
   public populate(size: number, nextId: () => number): Population<SimulationGenome> {
     const population: Population<SimulationGenome> = [];
     for (let i = 0; i < size; i++) {
       const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
+      const probability = getRandomArrayItem(this.probabilities);
       const inputTypesConfig = fullCopyObject(this.sourceTypesConfig);
       const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig);
-      const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.probability);
+      const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
       population.push({
         id: nextId(),
@@ -124,28 +125,30 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface<Sim
   }
 }
 
-export class DefaultMutationStrategy extends BaseMutationStrategy<SimulationGenome, BaseMutationStrategyConfig> implements MutationStrategyInterface<SimulationGenome> {
+export class DynamicProbabilityMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
+  private readonly config: DynamicProbabilityMutationStrategyConfig;
   private readonly randomizeConfigCollection: RandomTypesConfig[];
 
-  constructor(config: BaseMutationStrategyConfig, randomizeConfigCollection: RandomTypesConfig[]) {
-    super(config);
+  constructor(config: DynamicProbabilityMutationStrategyConfig, randomizeConfigCollection: RandomTypesConfig[]) {
+    this.config = config;
     this.randomizeConfigCollection = randomizeConfigCollection;
   }
 
   mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
     const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
+    const probability = getRandomArrayItem(this.config.probabilities);
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
     const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig);
-    const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, this.config.probability);
+    const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
     return { id: newGenomeId, typesConfig: mutatedTypesConfig };
   }
 }
 
-export class SourceMutationStrategy extends DefaultMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
+export class SourceMutationStrategy extends DynamicProbabilityMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfig: TypesConfig;
 
-  constructor(config: BaseMutationStrategyConfig, randomizeConfigCollection: RandomTypesConfig[], sourceTypesConfig: TypesConfig) {
+  constructor(config: DynamicProbabilityMutationStrategyConfig, randomizeConfigCollection: RandomTypesConfig[], sourceTypesConfig: TypesConfig) {
     super(config, randomizeConfigCollection);
     this.sourceTypesConfig = sourceTypesConfig;
   }

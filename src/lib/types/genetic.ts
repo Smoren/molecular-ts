@@ -24,10 +24,14 @@ export type SimulationGenome = {
   typesConfig: TypesConfig;
 }
 
+export type DynamicProbabilityMutationStrategyConfig = {
+  probabilities: number[];
+}
+
 export type ReferenceSearchConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   metricsStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>;
-  mutationStrategyConfig: BaseMutationStrategyConfig;
+  mutationStrategyConfig: DynamicProbabilityMutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
@@ -41,7 +45,7 @@ export type ReferenceSearchConfigFactoryConfig = {
 export type ReferenceRandomSearchConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   metricsStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>;
-  mutationStrategyConfig: BaseMutationStrategyConfig;
+  mutationStrategyConfig: DynamicProbabilityMutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
@@ -56,7 +60,7 @@ export type ReferenceRandomSearchConfigFactoryConfig = {
 export type ClusterGradeMaximizeConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   runnerStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>;
-  mutationStrategyConfig: BaseMutationStrategyConfig;
+  mutationStrategyConfig: DynamicProbabilityMutationStrategyConfig;
   populateRandomizeConfigCollection: RandomTypesConfig[];
   mutationRandomizeConfigCollection: RandomTypesConfig[];
   crossoverRandomizeConfigCollection: RandomTypesConfig[];
@@ -71,7 +75,7 @@ export type SimulationGeneticMainConfig<TTaskConfig> = {
   macro: GeneticSearchConfig;
   initial: InitialConfig;
   metrics: SimulationMultiprocessingMetricsStrategyConfig<TTaskConfig>;
-  mutation: BaseMutationStrategyConfig;
+  mutation: DynamicProbabilityMutationStrategyConfig;
 }
 
 export type SimulationMainConfig<TTaskConfig> = {
