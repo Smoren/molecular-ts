@@ -22,6 +22,8 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
     .map((compound) => createCompoundGraph(compound, typesCount));
   const clusters = clusterGraphs(graphs);
   const clusterGrades: CompoundsClusterGrade[] = clusters.map((cluster) => calcCompoundsClusterGrade(cluster));
+  // TODO считать средний параметрический вектор всех кластеров, считать расстояния до него от каждого кластера
+  // TODO таким образом повышаем разнообразие кластеров
 
   clusterGrades.sort((lhs, rhs) => rhs.size - lhs.size);
   const inputCount = compounds.length;
