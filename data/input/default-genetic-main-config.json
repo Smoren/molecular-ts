@@ -1,6 +1,6 @@
 {
   "macro": {
-    "populationSize": 100,
+    "populationSize": 200,
     "survivalRate": 0.5,
     "crossoverRate": 0.5
   },
@@ -9,7 +9,7 @@
     "repeats": 2
   },
   "mutation": {
-    "probabilities": [0.01, 0.03, 0.2]
+    "probabilities": [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5]
   },
   "initial": {
     "ATOMS_COUNT": 800,
