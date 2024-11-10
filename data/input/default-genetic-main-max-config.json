@@ -5,15 +5,15 @@
     "crossoverRate": 0.5
   },
   "metrics": {
-    "checkpoints": [200, 1, 1, 1, 200, 1, 1, 1, 50, 1, 1, 1, 50, 1, 1, 1, 20, 1, 1, 1],
+    "checkpoints": [200, 1, 1, 1, 200, 1, 1, 1, 200, 1, 1, 1, 50, 1, 1, 1, 50, 1, 1, 1, 20, 1, 1, 1],
     "repeats": 3
   },
   "mutation": {
-    "probabilities": [0.01, 0.03, 0.2]
+    "probabilities": [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5]
   },
   "initial": {
-    "ATOMS_COUNT": 800,
+    "ATOMS_COUNT": 2000,
     "MIN_POSITION": [0, 0],
-    "MAX_POSITION": [1800, 1800]
+    "MAX_POSITION": [2500, 2500]
   }
 }

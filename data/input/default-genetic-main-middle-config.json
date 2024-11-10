@@ -1,12 +1,12 @@
 {
   "macro": {
-    "populationSize": 20,
+    "populationSize": 1000,
     "survivalRate": 0.3,
     "crossoverRate": 0.5
   },
   "metrics": {
-    "checkpoints": [30, 1, 1, 1, 50, 1, 1, 1, 50, 1, 1, 1, 20, 1, 1, 1],
-    "repeats": 1
+    "checkpoints": [200, 1, 1, 1, 200, 1, 1, 1, 50, 1, 1, 1, 50, 1, 1, 1, 20, 1, 1, 1],
+    "repeats": 3
   },
   "mutation": {
     "probabilities": [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5]
