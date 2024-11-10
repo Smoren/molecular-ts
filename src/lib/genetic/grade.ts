@@ -6,7 +6,7 @@ import {
 } from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../types/analysis';
-import { averageMatrixColumns } from '../math/operations';
+import { arraySum, averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
 import type { ClusterizationWeightsConfig } from '../types/genetic';
 
@@ -62,13 +62,19 @@ export function runSimulationForClustersGrade(
     runner.runSteps(stepsCount);
 
     const compounds = sim.exportCompounds();
+    const relativeCompoundedAtomsCount = arraySum(compounds.map((compound) => compound.size)) / sim.atoms.length;
+    const relativeLinksCount = sim.links.length / sim.atoms.length;
     const clustersSummary = gradeCompoundClusters(
       compounds,
       typesConfig.FREQUENCIES.length,
       weights.minCompoundSize,
     );
     const clustersScore = scoreCompoundClustersSummary(clustersSummary, weights);
-    const rawMatrix = [clustersScore];
+    const rawMatrix = [
+      clustersScore,
+      relativeCompoundedAtomsCount ** weights.relativeCompoundedAtomsCountWeight,
+      relativeLinksCount ** weights.relativeLinksCountWeight,
+    ];
     summaryMatrix.push(rawMatrix);
   }
 

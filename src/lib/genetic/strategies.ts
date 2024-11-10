@@ -1,9 +1,8 @@
 import type {
-  BaseMutationStrategyConfig,
   CrossoverStrategyInterface,
   FitnessStrategyInterface,
   GenerationFitnessColumn,
-  GenerationMetricsMatrix, MetricsStrategyConfig,
+  GenerationMetricsMatrix,
   MutationStrategyInterface,
   PopulateStrategyInterface,
   Population,
@@ -11,7 +10,10 @@ import type {
 import type {
   SimulationGenome,
   SimulationMultiprocessingMetricsStrategyConfig,
-  SimulationMetricsStrategyConfig, ClusterizationTaskConfig, ClusterizationWeightsConfig, DynamicProbabilityMutationStrategyConfig,
+  SimulationMetricsStrategyConfig,
+  ClusterizationTaskConfig,
+  ClusterizationWeightsConfig,
+  DynamicProbabilityMutationStrategyConfig,
 } from '../types/genetic';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
 import type { ReferenceTaskConfig } from '../types/genetic';
@@ -19,7 +21,6 @@ import {
   BaseCachedMultiprocessingMetricsStrategy,
   BaseMetricsStrategy,
   BaseMultiprocessingMetricsStrategy,
-  BaseMutationStrategy,
 } from "genetic-search";
 import {
   createTransparentTypesConfig,
@@ -27,9 +28,10 @@ import {
   randomCrossTypesConfigs,
   randomizeTypesConfig,
 } from '../config/types';
-import { arraySum, createRandomInteger } from '../math';
+import { createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
-import { getRandomArrayItem } from "@/lib/math/random";
+import { getRandomArrayItem } from "../math/random";
+import { arrayProduct } from "../math/operations";
 
 export class RandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly randomizeConfigCollection: RandomTypesConfig[];
@@ -203,6 +205,6 @@ export class ClusterizationCachedMultiprocessingMetricsStrategy extends BaseCach
 
 export class ClusterizationFitnessStrategy implements FitnessStrategyInterface {
   score(results: GenerationMetricsMatrix): GenerationFitnessColumn {
-    return results.map((result) => arraySum(result));
+    return results.map((result) => arrayProduct(result));
   }
 }

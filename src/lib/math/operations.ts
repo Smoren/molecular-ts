@@ -109,6 +109,10 @@ export function arraySum(input: number[]): number {
   return input.reduce((acc, val) => acc + val, 0);
 }
 
+export function arrayProduct(input: number[]): number {
+  return input.reduce((acc, val) => acc * val, 1);
+}
+
 export function tensorUnaryOperation<T>(operand: Tensor<T>, operation: (x: T) => T): Tensor<T> {
   const result: Tensor<T> = [];
   for (const item of operand) {
