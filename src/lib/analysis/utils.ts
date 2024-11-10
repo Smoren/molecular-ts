@@ -156,5 +156,7 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
     differenceWeight: 1,
     radiusWeight: 0.5,
     speedWeight: 0.5,
+    relativeCompoundedAtomsCountWeight: 1,
+    relativeLinksCountWeight: 1,
   };
 }
