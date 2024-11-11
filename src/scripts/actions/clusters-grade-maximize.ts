@@ -13,7 +13,7 @@ import {
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
-import { getGenerationResultFilePath } from '@/scripts/lib/helpers';
+import { getGenerationResultFilePath, getPopulationFilePath } from '@/scripts/lib/helpers';
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -67,9 +67,12 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     const fitConfig: GeneticSearchFitConfig = {
       generationsCount,
       beforeStep: () => {
+        writeJsonFile(getPopulationFilePath(), geneticSearch.population);
         stdoutInterceptor.startCountDots(formatString);
       },
       afterStep: (i, scores) => {
+        stdoutInterceptor.finish();
+
         const [bestScore, secondScore, meanScore, medianScore, worstScore] = getScoresSummary(scores);
 
         const bestGenome = geneticSearch.bestGenome;
@@ -83,7 +86,6 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
             geneticSearch.bestGenome,
           );
         }
-        stdoutInterceptor.finish();
       },
     }
 

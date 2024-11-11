@@ -27,3 +27,7 @@ export function getGenerationResultFilePath(
   const generationIndexStr = addLeadingZeros(generationIndex+1, String(totalGenerations).length);
   return `data/output/${runId}_generation_${generationIndexStr}_id_${bestId}_score_${Math.round(bestScore)}.json`;
 }
+
+export function getPopulationFilePath(): string {
+  return `data/output/population.json`;
+}

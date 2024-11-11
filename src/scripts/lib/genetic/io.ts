@@ -72,7 +72,7 @@ export function readJsonFile(path: string) {
   return JSON.parse(fs.readFileSync(path, 'utf8'));
 }
 
-export function writeJsonFile(path: string, data: Record<number | string, unknown>) {
+export function writeJsonFile(path: string, data: Record<number | string, unknown> | unknown[]) {
   path = path.match(/\.json$/) ? path : `${path}.json`;
   fs.writeFileSync(path, formatJsonString(JSON.stringify(data, null, 4)));
 }
