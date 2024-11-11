@@ -64,12 +64,12 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
     const formatString = (count: number) => `Genomes handled: ${count}`;
 
-    // TODO before step
     const fitConfig: GeneticSearchFitConfig = {
       generationsCount,
+      beforeStep: () => {
+        stdoutInterceptor.startCountDots(formatString);
+      },
       afterStep: (i, scores) => {
-        stdoutInterceptor.finish();
-
         const [bestScore, secondScore, meanScore, medianScore, worstScore] = getScoresSummary(scores);
 
         const bestGenome = geneticSearch.bestGenome;
@@ -83,7 +83,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
             geneticSearch.bestGenome,
           );
         }
-        stdoutInterceptor.startCountDots(formatString);
+        stdoutInterceptor.finish();
       },
     }
 
