@@ -4,16 +4,15 @@ import { ArgsParser } from "@/scripts/lib/router";
 import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/types/genetic";
 import { getScoresSummary } from "@/scripts/lib/genetic/helpers";
 import {
-  getRandomizeConfig,
   getWorldConfig,
   getGeneticMainConfig,
   writeJsonFile,
-  getClusterizationWeights, getRandomizeConfigCollection,
+  getClusterizationWeights, getRandomizeConfigCollection, getPopulation,
 } from "@/scripts/lib/genetic/io";
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
-import { getGenerationResultFilePath, getPopulationFilePath } from '@/scripts/lib/helpers';
+import { getGenerationResultFilePath, getPopulationOutputFilePath } from '@/scripts/lib/helpers';
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -32,6 +31,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       crossoverRandomizeConfigCollectionFileName,
       worldConfigFileName,
       weightsFileName,
+      populationFileName,
       useComposedAlgo,
       composedFinalPopulation,
       useAnsiCursor,
@@ -49,6 +49,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       crossoverRandomizeConfigCollection: getRandomizeConfigCollection(crossoverRandomizeConfigCollectionFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       weightsConfig: getClusterizationWeights(weightsFileName),
+      population: getPopulation(populationFileName),
       typesCount,
       useComposedAlgo,
       composedFinalPopulation,
@@ -67,7 +68,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     const fitConfig: GeneticSearchFitConfig = {
       generationsCount,
       beforeStep: () => {
-        writeJsonFile(getPopulationFilePath(), geneticSearch.population);
+        writeJsonFile(getPopulationOutputFilePath(), geneticSearch.population);
         stdoutInterceptor.startCountDots(formatString);
       },
       afterStep: (i, scores) => {
@@ -87,7 +88,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
           );
         }
       },
-    }
+    };
 
     stdoutInterceptor.startCountDots(formatString);
     await geneticSearch.fit(fitConfig);
@@ -111,6 +112,7 @@ function parseArgs(argsParser: ArgsParser) {
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
   const weightsFileName = argsParser.getString('weightsFileName', 'default-clusterization-weights');
+  const populationFileName = argsParser.getNullableString('populationFileName');
 
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = argsParser.getInt('composedFinalPopulation', 5);
@@ -127,6 +129,7 @@ function parseArgs(argsParser: ArgsParser) {
     crossoverRandomizeConfigCollectionFileName,
     worldConfigFileName,
     weightsFileName,
+    populationFileName,
     useComposedAlgo,
     composedFinalPopulation,
     useAnsiCursor,

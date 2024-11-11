@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import type { CalcMetricsTask } from "genetic-search";
+import type { CalcMetricsTask, Population } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/types/analysis";
@@ -7,9 +7,11 @@ import type {
   ClusterizationWeightsConfig,
   SimulationGeneticMainConfig,
   SimulationMainConfig,
+  SimulationGenome,
 } from "@/lib/types/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
+import { getPopulationInputFilePath, getPopulationOutputFilePath } from "@/scripts/lib/helpers";
 
 export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
@@ -60,6 +62,13 @@ export function getReferenceWeights(fileName: string): TotalSummaryWeights {
 
 export function getClusterizationWeights(fileName: string): ClusterizationWeightsConfig {
   return readJsonFile(`data/input/${fileName}`) as ClusterizationWeightsConfig;
+}
+
+export function getPopulation(fileName?: string): Population<SimulationGenome> | undefined {
+  if (fileName === undefined) {
+    return undefined;
+  }
+  return readJsonFile(getPopulationInputFilePath(fileName)) as Population<SimulationGenome>;
 }
 
 export function readJsonFile(path: string) {

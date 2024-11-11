@@ -55,6 +55,14 @@ export class ArgsParser {
     return this.get(key, defaultValue) as string;
   }
 
+  getNullableString(key: string): string | undefined {
+    const value = this.get(key);
+    if (value === undefined) {
+      return undefined;
+    }
+    return `${value}`;
+  }
+
   getInt(key: string, defaultValue: number): number {
     const value = this.get(key);
     if (value === undefined) {

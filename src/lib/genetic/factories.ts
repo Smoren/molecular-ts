@@ -167,6 +167,8 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
   };
 
+  let result: GeneticSearchInterface<SimulationGenome>;
+
   if (config.useComposedAlgo) {
     const composedConfig: ComposedGeneticSearchConfig = {
       eliminators: {
@@ -181,8 +183,14 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
       },
     };
 
-    return new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
+    result = new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
+  } else {
+    result = new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
   }
 
-  return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
+  if (config.population !== undefined) {
+    result.population = config.population;
+  }
+
+  return result;
 }

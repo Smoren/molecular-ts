@@ -2,7 +2,7 @@ import type {
   BaseMutationStrategyConfig,
   GeneticSearchConfig,
   MetricsStrategyConfig,
-  MultiprocessingMetricsStrategyConfig,
+  MultiprocessingMetricsStrategyConfig, Population,
 } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from './config';
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from '../types/analysis';
@@ -69,6 +69,7 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   typesCount: number;
   useComposedAlgo: boolean;
   composedFinalPopulation: number;
+  population?: Population<SimulationGenome>;
 }
 
 export type SimulationGeneticMainConfig<TTaskConfig> = {
