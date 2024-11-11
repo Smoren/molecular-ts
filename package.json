@@ -11,7 +11,7 @@
     "test": "jest",
     "tool": "tsx --no-warnings src/scripts/tool.ts",
     "calc": "npm run tool calc-simulation-summary",
-    "cluster": "npm run tool clusters-grade-maximize poolSize=1 generationsCount=10000 typesCount=3 mainConfigFileName=default-genetic-main-min-config populationFileName=population"
+    "cluster": "npm run tool clusters-grade-maximize"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -30,7 +30,7 @@
     "unplugin-vue-macros": "^2.7.9",
     "vue": "^3.4.15",
     "itertools-ts": "^1.27.1",
-    "genetic-search": "^3.0"
+    "genetic-search": "^3.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
