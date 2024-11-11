@@ -32,6 +32,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       worldConfigFileName,
       weightsFileName,
       populationFileName,
+      useCache,
       useComposedAlgo,
       composedFinalPopulation,
       useAnsiCursor,
@@ -51,6 +52,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       weightsConfig: getClusterizationWeights(weightsFileName),
       population: getPopulation(populationFileName),
       typesCount,
+      useCache,
       useComposedAlgo,
       composedFinalPopulation,
     };
@@ -114,6 +116,7 @@ function parseArgs(argsParser: ArgsParser) {
   const weightsFileName = argsParser.getString('weightsFileName', 'default-clusterization-weights');
   const populationFileName = argsParser.getNullableString('populationFileName');
 
+  const useCache = argsParser.getBool('useCache', true);
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = argsParser.getInt('composedFinalPopulation', 5);
 
@@ -130,6 +133,7 @@ function parseArgs(argsParser: ArgsParser) {
     worldConfigFileName,
     weightsFileName,
     populationFileName,
+    useCache,
     useComposedAlgo,
     composedFinalPopulation,
     useAnsiCursor,

@@ -183,6 +183,23 @@ export class ReferenceCachedMultiprocessingMetricsStrategy extends BaseCachedMul
   }
 }
 
+export class ClusterizationMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
+  private weights: ClusterizationWeightsConfig;
+
+  constructor(config: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
+    super(config);
+    this.weights = weights;
+  }
+
+  clone(): ClusterizationMultiprocessingMetricsStrategy {
+    return new ClusterizationMultiprocessingMetricsStrategy(this.config, this.weights);
+  }
+
+  protected createTaskInput(genome: SimulationGenome): ClusterizationTaskConfig {
+    return [genome.id, this.config.worldConfig, genome.typesConfig, this.weights, this.config.checkpoints, this.config.repeats];
+  }
+}
+
 export class ClusterizationCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
   private weights: ClusterizationWeightsConfig;
 

@@ -67,6 +67,7 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   worldConfig: WorldConfig;
   weightsConfig: ClusterizationWeightsConfig;
   typesCount: number;
+  useCache: boolean;
   useComposedAlgo: boolean;
   composedFinalPopulation: number;
   population?: Population<SimulationGenome>;
