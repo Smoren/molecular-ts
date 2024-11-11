@@ -3,6 +3,7 @@ import type {
   FitnessStrategyInterface,
   GenerationFitnessColumn,
   GenerationMetricsMatrix,
+  IdGeneratorInterface,
   MutationStrategyInterface,
   PopulateStrategyInterface,
   Population,
@@ -40,12 +41,12 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface<Simulat
     this.randomizeConfigCollection = randomizeConfigCollection;
   }
 
-  public populate(size: number, nextId: () => number): Population<SimulationGenome> {
+  public populate(size: number, idGenerator: IdGeneratorInterface<SimulationGenome>): Population<SimulationGenome> {
     const population: Population<SimulationGenome> = [];
     for (let i = 0; i < size; i++) {
       const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
       population.push({
-        id: nextId(),
+        id: idGenerator.nextId(),
         typesConfig: randomizeTypesConfig(
           randomizeConfig,
           createTransparentTypesConfig(randomizeConfig.TYPES_COUNT),
@@ -67,7 +68,7 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
     this.probabilities = probabilities;
   }
 
-  public populate(size: number, nextId: () => number): Population<SimulationGenome> {
+  public populate(size: number, idGenerator: IdGeneratorInterface<SimulationGenome>): Population<SimulationGenome> {
     const population: Population<SimulationGenome> = [];
     for (let i = 0; i < size; i++) {
       const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
@@ -77,7 +78,7 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
       const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
       population.push({
-        id: nextId(),
+        id: idGenerator.nextId(),
         typesConfig: mutatedTypesConfig,
       });
     }

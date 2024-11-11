@@ -189,7 +189,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
   }
 
   if (config.population !== undefined) {
-    result.setPopulation(config.population);
+    result.population = config.population;
   }
 
   return result;
