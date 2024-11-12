@@ -7,7 +7,9 @@ import {
   getWorldConfig,
   getGeneticMainConfig,
   writeJsonFile,
-  getClusterizationWeights, getRandomizeConfigCollection, getPopulation,
+  getClusterizationWeights,
+  getRandomizeConfigCollection,
+  getPopulation, getCache,
 } from "@/scripts/lib/genetic/io";
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
@@ -36,6 +38,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       worldConfigFileName,
       weightsFileName,
       populationFileName,
+      cacheFileName,
       useCache,
       useComposedAlgo,
       composedFinalPopulation,
@@ -54,15 +57,23 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       crossoverRandomizeConfigCollection: getRandomizeConfigCollection(crossoverRandomizeConfigCollectionFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       weightsConfig: getClusterizationWeights(weightsFileName),
-      population: getPopulation(populationFileName),
       typesCount,
       useCache,
       useComposedAlgo,
       composedFinalPopulation,
     };
 
+    const population = getPopulation(populationFileName);
+    const cache = getCache(cacheFileName);
+
     console.log('[START] Building genetic search');
     const geneticSearch = createClusterGradeMaximize(config);
+    if (population) {
+      geneticSearch.population = population;
+    }
+    if (cache) {
+      geneticSearch.cache.import(cache);
+    }
     console.log('[FINISH] Genetic search built');
 
     console.log('[START] Running genetic search');
@@ -120,6 +131,7 @@ function parseArgs(argsParser: ArgsParser) {
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
   const weightsFileName = argsParser.getString('weightsFileName', 'default-clusterization-weights');
   const populationFileName = argsParser.getNullableString('populationFileName');
+  const cacheFileName = argsParser.getNullableString('cacheFileName');
 
   const useCache = argsParser.getBool('useCache', true);
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
@@ -138,6 +150,7 @@ function parseArgs(argsParser: ArgsParser) {
     worldConfigFileName,
     weightsFileName,
     populationFileName,
+    cacheFileName,
     useCache,
     useComposedAlgo,
     composedFinalPopulation,

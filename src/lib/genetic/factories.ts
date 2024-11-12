@@ -197,9 +197,5 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     result = new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
   }
 
-  if (config.population !== undefined) {
-    result.population = config.population;
-  }
-
   return result;
 }

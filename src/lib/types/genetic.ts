@@ -70,7 +70,6 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   useCache: boolean;
   useComposedAlgo: boolean;
   composedFinalPopulation: number;
-  population?: Population<SimulationGenome>;
 }
 
 export type SimulationGeneticMainConfig<TTaskConfig> = {

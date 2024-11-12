@@ -11,7 +11,7 @@ import type {
 } from "@/lib/types/genetic";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
-import { getPopulationInputFilePath, getPopulationOutputFilePath } from "@/scripts/lib/helpers";
+import { getCacheInputFilePath, getPopulationInputFilePath } from "@/scripts/lib/helpers";
 
 export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
@@ -69,6 +69,13 @@ export function getPopulation(fileName?: string): Population<SimulationGenome> |
     return undefined;
   }
   return readJsonFile(getPopulationInputFilePath(fileName)) as Population<SimulationGenome>;
+}
+
+export function getCache(fileName?: string): Record<number, unknown> | undefined {
+  if (fileName === undefined) {
+    return undefined;
+  }
+  return readJsonFile(getCacheInputFilePath(fileName)) as Record<number, unknown>;
 }
 
 export function readJsonFile(path: string) {
