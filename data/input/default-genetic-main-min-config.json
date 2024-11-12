@@ -1,7 +1,7 @@
 {
   "macro": {
     "populationSize": 20,
-    "survivalRate": 0.3,
+    "survivalRate": 0.5,
     "crossoverRate": 0.5
   },
   "metrics": {

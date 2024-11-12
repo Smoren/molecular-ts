@@ -19,7 +19,6 @@ import type {
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
 import type { ReferenceTaskConfig } from '../types/genetic';
 import {
-  BaseCachedMultiprocessingMetricsStrategy,
   BaseMetricsStrategy,
   BaseMultiprocessingMetricsStrategy,
 } from "genetic-search";
@@ -173,16 +172,6 @@ export class ReferenceMultiprocessingMetricsStrategy extends BaseMultiprocessing
   }
 }
 
-export class ReferenceCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>, ReferenceTaskConfig> {
-  protected createTaskInput(genome: SimulationGenome): ReferenceTaskConfig {
-    return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
-  }
-
-  protected getGenomeId(input: ReferenceTaskConfig): number {
-    return input[0];
-  }
-}
-
 export class ClusterizationMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
   private weights: ClusterizationWeightsConfig;
 
@@ -191,33 +180,8 @@ export class ClusterizationMultiprocessingMetricsStrategy extends BaseMultiproce
     this.weights = weights;
   }
 
-  clone(): ClusterizationMultiprocessingMetricsStrategy {
-    return new ClusterizationMultiprocessingMetricsStrategy(this.config, this.weights);
-  }
-
   protected createTaskInput(genome: SimulationGenome): ClusterizationTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.weights, this.config.checkpoints, this.config.repeats];
-  }
-}
-
-export class ClusterizationCachedMultiprocessingMetricsStrategy extends BaseCachedMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
-  private weights: ClusterizationWeightsConfig;
-
-  constructor(config: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
-    super(config);
-    this.weights = weights;
-  }
-
-  clone(): ClusterizationCachedMultiprocessingMetricsStrategy {
-    return new ClusterizationCachedMultiprocessingMetricsStrategy(this.config, this.weights);
-  }
-
-  protected createTaskInput(genome: SimulationGenome): ClusterizationTaskConfig {
-    return [genome.id, this.config.worldConfig, genome.typesConfig, this.weights, this.config.checkpoints, this.config.repeats];
-  }
-
-  protected getGenomeId(input: ClusterizationTaskConfig): number {
-    return input[0];
   }
 }
 

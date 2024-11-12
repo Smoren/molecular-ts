@@ -1,4 +1,10 @@
-import { ComposedGeneticSearch, GeneticSearch, ReferenceLossFitnessStrategy } from "genetic-search";
+import {
+  ComposedGeneticSearch,
+  GeneticSearch,
+  SimpleMetricsCache,
+  AverageMetricsCache,
+  ReferenceLossFitnessStrategy,
+} from "genetic-search";
 import type {
   GeneticSearchInterface,
   GeneticSearchReferenceConfig,
@@ -19,14 +25,13 @@ import {
 } from '../genetic/helpers';
 import {
   ClusterizationMultiprocessingMetricsStrategy,
-  ClusterizationCachedMultiprocessingMetricsStrategy,
-  ReferenceCachedMultiprocessingMetricsStrategy,
   ClusterizationFitnessStrategy,
   ComposedCrossoverStrategy,
   DynamicProbabilityMutationStrategy,
   RandomPopulateStrategy,
   SourceMutationPopulateStrategy,
   SourceMutationStrategy,
+  ReferenceMultiprocessingMetricsStrategy,
 } from '../genetic/strategies';
 import { repeatRunSimulationForReferenceGrade } from './grade';
 
@@ -64,10 +69,11 @@ export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new RandomPopulateStrategy([populateRandomTypesConfig]),
-    metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
+    metrics: new ReferenceMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
     mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig]),
     crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
+    cache: new SimpleMetricsCache(),
   };
 
   // TODO to config file
@@ -135,10 +141,11 @@ export function createReferenceRandomSearch(config: ReferenceRandomSearchConfigF
       [populateRandomTypesConfig],
       config.mutationStrategyConfig.probabilities,
     ),
-    metrics: new ReferenceCachedMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
+    metrics: new ReferenceMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
     mutation: new SourceMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig], config.sourceTypesConfig),
     crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
+    cache: new SimpleMetricsCache(),
   };
 
   return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
@@ -160,16 +167,13 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     config.typesCount,
   );
 
-  const metricsStrategy = config.useCache
-    ? new ClusterizationCachedMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig)
-    : new ClusterizationMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig);
-
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
-    metrics: metricsStrategy,
+    metrics: new ClusterizationMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(),
     mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
+    cache: config.useCache ? new SimpleMetricsCache() : new AverageMetricsCache(),
   };
 
   let result: GeneticSearchInterface<SimulationGenome>;
