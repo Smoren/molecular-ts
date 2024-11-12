@@ -118,7 +118,7 @@ function parseArgs(argsParser: ArgsParser) {
 
   const useCache = argsParser.getBool('useCache', true);
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
-  const composedFinalPopulation = argsParser.getInt('composedFinalPopulation', 5);
+  const composedFinalPopulation = useComposedAlgo ? argsParser.getInt('composedFinalPopulation', 5) : 0;
 
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
