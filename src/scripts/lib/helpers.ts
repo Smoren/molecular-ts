@@ -36,3 +36,11 @@ export function getPopulationInputFilePath(fileName: string = 'population'): str
 export function getPopulationOutputFilePath(fileName: string = 'population'): string {
   return `data/output/${fileName}.json`;
 }
+
+export function getCacheInputFilePath(fileName: string = 'cache'): string {
+  return `data/input/${fileName}.json`;
+}
+
+export function getCacheOutputFilePath(fileName: string = 'cache'): string {
+  return `data/output/${fileName}.json`;
+}

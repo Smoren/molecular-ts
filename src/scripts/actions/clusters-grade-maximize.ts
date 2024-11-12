@@ -12,7 +12,11 @@ import {
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
-import { getGenerationResultFilePath, getPopulationOutputFilePath } from '@/scripts/lib/helpers';
+import {
+  getCacheOutputFilePath,
+  getGenerationResultFilePath,
+  getPopulationOutputFilePath
+} from '@/scripts/lib/helpers';
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -71,6 +75,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       generationsCount,
       beforeStep: () => {
         writeJsonFile(getPopulationOutputFilePath(), geneticSearch.population);
+        writeJsonFile(getCacheOutputFilePath(), geneticSearch.cache.export());
         stdoutInterceptor.startCountDots(formatString);
       },
       afterStep: (i, scores) => {
