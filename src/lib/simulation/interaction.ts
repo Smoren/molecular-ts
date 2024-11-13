@@ -1,12 +1,12 @@
-import type { WorldConfig, TypesConfig, ViewMode } from './types/config';
+import type { WorldConfig, TypesConfig, ViewMode } from '../config/types';
 import type { LinkManagerInterface, RulesHelperInterface } from './types/utils';
 import type { AtomInterface, LinkInterface } from './types/atomic';
-import type { NumericVector, VectorInterface } from './math/types';
+import type { NumericVector, VectorInterface } from '../math/types';
 import type { InteractionManagerInterface } from './types/interaction';
 import type { PhysicModelInterface } from './types/interaction';
-import { Vector } from './math';
-import { getViewModeConfig } from './utils/functions';
-import type { SummaryManagerInterface } from './analysis/types';
+import { Vector } from '../math';
+import { getViewModeConfig } from '../utils/functions';
+import type { SummaryManagerInterface } from '../analysis/types';
 
 export class InteractionManager implements InteractionManagerInterface {
   private readonly VIEW_MODE: ViewMode;

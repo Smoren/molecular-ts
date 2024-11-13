@@ -1,6 +1,6 @@
-import type { AtomInterface, LinkInterface } from '../types/atomic';
-import type { QueueInterface } from '../types/utils';
-import type { TypesConfig, WorldConfig } from '../types/config';
+import type { AtomInterface, LinkInterface } from '../simulation/types/atomic';
+import type { QueueInterface } from '../simulation/types/utils';
+import type { TypesConfig, WorldConfig } from '../config/types';
 import type { NumericVector } from "../math/types";
 
 export type WorldSummary<T> = {

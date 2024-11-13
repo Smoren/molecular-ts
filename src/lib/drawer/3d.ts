@@ -4,8 +4,8 @@ import type {
   EventManagerInterface,
   MouseEventListenerCallback,
 } from './types';
-import type { ColorVector, TypesConfig, WorldConfig } from '../types/config';
-import type { AtomInterface, LinkInterface } from '../types/atomic';
+import type { ColorVector, TypesConfig, WorldConfig } from '../config/types';
+import type { AtomInterface, LinkInterface } from '../simulation/types/atomic';
 import {
   Scene,
   Engine,
@@ -18,7 +18,7 @@ import {
   MeshBuilder,
 } from 'babylonjs';
 import type { NumericVector } from '../math/types';
-import type { LinkManagerInterface } from '../types/utils';
+import type { LinkManagerInterface } from '../simulation/types/utils';
 import { createVector } from '../math';
 import { EventManager } from '../drawer/utils';
 

@@ -1,4 +1,4 @@
-import type { TypesConfig, WorldConfig } from '../types/config';
+import type { TypesConfig, WorldConfig } from '../config/types';
 import {
   createDefaultClusterizationWeightsConfig,
   gradeCompoundClusters,

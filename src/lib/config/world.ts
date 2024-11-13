@@ -1,4 +1,4 @@
-import type { InitialConfig, WorldConfig } from '../types/config';
+import type { InitialConfig, WorldConfig } from './types';
 import type { NumericVector } from '../math/types';
 
 export function createBaseWorldConfig(): WorldConfig {

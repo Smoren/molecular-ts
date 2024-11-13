@@ -6,7 +6,7 @@ import Flag from "@/web/components/inputs/flag.vue";
 import ConfigCoordsBounds from "@/web/components/inputs/config-coords-bounds.vue";
 import ConfigSection from "@/web/components/config-editor/components/containers/config-section.vue";
 import InputHeader from "@/web/components/base/input-header.vue";
-import type { InitialConfig } from "@/lib/types/config";
+import type { InitialConfig } from "@/lib/config/types";
 import { ref, type Ref, watch } from "vue";
 import { getViewModeConfig } from "@/lib/utils/functions";
 

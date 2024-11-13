@@ -4,7 +4,7 @@ import type {
   MetricsStrategyConfig,
   MultiprocessingMetricsStrategyConfig, Population,
 } from "genetic-search";
-import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from '../types/config';
+import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from '../config/types';
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from '../analysis/types';
 
 export type ReferenceTaskConfig = [number, WorldConfig, TypesConfig, number[], number];

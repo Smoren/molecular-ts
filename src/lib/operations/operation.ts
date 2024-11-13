@@ -17,7 +17,7 @@ import {
   tensorBinaryOperation,
   tensorUnaryOperation,
 } from "../math/operations";
-import type { TypesConfig } from "../types/config";
+import type { TypesConfig } from "../config/types";
 import type { OperatorFactory, Tensor } from "../math/types";
 
 export class Operation implements OperationInterface {

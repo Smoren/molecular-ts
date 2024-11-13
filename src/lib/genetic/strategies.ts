@@ -16,7 +16,7 @@ import type {
   ClusterizationWeightsConfig,
   DynamicProbabilityMutationStrategyConfig,
 } from './types';
-import type { RandomTypesConfig, TypesConfig } from '../types/config';
+import type { RandomTypesConfig, TypesConfig } from '../config/types';
 import type { ReferenceTaskConfig } from './types';
 import {
   BaseMetricsStrategy,
@@ -27,7 +27,7 @@ import {
   crossTypesConfigs,
   randomCrossTypesConfigs,
   randomizeTypesConfig,
-} from '../config/types';
+} from '../config/atom-types';
 import { createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
 import { getRandomArrayItem } from "../math/random";

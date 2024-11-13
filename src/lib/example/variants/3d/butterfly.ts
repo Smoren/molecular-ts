@@ -1,11 +1,11 @@
 import type {
   TypesConfig,
   WorldConfig,
-} from "../../../types/config";
-import { creatDefaultTypesConfig } from "../../../config/types";
+} from "../../../config/types";
+import { creatDefaultTypesConfig } from "../../../config/atom-types";
 import { createBaseWorldConfig } from "../../../config/world";
 import { create3dButterfly } from "../../../config/atoms";
-import { Simulation } from "../../../simulation";
+import { Simulation } from "../../../simulation/simulation";
 import { create3dDrawer } from "../../../drawer/3d";
 import { PhysicModelV1 } from "../../../physics/v1";
 

@@ -3,9 +3,9 @@ import type {
   BondMapInterface,
   LinkInterface,
 } from './types/atomic';
-import type { NumericVector, VectorInterface } from './math/types';
+import type { NumericVector, VectorInterface } from '../math/types';
 import type { ClusterInterface } from './types/cluster';
-import { toVector } from './math';
+import { toVector } from '../math';
 
 class BondMap implements BondMapInterface {
   private storage: Record<number, AtomInterface> = {};

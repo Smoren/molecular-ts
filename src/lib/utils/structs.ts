@@ -5,14 +5,14 @@ import type {
   GeometryHelperInterface,
   QueueInterface,
   RunningStateInterface,
-} from '../types/utils';
-import type { AtomInterface, LinkInterface } from '../types/atomic';
+} from '../simulation/types/utils';
+import type { AtomInterface, LinkInterface } from '../simulation/types/atomic';
 import type {
   WorldConfig,
   TypesConfig,
-} from '../types/config';
+} from '../config/types';
 import { arrayBinaryOperation, arrayUnaryOperation } from '../math';
-import { Link } from '../atomic';
+import { Link } from '../simulation/atomic';
 
 class LinkPool implements LinksPoolInterface {
   private storage: LinkInterface[] = [];

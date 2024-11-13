@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import type { CalcMetricsTask, Population } from "genetic-search";
-import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
-import type { SimulationConfig } from "@/lib/types/simulation";
+import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
+import type { SimulationConfig } from "@/lib/simulation/types/simulation";
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/analysis/types";
 import type {
   ClusterizationWeightsConfig,

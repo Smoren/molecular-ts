@@ -1,4 +1,4 @@
-import type { InitialConfig } from '../types/config';
+import type { InitialConfig } from './types';
 
 export function create2dBaseInitialConfig(): InitialConfig {
   return {

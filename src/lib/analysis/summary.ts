@@ -7,8 +7,8 @@ import type {
   SummaryManagerInterface,
 } from './types';
 import { Queue } from '../utils/structs';
-import type { AtomInterface, LinkInterface } from '../types/atomic';
-import type { TypesConfig, WorldConfig } from '../types/config';
+import type { AtomInterface, LinkInterface } from '../simulation/types/atomic';
+import type { TypesConfig, WorldConfig } from '../config/types';
 import { arrayBinaryOperation, arrayUnaryOperation, round } from '../math';
 
 const createEmptyStepSummary = (typesCount: number): WorldSummary<number[]> => ({

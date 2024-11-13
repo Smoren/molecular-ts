@@ -1,10 +1,12 @@
 import { expect } from '@jest/globals'
-import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
+import type { AtomInterface, LinkInterface } from '../../src/lib/simulation/types/atomic';
 import type { ExtendedStatSummary, StatSummary } from "../../src/lib/analysis/types";
 import { createAtom } from '../../src/lib/utils/functions';
-import { Link } from '../../src/lib/atomic';
+import { Link } from '../../src/lib/simulation/atomic';
+import { LinkManager } from "../../src/lib/utils/structs";
 
 function createAtomsAndLinks(atomTypes: number[], linksData: number[][]): [AtomInterface[], LinkInterface[]] {
+  const linkManager = new LinkManager();
   const atoms: AtomInterface[] = [];
   let id = 0;
 
@@ -13,7 +15,8 @@ function createAtomsAndLinks(atomTypes: number[], linksData: number[][]): [AtomI
   }
   const links: LinkInterface[] = [];
   for (const [lhsId, rhsId] of linksData) {
-    links.push(new Link(atoms[lhsId], atoms[rhsId]));
+    const link = linkManager.create(atoms[lhsId], atoms[rhsId]);
+    links.push(link);
   }
 
   return [atoms, links];

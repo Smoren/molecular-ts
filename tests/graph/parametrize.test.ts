@@ -48,7 +48,7 @@ function dataProviderForCountVertexesAndEdges(): Array<[GraphInterface, NumericV
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 1, position: [0, 0] },
+          { id: 0, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [],
       }),
@@ -59,8 +59,8 @@ function dataProviderForCountVertexesAndEdges(): Array<[GraphInterface, NumericV
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 1, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 1, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [],
       }),
@@ -71,8 +71,8 @@ function dataProviderForCountVertexesAndEdges(): Array<[GraphInterface, NumericV
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 1, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 1, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -85,10 +85,10 @@ function dataProviderForCountVertexesAndEdges(): Array<[GraphInterface, NumericV
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
-          { id: 3, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
+          { id: 3, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -104,10 +104,10 @@ function dataProviderForCountVertexesAndEdges(): Array<[GraphInterface, NumericV
       createGraph({
         typesCount: 3,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
-          { id: 3, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
+          { id: 3, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -123,10 +123,10 @@ function dataProviderForCountVertexesAndEdges(): Array<[GraphInterface, NumericV
       createGraph({
         typesCount: 3,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
-          { id: 3, type: 2, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
+          { id: 3, type: 2, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -177,8 +177,8 @@ function dataProviderForCalcDistanceBetweenGraphsByVertexTypes(): Array<[GraphIn
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -195,8 +195,8 @@ function dataProviderForCalcDistanceBetweenGraphsByVertexTypes(): Array<[GraphIn
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -208,8 +208,8 @@ function dataProviderForCalcDistanceBetweenGraphsByVertexTypes(): Array<[GraphIn
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -226,8 +226,8 @@ function dataProviderForCalcDistanceBetweenGraphsByVertexTypes(): Array<[GraphIn
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -236,8 +236,8 @@ function dataProviderForCalcDistanceBetweenGraphsByVertexTypes(): Array<[GraphIn
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -249,8 +249,8 @@ function dataProviderForCalcDistanceBetweenGraphsByVertexTypes(): Array<[GraphIn
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -259,7 +259,7 @@ function dataProviderForCalcDistanceBetweenGraphsByVertexTypes(): Array<[GraphIn
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [],
       }),
@@ -269,10 +269,10 @@ function dataProviderForCalcDistanceBetweenGraphsByVertexTypes(): Array<[GraphIn
       createGraph({
         typesCount: 3,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
-          { id: 3, type: 2, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
+          { id: 3, type: 2, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -283,9 +283,9 @@ function dataProviderForCalcDistanceBetweenGraphsByVertexTypes(): Array<[GraphIn
       createGraph({
         typesCount: 3,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 1, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 1, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -333,8 +333,8 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -351,8 +351,8 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -364,8 +364,8 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -382,8 +382,8 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -392,8 +392,8 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -405,8 +405,8 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -415,7 +415,7 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
         ],
         edges: [],
       }),
@@ -425,9 +425,9 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -437,9 +437,9 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -452,9 +452,9 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -464,9 +464,9 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -479,9 +479,9 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -491,9 +491,9 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 3,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 2 },
@@ -506,9 +506,9 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 0, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },
@@ -518,9 +518,9 @@ function dataProviderForCalcDistanceBetweenGraphsByEdgeTypes(): Array<[GraphInte
       createGraph({
         typesCount: 2,
         vertexes: [
-          { id: 0, type: 0, position: [0, 0] },
-          { id: 1, type: 1, position: [0, 0] },
-          { id: 2, type: 1, position: [0, 0] },
+          { id: 0, type: 0, position: [0, 0], speed: [0, 0] },
+          { id: 1, type: 1, position: [0, 0], speed: [0, 0] },
+          { id: 2, type: 1, position: [0, 0], speed: [0, 0] },
         ],
         edges: [
           { lhsId: 0, rhsId: 1 },

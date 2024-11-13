@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { ref, type Ref, watch } from "vue";
-import type { ViewMode } from "@/lib/types/config";
+import type { ViewMode } from "@/lib/config/types";
 import { useConfigStore } from "@/web/store/config";
 import { useSimulationStore } from "@/web/store/simulation";
 

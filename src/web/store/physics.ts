@@ -1,6 +1,6 @@
 import { type Ref, ref, watch } from "vue";
 import { defineStore } from "pinia";
-import type { PhysicModelName } from "@/lib/types/config";
+import type { PhysicModelName } from "@/lib/config/types";
 import { useConfigStore } from '@/web/store/config';
 import { useSimulationStore } from '@/web/store/simulation';
 import { createPhysicModel } from '@/lib/utils/functions';

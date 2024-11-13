@@ -1,5 +1,5 @@
 import type { UNARY_OPERATOR_FACTORY, BINARY_OPERATOR_FACTORY } from "../math/operations";
-import type { TypesConfig } from "../types/config";
+import type { TypesConfig } from "../config/types";
 import type { Tensor } from "../math/types";
 
 export enum OperationType {

@@ -1,14 +1,14 @@
 import type { TotalSummary, TotalSummaryWeights, SummaryMatrixRowObject } from '../analysis/types';
-import type { RandomTypesConfig, TypesConfig, WorldConfig } from '../types/config';
+import type { RandomTypesConfig, TypesConfig, WorldConfig } from '../config/types';
 import { STAT_SUMMARY_ARRAY_SIZE } from '../analysis/types';
 import { createFilledArray } from '../math';
 import { groupArray } from '../math/helpers';
 import { convertArrayToStatSummary, convertStatSummaryToArray } from '../analysis/helpers';
-import { Simulation } from '../simulation';
+import { Simulation } from '../simulation/simulation';
 import { createPhysicModel } from '../utils/functions';
 import { create2dRandomDistribution } from '../config/atoms';
 import { createDummyDrawer } from '../drawer/dummy';
-import { Runner } from '../runner';
+import { Runner } from '../simulation/runner';
 
 export function createTransparentWeights(): TotalSummaryWeights {
   return {

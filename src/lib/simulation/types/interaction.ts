@@ -1,5 +1,5 @@
 import type { AtomInterface, LinkInterface } from './atomic';
-import type { TypesConfig, WorldConfig } from './config';
+import type { TypesConfig, WorldConfig } from '../../config/types';
 import type { GeometryHelperInterface } from './utils';
 
 export interface InteractionManagerInterface {

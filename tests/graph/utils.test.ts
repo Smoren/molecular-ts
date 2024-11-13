@@ -33,7 +33,7 @@ function dataProviderForGetCentroid(): Array<[GraphConfig, NumericVector]> {
       {
         typesCount: 1,
         vertexes: [
-          { id: 0, position: [0, 0], type: 0 },
+          { id: 0, position: [0, 0], speed: [0, 0], type: 0 },
         ],
         edges: [],
       },
@@ -43,7 +43,7 @@ function dataProviderForGetCentroid(): Array<[GraphConfig, NumericVector]> {
       {
         typesCount: 1,
         vertexes: [
-          { id: 0, position: [1, 2], type: 0 },
+          { id: 0, position: [1, 2], speed: [0, 0], type: 0 },
         ],
         edges: [],
       },
@@ -53,8 +53,8 @@ function dataProviderForGetCentroid(): Array<[GraphConfig, NumericVector]> {
       {
         typesCount: 2,
         vertexes: [
-          { id: 0, position: [1, 2], type: 0 },
-          { id: 1, position: [3, 4], type: 1 },
+          { id: 0, position: [1, 2], speed: [0, 0], type: 0 },
+          { id: 1, position: [3, 4], speed: [0, 0], type: 1 },
         ],
         edges: [],
       },
@@ -64,10 +64,10 @@ function dataProviderForGetCentroid(): Array<[GraphConfig, NumericVector]> {
       {
         typesCount: 2,
         vertexes: [
-          { id: 0, position: [-1, -1], type: 0 },
-          { id: 1, position: [-1, 1], type: 1 },
-          { id: 2, position: [1, -1], type: 1 },
-          { id: 3, position: [1, 1], type: 0 },
+          { id: 0, position: [-1, -1], speed: [0, 0], type: 0 },
+          { id: 1, position: [-1, 1], speed: [0, 0], type: 1 },
+          { id: 2, position: [1, -1], speed: [0, 0], type: 1 },
+          { id: 3, position: [1, 1], speed: [0, 0], type: 0 },
         ],
         edges: [],
       },
@@ -77,10 +77,10 @@ function dataProviderForGetCentroid(): Array<[GraphConfig, NumericVector]> {
       {
         typesCount: 2,
         vertexes: [
-          { id: 0, position: [0, 0], type: 0 },
-          { id: 1, position: [0, 1], type: 1 },
-          { id: 2, position: [1, 0], type: 1 },
-          { id: 3, position: [1, 1], type: 0 },
+          { id: 0, position: [0, 0], speed: [0, 0], type: 0 },
+          { id: 1, position: [0, 1], speed: [0, 0], type: 1 },
+          { id: 2, position: [1, 0], speed: [0, 0], type: 1 },
+          { id: 3, position: [1, 1], speed: [0, 0], type: 0 },
         ],
         edges: [],
       },
@@ -117,7 +117,7 @@ function dataProviderForGetAverageRadius(): Array<[GraphConfig, number]> {
       {
         typesCount: 1,
         vertexes: [
-          { id: 0, position: [0, 0], type: 0 },
+          { id: 0, position: [0, 0], speed: [0, 0], type: 0 },
         ],
         edges: [],
       },
@@ -127,7 +127,7 @@ function dataProviderForGetAverageRadius(): Array<[GraphConfig, number]> {
       {
         typesCount: 1,
         vertexes: [
-          { id: 0, position: [1, 2], type: 0 },
+          { id: 0, position: [1, 2], speed: [0, 0], type: 0 },
         ],
         edges: [],
       },
@@ -137,8 +137,8 @@ function dataProviderForGetAverageRadius(): Array<[GraphConfig, number]> {
       {
         typesCount: 2,
         vertexes: [
-          { id: 0, position: [1, 2], type: 0 },
-          { id: 1, position: [3, 4], type: 1 },
+          { id: 0, position: [1, 2], speed: [0, 0], type: 0 },
+          { id: 1, position: [3, 4], speed: [0, 0], type: 1 },
         ],
         edges: [],
       },
@@ -148,10 +148,10 @@ function dataProviderForGetAverageRadius(): Array<[GraphConfig, number]> {
       {
         typesCount: 2,
         vertexes: [
-          { id: 0, position: [-1, -1], type: 0 },
-          { id: 1, position: [-1, 1], type: 1 },
-          { id: 2, position: [1, -1], type: 1 },
-          { id: 3, position: [1, 1], type: 0 },
+          { id: 0, position: [-1, -1], speed: [0, 0], type: 0 },
+          { id: 1, position: [-1, 1], speed: [0, 0], type: 1 },
+          { id: 2, position: [1, -1], speed: [0, 0], type: 1 },
+          { id: 3, position: [1, 1], speed: [0, 0], type: 0 },
         ],
         edges: [],
       },
@@ -161,10 +161,10 @@ function dataProviderForGetAverageRadius(): Array<[GraphConfig, number]> {
       {
         typesCount: 2,
         vertexes: [
-          { id: 0, position: [0, 0], type: 0 },
-          { id: 1, position: [0, 1], type: 1 },
-          { id: 2, position: [1, 0], type: 1 },
-          { id: 3, position: [1, 1], type: 0 },
+          { id: 0, position: [0, 0], speed: [0, 0], type: 0 },
+          { id: 1, position: [0, 1], speed: [0, 0], type: 1 },
+          { id: 2, position: [1, 0], speed: [0, 0], type: 1 },
+          { id: 3, position: [1, 1], speed: [0, 0], type: 0 },
         ],
         edges: [],
       },
@@ -174,14 +174,14 @@ function dataProviderForGetAverageRadius(): Array<[GraphConfig, number]> {
       {
         typesCount: 2,
         vertexes: [
-          { id: 0, position: [-1, -1], type: 0 },
-          { id: 1, position: [-1, 1], type: 1 },
-          { id: 2, position: [1, -1], type: 1 },
-          { id: 3, position: [1, 1], type: 0 },
-          { id: 4, position: [-2, -2], type: 0 },
-          { id: 5, position: [-2, 2], type: 1 },
-          { id: 6, position: [2, -2], type: 1 },
-          { id: 7, position: [2, 2], type: 0 },
+          { id: 0, position: [-1, -1], speed: [0, 0], type: 0 },
+          { id: 1, position: [-1, 1], speed: [0, 0], type: 1 },
+          { id: 2, position: [1, -1], speed: [0, 0], type: 1 },
+          { id: 3, position: [1, 1], speed: [0, 0], type: 0 },
+          { id: 4, position: [-2, -2], speed: [0, 0], type: 0 },
+          { id: 5, position: [-2, 2], speed: [0, 0], type: 1 },
+          { id: 6, position: [2, -2], speed: [0, 0], type: 1 },
+          { id: 7, position: [2, 2], speed: [0, 0], type: 0 },
         ],
         edges: [],
       },

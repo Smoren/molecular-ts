@@ -1,6 +1,6 @@
-import type { AtomInterface } from '../types/atomic';
+import type { AtomInterface } from '../simulation/types/atomic';
 import { createAtom } from '../utils/functions';
-import type { TypesConfig, WorldConfig } from '../types/config';
+import type { TypesConfig, WorldConfig } from './types';
 import { getIndexByFrequencies } from '../math';
 
 export function create2dButterfly(): AtomInterface[] {

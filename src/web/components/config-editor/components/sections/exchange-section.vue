@@ -2,7 +2,7 @@
 
 import { useConfigStore } from "@/web/store/config";
 import { useSimulationStore } from "@/web/store/simulation";
-import type { TypesConfig } from "@/lib/types/config";
+import type { TypesConfig } from "@/lib/config/types";
 import ImportButton from "@/web/components/inputs/import-button.vue";
 import ExportButton from "@/web/components/inputs/export-button.vue";
 import InputHeader from "@/web/components/base/input-header.vue";

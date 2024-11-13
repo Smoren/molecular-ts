@@ -4,7 +4,7 @@ import { create2dSimulationWithRandomTypes } from './variants/2d/random-types-di
 import { create3dSimulationButterfly } from './variants/3d/butterfly';
 import { create3dSimulationWithConstTypes } from './variants/3d/const-types-distribution';
 import { create3dSimulationWithRandomTypes } from './variants/3d/random-types-distribution';
-import type { Simulation } from '../simulation';
+import type { Simulation } from '../simulation/simulation';
 import { MODE } from '../config/initial';
 
 export function create2dSimulation(mode: number): Simulation {

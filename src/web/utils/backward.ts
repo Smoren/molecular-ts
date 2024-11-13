@@ -1,4 +1,4 @@
-import type { TypesConfig, TypesSymmetricConfig, WorldConfig } from '@/lib/types/config';
+import type { TypesConfig, TypesSymmetricConfig, WorldConfig } from '@/lib/config/types';
 import { fullCopyObject } from '@/lib/utils/functions';
 
 export function convertWorldConfigForBackwardCompatibility(inputConfig: WorldConfig): WorldConfig {

@@ -1,4 +1,4 @@
-import type { AtomInterface } from "../types/atomic";
+import type { AtomInterface } from "../simulation/types/atomic";
 import type { Edge, GraphInterface } from "../graph/types";
 import { createEdge, createGraph, getEdgeId } from "../graph/factories";
 import type { Compound } from './types';

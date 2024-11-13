@@ -1,11 +1,11 @@
 import type {
   TypesConfig,
   WorldConfig,
-} from "../../../types/config";
-import { createRandomTypesConfig } from "../../../config/types";
+} from "../../../config/types";
+import { createRandomTypesConfig } from "../../../config/atom-types";
 import { createBaseWorldConfig } from "../../../config/world";
 import { create3dRandomDistribution } from "../../../config/atoms";
-import { Simulation } from "../../../simulation";
+import { Simulation } from "../../../simulation/simulation";
 import { create3dDrawer } from "../../../drawer/3d";
 import { PhysicModelV1 } from "../../../physics/v1";
 

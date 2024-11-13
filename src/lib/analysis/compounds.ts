@@ -1,4 +1,4 @@
-import type { AtomInterface } from '../types/atomic';
+import type { AtomInterface } from '../simulation/types/atomic';
 import type {
   Compound,
   CompoundsAnalyzerSummary,

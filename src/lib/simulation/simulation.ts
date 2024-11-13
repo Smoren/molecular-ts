@@ -1,28 +1,28 @@
 import type { SimulationConfig, SimulationInterface } from './types/simulation';
 import type { AtomInterface } from './types/atomic';
-import type { DrawerInterface } from './drawer/types';
+import type { DrawerInterface } from '../drawer/types';
 import type { LinkManagerInterface, RunningStateInterface } from './types/utils';
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
 import type { ClusterManagerInterface } from './types/cluster';
-import type { WorldSummary, SummaryManagerInterface } from './analysis/types';
+import type { WorldSummary, SummaryManagerInterface } from '../analysis/types';
 import { ClusterManager } from './cluster';
-import { LinkManager, RulesHelper, RunningState } from './utils/structs';
+import { LinkManager, RulesHelper, RunningState } from '../utils/structs';
 import { InteractionManager } from './interaction';
-import { SummaryManager } from './analysis/summary';
-import type { NumericVector } from './math/types';
-import type { Compound } from './analysis/types';
-import { CompoundsCollector } from './analysis/compounds';
-import { PreventException } from "./drawer/utils";
-import { toVector } from "./math";
-import { createAtom } from './utils/functions';
-import { createCompoundGraphByAtom } from "./analysis/factories";
-import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "./graph/utils";
-import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./analysis/symmetry";
+import { SummaryManager } from '../analysis/summary';
+import type { NumericVector } from '../math/types';
+import type { Compound } from '../analysis/types';
+import { CompoundsCollector } from '../analysis/compounds';
+import { PreventException } from "../drawer/utils";
+import { toVector } from "../math";
+import { createAtom } from '../utils/functions';
+import { createCompoundGraphByAtom } from "../analysis/factories";
+import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "../graph/utils";
+import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "../analysis/symmetry";
 import {
   createDefaultClusterizationWeightsConfig,
   gradeCompoundClusters,
   scoreCompoundClustersSummary
-} from "./analysis/utils";
+} from "../analysis/utils";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;

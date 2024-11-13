@@ -1,4 +1,4 @@
-import type { RandomTypesConfig } from "@/lib/types/config";
+import type { RandomTypesConfig } from "@/lib/config/types";
 import { defineStore } from "pinia";
 import { useLocalStore } from "./local";
 import { ref } from "vue";

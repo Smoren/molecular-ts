@@ -1,8 +1,8 @@
-import type { InitialConfig, TypesConfig, WorldConfig, ViewMode } from './config';
+import type { InitialConfig, TypesConfig, WorldConfig, ViewMode } from '../../config/types';
 import type { AtomInterface } from './atomic';
-import type { DrawerInterface } from '../drawer/types';
+import type { DrawerInterface } from '../../drawer/types';
 import type { PhysicModelInterface } from './interaction';
-import type { WorldSummary, Compound } from '../analysis/types';
+import type { WorldSummary, Compound } from '../../analysis/types';
 import type { LinkManagerInterface } from './utils';
 
 export type SimulationConfig = {

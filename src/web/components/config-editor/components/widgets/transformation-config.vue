@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type { TransformationConfig } from "@/lib/types/config";
+import type { TransformationConfig } from "@/lib/config/types";
 import { ref, watch } from "vue";
 import TypeSelect from "@/web/components/inputs/type-select.vue";
 

@@ -28,14 +28,14 @@ function dataProviderForScoreBilateralSymmetry(): Array<[GraphConfig, LineCoeffi
       {
         typesCount: 4,
         vertexes: [
-          { id: 103, position: [0, 3], type: 0 },
-          { id: 102, position: [-0, 2], type: 0 },
-          { id: -11, position: [-1, 1], type: 1 },
-          { id: 111, position: [1, 1], type: 1 },
-          { id: 122, position: [2, 2], type: 2 },
-          { id: -22, position: [-2, 2], type: 2 },
-          { id: 120, position: [2, 0], type: 3 },
-          { id: -20, position: [-2, 0], type: 3 },
+          { id: 103, position: [0, 3], speed: [0, 0], type: 0 },
+          { id: 102, position: [-0, 2], speed: [0, 0], type: 0 },
+          { id: -11, position: [-1, 1], speed: [0, 0], type: 1 },
+          { id: 111, position: [1, 1], speed: [0, 0], type: 1 },
+          { id: 122, position: [2, 2], speed: [0, 0], type: 2 },
+          { id: -22, position: [-2, 2], speed: [0, 0], type: 2 },
+          { id: 120, position: [2, 0], speed: [0, 0], type: 3 },
+          { id: -20, position: [-2, 0], speed: [0, 0], type: 3 },
         ],
         edges: [
           { lhsId: 103, rhsId: 102 },
@@ -55,13 +55,13 @@ function dataProviderForScoreBilateralSymmetry(): Array<[GraphConfig, LineCoeffi
     //   {
     //     typesCount: 4,
     //     vertexes: [
-    //       { id: 103, position: [0, 3], type: 0 },
-    //       { id: 102, position: [-0, 2], type: 0 },
-    //       { id: -11, position: [-1, 1], type: 1 },
-    //       { id: 111, position: [1, 1], type: 1 },
-    //       { id: 122, position: [2, 2], type: 2 },
-    //       { id: -22, position: [-2, 2], type: 2 },
-    //       { id: 120, position: [2, 0], type: 3 },
+    //       { id: 103, position: [0, 3], speed: [0, 0], type: 0 },
+    //       { id: 102, position: [-0, 2], speed: [0, 0], type: 0 },
+    //       { id: -11, position: [-1, 1], speed: [0, 0], type: 1 },
+    //       { id: 111, position: [1, 1], speed: [0, 0], type: 1 },
+    //       { id: 122, position: [2, 2], speed: [0, 0], type: 2 },
+    //       { id: -22, position: [-2, 2], speed: [0, 0], type: 2 },
+    //       { id: 120, position: [2, 0], speed: [0, 0], type: 3 },
     //     ],
     //     edges: [
     //       { lhsId: 103, rhsId: 102 },

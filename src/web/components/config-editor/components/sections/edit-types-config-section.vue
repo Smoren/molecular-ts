@@ -2,7 +2,7 @@
 
 import { computed, ref, type Ref, watch } from 'vue';
 import type { Tensor } from '@/lib/math/types';
-import type { TypesConfig } from '@/lib/types/config';
+import type { TypesConfig } from '@/lib/config/types';
 import { OperationType } from '@/lib/operations/types';
 import { Operation, OperationPipe } from '@/lib/operations/operation';
 import { useConfigStore } from "@/web/store/config";

@@ -1,10 +1,10 @@
 import { describe, expect, it } from '@jest/globals'
 import type { Tensor } from "../../src/lib/math/types";
-import type { TypesConfig } from "../../src/lib/types/config";
+import type { TypesConfig } from "../../src/lib/config/types";
 import type { ArgumentName, OperationInterface } from "../../src/lib/operations/types";
 import { OperationType } from "../../src/lib/operations/types";
 import { Operation, OperationPipe } from "../../src/lib/operations/operation";
-import { createTransparentTypesConfig } from "../../src/lib/config/types";
+import { createTransparentTypesConfig } from "../../src/lib/config/atom-types";
 
 describe.each([
   ...dataProviderForOperationsPipe(),

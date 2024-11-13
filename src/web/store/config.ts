@@ -6,7 +6,7 @@ import type {
   TypesConfig,
   WorldConfig,
   ViewMode,
-} from "@/lib/types/config";
+} from "@/lib/config/types";
 import { createBaseWorldConfig } from "@/lib/config/world";
 import {
   creatDefaultTypesConfig,
@@ -14,10 +14,10 @@ import {
   createSingleTypeConfig,
   createTransparentTypesConfig,
   removeIndexFromTypesConfig,
-} from "@/lib/config/types";
+} from "@/lib/config/atom-types";
 import { fullCopyObject, getViewModeConfig } from "@/lib/utils/functions";
 import { useFlash } from '@/web/hooks/use-flash';
-import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/types';
+import { concatTypesConfigs, randomizeTypesConfig as partlyRandomizeTypesConfig } from '@/lib/config/atom-types';
 import { makeMatrixSymmetric, makeTensorSymmetric } from '@/lib/math/operations';
 import {
   convertTypesConfigForBackwardCompatibility,

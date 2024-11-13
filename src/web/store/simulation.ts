@@ -1,14 +1,14 @@
 import { computed } from "vue";
 import { defineStore } from "pinia";
-import type { SimulationInterface } from "@/lib/types/simulation";
-import type { PhysicModelInterface } from '@/lib/types/interaction';
-import type { ViewMode } from "@/lib/types/config";
+import type { SimulationInterface } from "@/lib/simulation/types/simulation";
+import type { PhysicModelInterface } from '@/lib/simulation/types/interaction';
+import type { ViewMode } from "@/lib/config/types";
 import { useConfigStore } from "@/web/store/config";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
 import { create2dDrawer } from "@/lib/drawer/2d";
 import { createPhysicModel } from '@/lib/utils/functions';
-import { Simulation } from "@/lib/simulation";
+import { Simulation } from "@/lib/simulation/simulation";
 
 export const useSimulationStore = defineStore("simulation", () => {
   const configStore = useConfigStore();

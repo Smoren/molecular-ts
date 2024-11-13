@@ -3,7 +3,7 @@
 import { ref } from "vue";
 import { useSnippetsStore } from "@/web/store/snippets";
 import { useConfigStore } from "@/web/store/config";
-import type { RandomTypesConfig } from "@/lib/types/config";
+import type { RandomTypesConfig } from "@/lib/config/types";
 
 const snippetsStore = useSnippetsStore();
 const configStore = useConfigStore();

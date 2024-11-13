@@ -1,4 +1,4 @@
-import type { AtomInterface } from '../types/atomic';
+import type { AtomInterface } from '../simulation/types/atomic';
 import type { NumericVector } from '../math/types';
 import type {
   LinkFactorDistanceConfig,
@@ -7,9 +7,9 @@ import type {
   WorldConfig,
   TypesConfig,
   ViewMode,
-} from '../types/config';
-import type { PhysicModelConstructor, PhysicModelInterface } from '../types/interaction';
-import { Atom } from '../atomic';
+} from '../config/types';
+import type { PhysicModelConstructor, PhysicModelInterface } from '../simulation/types/interaction';
+import { Atom } from '../simulation/atomic';
 import { PhysicModelV1 } from '../physics/v1';
 import { PhysicModelV2 } from '../physics/v2';
 
