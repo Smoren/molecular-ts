@@ -57,12 +57,12 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface<Simulat
 }
 
 export class SourceMutationPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
-  private readonly sourceTypesConfig: TypesConfig;
+  private readonly sourceTypesConfigCollection: TypesConfig[];
   private readonly randomizeConfigCollection: RandomTypesConfig[];
   private readonly probabilities: number[];
 
-  constructor(sourceTypesConfig: TypesConfig, randomizeConfigCollection: RandomTypesConfig[], probabilities: number[]) {
-    this.sourceTypesConfig = sourceTypesConfig;
+  constructor(sourceTypesConfigCollection: TypesConfig[], randomizeConfigCollection: RandomTypesConfig[], probabilities: number[]) {
+    this.sourceTypesConfigCollection = sourceTypesConfigCollection;
     this.randomizeConfigCollection = randomizeConfigCollection;
     this.probabilities = probabilities;
   }
@@ -72,7 +72,7 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
     for (let i = 0; i < size; i++) {
       const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
       const probability = getRandomArrayItem(this.probabilities);
-      const inputTypesConfig = fullCopyObject(this.sourceTypesConfig);
+      const inputTypesConfig = fullCopyObject(getRandomArrayItem(this.sourceTypesConfigCollection));
       const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig);
       const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 

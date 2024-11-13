@@ -137,7 +137,7 @@ export function createReferenceRandomSearch(config: ReferenceRandomSearchConfigF
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new SourceMutationPopulateStrategy(
-      config.sourceTypesConfig,
+      [config.sourceTypesConfig],
       [populateRandomTypesConfig],
       config.mutationStrategyConfig.probabilities,
     ),
