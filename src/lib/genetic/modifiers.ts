@@ -1,4 +1,4 @@
-import type { SummaryMatrixRowObject } from '../types/analysis';
+import type { SummaryMatrixRowObject } from '../analysis/types';
 import { arraySum } from '../math';
 import { convertArrayToStatSummary, convertStatSummaryToArray } from '../analysis/helpers';
 

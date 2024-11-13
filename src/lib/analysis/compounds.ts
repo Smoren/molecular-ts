@@ -5,7 +5,7 @@ import type {
   CompoundsCollectorInterface,
   ExtendedStatSummary,
   StatSummary,
-} from '../types/analysis';
+} from './types';
 import { createFilledArray, createVector, round } from '../math';
 import { createCompoundByAtom } from './factories';
 

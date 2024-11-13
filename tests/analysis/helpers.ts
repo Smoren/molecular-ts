@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals'
 import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
-import type { ExtendedStatSummary, StatSummary } from "../../src/lib/types/analysis";
+import type { ExtendedStatSummary, StatSummary } from "../../src/lib/analysis/types";
 import { createAtom } from '../../src/lib/utils/functions';
 import { Link } from '../../src/lib/atomic';
 

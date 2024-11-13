@@ -1,5 +1,5 @@
 import { multi, reduce, single } from "itertools-ts";
-import type { CompoundsClusterGrade, Compound, CompoundsClusterizationSummary } from "../types/analysis";
+import type { CompoundsClusterGrade, Compound, CompoundsClusterizationSummary } from "./types";
 import { clusterGraphs } from "../graph/clusterization";
 import {
   calcGraphsClusterAverageDifference,
@@ -14,7 +14,7 @@ import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetr
 import type { GraphInterface } from "../graph/types";
 import type { VectorInterface } from "../math/types";
 import { createFilledArray, createVector } from "../math";
-import type { ClusterizationWeightsConfig } from '../types/genetic';
+import type { ClusterizationWeightsConfig } from '../genetic/types';
 
 export function gradeCompoundClusters(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds

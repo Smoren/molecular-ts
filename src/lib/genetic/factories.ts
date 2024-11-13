@@ -16,7 +16,7 @@ import type {
   ReferenceSearchConfigFactoryConfig,
   ReferenceRandomSearchConfigFactoryConfig,
   SimulationGenome,
-} from '../types/genetic';
+} from './types';
 import {
   convertWeightsToSummaryMatrixRow,
   setTypesCountToRandomizeConfigCollection,

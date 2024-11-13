@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
 import type { AtomInterface, LinkInterface } from '../../src/lib/types/atomic';
-import type { StatSummary } from "../../src/lib/types/analysis";
+import type { StatSummary } from "../../src/lib/analysis/types";
 import { CompoundsAnalyzer, CompoundsCollector } from '../../src/lib/analysis/compounds';
 import { createCompoundsSummary, expectSameArraysOfSets, extendStatSummary, prepareCompoundsData } from './helpers';
 import { round } from "../../src/lib/math";

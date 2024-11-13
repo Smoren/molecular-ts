@@ -1,7 +1,7 @@
 import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
-import type { ReferenceSearchConfigFactoryConfig } from "@/lib/types/genetic";
+import type { ReferenceSearchConfigFactoryConfig } from "@/lib/genetic/types";
 import { getScoresSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getRandomizeConfig,

@@ -1,4 +1,4 @@
-import type { StatSummary } from '../types/analysis';
+import type { StatSummary } from './types';
 
 export function convertArrayToStatSummary(input: number[]): StatSummary {
   return {

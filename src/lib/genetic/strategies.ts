@@ -15,9 +15,9 @@ import type {
   ClusterizationTaskConfig,
   ClusterizationWeightsConfig,
   DynamicProbabilityMutationStrategyConfig,
-} from '../types/genetic';
+} from './types';
 import type { RandomTypesConfig, TypesConfig } from '../types/config';
-import type { ReferenceTaskConfig } from '../types/genetic';
+import type { ReferenceTaskConfig } from './types';
 import {
   BaseMetricsStrategy,
   BaseMultiprocessingMetricsStrategy,

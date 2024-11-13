@@ -1,6 +1,6 @@
-import type { TotalSummary, TotalSummaryWeights, SummaryMatrixRowObject } from '../types/analysis';
+import type { TotalSummary, TotalSummaryWeights, SummaryMatrixRowObject } from '../analysis/types';
 import type { RandomTypesConfig, TypesConfig, WorldConfig } from '../types/config';
-import { STAT_SUMMARY_ARRAY_SIZE } from '../types/analysis';
+import { STAT_SUMMARY_ARRAY_SIZE } from '../analysis/types';
 import { createFilledArray } from '../math';
 import { groupArray } from '../math/helpers';
 import { convertArrayToStatSummary, convertStatSummaryToArray } from '../analysis/helpers';

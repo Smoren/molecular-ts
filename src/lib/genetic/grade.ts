@@ -5,10 +5,10 @@ import {
   scoreCompoundClustersSummary,
 } from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
-import type { TotalSummary } from '../types/analysis';
+import type { TotalSummary } from '../analysis/types';
 import { arraySum, averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
-import type { ClusterizationWeightsConfig } from '../types/genetic';
+import type { ClusterizationWeightsConfig } from './types';
 
 export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
   const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);

@@ -1,4 +1,4 @@
-import type { ClusterizationTaskConfig, ReferenceTaskConfig } from "../types/genetic";
+import type { ClusterizationTaskConfig, ReferenceTaskConfig } from "./types";
 import { repeatRunSimulationForReferenceGrade } from "./grade";
 
 export const referenceGradeMultiprocessingTask = async ([

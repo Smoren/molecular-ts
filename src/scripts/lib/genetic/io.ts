@@ -2,13 +2,13 @@ import fs from "node:fs";
 import type { CalcMetricsTask, Population } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/types/config";
 import type { SimulationConfig } from "@/lib/types/simulation";
-import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/types/analysis";
+import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/analysis/types";
 import type {
   ClusterizationWeightsConfig,
   SimulationGeneticMainConfig,
   SimulationMainConfig,
   SimulationGenome,
-} from "@/lib/types/genetic";
+} from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
 import { getCacheInputFilePath, getPopulationInputFilePath } from "@/scripts/lib/helpers";

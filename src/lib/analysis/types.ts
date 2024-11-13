@@ -1,5 +1,5 @@
 import type { AtomInterface, LinkInterface } from '../types/atomic';
-import type { QueueInterface } from './utils';
+import type { QueueInterface } from '../types/utils';
 import type { TypesConfig, WorldConfig } from '../types/config';
 import type { NumericVector } from "../math/types";
 

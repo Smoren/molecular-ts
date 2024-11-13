@@ -1,7 +1,7 @@
 import type { AtomInterface } from "../types/atomic";
 import type { Edge, GraphInterface } from "../graph/types";
 import { createEdge, createGraph, getEdgeId } from "../graph/factories";
-import type { Compound } from '../types/analysis';
+import type { Compound } from './types';
 
 export function createCompoundByAtom(atom: AtomInterface): Compound {
   const compound: Compound = new Set();

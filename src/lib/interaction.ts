@@ -6,7 +6,7 @@ import type { InteractionManagerInterface } from './types/interaction';
 import type { PhysicModelInterface } from './types/interaction';
 import { Vector } from './math';
 import { getViewModeConfig } from './utils/functions';
-import type { SummaryManagerInterface } from './types/analysis';
+import type { SummaryManagerInterface } from './analysis/types';
 
 export class InteractionManager implements InteractionManagerInterface {
   private readonly VIEW_MODE: ViewMode;

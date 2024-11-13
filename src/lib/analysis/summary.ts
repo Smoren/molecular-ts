@@ -5,7 +5,7 @@ import type {
   StepSummaryManagerInterface,
   SummaryAttr,
   SummaryManagerInterface,
-} from '../types/analysis';
+} from './types';
 import { Queue } from '../utils/structs';
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type { TypesConfig, WorldConfig } from '../types/config';
