@@ -1,4 +1,4 @@
-import type { DrawerInterface, EventManagerInterface } from '../types/drawer';
+import type { DrawerInterface, EventManagerInterface } from './types';
 
 export class DrawerDummy implements DrawerInterface {
   public draw(): void {

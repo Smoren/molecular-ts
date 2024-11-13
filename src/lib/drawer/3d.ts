@@ -3,7 +3,7 @@ import type {
   DrawerInterface,
   EventManagerInterface,
   MouseEventListenerCallback,
-} from '../types/drawer';
+} from './types';
 import type { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import {

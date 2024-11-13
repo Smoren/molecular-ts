@@ -1,4 +1,4 @@
-import type { EventManagerInterface, MouseEventData, MouseEventListenerCallback } from '../types/drawer';
+import type { EventManagerInterface, MouseEventData, MouseEventListenerCallback } from './types';
 import type { NumericVector } from "../math/types";
 
 type ListenersStorage = {

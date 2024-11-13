@@ -1,7 +1,7 @@
 import type { NumericVector } from '../math/types';
-import type { AtomInterface } from './atomic';
-import type { LinkManagerInterface } from './utils';
-import type { TypesConfig, WorldConfig } from './config';
+import type { AtomInterface } from '../types/atomic';
+import type { LinkManagerInterface } from '../types/utils';
+import type { TypesConfig, WorldConfig } from '../types/config';
 
 export interface ViewConfigInterface {
   offset: NumericVector;

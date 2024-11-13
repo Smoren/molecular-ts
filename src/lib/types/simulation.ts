@@ -1,6 +1,6 @@
 import type { InitialConfig, TypesConfig, WorldConfig, ViewMode } from './config';
 import type { AtomInterface } from './atomic';
-import type { DrawerInterface } from './drawer';
+import type { DrawerInterface } from '../drawer/types';
 import type { PhysicModelInterface } from './interaction';
 import type { WorldSummary, Compound } from '../analysis/types';
 import type { LinkManagerInterface } from './utils';

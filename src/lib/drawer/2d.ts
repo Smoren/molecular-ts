@@ -6,7 +6,7 @@ import type {
   EventManagerInterface,
   MouseEventListenerCallback,
   ViewConfigInterface,
-} from '../types/drawer';
+} from './types';
 import type { ColorVector, TypesConfig, WorldConfig } from '../types/config';
 import type { AtomInterface, LinkInterface } from '../types/atomic';
 import type { LinkManagerInterface } from '../types/utils';
