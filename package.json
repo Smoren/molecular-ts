@@ -11,7 +11,8 @@
     "test": "jest",
     "tool": "tsx --no-warnings src/scripts/tool.ts",
     "calc": "npm run tool calc-simulation-summary",
-    "cluster": "npm run tool clusters-grade-maximize"
+    "cluster": "npm run tool clusters-grade-maximize",
+    "populate": "npm run tool populate"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",

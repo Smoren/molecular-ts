@@ -96,7 +96,7 @@ function parseArgs(argsParser: ArgsParser) {
 
   const geneticMainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
-  const sourceConfigFileName = argsParser.getString('sourceConfigFileName', 'default-source-types-config');
+  const sourceConfigFileName = argsParser.getString('sourceConfigFileName', 'default-source-genome-config');
   const referenceConfigFileName = argsParser.getString('referenceConfigFileName', 'default-reference-types-config');
   const referenceSummaryFileName = argsParser.get('referenceSummaryFileName', undefined);
   const weightsFileName = argsParser.getString('weightsFileName', 'default-reference-weights');

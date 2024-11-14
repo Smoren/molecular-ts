@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import type { CalcMetricsTask, Population } from "genetic-search";
+import type { CalcMetricsTask, IdGeneratorInterface, Population } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
 import type { SimulationConfig } from "@/lib/simulation/types/simulation";
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/analysis/types";
@@ -46,8 +46,12 @@ export function getRandomizeConfig(fileName: string): RandomTypesConfig {
   return readJsonFile(`data/input/${fileName}`) as RandomTypesConfig;
 }
 
-export function getRandomizeConfigCollection(fileName: string): RandomTypesConfig[] {
-  return readJsonFile(`data/input/${fileName}`) as RandomTypesConfig[];
+export function getRandomizeConfigCollection(fileName: string, typesCount?: number): RandomTypesConfig[] {
+  const result = readJsonFile(`data/input/${fileName}`) as RandomTypesConfig[];
+  if (typesCount !== undefined) {
+    result.forEach((config) => { config.TYPES_COUNT = typesCount });
+  }
+  return result;
 }
 
 export function getWorldConfig(fileName: string, initialConfig: InitialConfig): WorldConfig {
@@ -62,6 +66,15 @@ export function getReferenceWeights(fileName: string): TotalSummaryWeights {
 
 export function getClusterizationWeights(fileName: string): ClusterizationWeightsConfig {
   return readJsonFile(`data/input/${fileName}`) as ClusterizationWeightsConfig;
+}
+
+export function getSourcePopulation(fileName: string, idGenerator: IdGeneratorInterface<SimulationGenome>): Population<SimulationGenome> {
+  const source = readJsonFile(`data/input/${fileName}`) as SimulationGenome | SimulationGenome[];
+  const sourcePopulation = Array.isArray(source) ? source : [source];
+  return sourcePopulation.map(genome => ({
+    id: idGenerator.nextId(),
+    typesConfig: genome.typesConfig,
+  }))
 }
 
 export function getPopulation(fileName?: string): Population<SimulationGenome> | undefined {
