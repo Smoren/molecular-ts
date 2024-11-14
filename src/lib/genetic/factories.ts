@@ -3,6 +3,7 @@ import {
   GeneticSearch,
   SimpleMetricsCache,
   AverageMetricsCache,
+  WeightedAgeAverageMetricsCache,
   ReferenceLossFitnessStrategy,
 } from "genetic-search";
 import type {
@@ -34,7 +35,6 @@ import {
   ReferenceMultiprocessingMetricsStrategy,
 } from '../genetic/strategies';
 import { repeatRunSimulationForReferenceGrade } from './grade';
-import { WeightedAgeAverageMetricsCache } from "@/lib/genetic/cache";
 
 export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
