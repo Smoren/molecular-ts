@@ -6,13 +6,11 @@ import {
   getSourcePopulation,
 } from "@/scripts/lib/genetic/io";
 import { IdGenerator } from "genetic-search";
-import { SourceMutationPopulateStrategy } from "@/lib/genetic/strategies";
+import { RandomPopulateStrategy, SourceMutationPopulateStrategy } from "@/lib/genetic/strategies";
 
 export const actionPopulate = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
-
-  // TODO randomRate
 
   try {
     const argsParser = new ArgsParser(args);
@@ -22,6 +20,7 @@ export const actionPopulate = async (...args: string[]) => {
       probabilities,
       sourceFileName,
       randomizeConfigCollectionFileName,
+      randomRate,
     } = argsMap;
     console.log(`[START] populate (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
@@ -35,10 +34,17 @@ export const actionPopulate = async (...args: string[]) => {
 
     console.log('[COMPUTED PARAMS]', { typesCount });
 
-    const strategy = new SourceMutationPopulateStrategy(typesCollection, randomizeConfigCollection, probabilities);
-    const newPopulation = strategy.populate(populationSize-sourcePopulation.length, idGenerator);
+    const newPopulationSize = populationSize-sourcePopulation.length;
+    const randomPopulationSize = Math.round(newPopulationSize*randomRate);
+    const mutatedPopulationSize = newPopulationSize - randomPopulationSize;
 
-    const totalPopulation = [...sourcePopulation, ...newPopulation];
+    const sourceMutationStrategy = new SourceMutationPopulateStrategy(typesCollection, randomizeConfigCollection, probabilities);
+    const randomStrategy = new RandomPopulateStrategy(randomizeConfigCollection);
+
+    const mutatedPopulation = sourceMutationStrategy.populate(mutatedPopulationSize, idGenerator);
+    const randomPopulation = randomStrategy.populate(randomPopulationSize, idGenerator);
+
+    const totalPopulation = [...sourcePopulation, ...mutatedPopulation, ...randomPopulation];
     const fileName = 'data/output/population.json';
     writeJsonFile(fileName, totalPopulation);
 
@@ -56,11 +62,13 @@ function parseArgs(argsParser: ArgsParser) {
   const sourceFileName = argsParser.getString('sourceFileName', 'default-source-genome-config');
   const randomizeConfigCollectionFileName = argsParser.getString('randomizeConfigCollectionFileName', 'default-randomize-config-populate-collection');
   const probabilities = rawProbabilities !== undefined ? JSON.parse(rawProbabilities) : [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5];
+  const randomRate = argsParser.getFloat('randomRate', 0);
 
   return {
     populationSize,
     sourceFileName,
     randomizeConfigCollectionFileName,
+    randomRate,
     probabilities,
   };
 }

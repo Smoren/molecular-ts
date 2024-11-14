@@ -79,6 +79,22 @@ export class ArgsParser {
     return parseInt(value);
   }
 
+  getFloat(key: string, defaultValue: number): number {
+    const value = this.get(key);
+    if (value === undefined) {
+      return defaultValue;
+    }
+    return parseFloat(value);
+  }
+
+  getNullableFloat(key: string): number | undefined {
+    const value = this.get(key);
+    if (value === undefined) {
+      return undefined;
+    }
+    return parseFloat(value);
+  }
+
   getBool(key: string, defaultValue: boolean): boolean {
     const value = this.get(key);
     if (value === undefined) {
