@@ -12,6 +12,8 @@ export const actionPopulate = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
 
+  // TODO randomRate
+
   try {
     const argsParser = new ArgsParser(args);
     const argsMap = parseArgs(argsParser);
