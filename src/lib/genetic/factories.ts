@@ -34,6 +34,7 @@ import {
   ReferenceMultiprocessingMetricsStrategy,
 } from '../genetic/strategies';
 import { repeatRunSimulationForReferenceGrade } from './grade';
+import { WeightedAgeAverageMetricsCache } from "@/lib/genetic/cache";
 
 export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
@@ -173,7 +174,8 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     fitness: new ClusterizationFitnessStrategy(),
     mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
-    cache: config.useCache ? new SimpleMetricsCache() : new AverageMetricsCache(),
+    // cache: config.useCache ? new SimpleMetricsCache() : new AverageMetricsCache(),
+    cache: config.useCache ? new SimpleMetricsCache() : new WeightedAgeAverageMetricsCache(0.7), // TODO to config
   };
 
   let result: GeneticSearchInterface<SimulationGenome>;
