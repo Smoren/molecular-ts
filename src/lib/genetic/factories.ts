@@ -175,7 +175,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
     // cache: config.useCache ? new SimpleMetricsCache() : new AverageMetricsCache(),
-    cache: config.useCache ? new SimpleMetricsCache() : new WeightedAgeAverageMetricsCache(0.7), // TODO to config
+    cache: config.useConstCache ? new SimpleMetricsCache() : new WeightedAgeAverageMetricsCache(config.genomeAgeWeight),
   };
 
   let result: GeneticSearchInterface<SimulationGenome>;

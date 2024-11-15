@@ -39,9 +39,10 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       weightsFileName,
       populationFileName,
       cacheFileName,
-      useCache,
+      useConstCache,
       useComposedAlgo,
       composedFinalPopulation,
+      genomeAgeWeight,
       useAnsiCursor,
     } = argsMap;
     console.log(`[START] genetic search action (process_id = ${runId})`);
@@ -58,9 +59,10 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       weightsConfig: getClusterizationWeights(weightsFileName),
       typesCount,
-      useCache,
+      useConstCache,
       useComposedAlgo,
       composedFinalPopulation,
+      genomeAgeWeight,
     };
 
     const population = getPopulation(populationFileName);
@@ -133,9 +135,10 @@ function parseArgs(argsParser: ArgsParser) {
   const populationFileName = argsParser.getNullableString('populationFileName');
   const cacheFileName = argsParser.getNullableString('cacheFileName');
 
-  const useCache = argsParser.getBool('useCache', true);
+  const useConstCache = argsParser.getBool('useConstCache', true);
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = useComposedAlgo ? argsParser.getInt('composedFinalPopulation', 5) : 0;
+  const genomeAgeWeight = useConstCache ? 1 : argsParser.getFloat('genomeAgeWeight', 0.5);
 
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
@@ -151,9 +154,10 @@ function parseArgs(argsParser: ArgsParser) {
     weightsFileName,
     populationFileName,
     cacheFileName,
-    useCache,
+    useConstCache,
     useComposedAlgo,
     composedFinalPopulation,
+    genomeAgeWeight,
     useAnsiCursor,
   };
 }

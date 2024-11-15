@@ -67,9 +67,10 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   worldConfig: WorldConfig;
   weightsConfig: ClusterizationWeightsConfig;
   typesCount: number;
-  useCache: boolean;
+  useConstCache: boolean;
   useComposedAlgo: boolean;
   composedFinalPopulation: number;
+  genomeAgeWeight: number;
 }
 
 export type SimulationGeneticMainConfig<TTaskConfig> = {
