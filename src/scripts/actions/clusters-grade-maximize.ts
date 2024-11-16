@@ -138,7 +138,7 @@ function parseArgs(argsParser: ArgsParser) {
   const useConstCache = argsParser.getBool('useConstCache', true);
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = useComposedAlgo ? argsParser.getInt('composedFinalPopulation', 5) : 0;
-  const genomeAgeWeight = useConstCache ? 1 : argsParser.getFloat('genomeAgeWeight', 0.5);
+  const genomeAgeWeight = useConstCache ? 0 : argsParser.getFloat('genomeAgeWeight', 0.5);
 
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
