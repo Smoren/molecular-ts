@@ -29,3 +29,15 @@ export function getCurrentDateTime(): string {
 
   return `${year}-${month}-${day}_${hours}:${minutes}:${seconds}`;
 }
+
+export function formatJsonString(jsonStr: string) {
+  const regex = /(\[)([\d\s.,-]+)(])/g;
+  jsonStr = jsonStr.replace(regex, function(_, p1, p2, p3) {
+    let numbersOnly = p2.replace(/\s+/g, ' ');
+    return p1 + numbersOnly + p3;
+  });
+  jsonStr = jsonStr.replace(/\[ /g, '[');
+  jsonStr = jsonStr.replace(/([0-9]) ]/g, '$1]');
+
+  return jsonStr;
+}

@@ -10,8 +10,7 @@ import type {
   SimulationGenome,
 } from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
-import { formatJsonString } from "./helpers";
-import { addLeadingZeros } from "@/scripts/lib/helpers";
+import { addLeadingZeros, formatJsonString } from "@/scripts/lib/helpers";
 
 export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
