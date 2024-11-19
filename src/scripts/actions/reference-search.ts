@@ -11,11 +11,11 @@ import {
   getWorldConfig,
   getGeneticMainConfig,
   writeJsonFile,
+  getGenerationResultFilePath,
 } from "@/scripts/lib/genetic/io";
 import { createReferenceSearch } from "@/lib/genetic/factories";
 import { referenceGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
-import { getGenerationResultFilePath } from '@/scripts/lib/helpers';
 
 export const actionReferenceSearch = async (...args: string[]) => {
   const ts = Date.now();

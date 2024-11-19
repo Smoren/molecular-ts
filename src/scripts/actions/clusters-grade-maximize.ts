@@ -9,16 +9,15 @@ import {
   writeJsonFile,
   getClusterizationWeights,
   getRandomizeConfigCollection,
-  getPopulation, getCache,
+  getPopulation,
+  getCache,
+  getCacheOutputFilePath,
+  getGenerationResultFilePath,
+  getPopulationOutputFilePath,
 } from "@/scripts/lib/genetic/io";
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
-import {
-  getCacheOutputFilePath,
-  getGenerationResultFilePath,
-  getPopulationOutputFilePath
-} from '@/scripts/lib/helpers';
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();

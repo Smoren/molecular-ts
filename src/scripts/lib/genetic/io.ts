@@ -11,7 +11,7 @@ import type {
 } from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { formatJsonString } from "./helpers";
-import { getCacheInputFilePath, getPopulationInputFilePath } from "@/scripts/lib/helpers";
+import { addLeadingZeros } from "@/scripts/lib/helpers";
 
 export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
@@ -104,4 +104,31 @@ export function readJsonFile(path: string) {
 export function writeJsonFile(path: string, data: Record<number | string, unknown> | unknown[]) {
   path = path.match(/\.json$/) ? path : `${path}.json`;
   fs.writeFileSync(path, formatJsonString(JSON.stringify(data, null, 4)));
+}
+
+export function getGenerationResultFilePath(
+  runId: number,
+  generationIndex: number,
+  bestId: number,
+  bestScore: number,
+  totalGenerations: number,
+): string {
+  const generationIndexStr = addLeadingZeros(generationIndex+1, String(totalGenerations).length);
+  return `data/output/${runId}_generation_${generationIndexStr}_id_${bestId}_score_${Math.round(bestScore)}.json`;
+}
+
+export function getPopulationInputFilePath(fileName: string = 'population'): string {
+  return `data/input/${fileName}.json`;
+}
+
+export function getPopulationOutputFilePath(fileName: string = 'population'): string {
+  return `data/output/${fileName}.json`;
+}
+
+export function getCacheInputFilePath(fileName: string = 'cache'): string {
+  return `data/input/${fileName}.json`;
+}
+
+export function getCacheOutputFilePath(fileName: string = 'cache'): string {
+  return `data/output/${fileName}.json`;
 }
