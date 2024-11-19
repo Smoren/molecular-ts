@@ -14,14 +14,18 @@ import {
   getCacheOutputFilePath,
   getGenerationResultFilePath,
   getPopulationOutputFilePath,
+  sendStateToServer,
+  sendGenomeToServer,
 } from "@/scripts/lib/genetic/io";
 import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
+import { getCurrentDateTime } from '@/scripts/lib/helpers';
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
   const runId = Math.floor(Math.random()*1000);
+  const dateTimeString = getCurrentDateTime();
 
   try {
     const argsParser = new ArgsParser(args);
@@ -43,6 +47,8 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       composedFinalPopulation,
       genomeAgeWeight,
       useAnsiCursor,
+      remoteApiUrl,
+      remoteApiToken,
     } = argsMap;
     console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
@@ -62,7 +68,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       useComposedAlgo,
       composedFinalPopulation,
       genomeAgeWeight,
-    };
+     };
 
     const population = getPopulation(populationFileName);
     const cache = getCache(cacheFileName);
@@ -88,6 +94,15 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       beforeStep: () => {
         writeJsonFile(getPopulationOutputFilePath(), geneticSearch.population);
         writeJsonFile(getCacheOutputFilePath(), geneticSearch.cache.export());
+        sendStateToServer(
+          remoteApiUrl,
+          remoteApiToken,
+          typesCount,
+          dateTimeString,
+          runId,
+          geneticSearch.population,
+          geneticSearch.cache.export(),
+        )
         stdoutInterceptor.startCountDots(formatString);
       },
       afterStep: (i, scores) => {
@@ -105,6 +120,16 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
             getGenerationResultFilePath(runId, i, bestGenome.id, bestScore, mainConfig.macro.populationSize),
             geneticSearch.bestGenome,
           );
+          sendGenomeToServer(
+            remoteApiUrl,
+            remoteApiToken,
+            typesCount,
+            dateTimeString,
+            runId,
+            i,
+            bestScore,
+            bestGenome,
+          )
         }
       },
     };
@@ -141,6 +166,9 @@ function parseArgs(argsParser: ArgsParser) {
 
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
+  const remoteApiUrl = argsParser.getNullableString('remoteApiUrl');
+  const remoteApiToken = argsParser.getNullableString('remoteApiToken');
+
   return {
     poolSize,
     typesCount,
@@ -158,5 +186,7 @@ function parseArgs(argsParser: ArgsParser) {
     composedFinalPopulation,
     genomeAgeWeight,
     useAnsiCursor,
+    remoteApiUrl,
+    remoteApiToken,
   };
 }

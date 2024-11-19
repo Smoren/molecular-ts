@@ -175,7 +175,8 @@ export async function sendGenomeToServer(
   typesCount: number,
   dateTime: string,
   runId: number,
-  fileName: string,
+  generation: number,
+  score: number,
   genome: SimulationGenome,
 ) {
   if (url === undefined) {
@@ -188,7 +189,8 @@ export async function sendGenomeToServer(
     typesCount,
     dateTime,
     runId,
-    fileName,
+    generation,
+    score,
     genome,
   };
 
