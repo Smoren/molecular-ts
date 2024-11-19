@@ -1,8 +1,10 @@
 import fs from "node:fs";
+import fetch from 'node-fetch';
 import type { CalcMetricsTask, IdGeneratorInterface, Population } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
 import type { SimulationConfig } from "@/lib/simulation/types/simulation";
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/analysis/types";
+import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 import type {
   ClusterizationWeightsConfig,
   SimulationGeneticMainConfig,
@@ -11,7 +13,6 @@ import type {
 } from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { addLeadingZeros, formatJsonString } from "@/scripts/lib/helpers";
-import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 
 export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
@@ -145,15 +146,19 @@ export async function sendStateToServer(apiConfig: RemoteApiConfig, requestData:
   };
 
   try {
-    await fetch(apiConfig.url, {
+    const result = await fetch(apiConfig.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     });
+    if (result.status !== 200) {
+      const errorData = await result.json();
+      throw new Error(`${String(result.status)} ${JSON.stringify(errorData)}`);
+    }
   } catch (e) {
-    console.warn('Cannot send state to server', e);
+    console.warn('Cannot send state to server', (e as Error).message);
   }
 }
 
@@ -169,14 +174,18 @@ export async function sendGenomeToServer(apiConfig: RemoteApiConfig, requestData
   };
 
   try {
-    await fetch(apiConfig.url, {
+    const result = await fetch(apiConfig.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     });
+    if (result.status !== 200) {
+      const errorData = await result.json();
+      throw new Error(`${String(result.status)} ${JSON.stringify(errorData)}`);
+    }
   } catch (e) {
-    console.warn('Cannot send genome to server', e);
+    console.warn('Cannot send state to server', (e as Error).message);
   }
 }

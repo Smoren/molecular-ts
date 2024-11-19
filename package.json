@@ -24,14 +24,15 @@
     "babylonjs": "^6.0.0",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
+    "genetic-search": "^5.0",
+    "itertools-ts": "^1.27.1",
     "mdb-vue-ui-kit": "^4.1.1",
     "multiprocess-pool": "^1.4.5",
+    "node-fetch": "^3.3.2",
     "pinia": "^2.0.28",
     "smoothie": "^1.36.1",
     "unplugin-vue-macros": "^2.7.9",
-    "vue": "^3.4.15",
-    "itertools-ts": "^1.27.1",
-    "genetic-search": "^5.0"
+    "vue": "^3.4.15"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
