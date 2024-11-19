@@ -11,6 +11,7 @@ import type {
 } from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { addLeadingZeros, formatJsonString } from "@/scripts/lib/helpers";
+import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 
 export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
@@ -132,31 +133,19 @@ export function getCacheOutputFilePath(fileName: string = 'cache'): string {
   return `data/output/${fileName}.json`;
 }
 
-export async function sendStateToServer(
-  url: string | undefined,
-  token: string | undefined,
-  typesCount: number,
-  dateTime: string,
-  runId: number,
-  population: Population<SimulationGenome>,
-  cache: Record<number, unknown>,
-) {
-  if (url === undefined) {
+export async function sendStateToServer(apiConfig: RemoteApiConfig, requestData: SendStateRequestData) {
+  if (apiConfig.url === undefined) {
     return;
   }
 
   const body = {
     action: 'state',
-    token,
-    typesCount,
-    dateTime,
-    runId,
-    population,
-    cache,
+    token: apiConfig.token,
+    ...requestData,
   };
 
   try {
-    await fetch(url, {
+    await fetch(apiConfig.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -168,33 +157,19 @@ export async function sendStateToServer(
   }
 }
 
-export async function sendGenomeToServer(
-  url: string | undefined,
-  token: string | undefined,
-  typesCount: number,
-  dateTime: string,
-  runId: number,
-  generation: number,
-  score: number,
-  genome: SimulationGenome,
-) {
-  if (url === undefined) {
+export async function sendGenomeToServer(apiConfig: RemoteApiConfig, requestData: SendGenomeRequestData) {
+  if (apiConfig.url === undefined) {
     return;
   }
 
   const body = {
     action: 'genome',
-    token,
-    typesCount,
-    dateTime,
-    runId,
-    generation,
-    score,
-    genome,
+    token: apiConfig.token,
+    ...requestData,
   };
 
   try {
-    await fetch(url, {
+    await fetch(apiConfig.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -21,6 +21,7 @@ import { createClusterGradeMaximize } from "@/lib/genetic/factories";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getCurrentDateTime } from '@/scripts/lib/helpers';
+import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -52,6 +53,11 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     } = argsMap;
     console.log(`[START] genetic search action (process_id = ${runId})`);
     console.log('[INPUT PARAMS]', argsMap);
+
+    const apiConfig: RemoteApiConfig = {
+      url: remoteApiUrl,
+      token: remoteApiToken,
+    };
 
     const mainConfig = getGeneticMainConfig(mainConfigFileName, poolSize, clusterizationGradeMultiprocessingTask);
     const config: ClusterGradeMaximizeConfigFactoryConfig = {
@@ -94,15 +100,13 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       beforeStep: () => {
         writeJsonFile(getPopulationOutputFilePath(), geneticSearch.population);
         writeJsonFile(getCacheOutputFilePath(), geneticSearch.cache.export());
-        sendStateToServer(
-          remoteApiUrl,
-          remoteApiToken,
+        sendStateToServer(apiConfig, {
           typesCount,
-          dateTimeString,
           runId,
-          geneticSearch.population,
-          geneticSearch.cache.export(),
-        )
+          dateTime: dateTimeString,
+          population: geneticSearch.population,
+          cache: geneticSearch.cache.export(),
+        });
         stdoutInterceptor.startCountDots(formatString);
       },
       afterStep: (i, scores) => {
@@ -120,16 +124,14 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
             getGenerationResultFilePath(runId, i, bestGenome.id, bestScore, mainConfig.macro.populationSize),
             geneticSearch.bestGenome,
           );
-          sendGenomeToServer(
-            remoteApiUrl,
-            remoteApiToken,
+          sendGenomeToServer(apiConfig, {
             typesCount,
-            dateTimeString,
             runId,
-            i,
-            bestScore,
-            bestGenome,
-          )
+            dateTime: dateTimeString,
+            generation: i,
+            score: bestScore,
+            genome: bestGenome,
+          });
         }
       },
     };
