@@ -132,3 +132,75 @@ export function getCacheInputFilePath(fileName: string = 'cache'): string {
 export function getCacheOutputFilePath(fileName: string = 'cache'): string {
   return `data/output/${fileName}.json`;
 }
+
+export async function sendStateToServer(
+  url: string | undefined,
+  token: string | undefined,
+  typesCount: number,
+  dateTime: string,
+  runId: number,
+  population: Population<SimulationGenome>,
+  cache: Record<number, unknown>,
+) {
+  if (url === undefined) {
+    return;
+  }
+
+  const body = {
+    action: 'state',
+    token,
+    typesCount,
+    dateTime,
+    runId,
+    population,
+    cache,
+  };
+
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (e) {
+    console.warn('Cannot send state to server', e);
+  }
+}
+
+export async function sendGenomeToServer(
+  url: string | undefined,
+  token: string | undefined,
+  typesCount: number,
+  dateTime: string,
+  runId: number,
+  fileName: string,
+  genome: SimulationGenome,
+) {
+  if (url === undefined) {
+    return;
+  }
+
+  const body = {
+    action: 'genome',
+    token,
+    typesCount,
+    dateTime,
+    runId,
+    fileName,
+    genome,
+  };
+
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (e) {
+    console.warn('Cannot send genome to server', e);
+  }
+}
