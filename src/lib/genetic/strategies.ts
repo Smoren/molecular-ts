@@ -25,6 +25,7 @@ import {
 import {
   createTransparentTypesConfig,
   crossTypesConfigs,
+  crossTypesConfigsByIndexes,
   randomCrossTypesConfigs,
   randomizeTypesConfig,
 } from '../config/atom-types';
@@ -32,6 +33,7 @@ import { createRandomInteger } from '../math';
 import { fullCopyObject } from '../utils/functions';
 import { getRandomArrayItem } from "../math/random";
 import { arrayProduct } from "../math/operations";
+import { shuffleArray } from "../math/helpers";
 
 export class RandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly randomizeConfigCollection: RandomTypesConfig[];
@@ -82,6 +84,18 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
       });
     }
     return population;
+  }
+}
+
+export class ClassicCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
+  public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
+    const crossed = crossTypesConfigsByIndexes(lhs.typesConfig, rhs.typesConfig, this.getRandomIndexes(lhs));
+    return { id: newGenomeId, typesConfig: crossed };
+  }
+
+  protected getRandomIndexes(genome: SimulationGenome): number[] {
+    const allIndexes = [...Array(genome.typesConfig.FREQUENCIES.length).keys()];
+    return shuffleArray(allIndexes).slice(0, Math.floor(genome.typesConfig.FREQUENCIES.length / 2));
   }
 }
 

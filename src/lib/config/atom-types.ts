@@ -28,6 +28,9 @@ import {
   createFilledTensor,
 } from '../math';
 import {
+  crossArraysByIndexes,
+  crossMatricesByIndexes,
+  crossTensorsByIndexes,
   makeMatrixSymmetric,
   makeTensorSymmetric,
   removeIndexFromArray,
@@ -530,6 +533,26 @@ export function randomCrossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, sepa
 
   result.LINK_FACTOR_DISTANCE = randomCrossTensors(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, separator);
   result.LINK_FACTOR_ELASTIC = randomCrossTensors(lhs.LINK_FACTOR_ELASTIC, rhs.LINK_FACTOR_ELASTIC, separator);
+
+  return result;
+}
+
+export function crossTypesConfigsByIndexes(lhs: TypesConfig, rhs: TypesConfig, indexes: number[]): TypesConfig {
+  const result = fullCopyObject(lhs);
+
+  result.COLORS = createColors(lhs.COLORS.length);
+  result.RADIUS = crossArraysByIndexes(lhs.RADIUS, rhs.RADIUS, indexes);
+  result.FREQUENCIES = crossArraysByIndexes(lhs.FREQUENCIES, rhs.FREQUENCIES, indexes);
+
+  result.GRAVITY = crossMatricesByIndexes(lhs.GRAVITY, rhs.GRAVITY, indexes);
+  result.LINK_GRAVITY = crossMatricesByIndexes(lhs.LINK_GRAVITY, rhs.LINK_GRAVITY, indexes);
+
+  result.LINKS = crossArraysByIndexes(lhs.LINKS, rhs.LINKS, indexes);
+  result.TYPE_LINKS = crossMatricesByIndexes(lhs.TYPE_LINKS, rhs.TYPE_LINKS, indexes);
+  result.TYPE_LINK_WEIGHTS = crossMatricesByIndexes(lhs.TYPE_LINK_WEIGHTS, rhs.TYPE_LINK_WEIGHTS, indexes);
+
+  result.LINK_FACTOR_DISTANCE = crossTensorsByIndexes(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, indexes);
+  result.LINK_FACTOR_ELASTIC = crossTensorsByIndexes(lhs.LINK_FACTOR_ELASTIC, rhs.LINK_FACTOR_ELASTIC, indexes);
 
   return result;
 }

@@ -33,6 +33,7 @@ import {
   SourceMutationPopulateStrategy,
   SourceMutationStrategy,
   ReferenceMultiprocessingMetricsStrategy,
+  ClassicCrossoverStrategy,
 } from '../genetic/strategies';
 import { repeatRunSimulationForReferenceGrade } from './grade';
 
@@ -173,7 +174,8 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     metrics: new ClusterizationMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(),
     mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
-    crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
+    // crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
+    crossover: new ClassicCrossoverStrategy(),
     // cache: config.useCache ? new SimpleMetricsCache() : new AverageMetricsCache(),
     cache: config.useConstCache ? new SimpleMetricsCache() : new WeightedAgeAverageMetricsCache(config.genomeAgeWeight),
   };
