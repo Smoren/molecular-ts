@@ -1,6 +1,7 @@
 import { createFilledMatrix, createFilledTensor } from './factories';
 import type { OperatorFactory, Tensor } from './types';
 import { round } from "./helpers";
+import { fullCopyObject } from "../utils/functions";
 
 export const UNARY_OPERATOR_FACTORY: Record<string, OperatorFactory> = {
   ZEROS: {
@@ -218,6 +219,30 @@ export function randomCrossMatrices<T>(lhs: T[][], rhs: T[][], separator: number
 
 export function randomCrossTensors<T>(lhs: T[][][], rhs: T[][][], separator: number): T[][][] {
   return lhs.map((row, i) => row.map((col, j) => col.map((_, k) => Math.random() < separator ? lhs[i][j][k] : rhs[i][j][k])));
+}
+
+export function crossArraysByIndexes<T>(lhs: T[], rhs: T[], indexes: number[]): T[] {
+    const result = fullCopyObject(lhs);
+    for (const index of indexes) {
+        result[index] = rhs[index];
+    }
+    return result;
+}
+
+export function crossMatricesByIndexes<T>(lhs: T[][], rhs: T[][], indexes: number[]): T[][] {
+    const result = lhs.map((row) => fullCopyObject(row));
+    for (const index of indexes) {
+        result[index] = fullCopyObject(rhs[index]);
+    }
+    return result;
+}
+
+export function crossTensorsByIndexes<T>(lhs: T[][][], rhs: T[][][], indexes: number[]): T[][][] {
+    const result = lhs.map((row) => row.map((col) => fullCopyObject(col)));
+    for (const index of indexes) {
+        result[index] = fullCopyObject(rhs[index]);
+    }
+    return result;
 }
 
 export function removeIndexFromArray<T>(input: T[], index: number): T[] {

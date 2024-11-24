@@ -2,11 +2,16 @@ import { describe, expect, it } from '@jest/globals'
 import type { Tensor } from "../../src/lib/math/types";
 import {
   crossArrays,
-  crossMatrices,
-  crossTensors, removeIndexFromArray, removeIndexFromMatrix, removeIndexFromTensor,
+  crossArraysByIndexes,
+  crossMatrices, crossMatricesByIndexes,
+  crossTensors, crossTensorsByIndexes,
+  removeIndexFromArray,
+  removeIndexFromMatrix,
+  removeIndexFromTensor,
   tensorBinaryOperation,
   tensorUnaryOperation,
 } from '../../src/lib/math/operations';
+import { fullCopyObject } from '../../src/lib/utils/functions';
 
 describe.each([
   ...dataProviderForTensorUnaryOperation(),
@@ -970,6 +975,315 @@ function dataProviderForRemoveIndexFromTensor(): Array<[number[][][], number, nu
         [
           [11, 22],
           [44, 55],
+        ],
+      ],
+    ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForCrossArraysByIndexes(),
+] as Array<[number[], number[], number[], number[]]>)(
+  'Cross Arrays By Indexes Test',
+  (lhs, rhs, indexes, expected) => {
+    it('', () => {
+      const [lhsCopy, rhsCopy] = [fullCopyObject(lhs), fullCopyObject(rhs)];
+      const result = crossArraysByIndexes(lhs, rhs, indexes);
+
+      expect(result).toEqual(expected);
+      expect(lhsCopy).toEqual(lhs);
+      expect(rhsCopy).toEqual(rhs);
+    });
+  },
+);
+
+function dataProviderForCrossArraysByIndexes(): Array<[number[], number[], number[], number[]]> {
+  return [
+    [
+      [1, 2, 3],
+      [11, 22, 33],
+      [],
+      [1, 2, 3],
+    ],
+    [
+      [1, 2, 3],
+      [11, 22, 33],
+      [0],
+      [11, 2, 3],
+    ],
+    [
+      [1, 2, 3],
+      [11, 22, 33],
+      [1],
+      [1, 22, 3],
+    ],
+    [
+      [1, 2, 3],
+      [11, 22, 33],
+      [2],
+      [1, 2, 33],
+    ],
+    [
+      [1, 2, 3],
+      [11, 22, 33],
+      [0, 2],
+      [11, 2, 33],
+    ],
+    [
+      [1, 2, 3],
+      [11, 22, 33],
+      [0, 1],
+      [11, 22, 3],
+    ],
+    [
+      [1, 2, 3],
+      [11, 22, 33],
+      [0, 1, 2],
+      [11, 22, 33],
+    ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForCrossMatricesByIndexes(),
+] as Array<[number[][], number[][], number[], number[][]]>)(
+  'Cross Matrices By Indexes Test',
+  (lhs, rhs, indexes, expected) => {
+    it('', () => {
+      const [lhsCopy, rhsCopy] = [fullCopyObject(lhs), fullCopyObject(rhs)];
+      const result = crossMatricesByIndexes(lhs, rhs, indexes);
+
+      expect(result).toEqual(expected);
+      expect(lhsCopy).toEqual(lhs);
+      expect(rhsCopy).toEqual(rhs);
+    });
+  },
+);
+
+function dataProviderForCrossMatricesByIndexes(): Array<[number[][], number[][], number[], number[][]]> {
+  return [
+    [
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+      [
+        [11, 22, 33],
+        [44, 55, 66],
+        [77, 88, 99],
+      ],
+      [],
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+    ],
+    [
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+      [
+        [11, 22, 33],
+        [44, 55, 66],
+        [77, 88, 99],
+      ],
+      [0],
+      [
+        [11, 22, 33],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+    ],
+    [
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+      [
+        [11, 22, 33],
+        [44, 55, 66],
+        [77, 88, 99],
+      ],
+      [0, 2],
+      [
+        [11, 22, 33],
+        [4, 5, 6],
+        [77, 88, 99],
+      ],
+    ],
+    [
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+      [
+        [11, 22, 33],
+        [44, 55, 66],
+        [77, 88, 99],
+      ],
+      [1, 2],
+      [
+        [1, 2, 3],
+        [44, 55, 66],
+        [77, 88, 99],
+      ],
+    ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForCrossTensorsByIndexes(),
+] as Array<[number[][][], number[][][], number[], number[][][]]>)(
+  'Cross Tensors By Indexes Test',
+  (lhs, rhs, indexes, expected) => {
+    it('', () => {
+      const [lhsCopy, rhsCopy] = [fullCopyObject(lhs), fullCopyObject(rhs)];
+      const result = crossTensorsByIndexes(lhs, rhs, indexes);
+
+      expect(result).toEqual(expected);
+      expect(lhsCopy).toEqual(lhs);
+      expect(rhsCopy).toEqual(rhs);
+    });
+  },
+);
+
+function dataProviderForCrossTensorsByIndexes(): Array<[number[][][], number[][][], number[], number[][][]]> {
+  return [
+    [
+      [
+        [
+          [1, 2],
+          [3, 4],
+        ],
+        [
+          [5, 6],
+          [7, 8],
+        ],
+      ],
+      [
+        [
+          [11, 22],
+          [33, 44],
+        ],
+        [
+          [55, 66],
+          [77, 88],
+        ],
+      ],
+      [],
+      [
+        [
+          [1, 2],
+          [3, 4],
+        ],
+        [
+          [5, 6],
+          [7, 8],
+        ],
+      ],
+    ],
+    [
+      [
+        [
+          [1, 2],
+          [3, 4],
+        ],
+        [
+          [5, 6],
+          [7, 8],
+        ],
+      ],
+      [
+        [
+          [11, 22],
+          [33, 44],
+        ],
+        [
+          [55, 66],
+          [77, 88],
+        ],
+      ],
+      [0],
+      [
+        [
+          [11, 22],
+          [33, 44],
+        ],
+        [
+          [5, 6],
+          [7, 8],
+        ],
+      ],
+    ],
+    [
+      [
+        [
+          [1, 2],
+          [3, 4],
+        ],
+        [
+          [5, 6],
+          [7, 8],
+        ],
+      ],
+      [
+        [
+          [11, 22],
+          [33, 44],
+        ],
+        [
+          [55, 66],
+          [77, 88],
+        ],
+      ],
+      [1],
+      [
+        [
+          [1, 2],
+          [3, 4],
+        ],
+        [
+          [55, 66],
+          [77, 88],
+        ],
+      ],
+    ],
+    [
+      [
+        [
+          [1, 2],
+          [3, 4],
+        ],
+        [
+          [5, 6],
+          [7, 8],
+        ],
+      ],
+      [
+        [
+          [11, 22],
+          [33, 44],
+        ],
+        [
+          [55, 66],
+          [77, 88],
+        ],
+      ],
+      [0, 1],
+      [
+        [
+          [11, 22],
+          [33, 44],
+        ],
+        [
+          [55, 66],
+          [77, 88],
         ],
       ],
     ],
