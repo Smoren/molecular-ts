@@ -2,7 +2,7 @@ import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/genetic/types";
-import { getScoresSummary } from "@/scripts/lib/genetic/helpers";
+import { getPopulationSummary, getScoresSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getWorldConfig,
   getGeneticMainConfig,
@@ -113,10 +113,12 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
         stdoutInterceptor.finish();
 
         const [bestScore, secondScore, meanScore, medianScore, worstScore] = getScoresSummary(scores);
+        const [averageAge, initialCount, mutatedCount, crossedCount] = getPopulationSummary(geneticSearch.population);
 
         const bestGenome = geneticSearch.bestGenome;
         console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
-        console.log(`\tscores:\tbest=${bestScore}\tsecond=${secondScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
+        console.log(`\tscores:\t\tbest=${bestScore}\tsecond=${secondScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
+        console.log(`\tpopulation:\tmeanAge=${averageAge}\tinitial=${initialCount}\tmutated=${mutatedCount}\tcrossed=${crossedCount}`);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
           foundGenomeIds.add(bestGenome.id);

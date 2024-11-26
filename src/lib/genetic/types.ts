@@ -1,4 +1,5 @@
 import type {
+  BaseGenome,
   BaseMutationStrategyConfig,
   GeneticSearchConfig,
   MetricsStrategyConfig,
@@ -19,7 +20,7 @@ export type SimulationMetricsStrategyConfig<TTaskConfig> = MetricsStrategyConfig
 export type SimulationMultiprocessingMetricsStrategyConfig<TTaskConfig> = SimulationMetricsStrategyConfig<TTaskConfig>
   & MultiprocessingMetricsStrategyConfig<TTaskConfig>;
 
-export type SimulationGenome = {
+export type SimulationGenome = BaseGenome & {
   id: number;
   typesConfig: TypesConfig;
 }
