@@ -1,29 +1,22 @@
 import type { BaseGenome, GeneticSearchInterface } from "genetic-search";
 
-type GeneticSearchSchedulerConfig<TGenome extends BaseGenome> = {
-  schedule: [number, (algo: GeneticSearchInterface<TGenome>) => void][];
-  stop: (algo: GeneticSearchInterface<TGenome>) => boolean;
-};
+export type ScheduleRule<TGenome extends BaseGenome, TConfig> = {
+  condition: (runner: GeneticSearchInterface<TGenome>, config: TConfig) => boolean;
+  action: (runner: GeneticSearchInterface<TGenome>, config: TConfig) => void;
+}
 
-export class StopSearchException extends Error {}
+export class GeneticSearchScheduler<TGenome extends BaseGenome, TConfig> {
+  protected rules: ScheduleRule<TGenome, TConfig>[];
 
-export class GeneticSearchScheduler<TGenome extends BaseGenome> {
-  private readonly config: GeneticSearchSchedulerConfig<TGenome>;
-  private stepIndex: number;
-
-  constructor(config: GeneticSearchSchedulerConfig<TGenome>) {
-    this.config = config;
-    this.stepIndex = 1;
+  constructor(rules: ScheduleRule<TGenome, TConfig>[]) {
+    this.rules = rules;
   }
 
-  public step(algo: GeneticSearchInterface<TGenome>): void {
-    const actions = this.config.schedule.filter(([steps]) => this.stepIndex % steps === 0);
-    actions.map(([_, action]) => action(algo));
-
-    if (this.config.stop(algo)) {
-      throw new StopSearchException();
+  public handle(runner: GeneticSearchInterface<TGenome>, config: TConfig): void {
+    for (const rule of this.rules) {
+      if (rule.condition(runner, config)) {
+        rule.action(runner, config);
+      }
     }
-
-    this.stepIndex++;
   }
 }
