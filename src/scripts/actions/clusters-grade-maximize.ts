@@ -2,7 +2,7 @@ import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/genetic/types";
-import { getPopulationSummary, getScoresSummary } from "@/scripts/lib/genetic/helpers";
+import { getAgeSummary, getPopulationSummary, getScoresSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getWorldConfig,
   getGeneticMainConfig,
@@ -112,13 +112,16 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       afterStep: (i, scores) => {
         stdoutInterceptor.finish();
 
-        const [bestScore, secondScore, meanScore, medianScore, worstScore] = getScoresSummary(scores);
-        const [averageAge, initialCount, mutatedCount, crossedCount] = getPopulationSummary(geneticSearch.population);
+        const [bestScore, secondScore, meanScore, medianScore, worstScore] = getScoresSummary(scores, 3);
+        const [initialCount, mutatedCount, crossedCount, initialScore, mutatedScore, crossedScore] = getPopulationSummary(geneticSearch.population, 3);
+        const [minAge, meanAge, maxAge] = getAgeSummary(geneticSearch.population, 3);
 
         const bestGenome = geneticSearch.bestGenome;
         console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
-        console.log(`\tscores:\t\tbest=${bestScore}\tsecond=${secondScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
-        console.log(`\tpopulation:\tmeanAge=${averageAge}\tinitial=${initialCount}\tmutated=${mutatedCount}\tcrossed=${crossedCount}`);
+        console.log(`\tscores:\t\t\tbest=${bestScore}\tsecond=${secondScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
+        console.log(`\tpopulation count:\tinitial=${initialCount}\tmutated=${mutatedCount}\tcrossed=${crossedCount}`);
+        console.log(`\tpopulation scores:\tinitial=${initialScore}\tmutated=${mutatedScore}\tcrossed=${crossedScore}`);
+        console.log(`\tpopulation ages:\tmin=${minAge}\t\tmean=${meanAge}\tmax=${maxAge}`);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
           foundGenomeIds.add(bestGenome.id);

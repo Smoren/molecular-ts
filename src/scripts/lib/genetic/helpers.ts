@@ -1,6 +1,7 @@
 import { arraySum, round } from "@/lib/math";
 import type { Population } from "genetic-search";
 import type { SimulationGenome } from "@/lib/genetic/types";
+import { reduce } from "itertools-ts";
 
 export function getScoresSummary(losses: number[], precision: number = 4): [number, number, number, number, number] {
   const best = round(losses[0], precision);
@@ -12,11 +13,29 @@ export function getScoresSummary(losses: number[], precision: number = 4): [numb
   return [best, second, mean, median, worst];
 }
 
-export function getPopulationSummary(population: Population<SimulationGenome>, precision: number = 4): [number, number, number, number] {
-  const averageAge = round(arraySum(population.map(genome => genome.stats!.age)) / population.length, precision);
-  const initialCount = population.filter(genome => genome.stats!.origin === 'initial').length;
-  const mutatedCount = population.filter(genome => genome.stats!.origin === 'mutation').length;
-  const crossedCount = population.filter(genome => genome.stats!.origin === 'crossover').length;
+export function getPopulationSummary(population: Population<SimulationGenome>, precision: number = 4): [number, number, number, number, number, number] {
+  const initial = population.filter(genome => genome.stats!.origin === 'initial');
+  const mutated = population.filter(genome => genome.stats!.origin === 'mutation');
+  const crossed = population.filter(genome => genome.stats!.origin === 'crossover');
 
-  return [averageAge, initialCount, mutatedCount, crossedCount];
+  const initialCount = initial.length;
+  const mutatedCount = mutated.length;
+  const crossedCount = crossed.length;
+
+  const initialScores = initial.map((genome) => genome.stats!.fitness);
+  const mutatedScores = mutated.map((genome) => genome.stats!.fitness);
+  const crossedScores = crossed.map((genome) => genome.stats!.fitness);
+
+  const initialScore = initialScores.length ? round(arraySum(initialScores) / initialScores.length, precision) : 0;
+  const mutatedScore = mutatedScores.length ? round(arraySum(mutatedScores) / mutatedScores.length, precision) : 0;
+  const crossedScore = crossedScores.length ? round(arraySum(crossedScores) / crossedScores.length, precision) : 0;
+
+  return [initialCount, mutatedCount, crossedCount, initialScore, mutatedScore, crossedScore];
+}
+
+export function getAgeSummary(population: Population<SimulationGenome>, precision: number = 4): [number, number, number] {
+  const meanAge = round(reduce.toAverage(population.map(genome => genome.stats!.age)), precision);
+  const [minAge, maxAge] = reduce.toMinMax(population.map(genome => genome.stats!.age));
+
+  return [minAge, meanAge, maxAge];
 }
