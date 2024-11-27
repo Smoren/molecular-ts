@@ -1,7 +1,11 @@
 import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
-import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/genetic/types";
+import type {
+  ClusterGradeMaximizeConfigFactoryConfig,
+  ClusterizationWeightsConfig,
+  SimulationGenome
+} from "@/lib/genetic/types";
 import { getAgeSummary, getPopulationSummary, getScoresSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getWorldConfig,
@@ -22,6 +26,7 @@ import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiproce
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getCurrentDateTime } from '@/scripts/lib/helpers';
 import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
+import { GeneticSearchScheduler } from "@/lib/genetic/schedule";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -89,6 +94,16 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     }
     console.log('[FINISH] Genetic search built');
 
+    const scheduler = new GeneticSearchScheduler<SimulationGenome, ClusterizationWeightsConfig>([
+      {
+        condition: (runner, config) => runner.generation % 30 === 0 && config.minCompoundSize < 20,
+        action: (runner, config) => {
+          config.minCompoundSize++;
+          console.log(`\t[SCHEDULER] Generation ${runner.generation+1}: minCompoundSize = ${config.minCompoundSize}`);
+        }
+      }
+    ]);
+
     console.log('[START] Running genetic search');
     const foundGenomeIds: Set<number> = new Set();
 
@@ -138,6 +153,8 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
             genome: bestGenome,
           });
         }
+
+        scheduler.handle(geneticSearch, config.weightsConfig);
       },
     };
 
