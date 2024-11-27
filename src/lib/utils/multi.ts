@@ -43,7 +43,7 @@ class Pool<TInput, TResult> {
         }
       }
 
-      this.terminate();
+      await this.terminate();
     } else {
       throw new Error('Map function must be called from the main thread.');
     }
@@ -74,7 +74,6 @@ class Pool<TInput, TResult> {
 
       worker.on('exit', (code) => {
         if (code !== 0) {
-          const input = this.workerTaskMap.get(worker);
           reject(new Error(`Worker stopped with exit code ${code}`));
         }
         this.removeWorker(worker);
@@ -88,9 +87,9 @@ class Pool<TInput, TResult> {
     this.workerTaskMap.delete(worker);
   }
 
-  private terminate() {
+  private async terminate() {
     for (const worker of this.workers) {
-      worker.terminate();
+      await worker.terminate();
     }
   }
 }
@@ -100,9 +99,7 @@ if (!isMainThread) {
 
   (async () => {
     try {
-      const taskFunction = new Function(
-        'return ' + task
-      )() as TaskFunction<any, any>;
+      const taskFunction = new Function(`return ${task}`)() as TaskFunction<any, any>;
       const result = await taskFunction(input);
       parentPort?.postMessage(result);
     } catch (error) {
