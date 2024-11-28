@@ -29,7 +29,7 @@ import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
 import {
   createMinCompoundSizeDecreaseRule,
   createMinCompoundSizeIncreaseRule,
-  GeneticSearchScheduler
+  GeneticSearchScheduler,
 } from "@/lib/genetic/schedule";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
@@ -100,12 +100,16 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
 
     console.log('[START] Running genetic search');
     const foundGenomeIds: Set<number> = new Set();
-    const meanScoresHistory: number[] = [];
 
-    const scheduler = new GeneticSearchScheduler<SimulationGenome, ClusterizationWeightsConfig>(config.weightsConfig, [
-      createMinCompoundSizeIncreaseRule(15, 20),
-      createMinCompoundSizeDecreaseRule(meanScoresHistory, 10, 5),
-    ]);
+    const scheduler = new GeneticSearchScheduler<SimulationGenome, ClusterizationWeightsConfig>({
+      runner: geneticSearch,
+      config: config.weightsConfig,
+      maxHistoryLength: 10,
+      rules: [
+        createMinCompoundSizeIncreaseRule(15, 20),
+        createMinCompoundSizeDecreaseRule(10, 5),
+      ],
+    });
 
     const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
     const formatString = (count: number) => `Genomes handled: ${count}`;
@@ -127,17 +131,19 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       afterStep: (i, scores) => {
         stdoutInterceptor.finish();
 
-        const [bestScore, secondScore, meanScore, medianScore, worstScore] = getScoresSummary(scores, 3);
-        const [initialCount, mutatedCount, crossedCount, initialScore, mutatedScore, crossedScore] = getPopulationSummary(geneticSearch.population, 3);
         const [minAge, meanAge, maxAge] = getAgeSummary(geneticSearch.population, 3);
 
         const bestGenome = geneticSearch.bestGenome;
-        meanScoresHistory.push(meanScore);
+        const bestScore = bestGenome.stats!.fitness;
+
+        const summary = geneticSearch.getPopulationSummary(3);
+        const fitnessSummary = summary.fitnessSummary;
+        const groupedFitnessSummary = summary.groupedFitnessSummary;
 
         console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
-        console.log(`\tscores:\t\t\tbest=${bestScore}\tsecond=${secondScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
-        console.log(`\tpopulation count:\tinitial=${initialCount}\tmutated=${mutatedCount}\tcrossed=${crossedCount}`);
-        console.log(`\tpopulation scores:\tinitial=${initialScore}\tmutated=${mutatedScore}\tcrossed=${crossedScore}`);
+        console.log(`\tscores:\t\t\tbest=${fitnessSummary.best}\tsecond=${fitnessSummary.second}\tmean=${fitnessSummary.mean}\tmedian=${fitnessSummary.median}\tworst=${fitnessSummary.worst}`);
+        console.log(`\tpopulation count:\tinitial=${groupedFitnessSummary.initial.count}\tmutated=${groupedFitnessSummary.mutation.count}\tcrossed=${groupedFitnessSummary.crossover.count}`);
+        console.log(`\tpopulation scores:\tinitial=${groupedFitnessSummary.initial.mean}\tmutated=${groupedFitnessSummary.mutation.mean}\tcrossed=${groupedFitnessSummary.crossover.mean}`);
         console.log(`\tpopulation ages:\tmin=${minAge}\t\tmean=${meanAge}\tmax=${maxAge}`);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
@@ -156,7 +162,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
           });
         }
 
-        scheduler.handle(geneticSearch);
+        scheduler.handle();
       },
     };
 

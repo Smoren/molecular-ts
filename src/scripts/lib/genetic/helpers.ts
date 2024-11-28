@@ -1,7 +1,7 @@
-import { arraySum, round } from "@/lib/math";
-import type { Population } from "genetic-search";
-import type { SimulationGenome } from "@/lib/genetic/types";
 import { reduce } from "itertools-ts";
+import type { Population } from "genetic-search";
+import { arraySum, round } from "@/lib/math";
+import type { SimulationGenome } from "@/lib/genetic/types";
 
 export function getScoresSummary(losses: number[], precision: number = 4): [number, number, number, number, number] {
   const best = round(losses[0], precision);
@@ -34,8 +34,8 @@ export function getPopulationSummary(population: Population<SimulationGenome>, p
 }
 
 export function getAgeSummary(population: Population<SimulationGenome>, precision: number = 4): [number, number, number] {
-  const meanAge = round(reduce.toAverage(population.map(genome => genome.stats!.age)), precision);
+  const meanAge = round(reduce.toAverage(population.map(genome => genome.stats!.age)) ?? 0, precision);
   const [minAge, maxAge] = reduce.toMinMax(population.map(genome => genome.stats!.age));
 
-  return [minAge, meanAge, maxAge];
+  return [minAge ?? 0, meanAge, maxAge ?? 0];
 }

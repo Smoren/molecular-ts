@@ -12,7 +12,8 @@
     "tool": "tsx --no-warnings src/scripts/tool.ts",
     "calc": "npm run tool calc-simulation-summary",
     "cluster": "npm run tool clusters-grade-maximize mainConfigFileName=default-genetic-main-min-config useCache=0",
-    "populate": "npm run tool populate"
+    "populate": "npm run tool populate",
+    "my": "npm run tool clusters-grade-maximize typesCount=3 generationsCount=1000 useConstCache=0 mainConfigFileName=default-genetic-main-min-config"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -24,7 +25,7 @@
     "babylonjs": "^6.0.0",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
-    "genetic-search": "^5.3",
+    "genetic-search": "^5.4.1",
     "itertools-ts": "^1.27.1",
     "mdb-vue-ui-kit": "^4.1.1",
     "multiprocess-pool": "^1.4.5",
