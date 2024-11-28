@@ -1,5 +1,4 @@
 import os from 'os';
-import { single, summary } from "itertools-ts";
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type {
@@ -27,7 +26,11 @@ import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiproce
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getCurrentDateTime } from '@/scripts/lib/helpers';
 import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
-import { GeneticSearchScheduler } from "@/lib/genetic/schedule";
+import {
+  createMinCompoundSizeDecreaseRule,
+  createMinCompoundSizeIncreaseRule,
+  GeneticSearchScheduler
+} from "@/lib/genetic/schedule";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -99,26 +102,9 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     const foundGenomeIds: Set<number> = new Set();
     const meanScoresHistory: number[] = [];
 
-    const scheduler = new GeneticSearchScheduler<SimulationGenome, ClusterizationWeightsConfig>([
-      {
-        condition: (runner, config) => runner.generation % 15 === 0 && config.minCompoundSize < 20,
-        action: (runner, config) => {
-          config.minCompoundSize++;
-          console.log(`\n[SCHEDULER] minCompoundSize++ (${config.minCompoundSize})`);
-        },
-      },
-      {
-        condition: () => {
-          const tailLength = 10;
-          const historyTail = meanScoresHistory.slice(meanScoresHistory.length-tailLength);
-          return historyTail.length >= tailLength
-            && summary.allMatch(single.pairwise(historyTail), ([prev, next]) => prev > next);
-        },
-        action: (runner, config) => {
-          config.minCompoundSize--;
-          console.log(`\n[SCHEDULER] minCompoundSize-- (${config.minCompoundSize})`);
-        }
-      }
+    const scheduler = new GeneticSearchScheduler<SimulationGenome, ClusterizationWeightsConfig>(config.weightsConfig, [
+      createMinCompoundSizeIncreaseRule(15, 20),
+      createMinCompoundSizeDecreaseRule(meanScoresHistory, 10, 5),
     ]);
 
     const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
@@ -170,7 +156,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
           });
         }
 
-        scheduler.handle(geneticSearch, config.weightsConfig);
+        scheduler.handle(geneticSearch);
       },
     };
 
