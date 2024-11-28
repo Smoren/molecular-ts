@@ -1,15 +1,12 @@
 import os from 'os';
-import type { GeneticSearchFitConfig } from "genetic-search";
+import { type GeneticSearchFitConfig, Scheduler } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type {
   ClusterGradeMaximizeConfigFactoryConfig,
   ClusterizationWeightsConfig,
   SimulationGenome
 } from "@/lib/genetic/types";
-import {
-  getAgeSummary,
-  printGenerationSummary,
-} from "@/scripts/lib/genetic/helpers";
+import { printGenerationSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getWorldConfig,
   getGeneticMainConfig,
@@ -32,8 +29,7 @@ import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
 import {
   createMinCompoundSizeDecreaseRule,
   createMinCompoundSizeIncreaseRule,
-  GeneticSearchScheduler,
-} from "@/lib/genetic/schedule";
+} from "@/lib/genetic/scheduler";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -104,12 +100,12 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     console.log('[START] Running genetic search');
     const foundGenomeIds: Set<number> = new Set();
 
-    const scheduler = new GeneticSearchScheduler<SimulationGenome, ClusterizationWeightsConfig>({
+    const scheduler = new Scheduler<SimulationGenome, ClusterizationWeightsConfig>({
       runner: geneticSearch,
       config: config.weightsConfig,
       maxHistoryLength: 10,
       rules: [
-        createMinCompoundSizeIncreaseRule(15, 20),
+        createMinCompoundSizeIncreaseRule(15, 25),
         createMinCompoundSizeDecreaseRule(10, 5),
       ],
     });
@@ -119,6 +115,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
 
     const fitConfig: GeneticSearchFitConfig = {
       generationsCount,
+      scheduler,
       beforeStep: () => {
         writeJsonFile(getPopulationOutputFilePath(), geneticSearch.population);
         writeJsonFile(getCacheOutputFilePath(), geneticSearch.cache.export());
@@ -131,34 +128,32 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
         });
         stdoutInterceptor.startCountDots(formatString);
       },
-      afterStep: () => {
+      afterStep: (generation) => {
         stdoutInterceptor.finish();
 
         const bestGenome = geneticSearch.bestGenome;
         const bestScore = bestGenome.stats!.fitness;
 
         const summary = geneticSearch.getPopulationSummary(3);
-        const ageSummary = getAgeSummary(geneticSearch.population, 3);
 
-        printGenerationSummary(geneticSearch.generation, bestGenome, summary, ageSummary);
+        printGenerationSummary(generation, bestGenome, summary);
+        scheduler.logs.forEach((line) => console.log(`[SCHEDULER] ${line}`));
 
         if (!foundGenomeIds.has(bestGenome.id)) {
           foundGenomeIds.add(bestGenome.id);
           writeJsonFile(
-            getGenerationResultFilePath(runId, geneticSearch.generation, bestGenome.id, bestScore, mainConfig.macro.populationSize),
+            getGenerationResultFilePath(runId, generation, bestGenome.id, bestScore, mainConfig.macro.populationSize),
             geneticSearch.bestGenome,
           );
           sendGenomeToServer(apiConfig, {
             typesCount,
             runId,
             dateTime: dateTimeString,
-            generation: geneticSearch.generation,
+            generation,
             score: bestScore,
             genome: bestGenome,
           });
         }
-
-        scheduler.handle();
       },
     };
 

@@ -1,9 +1,8 @@
 import type {
   BaseGenome,
-  BaseMutationStrategyConfig,
   GeneticSearchConfig,
   MetricsStrategyConfig,
-  MultiprocessingMetricsStrategyConfig, Population,
+  MultiprocessingMetricsStrategyConfig,
 } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from '../config/types';
 import type { SummaryMatrixRowObject, TotalSummaryWeights } from '../analysis/types';
