@@ -1,4 +1,5 @@
 import os from 'os';
+import { single, summary } from "itertools-ts";
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type {
@@ -94,18 +95,31 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     }
     console.log('[FINISH] Genetic search built');
 
+    console.log('[START] Running genetic search');
+    const foundGenomeIds: Set<number> = new Set();
+    const meanScoresHistory: number[] = [];
+
     const scheduler = new GeneticSearchScheduler<SimulationGenome, ClusterizationWeightsConfig>([
       {
-        condition: (runner, config) => runner.generation % 30 === 0 && config.minCompoundSize < 20,
+        condition: (runner, config) => runner.generation % 15 === 0 && config.minCompoundSize < 20,
         action: (runner, config) => {
           config.minCompoundSize++;
-          console.log(`\t[SCHEDULER] Generation ${runner.generation+1}: minCompoundSize = ${config.minCompoundSize}`);
+          console.log(`\n[SCHEDULER] minCompoundSize++ (${config.minCompoundSize})`);
+        },
+      },
+      {
+        condition: () => {
+          const tailLength = 10;
+          const historyTail = meanScoresHistory.slice(meanScoresHistory.length-tailLength);
+          return historyTail.length >= tailLength
+            && summary.allMatch(single.pairwise(historyTail), ([prev, next]) => prev > next);
+        },
+        action: (runner, config) => {
+          config.minCompoundSize--;
+          console.log(`\n[SCHEDULER] minCompoundSize-- (${config.minCompoundSize})`);
         }
       }
     ]);
-
-    console.log('[START] Running genetic search');
-    const foundGenomeIds: Set<number> = new Set();
 
     const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
     const formatString = (count: number) => `Genomes handled: ${count}`;
@@ -132,6 +146,8 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
         const [minAge, meanAge, maxAge] = getAgeSummary(geneticSearch.population, 3);
 
         const bestGenome = geneticSearch.bestGenome;
+        meanScoresHistory.push(meanScore);
+
         console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
         console.log(`\tscores:\t\t\tbest=${bestScore}\tsecond=${secondScore}\tmean=${meanScore}\tmedian=${medianScore}\tworst=${worstScore}`);
         console.log(`\tpopulation count:\tinitial=${initialCount}\tmutated=${mutatedCount}\tcrossed=${crossedCount}`);
@@ -170,7 +186,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
 function parseArgs(argsParser: ArgsParser) {
   const poolSize = argsParser.getInt('poolSize', os.cpus().length);
   const typesCount = argsParser.getInt('typesCount', 3);
-  const generationsCount = argsParser.getInt('generationsCount', 100);
+  const generationsCount = argsParser.getNullableInt('generationsCount');
 
   const mainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
