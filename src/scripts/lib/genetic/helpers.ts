@@ -1,7 +1,8 @@
 import { reduce } from "itertools-ts";
-import type { Population } from "genetic-search";
+import type { Population, PopulationSummary } from "genetic-search";
 import { arraySum, round } from "@/lib/math";
 import type { SimulationGenome } from "@/lib/genetic/types";
+import { convertToTable } from '@/scripts/lib/helpers';
 
 export function getScoresSummary(losses: number[], precision: number = 4): [number, number, number, number, number] {
   const best = round(losses[0], precision);
@@ -38,4 +39,21 @@ export function getAgeSummary(population: Population<SimulationGenome>, precisio
   const [minAge, maxAge] = reduce.toMinMax(population.map(genome => genome.stats!.age));
 
   return [minAge ?? 0, meanAge, maxAge ?? 0];
+}
+
+export function printGenerationSummary(generation: number, bestGenome: SimulationGenome, summary: PopulationSummary, ageSummary: [number, number, number]): void {
+  console.log(`\n[GENERATION ${generation}] best id=${bestGenome.id}`);
+
+  const fitnessSummary = summary.fitnessSummary;
+  const groupedFitnessSummary = summary.groupedFitnessSummary;
+  const [minAge, meanAge, maxAge] = ageSummary;
+
+  const table = [
+    ['scores:', `best=${fitnessSummary.best}`, `second=${fitnessSummary.second}`, `mean=${fitnessSummary.mean}`, `median=${fitnessSummary.median}`, `worst=${fitnessSummary.worst}`],
+    ['population count:', `initial=${groupedFitnessSummary.initial.count}`, `mutated=${groupedFitnessSummary.mutation.count}`, `crossed=${groupedFitnessSummary.crossover.count}`],
+    ['population scores:', `initial=${groupedFitnessSummary.initial.mean}`, `mutated=${groupedFitnessSummary.mutation.mean}`, `crossed=${groupedFitnessSummary.crossover.mean}`],
+    ['population ages:', `min=${minAge}`, `mean=${meanAge}`, `max=${maxAge}`],
+  ];
+
+  console.log(convertToTable(table, 3));
 }

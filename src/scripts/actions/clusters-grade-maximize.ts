@@ -6,7 +6,10 @@ import type {
   ClusterizationWeightsConfig,
   SimulationGenome
 } from "@/lib/genetic/types";
-import { getAgeSummary, getPopulationSummary, getScoresSummary } from "@/scripts/lib/genetic/helpers";
+import {
+  getAgeSummary,
+  printGenerationSummary,
+} from "@/scripts/lib/genetic/helpers";
 import {
   getWorldConfig,
   getGeneticMainConfig,
@@ -128,35 +131,28 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
         });
         stdoutInterceptor.startCountDots(formatString);
       },
-      afterStep: (i, scores) => {
+      afterStep: () => {
         stdoutInterceptor.finish();
-
-        const [minAge, meanAge, maxAge] = getAgeSummary(geneticSearch.population, 3);
 
         const bestGenome = geneticSearch.bestGenome;
         const bestScore = bestGenome.stats!.fitness;
 
         const summary = geneticSearch.getPopulationSummary(3);
-        const fitnessSummary = summary.fitnessSummary;
-        const groupedFitnessSummary = summary.groupedFitnessSummary;
+        const ageSummary = getAgeSummary(geneticSearch.population, 3);
 
-        console.log(`\n[GENERATION ${i+1}] best id=${bestGenome.id}`);
-        console.log(`\tscores:\t\t\tbest=${fitnessSummary.best}\tsecond=${fitnessSummary.second}\tmean=${fitnessSummary.mean}\tmedian=${fitnessSummary.median}\tworst=${fitnessSummary.worst}`);
-        console.log(`\tpopulation count:\tinitial=${groupedFitnessSummary.initial.count}\tmutated=${groupedFitnessSummary.mutation.count}\tcrossed=${groupedFitnessSummary.crossover.count}`);
-        console.log(`\tpopulation scores:\tinitial=${groupedFitnessSummary.initial.mean}\tmutated=${groupedFitnessSummary.mutation.mean}\tcrossed=${groupedFitnessSummary.crossover.mean}`);
-        console.log(`\tpopulation ages:\tmin=${minAge}\t\tmean=${meanAge}\tmax=${maxAge}`);
+        printGenerationSummary(geneticSearch.generation, bestGenome, summary, ageSummary);
 
         if (!foundGenomeIds.has(bestGenome.id)) {
           foundGenomeIds.add(bestGenome.id);
           writeJsonFile(
-            getGenerationResultFilePath(runId, i, bestGenome.id, bestScore, mainConfig.macro.populationSize),
+            getGenerationResultFilePath(runId, geneticSearch.generation, bestGenome.id, bestScore, mainConfig.macro.populationSize),
             geneticSearch.bestGenome,
           );
           sendGenomeToServer(apiConfig, {
             typesCount,
             runId,
             dateTime: dateTimeString,
-            generation: i,
+            generation: geneticSearch.generation,
             score: bestScore,
             genome: bestGenome,
           });

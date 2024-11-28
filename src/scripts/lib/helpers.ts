@@ -41,3 +41,30 @@ export function formatJsonString(jsonStr: string) {
 
   return jsonStr;
 }
+
+export function convertToTable(data: string[][], padding: number = 0): string {
+  if (!data || data.length === 0) {
+    return '';
+  }
+
+  const maxCols = Math.max(...data.map(row => row.length));
+
+  const normalizedData = data.map(row =>
+    row.concat(Array(maxCols - row.length).fill('')) // Добавляем пустые строки где нужно
+  );
+
+  const columnWidths: number[] = Array(maxCols).fill(0);
+  for (let col = 0; col < maxCols; col++) {
+    columnWidths[col] = Math.max(...normalizedData.map(row => (row[col]?.length || 0)));
+  }
+
+  const result: string[] = [];
+  for (const row of normalizedData) {
+    const rowString = row
+      .map((cell, i) => cell.padEnd(columnWidths[i]+padding, ' ')) // Добавляем пробелы до максимальной длины
+      .join(' '); // Разделитель
+    result.push(rowString);
+  }
+
+  return result.join('\n');
+}
