@@ -185,7 +185,7 @@ function parseArgs(argsParser: ArgsParser) {
   const populationFileName = argsParser.getNullableString('populationFileName');
   const cacheFileName = argsParser.getNullableString('cacheFileName');
 
-  const useConstCache = argsParser.getBool('useConstCache', true);
+  const useConstCache = argsParser.getBool('useConstCache', false);
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = useComposedAlgo ? argsParser.getInt('composedFinalPopulation', 5) : 0;
   const genomeAgeWeight = useConstCache ? 0 : argsParser.getFloat('genomeAgeWeight', 0.5);

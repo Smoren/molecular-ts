@@ -4,7 +4,7 @@ import { single, summary } from "itertools-ts";
 
 export type ScheduleRule<TGenome extends BaseGenome, TConfig> = {
   condition: (runner: GeneticSearchInterface<TGenome>, config: TConfig) => boolean;
-  action: (runner: GeneticSearchInterface<TGenome>, config: TConfig) => void;
+  action: (config: TConfig, runner: GeneticSearchInterface<TGenome>) => void;
 }
 
 export class GeneticSearchScheduler<TGenome extends BaseGenome, TConfig> {
@@ -19,7 +19,7 @@ export class GeneticSearchScheduler<TGenome extends BaseGenome, TConfig> {
   public handle(runner: GeneticSearchInterface<TGenome>): void {
     for (const rule of this.rules) {
       if (rule.condition(runner, this.config)) {
-        rule.action(runner, this.config);
+        rule.action(this.config, runner);
       }
     }
   }
@@ -28,7 +28,7 @@ export class GeneticSearchScheduler<TGenome extends BaseGenome, TConfig> {
 export function createMinCompoundSizeIncreaseRule(
   stepsInterval: number,
   maxValue?: number,
-  increaseValue?: number = 1,
+  increaseValue: number = 1,
 ): ScheduleRule<SimulationGenome, ClusterizationWeightsConfig> {
   return {
     condition: (runner, config) => {
@@ -38,7 +38,7 @@ export function createMinCompoundSizeIncreaseRule(
 
       return runner.generation % stepsInterval === 0;
     },
-    action: (runner, config) => {
+    action: (config) => {
       config.minCompoundSize += increaseValue;
       console.log(`\n[SCHEDULER] minCompoundSize increased (${config.minCompoundSize})`);
     },
@@ -47,15 +47,17 @@ export function createMinCompoundSizeIncreaseRule(
 
 export function createMinCompoundSizeDecreaseRule(
   scoresHistory: number[],
-  historyTailLength: number,
+  decreaseDuration: number,
   minValue?: number,
-  decreaseValue?: number = 1,
+  decreaseValue: number = 1,
 ): ScheduleRule<SimulationGenome, ClusterizationWeightsConfig> {
   return {
     condition: (runner, config) => {
       if (minValue !== undefined && config.minCompoundSize <= minValue) {
         return false;
       }
+
+      const historyTailLength = decreaseDuration + 1;
 
       if (scoresHistory.length < historyTailLength) {
         return false;
@@ -64,7 +66,7 @@ export function createMinCompoundSizeDecreaseRule(
       const historyTail = scoresHistory.slice(scoresHistory.length-historyTailLength);
       return summary.allMatch(single.pairwise(historyTail), ([prev, next]) => prev > next);
     },
-    action: (runner, config) => {
+    action: (config) => {
       config.minCompoundSize -= decreaseValue;
       console.log(`\n[SCHEDULER] minCompoundSize decreased (${config.minCompoundSize})`);
     },
