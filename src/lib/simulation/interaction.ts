@@ -62,6 +62,7 @@ export class InteractionManager implements InteractionManagerInterface {
 
     if (
       dist2 >= (this.WORLD_CONFIG.MAX_LINK_RADIUS * this.getDistanceFactor(link.lhs, link.rhs) * this.getDistanceFactor(link.rhs, link.lhs)) ** 2
+      || dist2 > this.WORLD_CONFIG.MAX_INTERACTION_RADIUS ** 2
       || this.ruleHelper.isLinkRedundant(link.lhs, link.rhs)
     ) {
       this.linkManager.delete(link);
