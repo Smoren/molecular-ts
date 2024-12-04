@@ -257,6 +257,35 @@ export function removeIndexFromTensor<T>(tensor: T[][][], index: number): T[][][
   return tensor.filter((_, i) => i !== index).map((row) => removeIndexFromMatrix(row, index));
 }
 
+export function copyArrayIndex<T>(array: T[], indexFrom: number, indexTo: number): T[] {
+  const result = fullCopyObject(array);
+  result[indexTo] = array[indexFrom];
+  return result;
+}
+
+export function copyMatrixIndex<T>(matrix: T[][], indexFrom: number, indexTo: number): T[][] {
+  const result = fullCopyObject(matrix);
+  result[indexTo] = fullCopyObject(matrix[indexFrom]);
+  for (let i = 0; i < matrix[indexFrom].length; ++i) {
+    result[i][indexTo] = matrix[i][indexFrom];
+  }
+  result[indexTo][indexTo] = matrix[indexFrom][indexFrom];
+  return result;
+}
+
+export function copyTensorIndex<T>(tensor: T[][][], indexFrom: number, indexTo: number): T[][][] {
+  const result = fullCopyObject(tensor);
+  result[indexTo] = copyMatrixIndex(tensor[indexFrom], indexFrom, indexTo);
+  for (let i = 0; i < tensor[indexFrom].length; ++i) {
+    result[i][indexTo] = fullCopyObject(tensor[i][indexFrom]);
+    for (let j = 0; j < tensor[i][indexFrom].length; ++j) {
+      result[i][j][indexTo] = tensor[i][j][indexFrom];
+    }
+    result[i][indexTo][indexTo] = tensor[i][indexFrom][indexFrom];
+  }
+  return result;
+}
+
 export function setMatrixMainDiagonal<T>(matrix: T[][], value: T): T[][] {
   for (let i = 0; i < matrix.length; ++i) {
     matrix[i][i] = value;

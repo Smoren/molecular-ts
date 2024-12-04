@@ -9,6 +9,7 @@ import type {
 } from "@/lib/config/types";
 import { createBaseWorldConfig } from "@/lib/config/world";
 import {
+  copyIndexInTypesConfig,
   creatDefaultTypesConfig,
   createDefaultRandomTypesConfig,
   createSingleTypeConfig,
@@ -244,8 +245,15 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const appendType = () => {
-    const newTypeConfig = createSingleTypeConfig();
-    addTypesFromConfig(newTypeConfig);
+    const newConfig = createSingleTypeConfig();
+    addTypesFromConfig(newConfig);
+  }
+
+  const cloneType = (index: number) => {
+    appendType();
+    const lastIndex = typesConfig.value.FREQUENCIES.length - 1;
+    const newConfig = copyIndexInTypesConfig(typesConfig.value, index, lastIndex);
+    setTypesConfig(newConfig);
   }
 
   const handleSyncWorldConfigBounds = () => {
@@ -285,6 +293,7 @@ export const useConfigStore = defineStore("config", () => {
     setRandomTypesConfig,
     syncRandomTypesCount,
     appendType,
+    cloneType,
     addTypesFromConfig,
     removeTypeFromConfig,
     exportConfig,

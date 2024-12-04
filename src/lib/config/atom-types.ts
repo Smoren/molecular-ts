@@ -28,6 +28,9 @@ import {
   createFilledTensor,
 } from '../math';
 import {
+  copyArrayIndex,
+  copyMatrixIndex,
+  copyTensorIndex,
   crossArraysByIndexes,
   crossMatricesByIndexes,
   crossTensorsByIndexes,
@@ -575,6 +578,27 @@ export function removeIndexFromTypesConfig(input: TypesConfig, index: number): T
   result.LINK_FACTOR_ELASTIC = removeIndexFromTensor(input.LINK_FACTOR_ELASTIC, index);
 
   result.TRANSFORMATION = {};
+
+  return result;
+}
+
+export function copyIndexInTypesConfig(input: TypesConfig, indexFrom: number, indexTo: number): TypesConfig {
+  const result = fullCopyObject(input);
+
+  result.RADIUS = copyArrayIndex(input.RADIUS, indexFrom, indexTo);
+  result.FREQUENCIES = copyArrayIndex(input.FREQUENCIES, indexFrom, indexTo);
+
+  result.GRAVITY = copyMatrixIndex(input.GRAVITY, indexFrom, indexTo);
+  result.LINK_GRAVITY = copyMatrixIndex(input.LINK_GRAVITY, indexFrom, indexTo);
+
+  result.LINKS = copyArrayIndex(input.LINKS, indexFrom, indexTo);
+  result.TYPE_LINKS = copyMatrixIndex(input.TYPE_LINKS, indexFrom, indexTo);
+  result.TYPE_LINK_WEIGHTS = copyMatrixIndex(input.TYPE_LINK_WEIGHTS, indexFrom, indexTo);
+
+  result.LINK_FACTOR_DISTANCE = copyTensorIndex(input.LINK_FACTOR_DISTANCE, indexFrom, indexTo);
+  result.LINK_FACTOR_ELASTIC = copyTensorIndex(input.LINK_FACTOR_ELASTIC, indexFrom, indexTo);
+
+  // TODO do not need to clear transformation, but maybe need to copy it
 
   return result;
 }
