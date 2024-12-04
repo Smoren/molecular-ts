@@ -11,6 +11,7 @@ import InputHeader from "@/web/components/base/input-header.vue";
 import ConfigTensor from "@/web/components/inputs/config-tensor.vue";
 import TransformationConfig from "@/web/components/config-editor/components/widgets/transformation-config.vue";
 import { useRightBarStore } from '@/web/store/right-bar';
+import ConfigActions from "@/web/components/inputs/config-actions.vue";
 
 const configStore = useConfigStore();
 const rightBarStore = useRightBarStore();
@@ -24,10 +25,6 @@ const {
 
 const clean = () => {
   clearInactiveParams(typesConfig);
-}
-
-const clone = () => {
-  configStore.cloneType(0);
 }
 
 const setDefaultTypesConfig = () => {
@@ -56,13 +53,6 @@ const refill = () => {
   }
 };
 
-const removeType = (index: number) => {
-  if (confirm('Are you sure to remove type?')) {
-    configStore.removeTypeFromConfig(index);
-    refillAtoms!(true);
-  }
-}
-
 const linkDistanceFactorConfigDescription = computed(() => {
   return "Tensor of influence on neighbors links shows how particles of each type affect " +
       "the maximum length of links of neighboring particles of different types with particles of specific types."
@@ -81,11 +71,18 @@ const linkElasticFactorConfigDescription = computed(() => {
       <div class="btn-group" role="group">
         <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.RANDOMIZE)">Randomize</button>
         <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.EDIT_TYPES)">Edit</button>
-         <button class="btn btn-outline-secondary" @click="clone">Clone</button>
         <!-- <button class="btn btn-outline-secondary" @click="clean">Clean</button> -->
         <!-- <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button> -->
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
         <button class="btn btn-outline-secondary" @click="configStore.appendType">Add type</button>
+      </div>
+      <div>
+        <input-header
+          name="Actions"
+          tooltip="Dropdown menu of actions for each type."
+          position="center"
+        />
+        <config-actions :colors="typesConfig.COLORS" />
       </div>
       <div>
         <input-header
@@ -97,9 +94,6 @@ const linkElasticFactorConfigDescription = computed(() => {
           :values="typesConfig.FREQUENCIES"
           :colors="typesConfig.COLORS"
           :step="0.1"
-          color-title="Remove type"
-          color-cursor="pointer"
-          @colorClick="removeType"
         />
       </div>
       <div>
