@@ -1,4 +1,4 @@
-import type { GeneticSearch, SchedulerRule } from "genetic-search";
+import type { GeneticSearchInterface, SchedulerRule } from "genetic-search";
 import type { ClusterizationWeightsConfig, SimulationGenome } from "./types";
 import { Scheduler } from "genetic-search";
 import { single, summary } from "itertools-ts";
@@ -61,7 +61,7 @@ export function createDefaultClustersGradeMaximizeRules(): SchedulerRule<Simulat
 
 export function createSchedulerForClustersGradeMaximize(
   useScheduler: boolean,
-  runner: GeneticSearch<SimulationGenome>,
+  runner: GeneticSearchInterface<SimulationGenome>,
   config: ClusterizationWeightsConfig,
   maxHistoryLength: number = 10,
 ): Scheduler<SimulationGenome, ClusterizationWeightsConfig> {

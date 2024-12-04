@@ -1,5 +1,5 @@
 import os from 'os';
-import { type GeneticSearchFitConfig } from "genetic-search";
+import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/genetic/types";
 import { printGenerationSummary } from "@/scripts/lib/genetic/helpers";
