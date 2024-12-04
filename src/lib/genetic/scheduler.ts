@@ -1,5 +1,6 @@
-import type { SchedulerRule } from "genetic-search";
+import type { GeneticSearch, SchedulerRule } from "genetic-search";
 import type { ClusterizationWeightsConfig, SimulationGenome } from "./types";
+import { Scheduler } from "genetic-search";
 import { single, summary } from "itertools-ts";
 
 export function createMinCompoundSizeIncreaseRule(
@@ -49,4 +50,26 @@ export function createMinCompoundSizeDecreaseRule(
       input.logger(`minCompoundSize decreased (${input.config.minCompoundSize})`);
     },
   };
+}
+
+export function createDefaultClustersGradeMaximizeRules(): SchedulerRule<SimulationGenome, ClusterizationWeightsConfig>[] {
+  return [
+    createMinCompoundSizeIncreaseRule(15, 25),
+    createMinCompoundSizeDecreaseRule(10, 5),
+  ];
+}
+
+export function createSchedulerForClustersGradeMaximize(
+  useScheduler: boolean,
+  runner: GeneticSearch<SimulationGenome>,
+  config: ClusterizationWeightsConfig,
+  maxHistoryLength: number = 10,
+): Scheduler<SimulationGenome, ClusterizationWeightsConfig> {
+  const rules = useScheduler ? createDefaultClustersGradeMaximizeRules() : [];
+  return new Scheduler({
+    runner,
+    maxHistoryLength,
+    config,
+    rules,
+  });
 }

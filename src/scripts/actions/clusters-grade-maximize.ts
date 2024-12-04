@@ -1,11 +1,7 @@
 import os from 'os';
-import { type GeneticSearchFitConfig, Scheduler } from "genetic-search";
+import { type GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
-import type {
-  ClusterGradeMaximizeConfigFactoryConfig,
-  ClusterizationWeightsConfig,
-  SimulationGenome
-} from "@/lib/genetic/types";
+import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/genetic/types";
 import { printGenerationSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getWorldConfig,
@@ -26,10 +22,7 @@ import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiproce
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getCurrentDateTime } from '@/scripts/lib/helpers';
 import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
-import {
-  createMinCompoundSizeDecreaseRule,
-  createMinCompoundSizeIncreaseRule,
-} from "@/lib/genetic/scheduler";
+import { createSchedulerForClustersGradeMaximize } from "@/lib/genetic/scheduler";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -52,6 +45,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       populationFileName,
       cacheFileName,
       useConstCache,
+      useScheduler,
       useComposedAlgo,
       composedFinalPopulation,
       genomeAgeWeight,
@@ -99,17 +93,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
 
     console.log('[START] Running genetic search');
     const foundGenomeIds: Set<number> = new Set();
-
-    const scheduler = new Scheduler<SimulationGenome, ClusterizationWeightsConfig>({
-      runner: geneticSearch,
-      config: config.weightsConfig,
-      maxHistoryLength: 10,
-      rules: [
-        createMinCompoundSizeIncreaseRule(15, 25),
-        createMinCompoundSizeDecreaseRule(10, 5),
-      ],
-    });
-
+    const scheduler = createSchedulerForClustersGradeMaximize(useScheduler, geneticSearch, config.weightsConfig);
     const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
     const formatString = (count: number) => `Genomes handled: ${count}`;
 
@@ -183,6 +167,7 @@ function parseArgs(argsParser: ArgsParser) {
   const cacheFileName = argsParser.getNullableString('cacheFileName');
 
   const useConstCache = argsParser.getBool('useConstCache', false);
+  const useScheduler = argsParser.getBool('useScheduler', false);
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = useComposedAlgo ? argsParser.getInt('composedFinalPopulation', 5) : 0;
   const genomeAgeWeight = useConstCache ? 0 : argsParser.getFloat('genomeAgeWeight', 0.5);
@@ -205,6 +190,7 @@ function parseArgs(argsParser: ArgsParser) {
     populationFileName,
     cacheFileName,
     useConstCache,
+    useScheduler,
     useComposedAlgo,
     composedFinalPopulation,
     genomeAgeWeight,
