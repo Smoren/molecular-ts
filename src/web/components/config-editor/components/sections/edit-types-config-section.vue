@@ -111,11 +111,7 @@ watch(() => inputType.value, () => {
 
 <template>
   <config-section>
-    <template #title>
-      Edit types config
-    </template>
     <template #body>
-      <br />
       <div>
         <input-header name="Config item to edit" />
         <dropdown

@@ -74,6 +74,7 @@ const linkElasticFactorConfigDescription = computed(() => {
         <!-- <button class="btn btn-outline-secondary" @click="clean">Clean</button> -->
         <!-- <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button> -->
         <button class="btn btn-outline-secondary" @click="refill">Refill</button>
+        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.GENETIC)">Genetic</button>
         <button class="btn btn-outline-secondary" @click="configStore.appendType">Add type</button>
       </div>
       <div>

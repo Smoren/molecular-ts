@@ -253,11 +253,7 @@ const timeSeriesConfigMean: ChartConfig[] = [
 
 <template>
   <config-section>
-    <template #title>
-      Summary
-    </template>
     <template #body>
-      <br />
       <div v-for="config in timeSeriesConfigBase">
         <chart
           :id="config.id"

@@ -1,25 +1,11 @@
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
-import type { BarModeAlias, BarModesMap } from '@/web/types/nav';
+import { type BarModeAlias, type BarModesMap, modesMap } from '@/web/types/nav';
 import { AVAILABLE_MODES } from '@/web/types/nav';
 import { useNavHistoryStore } from '@/web/store/nav-history';
 import { useConfigStore } from '@/web/store/config';
 
-function createModesMap(input: Array<[BarModeAlias, string]>): BarModesMap {
-  const result = {} as BarModesMap;
-  for (const [alias, title] of input) {
-    result[alias] = { alias, title };
-  }
-  return result;
-}
-
 export const useRightBarStore = defineStore('rightBar', () => {
-  const modesMap = createModesMap([
-    ['RANDOMIZE', 'Randomize types config'],
-    ['SUMMARY', 'Summary'],
-    ['EDIT_TYPES', 'Edit types config'],
-  ]);
-
   const historyStore = useNavHistoryStore();
   const configStore = useConfigStore();
   const currentModeAlias = ref<BarModeAlias | undefined>();

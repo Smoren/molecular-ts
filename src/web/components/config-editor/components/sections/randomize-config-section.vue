@@ -56,9 +56,6 @@ const randomizeTypesConfig = () => {
 
 <template>
   <config-section>
-    <template #title>
-      Randomize Config
-    </template>
     <template #body>
       <div>
         <input-header
