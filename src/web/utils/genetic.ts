@@ -1,6 +1,6 @@
 import type { InitialConfig, RandomTypesConfig } from "@/lib/config/types";
 
-export function createDefaultPopulateRandomTypesConfigCollection(): RandomTypesConfig[] {
+export function createDefaultPopulateRandomTypesConfigCollection(typesCount: number): RandomTypesConfig[] {
   return [
     {
       TYPES_COUNT: 0,
@@ -98,10 +98,13 @@ export function createDefaultPopulateRandomTypesConfigCollection(): RandomTypesC
       LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
       LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false
     }
-  ];
+  ].map((x) => {
+    x.TYPES_COUNT = typesCount;
+    return x as RandomTypesConfig;
+  });
 }
 
-export function createDefaultMutationRandomTypesConfigCollection(): RandomTypesConfig[] {
+export function createDefaultMutationRandomTypesConfigCollection(typesCount: number): RandomTypesConfig[] {
   return [
     {
       TYPES_COUNT: 0,
@@ -231,7 +234,10 @@ export function createDefaultMutationRandomTypesConfigCollection(): RandomTypesC
       LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
       LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false
     }
-  ];
+  ].map((x) => {
+    x.TYPES_COUNT = typesCount;
+    return x as RandomTypesConfig;
+  });
 }
 
 export function createDefaultMutationProbabilities(): number[] {

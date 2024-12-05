@@ -68,8 +68,8 @@ function createAlgo() {
     } // TODO TTaskConfig to input
   };
   const weightsConfig: ClusterizationWeightsConfig = createDefaultClusterizationWeightsConfig();
-  const populateRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig)]; //, ...createDefaultPopulateRandomTypesConfigCollection()];
-  const mutationRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig)]; //, ...createDefaultMutationRandomTypesConfigCollection()];
+  const populateRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig), ...createDefaultPopulateRandomTypesConfigCollection(configStore.randomTypesConfig.TYPES_COUNT)];
+  const mutationRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig), ...createDefaultMutationRandomTypesConfigCollection(configStore.randomTypesConfig.TYPES_COUNT)];
   const mutationStrategyConfig: DynamicProbabilityMutationStrategyConfig = {
     probabilities: createDefaultMutationProbabilities(),
   }
@@ -119,13 +119,14 @@ async function runAlgoStep(algo: GeneticSearch<SimulationGenome>) {
 
   console.log(`Generation ${algo.generation}`, algo.bestGenome, algo.bestGenome.stats);
   console.log('Fitness', algo.population.map((x) => x.stats!.fitness));
-  configStore.setTypesConfig(algo.bestGenome.typesConfig);
 
   if (needStop.value) {
     isStarted.value = false;
     console.log('Genetic algo stopped.');
     return;
   }
+
+  configStore.setTypesConfig(algo.bestGenome.typesConfig);
 
   setTimeout(async () => {
     await runAlgoStep(algo);
