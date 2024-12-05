@@ -53,7 +53,9 @@ export function gradeMonomerPolymerPair(
   const edgesDiff = edgesDiffVector.abs;
 
   // TODO пока считаем, что полимеры соединены только одной связью, это допущение нужно исключить
-  const clarifiedEdgesDiff = edgesDiff - polymerSize;
+  const clarifiedEdgesDiff = edgesDiff - (polymerSize-1);
+
+  // TODO сделать новый граф, соединив мономер с собой polymerSize раз и сравнить с полимером по полной программе
 
   if (clarifiedEdgesDiff < 0) {
     // не хватает связей между мономерами
