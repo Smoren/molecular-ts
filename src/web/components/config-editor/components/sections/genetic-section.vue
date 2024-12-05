@@ -23,7 +23,7 @@ import { createDefaultClusterizationWeightsConfig } from "@/lib/analysis/utils";
 import { useConfigStore } from "@/web/store/config";
 import { fullCopyObject } from "@/lib/utils/functions";
 import { SimpleMetricsCache } from "genetic-search/src/cache";
-import { computed, ref } from "vue";
+import { computed, onUnmounted, ref } from "vue";
 import { arraySum, round } from "@/lib/math";
 import {
   createDefaultInitialConfig,
@@ -132,6 +132,10 @@ async function runAlgoStep(algo: GeneticSearch<SimulationGenome>) {
     await runAlgoStep(algo);
   }, 10);
 }
+
+onUnmounted(() => {
+  stopAlgo();
+});
 
 </script>
 
