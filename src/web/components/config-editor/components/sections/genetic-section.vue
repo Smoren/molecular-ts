@@ -48,6 +48,7 @@ const progress = computed(() => {
 });
 
 function createAlgo() {
+  const typesCount = configStore.typesConfig.FREQUENCIES.length;
   const worldConfig = fullCopyObject(configStore.worldConfig);
   worldConfig.TEMPERATURE_FUNCTION = () => 0;
   worldConfig.CONFIG_2D.INITIAL = createDefaultInitialConfig();
@@ -68,8 +69,20 @@ function createAlgo() {
     } // TODO TTaskConfig to input
   };
   const weightsConfig: ClusterizationWeightsConfig = createDefaultClusterizationWeightsConfig();
-  const populateRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig), ...createDefaultPopulateRandomTypesConfigCollection(configStore.randomTypesConfig.TYPES_COUNT)];
-  const mutationRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig), ...createDefaultMutationRandomTypesConfigCollection(configStore.randomTypesConfig.TYPES_COUNT)];
+  const populateRandomTypesConfigCollection = [
+    fullCopyObject(configStore.randomTypesConfig),
+    ...createDefaultPopulateRandomTypesConfigCollection(),
+  ].map((x) => {
+    x.TYPES_COUNT = typesCount;
+    return x;
+  });
+  const mutationRandomTypesConfigCollection = [
+    fullCopyObject(configStore.randomTypesConfig),
+    ...createDefaultMutationRandomTypesConfigCollection(),
+  ].map((x) => {
+    x.TYPES_COUNT = typesCount;
+    return x;
+  });
   const mutationStrategyConfig: DynamicProbabilityMutationStrategyConfig = {
     probabilities: createDefaultMutationProbabilities(),
   }
