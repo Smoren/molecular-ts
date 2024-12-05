@@ -26,5 +26,5 @@ export const modesMap = createModesMap([
   ['RANDOMIZE', 'Randomize types config'],
   ['SUMMARY', 'Summary'],
   ['EDIT_TYPES', 'Edit types config'],
-  ['GENETIC', 'Genetic algorithm'],
+  ['GENETIC', 'Genetic search'],
 ]);

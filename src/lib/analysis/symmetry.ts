@@ -11,7 +11,7 @@ import {
   splitGraphByLine,
 } from "../graph/utils";
 import { findOrthogonalLine, getLineByPoints } from "../math/geometry";
-import { convertDifferenceToNormalizedSimilarityGrade } from "@/lib/analysis/utils";
+import { convertDifferenceToNormalizedSimilarityGrade } from "./utils";
 
 // TODO parametrize type+edges_count
 // TODO parametrize type+linked_types

@@ -37,7 +37,7 @@ import { repeatRunSimulationForReferenceGrade } from './grade';
 import {
   ClusterizationMultiprocessingMetricsStrategy,
   ReferenceMultiprocessingMetricsStrategy
-} from "@/lib/genetic/multiprocessing";
+} from "./multiprocessing";
 
 export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;

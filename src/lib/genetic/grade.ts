@@ -9,6 +9,7 @@ import type { TotalSummary } from '../analysis/types';
 import { arraySum, averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
 import type { ClusterizationTaskConfig, ClusterizationWeightsConfig } from './types';
+import { sleep } from "./utils";
 
 export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
   const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
@@ -48,18 +49,23 @@ export function repeatRunSimulationForReferenceGrade(worldConfig: WorldConfig, t
   return averageMatrixColumns(result);
 }
 
-export function runSimulationForClustersGrade(
+export async function runSimulationForClustersGrade(
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,
   weights: ClusterizationWeightsConfig,
   checkpoints: number[],
-): number[] {
+  timeout?: number,
+): Promise<number[]> {
   const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
   const sim = runner.simulation;
   const summaryMatrix: number[][] = [];
 
   for (const stepsCount of checkpoints) {
-    runner.runSteps(stepsCount);
+    if (timeout) {
+      await runner.runStepsWithTimeout(stepsCount, timeout);
+    } else {
+      runner.runSteps(stepsCount);
+    }
 
     const compounds = sim.exportCompounds();
     const relativeCompoundedAtomsCount = arraySum(compounds.map((compound) => compound.size)) / sim.atoms.length;
@@ -78,6 +84,10 @@ export function runSimulationForClustersGrade(
     summaryMatrix.push(rawMatrix);
   }
 
+  if (timeout) {
+    await sleep(timeout);
+  }
+
   return averageMatrixColumns(summaryMatrix);
 }
 
@@ -91,7 +101,22 @@ export async function repeatRunSimulationForClustersGrade([
 ]: ClusterizationTaskConfig): Promise<number[]> {
   const result = [];
   for (let i=0; i<repeats; i++) {
-    result.push(runSimulationForClustersGrade(worldConfig, typesConfig, weights, checkpoints));
+    result.push(await runSimulationForClustersGrade(worldConfig, typesConfig, weights, checkpoints));
+  }
+  return averageMatrixColumns(result);
+}
+
+export async function repeatRunSimulationForClustersGradeWithTimeout([
+  _,
+  worldConfig,
+  typesConfig,
+  weights,
+  checkpoints,
+  repeats,
+]: ClusterizationTaskConfig): Promise<number[]> {
+  const result = [];
+  for (let i=0; i<repeats; i++) {
+    result.push(await runSimulationForClustersGrade(worldConfig, typesConfig, weights, checkpoints, 1));
   }
   return averageMatrixColumns(result);
 }

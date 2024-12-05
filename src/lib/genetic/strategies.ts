@@ -178,7 +178,7 @@ export class ReferenceMetricsStrategy extends BaseMetricsStrategy<SimulationGeno
 }
 
 export class ClusterizationMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
-  private weights: ClusterizationWeightsConfig;
+  private readonly weights: ClusterizationWeightsConfig;
 
   constructor(config: SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
     super(config);
