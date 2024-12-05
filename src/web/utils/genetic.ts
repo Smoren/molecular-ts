@@ -1,0 +1,247 @@
+import type { InitialConfig, RandomTypesConfig } from "@/lib/config/types";
+
+export function createDefaultPopulateRandomTypesConfigCollection(): RandomTypesConfig[] {
+  return [
+    {
+      TYPES_COUNT: 0,
+
+      USE_RADIUS_BOUNDS: false,
+      USE_FREQUENCY_BOUNDS: false,
+      USE_GRAVITY_BOUNDS: true,
+      USE_LINK_GRAVITY_BOUNDS: true,
+      USE_LINK_BOUNDS: true,
+      USE_LINK_TYPE_BOUNDS: true,
+      USE_LINK_TYPE_WEIGHT_BOUNDS: true,
+      USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+      USE_LINK_FACTOR_ELASTIC_BOUNDS: true,
+
+      RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+      FREQUENCY_BOUNDS: [0.5, 1, 0.7, 0.1],
+      GRAVITY_BOUNDS: [-10, 1, -1, 0.1],
+      LINK_GRAVITY_BOUNDS: [-15, 1, -1, 0.1],
+      LINK_BOUNDS: [1, 8, 4],
+      LINK_TYPE_BOUNDS: [0, 6, 3],
+      LINK_TYPE_WEIGHT_BOUNDS: [-3, 2, 1, 0.5],
+      LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
+      LINK_FACTOR_ELASTIC_BOUNDS: [0.7, 1, 1, 0.1],
+
+      GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
+      LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
+      LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false
+    },
+    {
+      TYPES_COUNT: 0,
+
+      USE_RADIUS_BOUNDS: false,
+      USE_FREQUENCY_BOUNDS: false,
+      USE_GRAVITY_BOUNDS: true,
+      USE_LINK_GRAVITY_BOUNDS: true,
+      USE_LINK_BOUNDS: true,
+      USE_LINK_TYPE_BOUNDS: true,
+      USE_LINK_TYPE_WEIGHT_BOUNDS: true,
+      USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+      USE_LINK_FACTOR_ELASTIC_BOUNDS: false,
+
+      RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+      FREQUENCY_BOUNDS: [0.5, 1, 0.7, 0.1],
+      GRAVITY_BOUNDS: [-10, -1, -3, 0.1],
+      LINK_GRAVITY_BOUNDS: [-15, -1, -3, 0.1],
+      LINK_BOUNDS: [1, 5, 4],
+      LINK_TYPE_BOUNDS: [0, 3, 3],
+      LINK_TYPE_WEIGHT_BOUNDS: [0.5, 2, 1, 0.5],
+      LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
+      LINK_FACTOR_ELASTIC_BOUNDS: [0.7, 1, 1, 0.1],
+
+      GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
+      LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
+      LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false
+    },
+    {
+      TYPES_COUNT: 0,
+
+      USE_RADIUS_BOUNDS: false,
+      USE_FREQUENCY_BOUNDS: false,
+      USE_GRAVITY_BOUNDS: true,
+      USE_LINK_GRAVITY_BOUNDS: true,
+      USE_LINK_BOUNDS: true,
+      USE_LINK_TYPE_BOUNDS: true,
+      USE_LINK_TYPE_WEIGHT_BOUNDS: true,
+      USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+      USE_LINK_FACTOR_ELASTIC_BOUNDS: true,
+
+      RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+      FREQUENCY_BOUNDS: [0.5, 1, 0.7, 0.1],
+      GRAVITY_BOUNDS: [-10, -1, -3, 0.1],
+      LINK_GRAVITY_BOUNDS: [-15, -1, -3, 0.1],
+      LINK_BOUNDS: [1, 5, 4],
+      LINK_TYPE_BOUNDS: [0, 3, 3],
+      LINK_TYPE_WEIGHT_BOUNDS: [0.5, 2, 1, 0.5],
+      LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
+      LINK_FACTOR_ELASTIC_BOUNDS: [1, 1, 1, 0.1],
+
+      GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
+      LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
+      LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false
+    }
+  ];
+}
+
+export function createDefaultMutationRandomTypesConfigCollection(): RandomTypesConfig[] {
+  return [
+    {
+      TYPES_COUNT: 0,
+
+      USE_RADIUS_BOUNDS: false,
+      USE_FREQUENCY_BOUNDS: false,
+      USE_GRAVITY_BOUNDS: true,
+      USE_LINK_GRAVITY_BOUNDS: true,
+      USE_LINK_BOUNDS: true,
+      USE_LINK_TYPE_BOUNDS: true,
+      USE_LINK_TYPE_WEIGHT_BOUNDS: true,
+      USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+      USE_LINK_FACTOR_ELASTIC_BOUNDS: true,
+
+      RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+      FREQUENCY_BOUNDS: [0.5, 1, 0.7, 0.1],
+      GRAVITY_BOUNDS: [-10, 1, -1, 0.1],
+      LINK_GRAVITY_BOUNDS: [-15, 1, -1, 0.1],
+      LINK_BOUNDS: [1, 8, 4],
+      LINK_TYPE_BOUNDS: [0, 6, 3],
+      LINK_TYPE_WEIGHT_BOUNDS: [-3, 2, 1, 0.5],
+      LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
+      LINK_FACTOR_ELASTIC_BOUNDS: [0.7, 1, 1, 0.1],
+
+      GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
+      LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
+      LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false
+    },
+    {
+      TYPES_COUNT: 0,
+
+      USE_RADIUS_BOUNDS: false,
+      USE_FREQUENCY_BOUNDS: false,
+      USE_GRAVITY_BOUNDS: true,
+      USE_LINK_GRAVITY_BOUNDS: true,
+      USE_LINK_BOUNDS: true,
+      USE_LINK_TYPE_BOUNDS: true,
+      USE_LINK_TYPE_WEIGHT_BOUNDS: true,
+      USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+      USE_LINK_FACTOR_ELASTIC_BOUNDS: false,
+
+      RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+      FREQUENCY_BOUNDS: [0.5, 1, 0.7, 0.1],
+      GRAVITY_BOUNDS: [-10, -1, -3, 0.1],
+      LINK_GRAVITY_BOUNDS: [-15, -1, -3, 0.1],
+      LINK_BOUNDS: [1, 5, 4],
+      LINK_TYPE_BOUNDS: [0, 3, 3],
+      LINK_TYPE_WEIGHT_BOUNDS: [0.5, 2, 1, 0.5],
+      LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
+      LINK_FACTOR_ELASTIC_BOUNDS: [0.7, 1, 1, 0.1],
+
+      GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
+      LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
+      LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false
+    },
+    {
+      TYPES_COUNT: 0,
+
+      USE_RADIUS_BOUNDS: false,
+      USE_FREQUENCY_BOUNDS: false,
+      USE_GRAVITY_BOUNDS: true,
+      USE_LINK_GRAVITY_BOUNDS: true,
+      USE_LINK_BOUNDS: true,
+      USE_LINK_TYPE_BOUNDS: true,
+      USE_LINK_TYPE_WEIGHT_BOUNDS: true,
+      USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+      USE_LINK_FACTOR_ELASTIC_BOUNDS: true,
+
+      RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+      FREQUENCY_BOUNDS: [0.5, 1, 0.7, 0.1],
+      GRAVITY_BOUNDS: [-10, -1, -3, 0.1],
+      LINK_GRAVITY_BOUNDS: [-15, -1, -3, 0.1],
+      LINK_BOUNDS: [1, 5, 4],
+      LINK_TYPE_BOUNDS: [0, 3, 3],
+      LINK_TYPE_WEIGHT_BOUNDS: [0.5, 2, 1, 0.5],
+      LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
+      LINK_FACTOR_ELASTIC_BOUNDS: [1, 1, 1, 0.1],
+
+      GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
+      LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
+      LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false
+    },
+    {
+      TYPES_COUNT: 0,
+
+      USE_RADIUS_BOUNDS: false,
+      USE_FREQUENCY_BOUNDS: true,
+      USE_GRAVITY_BOUNDS: false,
+      USE_LINK_GRAVITY_BOUNDS: false,
+      USE_LINK_BOUNDS: false,
+      USE_LINK_TYPE_BOUNDS: false,
+      USE_LINK_TYPE_WEIGHT_BOUNDS: false,
+      USE_LINK_FACTOR_DISTANCE_BOUNDS: false,
+      USE_LINK_FACTOR_ELASTIC_BOUNDS: false,
+
+      RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
+      FREQUENCY_BOUNDS: [0.5, 1, 0.7, 0.1],
+      GRAVITY_BOUNDS: [-10, -1, -3, 0.1],
+      LINK_GRAVITY_BOUNDS: [-15, -1, -3, 0.1],
+      LINK_BOUNDS: [1, 5, 4],
+      LINK_TYPE_BOUNDS: [0, 3, 3],
+      LINK_TYPE_WEIGHT_BOUNDS: [0.5, 2, 1, 0.5],
+      LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
+      LINK_FACTOR_ELASTIC_BOUNDS: [1, 1, 1, 0.1],
+
+      GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_MATRIX_SYMMETRIC: false,
+      LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
+      LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
+      LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
+      LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false
+    }
+  ];
+}
+
+export function createDefaultMutationProbabilities(): number[] {
+  return [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5];
+}
+
+export function createDefaultInitialConfig(): InitialConfig {
+  return {
+    ATOMS_COUNT: 500,
+    MIN_POSITION: [0, 0],
+    MAX_POSITION: [1000, 1000],
+  }
+}

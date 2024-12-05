@@ -24,11 +24,19 @@ import { useConfigStore } from "@/web/store/config";
 import { fullCopyObject } from "@/lib/utils/functions";
 import { SimpleMetricsCache } from "genetic-search/src/cache";
 import { computed, ref } from "vue";
-import { round } from "@/lib/math";
+import { arraySum, round } from "@/lib/math";
+import {
+  createDefaultInitialConfig,
+  createDefaultMutationProbabilities,
+  createDefaultMutationRandomTypesConfigCollection,
+  createDefaultPopulateRandomTypesConfigCollection
+} from "@/web/utils/genetic";
 
 const configStore = useConfigStore();
 const isStarted = ref(false);
+const needStop = ref(false);
 const bestGenome = ref<SimulationGenome | undefined>();
+const averageScore = ref(0);
 const generation = ref(0);
 const genomesHandled = ref(0);
 
@@ -42,9 +50,7 @@ const progress = computed(() => {
 function createAlgo() {
   const worldConfig = fullCopyObject(configStore.worldConfig);
   worldConfig.TEMPERATURE_FUNCTION = () => 0;
-  worldConfig.CONFIG_2D.INITIAL.ATOMS_COUNT = 500;
-  worldConfig.CONFIG_2D.INITIAL.MIN_POSITION = [0, 0];
-  worldConfig.CONFIG_2D.INITIAL.MAX_POSITION = [1000, 1000];
+  worldConfig.CONFIG_2D.INITIAL = createDefaultInitialConfig();
 
   const macroConfig: GeneticSearchConfig = {
     populationSize: POPULATION_SIZE,
@@ -53,7 +59,7 @@ function createAlgo() {
   };
   const metricsStrategyConfig: SimulationMetricsStrategyConfig<ClusterizationTaskConfig> = {
     worldConfig,
-    checkpoints: [50, 50],
+    checkpoints: [30, 30],
     repeats: 1,
     task: repeatRunSimulationForClustersGradeWithTimeout,
     onTaskResult: (metrics) => {
@@ -62,10 +68,10 @@ function createAlgo() {
     } // TODO TTaskConfig to input
   };
   const weightsConfig: ClusterizationWeightsConfig = createDefaultClusterizationWeightsConfig();
-  const populateRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig)];
-  const mutationRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig)];
+  const populateRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig)]; //, ...createDefaultPopulateRandomTypesConfigCollection()];
+  const mutationRandomTypesConfigCollection = [fullCopyObject(configStore.randomTypesConfig)]; //, ...createDefaultMutationRandomTypesConfigCollection()];
   const mutationStrategyConfig: DynamicProbabilityMutationStrategyConfig = {
-    probabilities: [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5],
+    probabilities: createDefaultMutationProbabilities(),
   }
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
@@ -95,7 +101,8 @@ function startAlgo() {
 }
 
 function stopAlgo() {
-  isStarted.value = false;
+  console.log('Stopping genetic algo...');
+  needStop.value = true;
 }
 
 async function runAlgoStep(algo: GeneticSearch<SimulationGenome>) {
@@ -107,12 +114,16 @@ async function runAlgoStep(algo: GeneticSearch<SimulationGenome>) {
   bestGenome.value = algo.bestGenome;
   generation.value = algo.generation;
 
+  const scores = algo.population.map((x) => x.stats!.fitness);
+  averageScore.value = arraySum(scores) / scores.length;
+
   console.log(`Generation ${algo.generation}`, algo.bestGenome, algo.bestGenome.stats);
   console.log('Fitness', algo.population.map((x) => x.stats!.fitness));
   configStore.setTypesConfig(algo.bestGenome.typesConfig);
 
-  if (!isStarted.value) {
-    console.log('Stopping genetic algo');
+  if (needStop.value) {
+    isStarted.value = false;
+    console.log('Genetic algo stopped.');
     return;
   }
 
@@ -128,12 +139,13 @@ async function runAlgoStep(algo: GeneticSearch<SimulationGenome>) {
     <button class="btn btn-outline-secondary" @click="startAlgo" :disabled="isStarted">
       Start
     </button>
-    <button class="btn btn-outline-secondary" @click="stopAlgo" :disabled="!isStarted">
+    <button class="btn btn-outline-secondary" @click="stopAlgo" :disabled="!isStarted || needStop">
       Stop
     </button>
   </div>
   <div class="progress-block" v-if="isStarted">
     Genomes handled: <b>{{ genomesHandled }}</b>
+    <span v-if="needStop">&nbsp;(stopping...)</span>
     <div class="progress">
       <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{ width: progress + '%'}"></div>
     </div>
@@ -153,6 +165,10 @@ async function runAlgoStep(algo: GeneticSearch<SimulationGenome>) {
         <tr v-if="bestGenome">
           <td>Best genome score</td>
           <td>{{ round(bestGenome!.stats!.fitness, 4) }}</td>
+        </tr>
+        <tr v-if="bestGenome">
+          <td>Average population score</td>
+          <td>{{ round(averageScore, 4) }}</td>
         </tr>
       </tbody>
     </table>

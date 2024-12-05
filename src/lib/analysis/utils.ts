@@ -68,8 +68,9 @@ export function scoreCompoundClustersSummary(
   ));
 
   const clustersCount = summary.clusters.length;
-  const relativeClustered = summary.clusteredCount / summary.filteredCount;
-  const relativeFiltered = summary.filteredCount / summary.inputCount;
+  const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
+  const relativeFiltered = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
+
   return clustersScore
     * clustersCount ** weights.clustersCountWeight
     * relativeClustered ** weights.relativeClusteredCountWeight
