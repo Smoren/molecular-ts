@@ -106,6 +106,7 @@ function startAlgo() {
   }
 
   console.log('Start genetic algo');
+  generation.value = 0;
 
   isStarted.value = true;
   const algo = createAlgo();
