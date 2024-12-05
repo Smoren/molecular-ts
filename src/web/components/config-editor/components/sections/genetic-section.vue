@@ -47,6 +47,8 @@ const progress = computed(() => {
   return genomesHandled.value / totalCount * 100;
 });
 
+class StopException extends Error {}
+
 function createAlgo() {
   const typesCount = configStore.typesConfig.FREQUENCIES.length;
   const worldConfig = fullCopyObject(configStore.worldConfig);
@@ -66,6 +68,9 @@ function createAlgo() {
     onTaskResult: (metrics) => {
       console.log('genome handled', metrics);
       genomesHandled.value++;
+      if (needStop.value) {
+        throw new StopException();
+      }
     } // TODO TTaskConfig to input
   };
   const weightsConfig: ClusterizationWeightsConfig = createDefaultClusterizationWeightsConfig();
@@ -122,17 +127,23 @@ function stopAlgo() {
 async function runAlgoStep(algo: GeneticSearch<SimulationGenome>) {
   genomesHandled.value = 0;
 
-  await algo.fitStep();
-  algo.clearCache();
+  try {
+    await algo.fitStep();
+    algo.clearCache();
 
-  bestGenome.value = algo.bestGenome;
-  generation.value = algo.generation;
+    bestGenome.value = algo.bestGenome;
+    generation.value = algo.generation;
 
-  const scores = algo.population.map((x) => x.stats!.fitness);
-  averageScore.value = arraySum(scores) / scores.length;
+    const scores = algo.population.map((x) => x.stats!.fitness);
+    averageScore.value = arraySum(scores) / scores.length;
 
-  console.log(`Generation ${algo.generation}`, algo.bestGenome, algo.bestGenome.stats);
-  console.log('Fitness', algo.population.map((x) => x.stats!.fitness));
+    console.log(`Generation ${algo.generation}`, algo.bestGenome, algo.bestGenome.stats);
+    console.log('Fitness', algo.population.map((x) => x.stats!.fitness));
+  } catch (e) {
+    if (!(e instanceof StopException)) {
+      throw e;
+    }
+  }
 
   if (needStop.value) {
     isStarted.value = false;
