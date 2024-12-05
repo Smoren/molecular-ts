@@ -8,7 +8,7 @@ import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../analysis/types';
 import { arraySum, averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
-import type { ClusterizationWeightsConfig } from './types';
+import type { ClusterizationTaskConfig, ClusterizationWeightsConfig } from './types';
 
 export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
   const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
@@ -81,13 +81,14 @@ export function runSimulationForClustersGrade(
   return averageMatrixColumns(summaryMatrix);
 }
 
-export function repeatRunSimulationForClustersGrade(
-  worldConfig: WorldConfig,
-  typesConfig: TypesConfig,
-  weights: ClusterizationWeightsConfig,
-  checkpoints: number[],
-  repeats: number,
-): number[] {
+export async function repeatRunSimulationForClustersGrade([
+  _,
+  worldConfig,
+  typesConfig,
+  weights,
+  checkpoints,
+  repeats,
+]: ClusterizationTaskConfig): Promise<number[]> {
   const result = [];
   for (let i=0; i<repeats; i++) {
     result.push(runSimulationForClustersGrade(worldConfig, typesConfig, weights, checkpoints));

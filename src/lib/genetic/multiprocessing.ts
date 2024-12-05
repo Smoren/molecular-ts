@@ -1,5 +1,31 @@
-import type { ClusterizationTaskConfig, ReferenceTaskConfig } from "./types";
+import type {
+  ClusterizationTaskConfig,
+  ClusterizationWeightsConfig,
+  ReferenceTaskConfig,
+  SimulationGenome,
+  SimulationMultiprocessingMetricsStrategyConfig,
+} from "./types";
+import { BaseMultiprocessingMetricsStrategy } from "genetic-search-multiprocess";
 import { repeatRunSimulationForReferenceGrade } from "./grade";
+
+export class ReferenceMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>, ReferenceTaskConfig> {
+  protected createTaskInput(genome: SimulationGenome): ReferenceTaskConfig {
+    return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
+  }
+}
+
+export class ClusterizationMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
+  private weights: ClusterizationWeightsConfig;
+
+  constructor(config: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
+    super(config);
+    this.weights = weights;
+  }
+
+  protected createTaskInput(genome: SimulationGenome): ClusterizationTaskConfig {
+    return [genome.id, this.config.worldConfig, genome.typesConfig, this.weights, this.config.checkpoints, this.config.repeats];
+  }
+}
 
 export const referenceGradeMultiprocessingTask = async ([
   _,
@@ -40,5 +66,12 @@ export const clusterizationGradeMultiprocessingTask = async ([
   const dirName = __dirname.replace('/node_modules/multiprocess-pool/dist', '/src');
   const { repeatRunSimulationForClustersGrade } = await import(`${dirName}/lib/genetic/grade`);
 
-  return repeatRunSimulationForClustersGrade(worldConfig, typesConfig, weights, checkpoints, repeats);
+  return repeatRunSimulationForClustersGrade([
+    _,
+    worldConfig,
+    typesConfig,
+    weights,
+    checkpoints,
+    repeats,
+  ]);
 }

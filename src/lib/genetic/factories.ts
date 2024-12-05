@@ -25,17 +25,19 @@ import {
   convertSummaryMatrixRowToObject,
 } from '../genetic/helpers';
 import {
-  ClusterizationMultiprocessingMetricsStrategy,
   ClusterizationFitnessStrategy,
   ComposedCrossoverStrategy,
   DynamicProbabilityMutationStrategy,
   RandomPopulateStrategy,
   SourceMutationPopulateStrategy,
   SourceMutationStrategy,
-  ReferenceMultiprocessingMetricsStrategy,
   ClassicCrossoverStrategy,
 } from '../genetic/strategies';
 import { repeatRunSimulationForReferenceGrade } from './grade';
+import {
+  ClusterizationMultiprocessingMetricsStrategy,
+  ReferenceMultiprocessingMetricsStrategy
+} from "@/lib/genetic/multiprocessing";
 
 export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;

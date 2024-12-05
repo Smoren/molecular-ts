@@ -18,10 +18,7 @@ import type {
 } from './types';
 import type { RandomTypesConfig, TypesConfig } from '../config/types';
 import type { ReferenceTaskConfig } from './types';
-import {
-  BaseMetricsStrategy,
-  BaseMultiprocessingMetricsStrategy,
-} from "genetic-search";
+import { BaseMetricsStrategy } from "genetic-search";
 import {
   createTransparentTypesConfig,
   crossTypesConfigs,
@@ -180,16 +177,10 @@ export class ReferenceMetricsStrategy extends BaseMetricsStrategy<SimulationGeno
   }
 }
 
-export class ReferenceMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>, ReferenceTaskConfig> {
-  protected createTaskInput(genome: SimulationGenome): ReferenceTaskConfig {
-    return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
-  }
-}
-
-export class ClusterizationMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
+export class ClusterizationMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
   private weights: ClusterizationWeightsConfig;
 
-  constructor(config: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
+  constructor(config: SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
     super(config);
     this.weights = weights;
   }
