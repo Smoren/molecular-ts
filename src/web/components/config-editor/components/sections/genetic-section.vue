@@ -122,6 +122,7 @@ async function runAlgoStep(algo: GeneticSearch<SimulationGenome>) {
 
   if (needStop.value) {
     isStarted.value = false;
+    needStop.value = false;
     console.log('Genetic algo stopped.');
     return;
   }
