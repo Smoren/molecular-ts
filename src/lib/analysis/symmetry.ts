@@ -1,18 +1,17 @@
 import { infinite, single } from "itertools-ts";
 import type { LineCoefficients, NumericVector, VectorInterface } from "../math/types";
 import type { GraphInterface } from "../graph/types";
-import { createVector, toVector } from "../math";
+import { createVector } from "../math";
 import {
   calcDistanceBetweenGraphsByTypesCombined,
   findFarthestVertexPair,
   getGraphAverageRadius,
   getGraphCentroid,
-  getVertexAzimuth,
   getVertexesSortedByAzimuth,
-  getWeightedGraphCentroid,
   splitGraphByLine,
 } from "../graph/utils";
 import { findOrthogonalLine, getLineByPoints } from "../math/geometry";
+import { convertDifferenceToNormalizedSimilarityGrade } from "@/lib/analysis/utils";
 
 // TODO parametrize type+edges_count
 // TODO parametrize type+linked_types
@@ -35,10 +34,6 @@ type ScoreSymmetryFunctionArguments = {
 }
 
 type ScoreSymmetryAxisFunction = (params: ScoreSymmetryAxisFunctionArguments) => number;
-
-export function normSymmetryScore(x: number, normCoefficient: number = 0.5): number {
-  return 1 / (1 + Math.abs(x)*normCoefficient);
-}
 
 export function scoreSymmetryAxis({
   graph,
@@ -148,20 +143,7 @@ export function scoreBilateralSymmetry({
         bestAxis = axis;
       }
     }
-
-    // // Проверим ось симметрии с угловым коэффициентом tan(azimuth(a)) — пытаемся провести прямую через точку a.
-    // const k1 = Math.tan(getVertexAzimuth(lhs, centroid));
-    // const p1 = lhs.position;
-    // const b1 = p1[1] - k1 * p1[0]; // y = kx + b => b = y - kx
-    // checkSymmetryAxis(graph, [k1, b1], radius, 0.5);
-    //
-    // // Проверим ось симметрии с угловым коэффициентом tan((azimuth(a) + azimuth(b)) * 0.5) — пытаемся провести
-    // // посередине между a и b (собственно, ради этого и затевалась сортировка по азимутам).
-    // const k2 = Math.tan(getVertexAzimuth(lhs, centroid) + getVertexAzimuth(rhs, centroid)) * 0.5;
-    // const p2 = createVector(lhs.position).add(rhs.position).div(2);
-    // const b2 = p2[1] - k2 * p2[0]; // y = kx + b => b = y - kx
-    // checkSymmetryAxis(graph, [k2, b2], radius, 0.5);
   }
 
-  return [normSymmetryScore(bestScore, normCoefficient), bestAxis];
+  return [convertDifferenceToNormalizedSimilarityGrade(bestScore, normCoefficient), bestAxis];
 }

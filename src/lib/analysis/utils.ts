@@ -148,6 +148,10 @@ export function calcGraphRadius(graph: GraphInterface): number {
   return getGraphAverageRadius(graph, getGraphCentroid(graph));
 }
 
+export function convertDifferenceToNormalizedSimilarityGrade(diff: number, normCoefficient: number = 0.5): number {
+  return 1 / (1 + Math.abs(diff)*normCoefficient);
+}
+
 export function createDefaultClusterizationWeightsConfig(): ClusterizationWeightsConfig {
   return {
     minCompoundSize: 5,
