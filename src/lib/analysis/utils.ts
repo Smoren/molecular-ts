@@ -77,6 +77,9 @@ export function scoreCompoundClustersSummary(
 }
 
 export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsClusterGrade {
+  const vertexTypesVector = calcAverageVertexTypesVector(cluster);
+  const edgeTypesVector = calcAverageEdgeTypesVector(cluster);
+  const typesVector = [...vertexTypesVector].concat(edgeTypesVector).map((x) => Math.round(x));
   return {
     size: cluster.length,
     difference: calcGraphsClusterAverageDifference(cluster),
@@ -84,8 +87,9 @@ export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsC
     vertexesBounds: calcVertexesBounds(cluster),
     edgesBounds: calcEdgesBounds(cluster),
     typesCountBounds: calcTypesCountBounds(cluster),
-    vertexTypesVector: calcAverageVertexTypesVector(cluster),
-    edgeTypesVector: calcAverageEdgeTypesVector(cluster),
+    vertexTypesVector,
+    edgeTypesVector,
+    typesVector,
     radius: calcAverageGraphRadius(cluster),
     speedBounds: calcSpeedBounds(cluster),
     speedAverage: calcAverageSpeed(cluster),
