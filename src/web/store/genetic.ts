@@ -15,7 +15,7 @@ import type {
   SimulationGenome,
   SimulationMetricsStrategyConfig,
 } from "@/lib/genetic/types";
-import type { RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
+import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
 import {
   GeneticSearch,
   Scheduler,
@@ -32,7 +32,6 @@ import {
 } from "@/lib/genetic/strategies";
 import { fullCopyObject } from "@/lib/utils/functions";
 import {
-  createDefaultMutationProbabilities,
   createDefaultMutationRandomTypesConfigCollection,
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
@@ -97,10 +96,6 @@ export const useGeneticStore = defineStore("genetic", () => {
     }
 
     algoRaw = createAlgo();
-    // setTimeout(() => {
-    //   runAlgoStep();
-    // }, 10);
-    // return;
 
     beforeStart();
 
@@ -114,39 +109,6 @@ export const useGeneticStore = defineStore("genetic", () => {
       afterStep();
     }
   };
-
-  async function runAlgoStep() {
-    beforeStart();
-
-    try {
-      await algoRaw!.fitStep();
-      algoRaw!.clearCache();
-
-      bestGenome.value = algoRaw!.bestGenome;
-      population.value = algoRaw!.population;
-      populationSummary.value = algoRaw!.getPopulationSummary(4);
-      genomesHandled.value = 0;
-
-      console.log(`Generation ${algoRaw!.generation}`, algoRaw!.bestGenome, algoRaw!.bestGenome.stats);
-      console.log('Fitness', algoRaw!.population.map((x) => x.stats!.fitness));
-    } catch (e) {
-      if (!(e instanceof StopException)) {
-        throw e;
-      }
-    } finally {
-      afterStep();
-    }
-
-    if (isStopping.value) {
-      return;
-    }
-
-    applyBestGenome();
-
-    setTimeout(async () => {
-      await runAlgoStep();
-    }, 10);
-  }
 
   const stop = () => {
     isStopping.value = true;
@@ -178,8 +140,10 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const initConfigsFromStore = () => {
     worldConfig.value = fullCopyObject(configStore.worldConfig);
+    worldConfig.value.CONFIG_2D.INITIAL = createDefaultInitialConfig();
     worldConfig.value.TEMPERATURE_FUNCTION = configStore.worldConfig.TEMPERATURE_FUNCTION ?? (() => 0);
     worldConfigRaw.TEMPERATURE_FUNCTION = configStore.worldConfig.TEMPERATURE_FUNCTION ?? (() => 0);
+
     typesConfig.value = fullCopyObject(configStore.typesConfig);
     randomTypesConfig.value = fullCopyObject(configStore.randomTypesConfig);
   }
@@ -236,8 +200,8 @@ export const useGeneticStore = defineStore("genetic", () => {
     fitness: new ClusterizationFitnessStrategy(),
     mutation: new DynamicProbabilityMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
     crossover: new ClassicCrossoverStrategy(),
-    cache: new SimpleMetricsCache(),
-    // cache: new WeightedAgeAverageMetricsCache(0.5),
+    // cache: new SimpleMetricsCache(),
+    cache: new WeightedAgeAverageMetricsCache(0.5),
   });
 
   const createFitConfig = (): GeneticSearchFitConfig => ({
@@ -259,6 +223,18 @@ export const useGeneticStore = defineStore("genetic", () => {
   const createAlgo = (): GeneticSearchInterface<SimulationGenome> => {
     return new GeneticSearch<SimulationGenome>(macroConfig.value, createStrategyConfig());
   };
+
+  const createDefaultMutationProbabilities = (): number[] => {
+    return [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5];
+  }
+
+  const createDefaultInitialConfig = (): InitialConfig => {
+    return {
+      ATOMS_COUNT: 500,
+      MIN_POSITION: [0, 0],
+      MAX_POSITION: [1000, 1000],
+    }
+  }
 
   const setConfigRaw = <T, U extends Record<string, unknown>>(fromConfig: U, toConfig: U) => {
     const buf = fullCopyObject(fromConfig);

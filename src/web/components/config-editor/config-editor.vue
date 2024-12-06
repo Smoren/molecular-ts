@@ -19,7 +19,6 @@ import { useLeftBarStore } from '@/web/store/left-bar';
 import { useRightBarStore } from '@/web/store/right-bar';
 import EditTypesConfigSection from '@/web/components/config-editor/components/sections/edit-types-config-section.vue';
 import GeneticSection from "@/web/components/config-editor/components/sections/genetic-section.vue";
-import GeneticSectionOld from "@/web/components/config-editor/components/sections/genetic-section-old.vue";
 
 const leftBarStore = useLeftBarStore();
 const rightBarStore = useRightBarStore();
@@ -78,7 +77,6 @@ const activeAccordionItem = ref('collapse-world');
             <summary-section v-if="rightBarStore.isMode(rightBarStore.modes.SUMMARY)" />
             <edit-types-config-section v-if="rightBarStore.isMode(rightBarStore.modes.EDIT_TYPES)" />
             <genetic-section v-if="rightBarStore.isMode(rightBarStore.modes.GENETIC)" />
-<!--            <genetic-section-old v-if="rightBarStore.isMode(rightBarStore.modes.GENETIC)" />-->
           </div>
         </template>
       </sidebar>

@@ -233,15 +233,3 @@ export function createDefaultMutationRandomTypesConfigCollection(): RandomTypesC
     }
   ];
 }
-
-export function createDefaultMutationProbabilities(): number[] {
-  return [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5];
-}
-
-export function createDefaultInitialConfig(): InitialConfig {
-  return {
-    ATOMS_COUNT: 500,
-    MIN_POSITION: [0, 0],
-    MAX_POSITION: [1000, 1000],
-  }
-}
