@@ -172,12 +172,17 @@ export const useGeneticStore = defineStore("genetic", () => {
     probabilities: createDefaultMutationProbabilities(),
   });
 
+  let time = Date.now();
+
   const createMetricsStrategyConfig = (): SimulationMetricsStrategyConfig<ClusterizationTaskConfig> => ({
     worldConfig: worldConfigRaw,
     checkpoints: [30, 30],
     repeats: 1,
     task: repeatRunSimulationForClustersGradeWithTimeout,
     onTaskResult: (metrics) => {
+      console.log('time spent', Date.now() - time);
+      time = Date.now();
+
       console.log('genome handled', metrics);
       genomesHandled.value++;
       if (isStopping.value) {

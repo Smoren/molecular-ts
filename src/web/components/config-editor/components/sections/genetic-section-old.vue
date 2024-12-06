@@ -60,12 +60,16 @@ function createAlgo() {
     survivalRate: 0.5,
     crossoverRate: 0.5,
   };
+  let time = Date.now();
   const metricsStrategyConfig: SimulationMetricsStrategyConfig<ClusterizationTaskConfig> = {
     worldConfig,
     checkpoints: [30, 30],
     repeats: 1,
     task: repeatRunSimulationForClustersGradeWithTimeout,
     onTaskResult: (metrics) => {
+      console.log('time spent', Date.now() - time);
+      time = Date.now();
+
       console.log('genome handled', metrics);
       genomesHandled.value++;
       if (needStop.value) {
