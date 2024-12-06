@@ -36,8 +36,7 @@ import {
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
 import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/grade";
-import type { PopulationSummary } from "genetic-search/lib/types";
-import { arraySum } from "@/lib/math";
+import type { GenomeMetricsRow, PopulationSummary } from "genetic-search/src/types";
 
 class StopException extends Error {}
 
@@ -69,6 +68,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   const genomesHandled = ref(0);
   const typesCount = computed(() => typesConfig.value.FREQUENCIES.length);
 
+  const generation = ref<number>(0);
   const bestGenome = ref<SimulationGenome | undefined>();
   const population = ref<Population<SimulationGenome> | undefined>();
   const populationSummary = ref<PopulationSummary | undefined>();
@@ -83,8 +83,6 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const populationFitness = computed(() => populationStats.value
     .map((x) => x.fitness));
-
-  const generation = computed(() => (algo.value?.generation ?? 1) - 1);
 
   const isRunning = computed(() => {
     return algo.value !== undefined && isStarted.value;
@@ -121,6 +119,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   const resetState = () => {
     isStarted.value = false;
     isStopping.value = false;
+    generation.value = 0;
     genomesHandled.value = 0;
   };
 
@@ -136,6 +135,30 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const afterStep = () => {
     resetState();
+  }
+
+  const onTaskResultHandler = (metrics: GenomeMetricsRow) => {
+    console.log('time spent', Date.now() - time);
+    time = Date.now();
+
+    console.log('genome handled', metrics);
+    genomesHandled.value++;
+    if (isStopping.value) {
+      throw new StopException();
+    }
+  };
+
+  const afterStepHandler = (gen: number) => {
+    console.log(`Generation ${gen}`, algoRaw?.bestGenome, algoRaw?.bestGenome.stats, algoRaw?.getPopulationSummary(4));
+    generation.value = gen;
+    bestGenome.value = algoRaw!.bestGenome;
+    population.value = algoRaw!.population;
+    populationSummary.value = algoRaw!.getPopulationSummary(4);
+    genomesHandled.value = 0;
+
+    if (!isStopping.value) {
+      applyBestGenome();
+    }
   }
 
   const initConfigsFromStore = () => {
@@ -182,16 +205,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     checkpoints: [30, 30],
     repeats: 1,
     task: repeatRunSimulationForClustersGradeWithTimeout,
-    onTaskResult: (metrics) => {
-      console.log('time spent', Date.now() - time);
-      time = Date.now();
-
-      console.log('genome handled', metrics);
-      genomesHandled.value++;
-      if (isStopping.value) {
-        throw new StopException();
-      }
-    } // TODO TTaskConfig to input
+    onTaskResult: onTaskResultHandler, // TODO TTaskConfig to input
   });
 
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
@@ -205,17 +219,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   });
 
   const createFitConfig = (): GeneticSearchFitConfig => ({
-    afterStep: (gen) => {
-      console.log(`Generation ${gen}`, algoRaw?.bestGenome, algoRaw?.bestGenome.stats, algoRaw?.getPopulationSummary(4));
-      bestGenome.value = algoRaw!.bestGenome;
-      population.value = algoRaw!.population;
-      populationSummary.value = algoRaw!.getPopulationSummary(4);
-      genomesHandled.value = 0;
-
-      if (!isStopping.value) {
-        applyBestGenome();
-      }
-    },
+    afterStep: afterStepHandler,
     stopCondition: () => isStopping.value,
     scheduler: schedulerRaw,
   });
