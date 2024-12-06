@@ -38,6 +38,7 @@ import {
 } from "@/web/utils/genetic";
 import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/grade";
 import type { PopulationSummary } from "genetic-search/lib/types";
+import { arraySum } from "@/lib/math";
 
 class StopException extends Error {}
 
@@ -96,19 +97,56 @@ export const useGeneticStore = defineStore("genetic", () => {
     }
 
     algoRaw = createAlgo();
+    // setTimeout(() => {
+    //   runAlgoStep();
+    // }, 10);
+    // return;
 
     beforeStart();
 
     try {
-      await algoRaw.fit(createFitConfig());
+      await algoRaw!.fit(createFitConfig());
     } catch (e) {
       if (!(e instanceof StopException)) {
         throw e;
       }
     } finally {
-      afterStop();
+      afterStep();
     }
   };
+
+  async function runAlgoStep() {
+    beforeStart();
+
+    try {
+      await algoRaw!.fitStep();
+      algoRaw!.clearCache();
+
+      bestGenome.value = algoRaw!.bestGenome;
+      population.value = algoRaw!.population;
+      populationSummary.value = algoRaw!.getPopulationSummary(4);
+      genomesHandled.value = 0;
+
+      console.log(`Generation ${algoRaw!.generation}`, algoRaw!.bestGenome, algoRaw!.bestGenome.stats);
+      console.log('Fitness', algoRaw!.population.map((x) => x.stats!.fitness));
+    } catch (e) {
+      if (!(e instanceof StopException)) {
+        throw e;
+      }
+    } finally {
+      afterStep();
+    }
+
+    if (isStopping.value) {
+      return;
+    }
+
+    applyBestGenome();
+
+    setTimeout(async () => {
+      await runAlgoStep(algo);
+    }, 10);
+  }
 
   const stop = () => {
     isStopping.value = true;
@@ -134,7 +172,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     isStarted.value = true;
   };
 
-  const afterStop = () => {
+  const afterStep = () => {
     resetState();
   }
 

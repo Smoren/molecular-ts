@@ -77,8 +77,8 @@ const activeAccordionItem = ref('collapse-world');
             <randomize-config-section v-if="rightBarStore.isMode(rightBarStore.modes.RANDOMIZE)" />
             <summary-section v-if="rightBarStore.isMode(rightBarStore.modes.SUMMARY)" />
             <edit-types-config-section v-if="rightBarStore.isMode(rightBarStore.modes.EDIT_TYPES)" />
-<!--            <genetic-section v-if="rightBarStore.isMode(rightBarStore.modes.GENETIC)" />-->
-            <genetic-section-old v-if="rightBarStore.isMode(rightBarStore.modes.GENETIC)" />
+            <genetic-section v-if="rightBarStore.isMode(rightBarStore.modes.GENETIC)" />
+<!--            <genetic-section-old v-if="rightBarStore.isMode(rightBarStore.modes.GENETIC)" />-->
           </div>
         </template>
       </sidebar>
