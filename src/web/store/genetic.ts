@@ -144,7 +144,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     applyBestGenome();
 
     setTimeout(async () => {
-      await runAlgoStep(algo);
+      await runAlgoStep();
     }, 10);
   }
 
