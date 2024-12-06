@@ -43,6 +43,10 @@ const geneticStore = useGeneticStore();
           <td>Average population score</td>
           <td>{{ round(geneticStore.populationSummary!.fitnessSummary.mean, 4) }}</td>
         </tr>
+        <tr v-if="geneticStore.populationSummary">
+          <td>Median population score</td>
+          <td>{{ round(geneticStore.populationSummary!.fitnessSummary.median, 4) }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
