@@ -7,6 +7,7 @@ import type {
   GeneticSearchStrategyConfig,
   Population,
 } from "genetic-search";
+import { SimpleMetricsCache } from "genetic-search";
 import type {
   ClusterizationTaskConfig,
   ClusterizationWeightsConfig,
@@ -197,7 +198,8 @@ export const useGeneticStore = defineStore("genetic", () => {
     fitness: new ClusterizationFitnessStrategy(),
     mutation: new DynamicProbabilityMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
     crossover: new ClassicCrossoverStrategy(),
-    cache: new WeightedAgeAverageMetricsCache(0.5),
+    cache: new SimpleMetricsCache(),
+    // cache: new WeightedAgeAverageMetricsCache(0.5),
   });
 
   const createFitConfig = (): GeneticSearchFitConfig => ({
