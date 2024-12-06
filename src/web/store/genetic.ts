@@ -1,12 +1,11 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
-import {
-  GeneticSearch,
-  type GeneticSearchConfig,
-  type GeneticSearchFitConfig,
-  type GeneticSearchInterface,
-  type GeneticSearchStrategyConfig,
-  type Scheduler,
+import { computed, ref, watch } from "vue";
+import type {
+  GeneticSearchConfig,
+  GeneticSearchFitConfig,
+  GeneticSearchInterface,
+  GeneticSearchStrategyConfig,
+  Population,
 } from "genetic-search";
 import type {
   ClusterizationTaskConfig,
@@ -16,6 +15,11 @@ import type {
   SimulationMetricsStrategyConfig,
 } from "@/lib/genetic/types";
 import type { RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
+import {
+  GeneticSearch,
+  Scheduler,
+  WeightedAgeAverageMetricsCache,
+} from "genetic-search";
 import { useConfigStore } from "@/web/store/config";
 import { createDefaultClusterizationWeightsConfig } from "@/lib/analysis/utils";
 import {
@@ -25,7 +29,6 @@ import {
   DynamicProbabilityMutationStrategy,
   RandomPopulateStrategy,
 } from "@/lib/genetic/strategies";
-import { SimpleMetricsCache } from "genetic-search/src/cache";
 import { fullCopyObject } from "@/lib/utils/functions";
 import {
   createDefaultMutationProbabilities,
@@ -33,6 +36,7 @@ import {
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
 import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/grade";
+import type { PopulationSummary } from "genetic-search/lib/types";
 
 class StopException extends Error {}
 
@@ -44,36 +48,45 @@ export const useGeneticStore = defineStore("genetic", () => {
     survivalRate: 0.5,
     crossoverRate: 0.5,
   });
-  const worldConfig = ref<WorldConfig>(fullCopyObject(configStore.worldConfig));
-  const typesConfig = ref<TypesConfig>(fullCopyObject(configStore.typesConfig));
-  const randomTypesConfig = ref<RandomTypesConfig>(fullCopyObject(configStore.randomTypesConfig));
-  const weightsConfig = ref<ClusterizationWeightsConfig>(createDefaultClusterizationWeightsConfig());
-  const mutationStrategyConfig = ref<DynamicProbabilityMutationStrategyConfig>({
-    probabilities: createDefaultMutationProbabilities(),
-  });
+  const worldConfigRaw: WorldConfig = fullCopyObject(configStore.worldConfig);
+  const typesConfigRaw: TypesConfig = fullCopyObject(configStore.typesConfig);
+  const randomTypesConfigRaw: RandomTypesConfig = fullCopyObject(configStore.randomTypesConfig);
+  const weightsConfigRaw: ClusterizationWeightsConfig = createDefaultClusterizationWeightsConfig();
+
+  const worldConfig = ref<WorldConfig>(worldConfigRaw);
+  const typesConfig = ref<TypesConfig>(typesConfigRaw);
+  const randomTypesConfig = ref<RandomTypesConfig>(randomTypesConfigRaw);
+  const weightsConfig = ref<ClusterizationWeightsConfig>(weightsConfigRaw);
+
+  let algoRaw: GeneticSearchInterface<SimulationGenome> | undefined;
+  let schedulerRaw: Scheduler<SimulationGenome, Record<string, unknown>>;
 
   const algo = ref<GeneticSearchInterface<SimulationGenome> | undefined>();
-  const scheduler = ref<Scheduler<SimulationGenome, Record<string, unknown>> | undefined>();
-  const isStopping = ref(false);
 
+  const isStarted = ref(false);
+  const isStopping = ref(false);
   const genomesHandled = ref(0);
+  const typesCount = computed(() => typesConfig.value.FREQUENCIES.length);
+
+  const bestGenome = ref<SimulationGenome | undefined>();
+  const population = ref<Population<SimulationGenome> | undefined>();
+  const populationSummary = ref<PopulationSummary | undefined>();
+
   const progress = computed(() => macroConfig.value.populationSize
     ? (genomesHandled.value / macroConfig.value.populationSize * 100)
     : 0);
 
-  const typesCount = computed(() => typesConfig.value.FREQUENCIES.length);
-  const bestGenome = computed(() => algo.value?.bestGenome);
-  const populationSummary = computed(() => algo.value?.getPopulationSummary(4));
-
-  const populationStats = computed(() => (algo.value?.population ?? [])
+  const populationStats = computed(() => (population.value ?? [])
     .filter((x) => x.stats !== undefined)
     .map((x) => x.stats!));
 
   const populationFitness = computed(() => populationStats.value
     .map((x) => x.fitness));
 
+  const generation = computed(() => (algo.value?.generation ?? 1) - 1);
+
   const isRunning = computed(() => {
-    return algo.value !== undefined;
+    return algo.value !== undefined && isStarted.value;
   });
 
   const start = async () => {
@@ -81,17 +94,18 @@ export const useGeneticStore = defineStore("genetic", () => {
       return;
     }
 
-    resetState();
-    initConfigsFromStore();
+    algoRaw = createAlgo();
 
-    algo.value = createAlgo();
+    beforeStart();
 
     try {
-      await algo.value.fit(createFitConfig());
+      await algoRaw.fit(createFitConfig());
     } catch (e) {
       if (!(e instanceof StopException)) {
         throw e;
       }
+    } finally {
+      afterStop();
     }
   };
 
@@ -100,26 +114,46 @@ export const useGeneticStore = defineStore("genetic", () => {
   };
 
   const clear = () => {
-    algo.value = undefined;
+    algoRaw = undefined;
   };
 
   const resetState = () => {
+    isStarted.value = false;
     isStopping.value = false;
     genomesHandled.value = 0;
   };
 
+  const beforeStart = () => {
+    algoRaw!.population[0].typesConfig = fullCopyObject(configStore.typesConfig);
+    algo.value = algoRaw;
+
+    resetState();
+    initConfigsFromStore();
+
+    isStarted.value = true;
+  };
+
+  const afterStop = () => {
+    resetState();
+  }
+
   const initConfigsFromStore = () => {
     worldConfig.value = fullCopyObject(configStore.worldConfig);
+    worldConfig.value.TEMPERATURE_FUNCTION = configStore.worldConfig.TEMPERATURE_FUNCTION ?? (() => 0);
+    worldConfigRaw.TEMPERATURE_FUNCTION = configStore.worldConfig.TEMPERATURE_FUNCTION ?? (() => 0);
     typesConfig.value = fullCopyObject(configStore.typesConfig);
     randomTypesConfig.value = fullCopyObject(configStore.randomTypesConfig);
   }
 
-  const applyTypesConfig = () => {
-    configStore.setTypesConfig(typesConfig.value);
+  const applyBestGenome = () => {
+    if (bestGenome.value === undefined) {
+      throw new Error('Best genome is undefined');
+    }
+    configStore.setTypesConfig(bestGenome.value?.typesConfig);
   }
 
   const createPopulateRandomTypesConfigCollection = () => [
-    fullCopyObject(configStore.randomTypesConfig),
+    fullCopyObject(randomTypesConfigRaw),
     ...createDefaultPopulateRandomTypesConfigCollection(),
   ].map((x) => {
     x.TYPES_COUNT = typesCount.value;
@@ -127,7 +161,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   });
 
   const createMutationRandomTypesConfigCollection = () => [
-    fullCopyObject(configStore.randomTypesConfig),
+    fullCopyObject(randomTypesConfigRaw),
     ...createDefaultMutationRandomTypesConfigCollection(),
   ].map((x) => {
     x.TYPES_COUNT = typesCount.value;
@@ -139,7 +173,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   });
 
   const createMetricsStrategyConfig = (): SimulationMetricsStrategyConfig<ClusterizationTaskConfig> => ({
-    worldConfig: worldConfig.value,
+    worldConfig: worldConfigRaw,
     checkpoints: [30, 30],
     repeats: 1,
     task: repeatRunSimulationForClustersGradeWithTimeout,
@@ -154,40 +188,75 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
     populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
-    metrics: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), weightsConfig.value),
+    metrics: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), weightsConfigRaw),
     fitness: new ClusterizationFitnessStrategy(),
     mutation: new DynamicProbabilityMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
     crossover: new ClassicCrossoverStrategy(),
-    cache: new SimpleMetricsCache(),
+    cache: new WeightedAgeAverageMetricsCache(0.5),
   });
 
   const createFitConfig = (): GeneticSearchFitConfig => ({
-    afterStep: (generation) => {
-      console.log('generation', generation);
+    afterStep: (gen) => {
+      console.log(`Generation ${gen}`, algoRaw?.bestGenome, algoRaw?.bestGenome.stats, algoRaw?.getPopulationSummary(4));
+      bestGenome.value = algoRaw!.bestGenome;
+      population.value = algoRaw!.population;
+      populationSummary.value = algoRaw!.getPopulationSummary(4);
+      genomesHandled.value = 0;
+
+      if (!isStopping.value) {
+        applyBestGenome();
+      }
     },
     stopCondition: () => isStopping.value,
-    scheduler: scheduler.value,
+    scheduler: schedulerRaw,
   });
 
   const createAlgo = (): GeneticSearchInterface<SimulationGenome> => {
     return new GeneticSearch<SimulationGenome>(macroConfig.value, createStrategyConfig());
   };
 
+  const setConfigRaw = <T, U extends Record<string, unknown>>(fromConfig: U, toConfig: U) => {
+    const buf = fullCopyObject(fromConfig);
+    for (const i in fromConfig) {
+      (toConfig[i as keyof U] as T) = buf[i as keyof U] as T;
+    }
+  }
+
+  const setWorldConfigRaw = (newConfig: WorldConfig) => {
+    setConfigRaw(newConfig, worldConfigRaw);
+    worldConfigRaw.TEMPERATURE_FUNCTION = worldConfigRaw.TEMPERATURE_FUNCTION ?? (() => 0);
+  }
+
+  watch(worldConfig, (newConfig: WorldConfig) => {
+    setWorldConfigRaw(newConfig);
+  }, { deep: true });
+
+  watch(typesConfig, (newConfig: TypesConfig) => {
+    setConfigRaw(newConfig, typesConfigRaw);
+  }, { deep: true });
+
+  watch(randomTypesConfig, (newConfig: RandomTypesConfig) => {
+    setConfigRaw(newConfig, randomTypesConfigRaw);
+  }, { deep: true });
+
+  watch(weightsConfig, (newConfig: ClusterizationWeightsConfig) => {
+    setConfigRaw(newConfig, weightsConfigRaw);
+  }, { deep: true });
+
   return {
     macroConfig,
     weightsConfig,
-    mutationStrategyConfig,
     isRunning,
     isStopping,
     bestGenome,
     populationSummary,
     populationStats,
     populationFitness,
+    generation,
     genomesHandled,
     progress,
     start,
     stop,
     clear,
-    applyTypesConfig,
   }
 });

@@ -82,10 +82,10 @@ export async function runSimulationForClustersGrade(
       relativeLinksCount ** weights.relativeLinksCountWeight,
     ];
     summaryMatrix.push(rawMatrix);
-  }
 
-  if (timeout) {
-    await sleep(timeout);
+    if (timeout) {
+      await sleep(timeout);
+    }
   }
 
   return averageMatrixColumns(summaryMatrix);
