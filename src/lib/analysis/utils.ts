@@ -171,3 +171,22 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
     relativeLinksCountWeight: 1,
   };
 }
+
+export function createModifiedClusterizationWeightsConfig(): ClusterizationWeightsConfig {
+  return {
+    minCompoundSize: 8,
+    clustersCountWeight: 1,
+    clusterSizeWeight: 1,
+    relativeFilteredCountWeight: 1,
+    relativeClusteredCountWeight: 1,
+    vertexesCountWeight: 2,
+    edgesCountWeight: 1,
+    uniqueTypesCountWeight: 1,
+    symmetryWeight: 1,
+    differenceWeight: 1,
+    radiusWeight: 0.5,
+    speedWeight: 0.5,
+    relativeCompoundedAtomsCountWeight: 1,
+    relativeLinksCountWeight: 1,
+  };
+}
