@@ -174,7 +174,7 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
 
 export function createModifiedClusterizationWeightsConfig(): ClusterizationWeightsConfig {
   return {
-    minCompoundSize: 8,
+    minCompoundSize: 6,
     clustersCountWeight: 1,
     clusterSizeWeight: 1,
     relativeFilteredCountWeight: 1,
