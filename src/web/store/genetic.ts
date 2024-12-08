@@ -171,7 +171,9 @@ export const useGeneticStore = defineStore("genetic", () => {
     worldConfigRaw.TEMPERATURE_FUNCTION = configStore.worldConfig.TEMPERATURE_FUNCTION ?? (() => 0);
 
     typesConfig.value = fullCopyObject(configStore.typesConfig);
+
     randomTypesConfig.value = fullCopyObject(configStore.randomTypesConfig);
+    randomTypesConfig.value.TYPES_COUNT = typesCount.value;
   }
 
   const applyBestGenome = () => {
