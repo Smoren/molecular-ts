@@ -6,6 +6,7 @@ import type {
   GeneticSearchInterface,
   GeneticSearchStrategyConfig,
   Population,
+  GenomeStats,
 } from "genetic-search";
 import type {
   ClusterizationTaskConfig,
@@ -72,14 +73,11 @@ export const useGeneticStore = defineStore("genetic", () => {
   const population = ref<Population<SimulationGenome> | undefined>();
   const populationSize = ref<number>(0);
   const populationSummary = ref<PopulationSummary | undefined>();
+  const populationStats = ref<GenomeStats[]>([]);
 
   const progress = computed(() => macroConfig.value.populationSize
     ? (genomesHandled.value / populationSize.value * 100)
     : 0);
-
-  const populationStats = computed(() => (population.value ?? [])
-    .filter((x) => x.stats !== undefined)
-    .map((x) => x.stats!));
 
   const populationFitness = computed(() => populationStats.value
     .map((x) => x.fitness));
@@ -157,6 +155,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     generation.value = gen;
     bestGenome.value = algoRaw!.bestGenome;
     population.value = algoRaw!.population;
+    populationStats.value = algoRaw!.generationStats;
     populationSummary.value = algoRaw!.getPopulationSummary(4);
     genomesHandled.value = 0;
 

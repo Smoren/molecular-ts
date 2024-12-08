@@ -3,12 +3,13 @@
 import { useGeneticStore } from "@/web/store/genetic";
 import { round } from "@/lib/math";
 import InputHeader from "@/web/components/base/input-header.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
+import ChartStatic from "@/web/components/config-editor/components/widgets/chart-static.vue";
 
 const geneticStore = useGeneticStore();
-
 const activeAccordionItem = ref('collapse-macro');
+const fitnessChartData = computed(() => geneticStore.populationFitness.map((y, x) => ({x, y})));
 
 </script>
 
@@ -28,13 +29,16 @@ const activeAccordionItem = ref('collapse-macro');
       <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{ width: geneticStore.progress + '%'}"></div>
     </div>
   </div>
-
   <div class="summary">
     <table class="table" style="width: 100%">
       <tbody>
         <tr v-if="geneticStore.generation">
           <td width="50%">Generation</td>
           <td>{{ geneticStore.generation }}</td>
+        </tr>
+        <tr v-if="geneticStore.populationSummary">
+          <td>Stagnation counter</td>
+          <td>{{ geneticStore.populationSummary!.stagnationCounter }}</td>
         </tr>
         <tr v-if="geneticStore.bestGenome">
           <td>Best genome ID</td>
@@ -54,6 +58,10 @@ const activeAccordionItem = ref('collapse-macro');
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="genetic-charts-container" v-if="fitnessChartData.length">
+    <h6>Population fitness</h6>
+    <chart-static :data="fitnessChartData" />
   </div>
   <MDBAccordion v-model="activeAccordionItem">
     <MDBAccordionItem headerTitle="Macro config" collapseId="collapse-macro">
@@ -153,6 +161,15 @@ const activeAccordionItem = ref('collapse-macro');
 
 .config-block input[type=number] {
   width: 100%;
+}
+
+.genetic-charts-container {
+  margin-top: 30px;
+  margin-bottom: 30px;
+
+  h6 {
+    margin-bottom: 15px;
+  }
 }
 
 </style>

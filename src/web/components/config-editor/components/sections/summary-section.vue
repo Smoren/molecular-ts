@@ -3,8 +3,8 @@
 import { ref, type Ref } from 'vue';
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
 import { useSimulationStore } from '@/web/store/simulation';
-import type { TimeSeriesConfig } from "@/web/components/config-editor/components/widgets/chart.vue";
-import Chart from "@/web/components/config-editor/components/widgets/chart.vue";
+import type { TimeSeriesConfig } from "@/web/components/config-editor/components/widgets/chart-flow.vue";
+import ChartFlow from "@/web/components/config-editor/components/widgets/chart-flow.vue";
 import Flag from '@/web/components/inputs/flag.vue';
 
 const { getCurrentSimulation } = useSimulationStore();
@@ -255,7 +255,7 @@ const timeSeriesConfigMean: ChartConfig[] = [
   <config-section>
     <template #body>
       <div v-for="config in timeSeriesConfigBase">
-        <chart
+        <chart-flow
           :id="config.id"
           :name="config.name"
           :data="config.data"
@@ -269,7 +269,7 @@ const timeSeriesConfigMean: ChartConfig[] = [
         <flag title="Mean Mode" v-model="showMean" />
       </div>
       <div v-for="config in timeSeriesConfigCount" v-show="!showMean">
-        <chart
+        <chart-flow
           :id="config.id"
           :name="config.name"
           :data="config.data"
@@ -280,7 +280,7 @@ const timeSeriesConfigMean: ChartConfig[] = [
         />
       </div>
       <div v-for="config in timeSeriesConfigMean" v-show="showMean">
-        <chart
+        <chart-flow
           :id="config.id"
           :name="config.name"
           :data="config.data"
