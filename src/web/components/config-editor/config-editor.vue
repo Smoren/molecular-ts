@@ -23,7 +23,7 @@ import GeneticSection from "@/web/components/config-editor/components/sections/g
 const leftBarStore = useLeftBarStore();
 const rightBarStore = useRightBarStore();
 
-const activeAccordionItem = ref('collapse-world');
+const activeAccordionItem = ref('collapse-types');
 
 </script>
 
