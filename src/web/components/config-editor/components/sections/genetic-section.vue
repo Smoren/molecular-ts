@@ -2,6 +2,7 @@
 
 import { useGeneticStore } from "@/web/store/genetic";
 import { round } from "@/lib/math";
+import InputHeader from "@/web/components/base/input-header.vue";
 
 const geneticStore = useGeneticStore();
 
@@ -50,6 +51,65 @@ const geneticStore = useGeneticStore();
       </tbody>
     </table>
   </div>
+  <div class="weights-config">
+    <h4>Weights config</h4>
+    <div>
+      <input-header name="Min compound size" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.minCompoundSize" />
+    </div>
+    <div>
+      <input-header name="Weight of clusters count" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.clustersCountWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of cluster size" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.clusterSizeWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of filtered compounds count" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeFilteredCountWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of clustered compounds count" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeFilteredCountWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of atoms count in clustered compound" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.vertexesCountWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of links count in clustered compound" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.edgesCountWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of unique types count in clustered compound" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.uniqueTypesCountWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of symmetry grade of clustered compounds" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.symmetryWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of difference grade of compounds in cluster" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.differenceWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of compounds radii in clusters" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.radiusWeight" />
+    </div>
+    <div>
+      <input-header name="Weight of compounds speeds in clusters" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.speedWeight" />
+    </div>
+    <div>
+      <input-header name="Relative compounded atoms count weight" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeCompoundedAtomsCountWeight" />
+    </div>
+    <div>
+      <input-header name="Relative compounded links count weight" />
+      <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeLinksCountWeight" />
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -62,6 +122,14 @@ const geneticStore = useGeneticStore();
 
 .summary {
   margin-top: 30px;
+}
+
+.weights-config > div {
+  margin-bottom: 15px;
+}
+
+.weights-config input[type=number] {
+  width: 100%;
 }
 
 </style>
