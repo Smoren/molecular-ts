@@ -22,7 +22,7 @@ const activeAccordionItem = ref('collapse-macro');
     </button>
   </div>
   <div class="progress-block" v-if="geneticStore.isRunning">
-    Genomes handled: <b>{{ geneticStore.genomesHandled }} / {{ geneticStore.macroConfig.populationSize }}</b>
+    Genomes handled: <b>{{ geneticStore.genomesHandled }} / {{ geneticStore.populationSize }}</b>
     <span v-if="geneticStore.isStopping">&nbsp;(stopping...)</span>
     <div class="progress">
       <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{ width: geneticStore.progress + '%'}"></div>

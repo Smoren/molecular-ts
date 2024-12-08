@@ -7,7 +7,6 @@ import type {
   GeneticSearchStrategyConfig,
   Population,
 } from "genetic-search";
-import { SimpleMetricsCache } from "genetic-search";
 import type {
   ClusterizationTaskConfig,
   ClusterizationWeightsConfig,
@@ -22,10 +21,7 @@ import {
   WeightedAgeAverageMetricsCache,
 } from "genetic-search";
 import { useConfigStore } from "@/web/store/config";
-import {
-  createDefaultClusterizationWeightsConfig,
-  createModifiedClusterizationWeightsConfig
-} from "@/lib/analysis/utils";
+import { createModifiedClusterizationWeightsConfig } from "@/lib/analysis/utils";
 import {
   ClassicCrossoverStrategy,
   ClusterizationFitnessStrategy,
@@ -74,10 +70,11 @@ export const useGeneticStore = defineStore("genetic", () => {
   const generation = ref<number>(0);
   const bestGenome = ref<SimulationGenome | undefined>();
   const population = ref<Population<SimulationGenome> | undefined>();
+  const populationSize = ref<number>(0);
   const populationSummary = ref<PopulationSummary | undefined>();
 
   const progress = computed(() => macroConfig.value.populationSize
-    ? (genomesHandled.value / macroConfig.value.populationSize * 100)
+    ? (genomesHandled.value / populationSize.value * 100)
     : 0);
 
   const populationStats = computed(() => (population.value ?? [])
@@ -151,6 +148,10 @@ export const useGeneticStore = defineStore("genetic", () => {
     }
   };
 
+  const beforeStepHandler = () => {
+    populationSize.value = algoRaw!.population.length;
+  };
+
   const afterStepHandler = (gen: number) => {
     console.log(`Generation ${gen}`, algoRaw?.bestGenome, algoRaw?.bestGenome.stats, algoRaw?.getPopulationSummary(4));
     generation.value = gen;
@@ -219,11 +220,11 @@ export const useGeneticStore = defineStore("genetic", () => {
     fitness: new ClusterizationFitnessStrategy(),
     mutation: new DynamicProbabilityMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
     crossover: new ClassicCrossoverStrategy(),
-    // cache: new SimpleMetricsCache(),
     cache: new WeightedAgeAverageMetricsCache(0.5),
   });
 
   const createFitConfig = (): GeneticSearchFitConfig => ({
+    beforeStep: beforeStepHandler,
     afterStep: afterStepHandler,
     stopCondition: () => isStopping.value,
     scheduler: schedulerRaw,
@@ -279,6 +280,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     isRunning,
     isStopping,
     bestGenome,
+    populationSize,
     populationSummary,
     populationStats,
     populationFitness,
