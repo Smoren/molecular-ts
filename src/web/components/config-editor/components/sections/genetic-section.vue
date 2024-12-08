@@ -8,7 +8,7 @@ import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
 
 const geneticStore = useGeneticStore();
 
-const activeAccordionItem = ref('collapse-weights');
+const activeAccordionItem = ref('collapse-macro');
 
 </script>
 
@@ -56,11 +56,27 @@ const activeAccordionItem = ref('collapse-weights');
     </table>
   </div>
   <MDBAccordion v-model="activeAccordionItem">
+    <MDBAccordionItem headerTitle="Macro config" collapseId="collapse-macro">
+      <div class="config-block">
+        <div>
+          <input-header name="Population size" />
+          <input type="number" step="1" v-model="geneticStore.macroConfig.populationSize" />
+        </div>
+        <div>
+          <input-header name="Survival rate" />
+          <input type="number" step="0.1" v-model="geneticStore.macroConfig.survivalRate" />
+        </div>
+        <div>
+          <input-header name="Crossover rate" />
+          <input type="number" step="0.1" v-model="geneticStore.macroConfig.crossoverRate" />
+        </div>
+      </div>
+    </MDBAccordionItem>
     <MDBAccordionItem headerTitle="Weights config" collapseId="collapse-weights">
-      <div class="weights-config">
+      <div class="config-block">
         <div>
           <input-header name="Min compound size" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.minCompoundSize" />
+          <input type="number" step="1" v-model="geneticStore.weightsConfig.minCompoundSize" />
         </div>
         <div>
           <input-header name="Weight of clusters count" />
@@ -131,11 +147,11 @@ const activeAccordionItem = ref('collapse-weights');
   margin-top: 30px;
 }
 
-.weights-config > div {
+.config-block > div {
   margin-bottom: 15px;
 }
 
-.weights-config input[type=number] {
+.config-block input[type=number] {
   width: 100%;
 }
 
