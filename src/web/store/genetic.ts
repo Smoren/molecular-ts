@@ -155,7 +155,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     generation.value = gen;
     bestGenome.value = algoRaw!.bestGenome;
     population.value = algoRaw!.population;
-    populationStats.value = algoRaw!.generationStats;
+    populationStats.value = algoRaw!.population.map((x) => x.stats!);
     populationSummary.value = algoRaw!.getPopulationSummary(4);
     genomesHandled.value = 0;
 
