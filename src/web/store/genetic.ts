@@ -44,7 +44,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   const configStore = useConfigStore();
 
   const macroConfig = ref<GeneticSearchConfig>({
-    populationSize: 30,
+    populationSize: 50,
     survivalRate: 0.5,
     crossoverRate: 0.5,
   });
@@ -74,6 +74,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   const populationSize = ref<number>(0);
   const populationSummary = ref<PopulationSummary | undefined>();
   const populationStats = ref<GenomeStats[]>([]);
+  const statsHistory = ref<GenomeStats[]>([]);
 
   const progress = computed(() => macroConfig.value.populationSize
     ? (genomesHandled.value / populationSize.value * 100)
@@ -119,15 +120,16 @@ export const useGeneticStore = defineStore("genetic", () => {
     isStopping.value = false;
     generation.value = 0;
     genomesHandled.value = 0;
+    statsHistory.value = [];
   };
 
   const beforeStart = () => {
-    algoRaw!.population[0].typesConfig = fullCopyObject(configStore.typesConfig);
     algo.value = algoRaw;
 
     resetState();
     initConfigsFromStore();
 
+    algoRaw!.population[0].typesConfig = fullCopyObject(configStore.typesConfig);
     isStarted.value = true;
   };
 
@@ -152,11 +154,13 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const afterStepHandler = (gen: number) => {
     console.log(`Generation ${gen}`, algoRaw?.bestGenome, algoRaw?.bestGenome.stats, algoRaw?.getPopulationSummary(4));
+    console.log('population', algoRaw?.population);
     generation.value = gen;
     bestGenome.value = algoRaw!.bestGenome;
     population.value = algoRaw!.population;
     populationStats.value = algoRaw!.population.map((x) => x.stats!);
     populationSummary.value = algoRaw!.getPopulationSummary(4);
+    statsHistory.value.push(bestGenome.value!.stats!);
     genomesHandled.value = 0;
 
     if (!isStopping.value) {
@@ -168,12 +172,18 @@ export const useGeneticStore = defineStore("genetic", () => {
     worldConfig.value = fullCopyObject(configStore.worldConfig);
     worldConfig.value.CONFIG_2D.INITIAL = createDefaultInitialConfig();
     worldConfig.value.TEMPERATURE_FUNCTION = configStore.worldConfig.TEMPERATURE_FUNCTION ?? (() => 0);
-    worldConfigRaw.TEMPERATURE_FUNCTION = configStore.worldConfig.TEMPERATURE_FUNCTION ?? (() => 0);
+    setWorldConfigRaw(worldConfig.value);
 
     typesConfig.value = fullCopyObject(configStore.typesConfig);
+    setConfigRaw(typesConfig.value, typesConfigRaw);
 
     randomTypesConfig.value = fullCopyObject(configStore.randomTypesConfig);
     randomTypesConfig.value.TYPES_COUNT = typesCount.value;
+    setConfigRaw(randomTypesConfig.value, randomTypesConfigRaw);
+
+    console.log('typesCount', typesCount.value);
+    console.log('typesConfig', typesConfig.value);
+    console.log('randomTypesConfig', randomTypesConfig.value);
   }
 
   const applyBestGenome = () => {
@@ -283,6 +293,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     populationSummary,
     populationStats,
     populationFitness,
+    statsHistory,
     generation,
     genomesHandled,
     progress,
