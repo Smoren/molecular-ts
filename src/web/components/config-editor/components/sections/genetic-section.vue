@@ -44,9 +44,13 @@ const fitnessChartData = computed(() => geneticStore.populationFitness.map((y, x
           <td>Best genome ID</td>
           <td>{{ geneticStore.bestGenome!.id }}</td>
         </tr>
-        <tr v-if="geneticStore.bestGenome">
+        <tr v-if="geneticStore.populationSummary">
           <td>Best genome score</td>
-          <td>{{ round(geneticStore.bestGenome!.stats!.fitness, 4) }}</td>
+          <td>{{ round(geneticStore.populationSummary!.fitnessSummary.best, 4) }}</td>
+        </tr>
+        <tr v-if="geneticStore.populationSummary">
+          <td>Second genome score</td>
+          <td>{{ round(geneticStore.populationSummary!.fitnessSummary.second, 4) }}</td>
         </tr>
         <tr v-if="geneticStore.populationSummary">
           <td>Average population score</td>
