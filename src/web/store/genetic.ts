@@ -124,13 +124,16 @@ export const useGeneticStore = defineStore("genetic", () => {
   };
 
   const beforeStart = () => {
-    algo.value = algoRaw;
-
     resetState();
     initConfigsFromStore();
 
+    algoRaw = createAlgo();
+    algo.value = algoRaw;
+
     algoRaw!.population[0].typesConfig = fullCopyObject(configStore.typesConfig);
     isStarted.value = true;
+
+    console.log('init population', algoRaw!.population);
   };
 
   const afterStep = () => {
