@@ -109,7 +109,7 @@ const fitnessHistoryChartData = computed(() => geneticStore.statsHistory.map((st
         </div>
         <div>
           <input-header name="Weight of clustered compounds count" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeFilteredCountWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeClusteredCountWeight" />
         </div>
         <div>
           <input-header name="Weight of atoms count in clustered compound" />
