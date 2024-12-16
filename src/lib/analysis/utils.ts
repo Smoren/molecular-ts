@@ -66,6 +66,7 @@ export function scoreCompoundClustersSummary(
     multi.zip(summary.clusters, clustersRelativeSizes),
     ([cluster, relativeSize]) => (relativeSize ** weights.clusterSizeWeight) * scoreCompoundCluster(cluster, weights),
   ));
+  // TODO use weights.clusterSizeWeight for median/mean cluster size
 
   const clustersCount = summary.clusters.length;
   const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
