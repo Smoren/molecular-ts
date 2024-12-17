@@ -162,3 +162,5 @@ export type CompoundsClusterizationSummary = {
   clusteredCount: number;
   notClusteredCount: number;
 }
+
+export type CompoundsClustersSummaryMetrics = [number, number, number, number, number];

@@ -21,7 +21,7 @@ import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "../analys
 import {
   createDefaultClusterizationWeightsConfig,
   gradeCompoundClusters,
-  scoreCompoundClustersSummary
+  calcMetricsForCompoundClustersSummary, weighCompoundClustersSummaryMetrics
 } from "../analysis/utils";
 
 export class Simulation implements SimulationInterface {
@@ -265,7 +265,8 @@ export class Simulation implements SimulationInterface {
           this.config.typesConfig.FREQUENCIES.length,
           weights.minCompoundSize,
         );
-        const score = scoreCompoundClustersSummary(clustersSummary, weights);
+        const metrics = calcMetricsForCompoundClustersSummary(clustersSummary, weights);
+        const score = weighCompoundClustersSummaryMetrics(metrics, weights);
         console.log('CLUSTERIZATION GRADE', clustersSummary);
         console.log('CLUSTERIZATION SCORE', score);
       }

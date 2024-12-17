@@ -1,5 +1,10 @@
 import { multi, reduce, single } from "itertools-ts";
-import type { CompoundsClusterGrade, Compound, CompoundsClusterizationSummary } from "./types";
+import type {
+  CompoundsClusterGrade,
+  Compound,
+  CompoundsClusterizationSummary,
+  CompoundsClustersSummaryMetrics
+} from "./types";
 import { clusterGraphs } from "../graph/clusterization";
 import {
   calcGraphsClusterAverageDifference,
@@ -57,10 +62,10 @@ export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade, weight
     / averageDifference ** weights.differenceWeight;
 }
 
-export function scoreCompoundClustersSummary(
+export function calcMetricsForCompoundClustersSummary(
   summary: CompoundsClusterizationSummary,
   weights: ClusterizationWeightsConfig,
-): number {
+): CompoundsClustersSummaryMetrics {
   const clustersSizes = summary.clusters.map((c) => c.size);
   const clusterSize = reduce.toAverage(clustersSizes) ?? 0;
   const clustersRelativeSizes = summary.clusters.map((c) => c.size / summary.clusteredCount);
@@ -74,6 +79,14 @@ export function scoreCompoundClustersSummary(
   const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
   const relativeFiltered = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
 
+  return [clustersScore, clusterSize, clustersCount, relativeClustered, relativeFiltered];
+}
+
+export function weighCompoundClustersSummaryMetrics(
+  metrics: CompoundsClustersSummaryMetrics,
+  weights: ClusterizationWeightsConfig,
+): number {
+  const [clustersScore, clusterSize, clustersCount, relativeClustered, relativeFiltered] = metrics;
   return clustersScore
     * clusterSize ** weights.clusterSizeWeight
     * clustersCount ** weights.clustersCountWeight

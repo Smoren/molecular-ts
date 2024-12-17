@@ -2,7 +2,7 @@ import type { TypesConfig, WorldConfig } from '../config/types';
 import {
   createDefaultClusterizationWeightsConfig,
   gradeCompoundClusters,
-  scoreCompoundClustersSummary,
+  calcMetricsForCompoundClustersSummary, weighCompoundClustersSummaryMetrics,
 } from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../analysis/types';
@@ -26,7 +26,8 @@ export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesCo
       typesConfig.FREQUENCIES.length,
       clusterizationWeights.minCompoundSize,
     );
-    const clustersScore = scoreCompoundClustersSummary(clustersSummary, clusterizationWeights);
+    const clustersMetrics = calcMetricsForCompoundClustersSummary(clustersSummary, clusterizationWeights);
+    const clustersScore = weighCompoundClustersSummaryMetrics(clustersMetrics, clusterizationWeights);
 
     const compoundsAnalyzer = new CompoundsAnalyzer(compounds, sim.atoms, typesConfig.FREQUENCIES.length);
     const totalSummary: TotalSummary = {
@@ -75,7 +76,8 @@ export async function runSimulationForClustersGrade(
       typesConfig.FREQUENCIES.length,
       weights.minCompoundSize,
     );
-    const clustersScore = scoreCompoundClustersSummary(clustersSummary, weights);
+    const clustersMetrics = calcMetricsForCompoundClustersSummary(clustersSummary, weights);
+    const clustersScore = weighCompoundClustersSummaryMetrics(clustersMetrics, weights);
     const rawMatrix = [
       clustersScore,
       relativeCompoundedAtomsCount ** weights.relativeCompoundedAtomsCountWeight,
