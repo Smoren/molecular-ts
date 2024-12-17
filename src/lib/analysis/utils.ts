@@ -61,18 +61,21 @@ export function scoreCompoundClustersSummary(
   summary: CompoundsClusterizationSummary,
   weights: ClusterizationWeightsConfig,
 ): number {
+  const clustersSizes = summary.clusters.map((c) => c.size);
+  const clusterSize = reduce.toAverage(clustersSizes) ?? 0;
   const clustersRelativeSizes = summary.clusters.map((c) => c.size / summary.clusteredCount);
+
   const clustersScore = reduce.toSum(single.map(
     multi.zip(summary.clusters, clustersRelativeSizes),
-    ([cluster, relativeSize]) => (relativeSize ** weights.clusterSizeWeight) * scoreCompoundCluster(cluster, weights),
+    ([cluster, relativeSize]) => (relativeSize) * scoreCompoundCluster(cluster, weights),
   ));
-  // TODO use weights.clusterSizeWeight for median/mean cluster size
 
   const clustersCount = summary.clusters.length;
   const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
   const relativeFiltered = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
 
   return clustersScore
+    * clusterSize ** weights.clusterSizeWeight
     * clustersCount ** weights.clustersCountWeight
     * relativeClustered ** weights.relativeClusteredCountWeight
     * relativeFiltered ** weights.relativeFilteredCountWeight;
