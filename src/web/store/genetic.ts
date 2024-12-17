@@ -220,7 +220,7 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const createMetricsStrategyConfig = (): SimulationMetricsStrategyConfig<ClusterizationTaskConfig> => ({
     worldConfig: worldConfigRaw,
-    checkpoints: [30, 30],
+    checkpoints: [100, 100],
     repeats: 1,
     task: repeatRunSimulationForClustersGradeWithTimeout,
     onTaskResult: onTaskResultHandler, // TODO TTaskConfig to input
