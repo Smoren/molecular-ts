@@ -73,7 +73,7 @@ const importState = (data: Record<string, unknown>) => {
 
 <style scoped lang="scss">
 
-@import "../../assets/config-editor.scss";
+@use "../../assets/config-editor.scss";
 
 .btn-group {
   margin-top: 10px;

@@ -24,6 +24,6 @@ defineProps<{
 
 <style scoped lang="scss">
 
-@import "../config-editor/assets/config-editor";
+@use "../config-editor/assets/config-editor";
 
 </style>

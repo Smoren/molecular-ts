@@ -28,29 +28,31 @@ const slicedTitles = computed(() => props.titles.slice(0, props.values.length));
 <template>
   <div>
     <table>
-      <tr>
-        <td v-for="title in slicedTitles">
-          {{ title }}
-        </td>
-      </tr>
-      <tr>
-        <td v-for="(_, index) in values">
-          <input
-            type="number"
-            v-model="values[index]"
-            :step="step"
-            :min="min"
-            :max="max"
-            @input="emitOnChange"
-          >
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td v-for="title in slicedTitles">
+            {{ title }}
+          </td>
+        </tr>
+        <tr>
+          <td v-for="(_, index) in values">
+            <input
+              type="number"
+              v-model="values[index]"
+              :step="step"
+              :min="min"
+              :max="max"
+              @input="emitOnChange"
+            >
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </template>
 
 <style scoped lang="scss">
 
-@import "../config-editor/assets/config-editor";
+@use "../config-editor/assets/config-editor";
 
 </style>

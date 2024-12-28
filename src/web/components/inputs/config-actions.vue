@@ -48,23 +48,25 @@ const getAlignByIndex = (index: number, total: number) => {
 
 <template>
   <table>
-    <tr>
-      <td style="width: 30px"></td>
-      <td v-for="(_, index) in colors" style="background: #515151;">
-        <dropdown-menu
-          :key="index"
-          :color="colors[index]"
-          :align="getAlignByIndex(index, colors.length)"
-          :actions="actions"
-          @choose="(action) => handleAction(action as ActionAlias, index)"
-        />
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <td style="width: 30px"></td>
+        <td v-for="(_, index) in colors" style="background: #515151;">
+          <dropdown-menu
+            :key="index"
+            :color="colors[index]"
+            :align="getAlignByIndex(index, colors.length)"
+            :actions="actions"
+            @choose="(action) => handleAction(action as ActionAlias, index)"
+          />
+        </td>
+      </tr>
+    </tbody>
   </table>
 </template>
 
 <style scoped lang="scss">
 
-@import "../config-editor/assets/config-editor";
+@use "../config-editor/assets/config-editor";
 
 </style>

@@ -46,34 +46,36 @@ watch(symmetric, () => {
 
 <template>
   <table>
-    <tr>
-      <td>
-        <tooltip text="Make matrix symmetric" :nowrap="true" position="left" v-if="!hideSymmetric">
-          <input type="checkbox" v-model="symmetric" title="Symmetric" />
-        </tooltip>
-      </td>
-      <td v-for="color in colors" :style="{ backgroundColor: getColorString(color) }">
-        &nbsp;
-      </td>
-    </tr>
-    <tr v-for="(row, rowIndex) in values">
-      <td :style="{ backgroundColor: getColorString(colors[rowIndex]), width: '30px' }"></td>
-      <td v-for="(_, colIndex) in row">
-        <input
-          type="number"
-          v-model="row[colIndex]"
-          :min="min"
-          :max="max"
-          :step="step"
-          @change="onChangeValue(rowIndex, colIndex)"
-        />
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <td>
+          <tooltip text="Make matrix symmetric" :nowrap="true" position="left" v-if="!hideSymmetric">
+            <input type="checkbox" v-model="symmetric" title="Symmetric" />
+          </tooltip>
+        </td>
+        <td v-for="color in colors" :style="{ backgroundColor: getColorString(color) }">
+          &nbsp;
+        </td>
+      </tr>
+      <tr v-for="(row, rowIndex) in values">
+        <td :style="{ backgroundColor: getColorString(colors[rowIndex]), width: '30px' }"></td>
+        <td v-for="(_, colIndex) in row">
+          <input
+            type="number"
+            v-model="row[colIndex]"
+            :min="min"
+            :max="max"
+            :step="step"
+            @change="onChangeValue(rowIndex, colIndex)"
+          />
+        </td>
+      </tr>
+    </tbody>
   </table>
 </template>
 
 <style scoped lang="scss">
 
-@import "../config-editor/assets/config-editor";
+@use "../config-editor/assets/config-editor";
 
 </style>

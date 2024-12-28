@@ -24,28 +24,30 @@ const emit = defineEmits<{
 
 <template>
   <table>
-    <tr>
-      <td style="width: 30px"></td>
-      <td
-        v-for="(color, index) in colors"
-        :style="{ backgroundColor: getColorString(color), cursor: colorCursor }"
-        :title="colorTitle"
-        @click="emit('colorClick', index)"
-      >
-        &nbsp;
-      </td>
-    </tr>
-    <tr>
-      <td style="width: 30px"></td>
-      <td v-for="(_, index) in values">
-        <input type="number" v-model="values[index]" :step="step" :min="min" :max="max">
-      </td>
-    </tr>
+    <tbody>
+      <tr>
+        <td style="width: 30px"></td>
+        <td
+          v-for="(color, index) in colors"
+          :style="{ backgroundColor: getColorString(color), cursor: colorCursor }"
+          :title="colorTitle"
+          @click="emit('colorClick', index)"
+        >
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 30px"></td>
+        <td v-for="(_, index) in values">
+          <input type="number" v-model="values[index]" :step="step" :min="min" :max="max">
+        </td>
+      </tr>
+    </tbody>
   </table>
 </template>
 
 <style scoped lang="scss">
 
-@import "../config-editor/assets/config-editor";
+@use "../config-editor/assets/config-editor";
 
 </style>

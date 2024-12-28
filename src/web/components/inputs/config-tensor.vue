@@ -57,8 +57,8 @@ const activeTabId = ref('tab-0');
 
 <style scoped lang="scss">
 
-@import "../config-editor/assets/config-editor";
-@import "../../../../node_modules/bootstrap/scss/bootstrap-utilities";
+@use "../config-editor/assets/config-editor";
+@use "../../../../node_modules/bootstrap/scss/bootstrap-utilities";
 
 .my-tab-pane {
   padding: 15px;

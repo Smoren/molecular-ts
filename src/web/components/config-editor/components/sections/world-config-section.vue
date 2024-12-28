@@ -161,62 +161,64 @@ watch(() => configStore.worldConfig.VIEW_MODE, () => {
           />
         </div>
         <table class="bounds-table">
-          <tr>
-            <td></td>
-            <td>x</td>
-            <td>y</td>
-            <td v-if="worldConfig.VIEW_MODE === '3d'">z</td>
-          </tr>
-          <tr>
-            <td>min</td>
-            <td
-              v-for="(_, index) in worldConfig.CONFIG_2D.BOUNDS.MIN_POSITION"
-              v-if="worldConfig.VIEW_MODE === '2d'"
-            >
-              <input
-                :key="index"
-                type="number"
-                v-model="worldConfig.CONFIG_2D.BOUNDS.MIN_POSITION[index]"
-                step="50"
-              />
-            </td>
-            <td
-              v-for="(_, index) in worldConfig.CONFIG_3D.BOUNDS.MIN_POSITION"
-              v-if="worldConfig.VIEW_MODE === '3d'"
-            >
-              <input
-                :key="index"
-                type="number"
-                v-model="worldConfig.CONFIG_3D.BOUNDS.MIN_POSITION[index]"
-                step="50"
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>max</td>
-            <td
-              v-for="(_, index) in worldConfig.CONFIG_2D.BOUNDS.MAX_POSITION"
-              v-if="worldConfig.VIEW_MODE === '2d'"
-            >
-              <input
-                :key="index"
-                type="number"
-                v-model="worldConfig.CONFIG_2D.BOUNDS.MAX_POSITION[index]"
-                step="50"
-              />
-            </td>
-            <td
-              v-for="(_, index) in worldConfig.CONFIG_3D.BOUNDS.MAX_POSITION"
-              v-if="worldConfig.VIEW_MODE === '3d'"
-            >
-              <input
-                :key="index"
-                type="number"
-                v-model="worldConfig.CONFIG_3D.BOUNDS.MAX_POSITION[index]"
-                step="50"
-              />
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td></td>
+              <td>x</td>
+              <td>y</td>
+              <td v-if="worldConfig.VIEW_MODE === '3d'">z</td>
+            </tr>
+            <tr>
+              <td>min</td>
+              <td
+                v-for="(_, index) in worldConfig.CONFIG_2D.BOUNDS.MIN_POSITION"
+                v-if="worldConfig.VIEW_MODE === '2d'"
+              >
+                <input
+                  :key="index"
+                  type="number"
+                  v-model="worldConfig.CONFIG_2D.BOUNDS.MIN_POSITION[index]"
+                  step="50"
+                />
+              </td>
+              <td
+                v-for="(_, index) in worldConfig.CONFIG_3D.BOUNDS.MIN_POSITION"
+                v-if="worldConfig.VIEW_MODE === '3d'"
+              >
+                <input
+                  :key="index"
+                  type="number"
+                  v-model="worldConfig.CONFIG_3D.BOUNDS.MIN_POSITION[index]"
+                  step="50"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>max</td>
+              <td
+                v-for="(_, index) in worldConfig.CONFIG_2D.BOUNDS.MAX_POSITION"
+                v-if="worldConfig.VIEW_MODE === '2d'"
+              >
+                <input
+                  :key="index"
+                  type="number"
+                  v-model="worldConfig.CONFIG_2D.BOUNDS.MAX_POSITION[index]"
+                  step="50"
+                />
+              </td>
+              <td
+                v-for="(_, index) in worldConfig.CONFIG_3D.BOUNDS.MAX_POSITION"
+                v-if="worldConfig.VIEW_MODE === '3d'"
+              >
+                <input
+                  :key="index"
+                  type="number"
+                  v-model="worldConfig.CONFIG_3D.BOUNDS.MAX_POSITION[index]"
+                  step="50"
+                />
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </template>
@@ -225,7 +227,7 @@ watch(() => configStore.worldConfig.VIEW_MODE, () => {
 
 <style scoped lang="scss">
 
-@import "../../assets/config-editor";
+@use "../../assets/config-editor";
 
 .bounds-table {
   width: 100%;

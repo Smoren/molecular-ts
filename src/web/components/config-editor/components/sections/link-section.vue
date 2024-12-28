@@ -45,6 +45,6 @@ const onClick = () => {
 
 <style scoped lang="scss">
 
-@import "../../assets/config-editor.scss";
+@use "../../assets/config-editor.scss";
 
 </style>

@@ -158,7 +158,7 @@ const fitnessHistoryChartData = computed(() => geneticStore.statsHistory.map((st
 
 <style scoped lang="scss">
 
-@import "../../assets/config-editor.scss";
+@use "../../assets/config-editor.scss";
 
 .progress-block {
   margin-top: 30px;

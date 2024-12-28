@@ -87,7 +87,7 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 
-@import "../../assets/config-editor";
+@use "../../assets/config-editor";
 
 .chart {
   width: 100%;
