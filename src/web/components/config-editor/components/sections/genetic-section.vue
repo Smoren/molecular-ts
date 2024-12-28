@@ -147,6 +147,10 @@ const fitnessHistoryChartData = computed(() => geneticStore.statsHistory.map((st
           <input-header name="Relative compounded links count weight" />
           <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeLinksCountWeight" />
         </div>
+        <div>
+          <input-header name="New created links per step weight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.linksCreatedWeight" />
+        </div>
       </div>
     </MDBAccordionItem>
   </MDBAccordion>
