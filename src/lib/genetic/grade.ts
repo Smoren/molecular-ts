@@ -78,6 +78,7 @@ export async function runSimulationForClustersGrade(
     );
     const clustersMetrics = calcMetricsForCompoundClustersSummary(clustersSummary, weights);
     const [clustersScore, clusterSize, clustersCount, relativeClustered, relativeFiltered] = clustersMetrics;
+    const linksCreated = sim.summary.LINKS_CREATED[0];
     const rawMatrix = [
       clustersScore,
       clusterSize ** weights.clusterSizeWeight,
@@ -86,6 +87,7 @@ export async function runSimulationForClustersGrade(
       relativeFiltered ** weights.relativeFilteredCountWeight,
       relativeCompoundedAtomsCount ** weights.relativeCompoundedAtomsCountWeight,
       relativeLinksCount ** weights.relativeLinksCountWeight,
+      linksCreated ** weights.linksCreatedWeight,
     ];
     summaryMatrix.push(rawMatrix);
 

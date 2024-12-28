@@ -12,5 +12,6 @@
   "radiusWeight": 1,
   "speedWeight": 0.5,
   "relativeCompoundedAtomsCountWeight": 1,
-  "relativeLinksCountWeight": 1
+  "relativeLinksCountWeight": 1,
+  "linksCreatedWeight": 1
 }

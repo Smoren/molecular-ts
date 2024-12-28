@@ -100,4 +100,5 @@ export type ClusterizationWeightsConfig = {
   speedWeight: number;
   relativeCompoundedAtomsCountWeight: number;
   relativeLinksCountWeight: number;
+  linksCreatedWeight: number;
 }

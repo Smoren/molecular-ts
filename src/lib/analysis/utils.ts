@@ -186,6 +186,7 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
     speedWeight: 0.5,
     relativeCompoundedAtomsCountWeight: 1,
     relativeLinksCountWeight: 1,
+    linksCreatedWeight: 1,
   };
 }
 
@@ -205,5 +206,6 @@ export function createModifiedClusterizationWeightsConfig(): ClusterizationWeigh
     speedWeight: 0.5,
     relativeCompoundedAtomsCountWeight: 1,
     relativeLinksCountWeight: 1,
+    linksCreatedWeight: 1,
   };
 }
