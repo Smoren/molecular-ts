@@ -23,12 +23,19 @@ import GeneticSection from "@/web/components/config-editor/components/sections/g
 const leftBarStore = useLeftBarStore();
 const rightBarStore = useRightBarStore();
 
-const activeAccordionItem = ref('collapse-types');
+const activeAccordionItem = ref();
+
+const openLeftBar = () => {
+  leftBarStore.open();
+  if (activeAccordionItem.value === undefined) {
+    activeAccordionItem.value = 'collapse-types';
+  }
+}
 
 </script>
 
 <template>
-  <navbar :on-burger-click="leftBarStore.open">
+  <navbar :on-burger-click="openLeftBar">
     <template #title>
       MolecuLarva
       <img :src="logo" alt="MolecuLarva" style="height: 30px; margin-left: 10px; margin-right: -10px">
