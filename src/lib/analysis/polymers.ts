@@ -55,7 +55,7 @@ export function gradeMonomerPolymerPair(
   const monomerEdgesDiffVector = edgesDiffVector.clone().div(polymerSize-1);
 
   const monomerExtraVertexesVector = toVector(monomerVertexesDiffVector.map((x) => Math.floor(x)));
-  const monomerExtraEdgesVector = toVector(monomerEdgesVector.map((x) => Math.floor(x)));
+  const monomerExtraEdgesVector = toVector(monomerEdgesDiffVector.map((x) => Math.floor(x)));
 
   // TODO доработать условие
   if (monomerExtraVertexesVector.abs2 >= monomerVertexesVector.abs2 || monomerExtraEdgesVector.abs2 >= monomerEdgesVector.abs2) {
