@@ -7,7 +7,7 @@ import {
   countVertexesGroupedByType,
 } from "../graph/utils";
 
-type PolymerSummary = {
+export type PolymerSummary = {
   confidenceScore: number;
   monomerSize: number;
   polymerSize: number;
@@ -46,8 +46,8 @@ export function gradeMonomerPolymerPair(
     return createBadPolymerGradeSummary(monomerCandidate.vertexes.length);
   }
 
-  const vertexesDiffVector = createVector(monomerVertexesVector).mul(multiplier).sub(polymerVertexesVector);
-  const edgesDiffVector = createVector(monomerEdgesVector).mul(multiplier).sub(polymerEdgesVector);
+  const vertexesDiffVector = createVector(polymerVertexesVector).sub(monomerVertexesVector.clone().mul(multiplier));
+  const edgesDiffVector = createVector(polymerEdgesVector).sub(monomerEdgesVector.clone().mul(multiplier));
 
   // Extra vertexes between 2 monomers
   const monomerVertexesDiffVector = vertexesDiffVector.clone().div(polymerSize-1);
