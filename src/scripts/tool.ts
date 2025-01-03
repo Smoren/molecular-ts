@@ -5,6 +5,7 @@ import { actionReferenceCalcSummary } from "@/scripts/actions/reference-calc-sum
 import { actionClustersGradeMaximize } from '@/scripts/actions/clusters-grade-maximize';
 import { actionPopulate } from "@/scripts/actions/populate";
 import { actionTestRunSingle } from "@/scripts/actions/test-run-single";
+import { actionTestRunMultiprocess } from "@/scripts/actions/test-run-multiprocess";
 
 const router = createRouter();
 
@@ -15,5 +16,6 @@ router.add('reference-calc-summary', actionReferenceCalcSummary);
 router.add('clusters-grade-maximize', actionClustersGradeMaximize);
 router.add('populate', actionPopulate);
 router.add('test-run-single', actionTestRunSingle);
+router.add('test-run-multiprocess', actionTestRunMultiprocess);
 
 router.run(process.argv);

@@ -2,7 +2,7 @@ import { createHeadless2dSimulationRunner } from "@/lib/genetic/helpers";
 import { getWorldConfig } from "@/scripts/lib/genetic/io";
 import { createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/config/atom-types";
 
-export const actionTestRunSingle = () => {
+export const actionTestRunSingle = async () => {
   const initialConfig = {
     "ATOMS_COUNT": 2000,
     "MIN_POSITION": [0, 0],
