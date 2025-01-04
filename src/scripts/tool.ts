@@ -7,6 +7,7 @@ import { actionPopulate } from "@/scripts/actions/populate";
 import { actionTestRunSingle } from "@/scripts/actions/test-run-single";
 import { actionTestRunMultiprocess } from "@/scripts/actions/test-run-multiprocess";
 import { actionTestMultiprocess } from "@/scripts/actions/test-multiprocess";
+import { actionTestRunMultiprocessNew } from "@/scripts/actions/test-run-multiprocess-new";
 
 const router = createRouter();
 
@@ -18,6 +19,7 @@ router.add('clusters-grade-maximize', actionClustersGradeMaximize);
 router.add('populate', actionPopulate);
 router.add('test-run-single', actionTestRunSingle);
 router.add('test-run-multiprocess', actionTestRunMultiprocess);
+router.add('test-run-multiprocess-new', actionTestRunMultiprocessNew);
 router.add('test-multiprocess', actionTestMultiprocess);
 
 router.run(process.argv);
