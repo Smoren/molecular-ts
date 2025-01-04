@@ -15,7 +15,7 @@ interface ResultMessage<TInput, TResult> {
 export class Pool extends EventEmitter {
   private workers: ChildProcess[] = [];
   private availableWorkers: ChildProcess[] = [];
-  private taskQueue: Array<{ data: any; taskFunctionString: string }> = [];
+  private taskQueue: Array<{ inputData: any; taskFunctionString: string }> = [];
   private tasksInProcess = new Map<ChildProcess, any>();
   private currentTaskIndex = 0;
   private onItemResult: ItemResultHandler<any, any> = () => {};
@@ -73,8 +73,8 @@ export class Pool extends EventEmitter {
     const taskFunctionString = task.toString();
 
     // Enqueue all tasks
-    for (const data of dataArray) {
-      this.taskQueue.push({ data, taskFunctionString });
+    for (const inputData of dataArray) {
+      this.taskQueue.push({ inputData, taskFunctionString });
     }
 
     // Start processing
@@ -97,10 +97,10 @@ export class Pool extends EventEmitter {
       const worker = this.availableWorkers.shift()!;
       const task = this.taskQueue.shift()!;
 
-      this.tasksInProcess.set(worker, task.data);
+      this.tasksInProcess.set(worker, task.inputData);
       worker.send({
         taskFunctionString: task.taskFunctionString,
-        inputData: task.data,
+        inputData: task.inputData,
         taskIndex: this.currentTaskIndex++,
       });
     }
