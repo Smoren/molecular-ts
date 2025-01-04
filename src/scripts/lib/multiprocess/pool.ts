@@ -31,7 +31,7 @@ export class Pool extends EventEmitter {
         } else {
           this.onItemResult(result, inputData);
         }
-        this.emit('result', { result, data: inputData });
+        this.emit('result', { result });
         this.tasksInProcess.delete(worker);
         this.availableWorkers.push(worker);
         this.processQueue();
@@ -41,12 +41,12 @@ export class Pool extends EventEmitter {
     }
   }
 
-  async *map(
-    dataArray: any[],
-    task: (input: any) => Promise<any>,
-    onItemResult?: (itemResult: any, itemInput: any) => void,
-    onItemError?: (error: string, itemInput: any) => void
-  ) {
+  async *mapUnordered<TInput, TResult>(
+    dataArray: TInput[],
+    task: (input: TInput) => Promise<TResult>,
+    onItemResult?: (itemResult: TResult, itemInput: TInput) => void,
+    onItemError?: (error: string, itemInput: TInput) => void,
+  ): AsyncGenerator<TResult> {
     this.onItemResult = onItemResult ?? (() => {});
     this.onItemError = onItemError ?? (() => {});
 
