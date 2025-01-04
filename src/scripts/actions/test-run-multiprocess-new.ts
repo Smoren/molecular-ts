@@ -33,7 +33,7 @@ export const actionTestRunMultiprocessNew = async () => {
     `Index: ${index+1}. Error: ${error}. Total: ${Date.now() - ts} ms`
   );
 
-  for await (const item of pool.map(inputs, runMultiprocessingSimulation, onResult, onError)) {}
+  await pool.map(inputs, runMultiprocessingSimulation, onResult, onError);
   pool.close();
 
   console.log('TOTAL TIME', Date.now() - ts);

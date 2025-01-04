@@ -37,23 +37,21 @@ export class Pool extends EventEmitter {
     }
   }
 
-  public async *map<TInput, TResult>(
+  public async map<TInput, TResult>(
     dataArray: TInput[],
     task: (input: TInput) => Promise<TResult>,
     onItemResult?: ItemResultHandler<TInput, TResult>,
     onItemError?: ItemErrorHandler<TInput>,
-  ): AsyncGenerator<TResult | undefined> {
+  ): Promise<Array<TResult | undefined>> {
     const result: [number, TResult | undefined][] = [];
     for await (const item of this.mapTasks(dataArray, task, onItemResult, onItemError)) {
       result.push(item);
     }
     result.sort((lhs, rhs) => lhs[0] - rhs[0]);
-    for (const item of result) {
-      yield item[1];
-    }
+    return result.map((item) => item[1]);
   }
 
-  close() {
+  public close() {
     for (const worker of this.workers) {
       worker.kill();
     }

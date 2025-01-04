@@ -27,7 +27,7 @@ export const actionTestMultiprocess = async () => {
   };
 
   const result = [];
-  for await (const itemResult of pool.map(data, task, onItemResult, onItemError)) {
+  for (const itemResult of await pool.map(data, task, onItemResult, onItemError)) {
     result.push(itemResult);
   }
   console.log('Final Result:', result);
