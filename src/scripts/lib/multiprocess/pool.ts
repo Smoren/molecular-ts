@@ -2,6 +2,9 @@ import { fork, ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
 import * as path from 'path';
 
+type ItemResultHandler<TInput, TResult> = (itemResult: TResult, itemInput: TInput, taskIndex: number) => void;
+type ItemErrorHandler<TInput> = (error: string, itemInput: TInput, taskIndex: number) => void;
+
 interface ResultMessage<TInput, TResult> {
   taskIndex: number;
   inputData: TInput;
@@ -15,23 +18,19 @@ export class Pool extends EventEmitter {
   private taskQueue: Array<{ data: any; taskFunctionString: string }> = [];
   private tasksInProcess = new Map<ChildProcess, any>();
   private currentTaskIndex = 0;
-  private onItemResult: (itemResult: any, itemInput: any, taskIndex: number) => void;
-  private onItemError: (error: string, itemInput: any, taskIndex: number) => void;
+  private onItemResult: ItemResultHandler<any, any> = () => {};
+  private onItemError: ItemErrorHandler<any> = () => {};
 
   constructor(poolSize: number) {
     super();
-
-    this.onItemResult = () => {};
-    this.onItemError = () => {};
-
     this.initWorkers(poolSize);
   }
 
   public async *mapUnordered<TInput, TResult>(
     dataArray: TInput[],
     task: (input: TInput) => Promise<TResult>,
-    onItemResult?: (itemResult: TResult, itemInput: TInput, taskIndex: number) => void,
-    onItemError?: (error: string, itemInput: TInput, taskIndex: number) => void,
+    onItemResult?: ItemResultHandler<TInput, TResult>,
+    onItemError?: ItemErrorHandler<TInput>,
   ): AsyncGenerator<TResult> {
     for await (const [_, result] of this.mapTasks(dataArray, task, onItemResult, onItemError)) {
       yield result;
@@ -41,8 +40,8 @@ export class Pool extends EventEmitter {
   public async *map<TInput, TResult>(
     dataArray: TInput[],
     task: (input: TInput) => Promise<TResult>,
-    onItemResult?: (itemResult: TResult, itemInput: TInput, taskIndex: number) => void,
-    onItemError?: (error: string, itemInput: TInput, taskIndex: number) => void,
+    onItemResult?: ItemResultHandler<TInput, TResult>,
+    onItemError?: ItemErrorHandler<TInput>,
   ): AsyncGenerator<TResult> {
     const result: [number, TResult][] = [];
     for await (const item of this.mapTasks(dataArray, task, onItemResult, onItemError)) {
@@ -63,8 +62,8 @@ export class Pool extends EventEmitter {
   private async *mapTasks<TInput, TResult>(
     dataArray: TInput[],
     task: (input: TInput) => Promise<TResult>,
-    onItemResult?: (itemResult: TResult, itemInput: TInput, taskIndex: number) => void,
-    onItemError?: (error: string, itemInput: TInput, taskIndex: number) => void,
+    onItemResult?: ItemResultHandler<TInput, TResult>,
+    onItemError?: ItemErrorHandler<TInput>,
   ): AsyncGenerator<[number, TResult]> {
     this.currentTaskIndex = 0;
 
