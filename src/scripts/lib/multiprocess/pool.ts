@@ -1,147 +1,85 @@
 import { fork, ChildProcess } from 'child_process';
-import * as path from 'path';
 import { EventEmitter } from 'events';
+import * as path from 'path';
 
-interface Task {
-  id: number;
-  input: any;
-  taskCode: string;
-  resolve: (value: any) => void;
-  reject: (reason: any) => void;
+interface TaskMessage {
+  taskFunctionString: string;
+  data: any;
 }
 
-export class Pool {
+interface ResultMessage {
+  result?: any;
+  error?: string;
+  data: any;
+}
+
+export class Pool extends EventEmitter {
   private workers: ChildProcess[] = [];
-  private idleWorkers: ChildProcess[] = [];
-  private taskQueue: Task[] = [];
-  private currentTaskId: number = 0;
-  private tasksInProgress: Map<number, { worker: ChildProcess, task: Task }> = new Map();
+  private availableWorkers: ChildProcess[] = [];
+  private taskQueue: Array<{ data: any; taskFunctionString: string }> = [];
+  private tasksInProcess = new Map<ChildProcess, any>();
+  private onItemResult?: (itemResult: any, itemInput: any) => void;
 
-  constructor(numWorkers: number) {
-    for (let i = 0; i < numWorkers; i++) {
-      this.addWorker();
-    }
-  }
-
-  private addWorker() {
-    const workerPath = path.resolve(__dirname, './worker.js');
-    const worker = fork(workerPath);
-
-    worker.on('message', (msg) => {
-      this.onWorkerMessage(worker, msg);
-    });
-
-    worker.on('exit', (code, signal) => {
-      console.log(`Воркер завершил работу: код ${code}, сигнал ${signal}`);
-      this.workers = this.workers.filter(w => w !== worker);
-      this.idleWorkers = this.idleWorkers.filter(w => w !== worker);
-      this.reassignTasks(worker);
-      // this.addWorker(); // Создаем нового воркера вместо завершившего
-    });
-
-    this.workers.push(worker);
-    this.idleWorkers.push(worker);
-    this.processQueue(); // Обрабатываем очередь задач, если есть
-  }
-
-  private reassignTasks(worker: ChildProcess) {
-    // Переназначаем задачи от завершившего воркера обратно в очередь
-    for (let [taskId, { worker: w, task }] of this.tasksInProgress.entries()) {
-      if (w === worker) {
-        this.taskQueue.unshift(task);
-        this.tasksInProgress.delete(taskId);
-      }
-    }
-  }
-
-  private onWorkerMessage(worker: ChildProcess, msg: any) {
-    const { taskId, result, error } = msg;
-
-    const taskInfo = this.tasksInProgress.get(taskId);
-
-    if (!taskInfo) {
-      // Задача не найдена
-      return;
-    }
-
-    const { task } = taskInfo;
-
-    if (error) {
-      task.reject(error);
-    } else {
-      task.resolve(result);
-    }
-
-    this.tasksInProgress.delete(taskId);
-    this.idleWorkers.push(worker);
-    this.processQueue();
-  }
-
-  private processQueue() {
-    while (this.idleWorkers.length > 0 && this.taskQueue.length > 0) {
-      const worker = this.idleWorkers.shift()!;
-      const task = this.taskQueue.shift()!;
-      this.currentTaskId += 1;
-      const taskId = this.currentTaskId;
-
-      this.tasksInProgress.set(taskId, { worker, task });
-
-      worker.send({
-        taskId,
-        taskCode: task.taskCode,
-        input: task.input
+  constructor(workerCount: number) {
+    super();
+    for (let i = 0; i < workerCount; i++) {
+      const worker = fork(path.resolve(__dirname, './worker.js'));
+      worker.on('message', (message: ResultMessage) => {
+        const { result, error, data } = message;
+        const itemInput = this.tasksInProcess.get(worker);
+        if (this.onItemResult) {
+          this.onItemResult(result, itemInput);
+        }
+        this.emit('result', { result, data: itemInput });
+        this.tasksInProcess.delete(worker);
+        this.availableWorkers.push(worker);
+        this.processQueue();
       });
+      this.workers.push(worker);
+      this.availableWorkers.push(worker);
     }
   }
 
   async *map(
-    data: any[],
-    task: Function,
-    onItemSuccess: (itemResult: any, itemInput: any) => void,
-    onItemError: (error: any, itemInput: any) => void,
+    dataArray: any[],
+    task: (input: any) => Promise<any>,
+    onItemResult?: (itemResult: any, itemInput: any) => void
   ) {
-    const taskCode = task.toString();
+    this.onItemResult = onItemResult;
+    const taskFunctionString = task.toString();
 
-    let remainingTasks = data.length;
-    const resultsQueue: any[] = [];
-    const eventEmitter = new EventEmitter();
+    // Enqueue all tasks
+    for (const data of dataArray) {
+      this.taskQueue.push({ data, taskFunctionString });
+    }
 
-    data.forEach((input, id) => {
-      const taskItem: Task = {
-        id,
-        input,
-        taskCode,
-        resolve: (result) => {
-          onItemSuccess(result, input);
-          resultsQueue.push(result);
-          eventEmitter.emit('result');
-          remainingTasks--;
-        },
-        reject: (error) => {
-          onItemError(error, input);
-          eventEmitter.emit('result');
-          remainingTasks--;
-        },
-      };
-      this.taskQueue.push(taskItem);
-    });
-
+    // Start processing
     this.processQueue();
 
-    while (remainingTasks > 0) {
-      if (resultsQueue.length > 0) {
-        const result = resultsQueue.shift();
-        yield result;
-      } else {
-        await new Promise((resolve) => {
-          eventEmitter.once('result', resolve);
-        });
-      }
+    const totalTasks = dataArray.length;
+    let received = 0;
+
+    while (received < totalTasks) {
+      const result = await new Promise<any>((resolve) => {
+        this.once('result', resolve);
+      });
+      received++;
+      yield result.result;
+    }
+  }
+
+  private processQueue() {
+    while (this.availableWorkers.length > 0 && this.taskQueue.length > 0) {
+      const worker = this.availableWorkers.shift()!;
+      const task = this.taskQueue.shift()!;
+
+      this.tasksInProcess.set(worker, task.data);
+      worker.send({ taskFunctionString: task.taskFunctionString, data: task.data });
     }
   }
 
   close() {
-    for (let worker of this.workers) {
+    for (const worker of this.workers) {
       worker.kill();
     }
   }
