@@ -1,5 +1,5 @@
-import { Pool } from '../lib/multiprocess/pool';
 import { infinite, single } from "itertools-ts";
+import { Pool } from "multiprocessor";
 
 export const actionTestMultiprocess = async () => {
   const ts = Date.now();

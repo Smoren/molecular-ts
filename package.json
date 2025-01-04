@@ -34,7 +34,8 @@
     "smoothie": "^1.36.1",
     "unplugin-vue-macros": "^2.7.9",
     "vue": "^3.4.15",
-    "vue3-charts": "^1.1.33"
+    "vue3-charts": "^1.1.33",
+    "multiprocessor": "^0.2.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

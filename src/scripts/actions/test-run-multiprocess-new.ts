@@ -4,7 +4,7 @@ import { createDefaultRandomTypesConfig, createRandomTypesConfig } from "@/lib/c
 import type { TypesConfig, WorldConfig } from "@/lib/config/types";
 import os from "os";
 import { infinite, multi, single } from "itertools-ts";
-import { Pool } from "@/scripts/lib/multiprocess/pool";
+import { Pool } from "multiprocessor";
 
 export const actionTestRunMultiprocessNew = async () => {
   const initialConfig = {
@@ -45,7 +45,7 @@ export const runMultiprocessingSimulation = async ([
 ]: [WorldConfig, TypesConfig]): Promise<[number, number]> => {
   const ts = Date.now();
 
-  const dirName = __dirname.replace('/src/scripts/lib/multiprocess', '/src');
+  const dirName = __dirname.replace('/node_modules/multiprocessor/lib', '/src');
   const { runSimulation } = await import(`${dirName}/scripts/actions/test-run-multiprocess`);
 
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
