@@ -19,15 +19,15 @@ export const actionTestMultiprocess = async () => {
     return r;
   };
 
-  const onItemResult = (itemResult: any, itemInput: any) => {
-    console.log('itemResult', itemResult, itemInput);
+  const onItemResult = (itemResult: number, itemInput: number[], taskIndex: number) => {
+    console.log('itemResult', itemResult, itemInput, taskIndex);
   };
-  const onItemError = (error: string, itemInput: any) => {
-    console.log('itemError', error, itemInput);
+  const onItemError = (error: string, itemInput: number[], taskIndex: number) => {
+    console.log('itemError', error, itemInput, taskIndex);
   };
 
   const result = [];
-  for await (const itemResult of pool.mapUnordered(data, task, onItemResult, onItemError)) {
+  for await (const itemResult of pool.map(data, task, onItemResult, onItemError)) {
     result.push(itemResult);
   }
   console.log('Final Result:', result);
