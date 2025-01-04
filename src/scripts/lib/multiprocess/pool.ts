@@ -2,11 +2,11 @@ import { fork, ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
 import * as path from 'path';
 
-interface ResultMessage {
+interface ResultMessage<TInput, TResult> {
   taskIndex: number;
-  result?: any;
+  inputData: TInput;
+  result?: TResult;
   error?: string;
-  inputData: any;
 }
 
 export class Pool extends EventEmitter {
@@ -18,29 +18,13 @@ export class Pool extends EventEmitter {
   private onItemResult: (itemResult: any, itemInput: any, taskIndex: number) => void;
   private onItemError: (error: string, itemInput: any, taskIndex: number) => void;
 
-  constructor(workerCount: number) {
+  constructor(poolSize: number) {
     super();
 
     this.onItemResult = () => {};
     this.onItemError = () => {};
 
-    for (let i = 0; i < workerCount; i++) {
-      const worker = fork(path.resolve(__dirname, './worker.js'));
-      worker.on('message', (message: ResultMessage) => {
-        const { result, error, inputData, taskIndex } = message;
-        if (error) {
-          this.onItemError(error, inputData, taskIndex);
-        } else {
-          this.onItemResult(result, inputData, taskIndex);
-        }
-        this.emit('result', { result, taskIndex });
-        this.tasksInProcess.delete(worker);
-        this.availableWorkers.push(worker);
-        this.processQueue();
-      });
-      this.workers.push(worker);
-      this.availableWorkers.push(worker);
-    }
+    this.initWorkers(poolSize);
   }
 
   public async *mapUnordered<TInput, TResult>(
@@ -120,6 +104,26 @@ export class Pool extends EventEmitter {
         inputData: task.data,
         taskIndex: this.currentTaskIndex++,
       });
+    }
+  }
+
+  private initWorkers(poolSize: number) {
+    for (let i = 0; i < poolSize; i++) {
+      const worker = fork(path.resolve(__dirname, './worker.js'));
+      worker.on('message', (message: ResultMessage<any, any>) => {
+        const { result, error, inputData, taskIndex } = message;
+        if (error) {
+          this.onItemError(error, inputData, taskIndex);
+        } else {
+          this.onItemResult(result, inputData, taskIndex);
+        }
+        this.emit('result', { result, taskIndex });
+        this.tasksInProcess.delete(worker);
+        this.availableWorkers.push(worker);
+        this.processQueue();
+      });
+      this.workers.push(worker);
+      this.availableWorkers.push(worker);
     }
   }
 }
