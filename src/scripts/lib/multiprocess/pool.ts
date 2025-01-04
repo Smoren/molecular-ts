@@ -31,7 +31,7 @@ export class Pool extends EventEmitter {
     task: (input: TInput) => Promise<TResult>,
     onItemResult?: ItemResultHandler<TInput, TResult>,
     onItemError?: ItemErrorHandler<TInput>,
-  ): AsyncGenerator<TResult> {
+  ): AsyncGenerator<TResult | undefined> {
     for await (const [_, result] of this.mapTasks(dataArray, task, onItemResult, onItemError)) {
       yield result;
     }
@@ -42,8 +42,8 @@ export class Pool extends EventEmitter {
     task: (input: TInput) => Promise<TResult>,
     onItemResult?: ItemResultHandler<TInput, TResult>,
     onItemError?: ItemErrorHandler<TInput>,
-  ): AsyncGenerator<TResult> {
-    const result: [number, TResult][] = [];
+  ): AsyncGenerator<TResult | undefined> {
+    const result: [number, TResult | undefined][] = [];
     for await (const item of this.mapTasks(dataArray, task, onItemResult, onItemError)) {
       result.push(item);
     }
@@ -64,7 +64,7 @@ export class Pool extends EventEmitter {
     task: (input: TInput) => Promise<TResult>,
     onItemResult?: ItemResultHandler<TInput, TResult>,
     onItemError?: ItemErrorHandler<TInput>,
-  ): AsyncGenerator<[number, TResult]> {
+  ): AsyncGenerator<[number, TResult | undefined]> {
     this.currentTaskIndex = 0;
 
     this.onItemResult = onItemResult ?? (() => {});
