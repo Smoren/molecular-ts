@@ -1,10 +1,10 @@
 process.on('message', async (message) => {
-  const { taskFunctionString, data } = message;
+  const { taskFunctionString, inputData } = message;
   const taskFunction = eval(`(${taskFunctionString})`);
   try {
-    const result = await taskFunction(data);
-    process.send({ result, data });
+    const result = await taskFunction(inputData);
+    process.send({ result, inputData });
   } catch (error) {
-    process.send({ error: error.toString(), data });
+    process.send({ error: error.toString(), inputData });
   }
 });

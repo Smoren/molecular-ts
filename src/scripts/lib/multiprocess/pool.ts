@@ -2,15 +2,10 @@ import { fork, ChildProcess } from 'child_process';
 import { EventEmitter } from 'events';
 import * as path from 'path';
 
-interface TaskMessage {
-  taskFunctionString: string;
-  data: any;
-}
-
 interface ResultMessage {
   result?: any;
   error?: string;
-  data: any;
+  inputData: any;
 }
 
 export class Pool extends EventEmitter {
@@ -18,19 +13,25 @@ export class Pool extends EventEmitter {
   private availableWorkers: ChildProcess[] = [];
   private taskQueue: Array<{ data: any; taskFunctionString: string }> = [];
   private tasksInProcess = new Map<ChildProcess, any>();
-  private onItemResult?: (itemResult: any, itemInput: any) => void;
+  private onItemResult: (itemResult: any, itemInput: any) => void;
+  private onItemError: (error: string, itemInput: any) => void;
 
   constructor(workerCount: number) {
     super();
+
+    this.onItemResult = () => {};
+    this.onItemError = () => {};
+
     for (let i = 0; i < workerCount; i++) {
       const worker = fork(path.resolve(__dirname, './worker.js'));
       worker.on('message', (message: ResultMessage) => {
-        const { result, error, data } = message;
-        const itemInput = this.tasksInProcess.get(worker);
-        if (this.onItemResult) {
-          this.onItemResult(result, itemInput);
+        const { result, error, inputData } = message;
+        if (error) {
+          this.onItemError(error, inputData);
+        } else {
+          this.onItemResult(result, inputData);
         }
-        this.emit('result', { result, data: itemInput });
+        this.emit('result', { result, data: inputData });
         this.tasksInProcess.delete(worker);
         this.availableWorkers.push(worker);
         this.processQueue();
@@ -43,9 +44,12 @@ export class Pool extends EventEmitter {
   async *map(
     dataArray: any[],
     task: (input: any) => Promise<any>,
-    onItemResult?: (itemResult: any, itemInput: any) => void
+    onItemResult?: (itemResult: any, itemInput: any) => void,
+    onItemError?: (error: string, itemInput: any) => void
   ) {
-    this.onItemResult = onItemResult;
+    this.onItemResult = onItemResult ?? (() => {});
+    this.onItemError = onItemError ?? (() => {});
+
     const taskFunctionString = task.toString();
 
     // Enqueue all tasks
@@ -74,7 +78,7 @@ export class Pool extends EventEmitter {
       const task = this.taskQueue.shift()!;
 
       this.tasksInProcess.set(worker, task.data);
-      worker.send({ taskFunctionString: task.taskFunctionString, data: task.data });
+      worker.send({ taskFunctionString: task.taskFunctionString, inputData: task.data });
     }
   }
 
