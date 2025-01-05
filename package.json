@@ -12,8 +12,7 @@
     "tool": "tsx --no-warnings src/scripts/tool.ts",
     "calc": "npm run tool calc-simulation-summary",
     "cluster": "npm run tool clusters-grade-maximize mainConfigFileName=default-genetic-main-min-config useCache=0",
-    "populate": "npm run tool populate",
-    "my": "npm run tool clusters-grade-maximize typesCount=3 generationsCount=1000 useConstCache=0 mainConfigFileName=default-genetic-main-min-config"
+    "populate": "npm run tool populate"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
