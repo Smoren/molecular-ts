@@ -1,6 +1,6 @@
 {
   "name": "molecular-ts",
-  "version": "1.13.4",
+  "version": "1.14.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -26,7 +26,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.10.3",
     "browser-process": "^0.0.1",
-    "genetic-search-multiprocess": "^2.1.0",
+    "genetic-search-multiprocess": "^2.2.0",
     "itertools-ts": "^1.27.1",
     "mdb-vue-ui-kit": "^4.1.1",
     "node-fetch": "^3.3.2",
@@ -35,7 +35,7 @@
     "unplugin-vue-macros": "^2.7.9",
     "vue": "^3.4.15",
     "vue3-charts": "^1.1.33",
-    "multiprocessor": "^0.4.0"
+    "multiprocess-pool": "^1.2.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
