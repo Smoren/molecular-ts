@@ -20,13 +20,14 @@ import type { RandomTypesConfig, TypesConfig } from '../config/types';
 import type { ReferenceTaskConfig } from './types';
 import { BaseMetricsStrategy } from "genetic-search";
 import {
+  copyIndexInTypesConfig,
   createTransparentTypesConfig,
   crossTypesConfigs,
   crossTypesConfigsByIndexes,
   randomCrossTypesConfigs,
   randomizeTypesConfig,
 } from '../config/atom-types';
-import { createRandomInteger } from '../math';
+import { createRandomInteger, getIndexByFrequencies } from '../math';
 import { fullCopyObject } from '../utils/functions';
 import { getRandomArrayItem } from "../math/random";
 import { arrayProduct } from "../math/operations";
@@ -155,6 +156,35 @@ export class DynamicProbabilityMutationStrategy implements MutationStrategyInter
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
     return { id: newGenomeId, typesConfig: mutatedTypesConfig };
+  }
+}
+
+export class CopyTypeMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
+  mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
+    const typesIndexes = shuffleArray([...genome.typesConfig.FREQUENCIES.keys()]);
+    const sourceType = typesIndexes.pop() as number;
+    const targetType = typesIndexes.pop() ?? sourceType;
+    const newTypesConfig = copyIndexInTypesConfig(genome.typesConfig, sourceType, targetType);
+
+    return { id: newGenomeId, typesConfig: newTypesConfig };
+  }
+}
+
+export class ComposedMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
+  private readonly strategies: MutationStrategyInterface<SimulationGenome>[];
+  private readonly probabilities: number[];
+
+  constructor(strategies: MutationStrategyInterface<SimulationGenome>[], probabilities: number[]) {
+    if (strategies.length !== probabilities.length) {
+      throw new Error('Strategies and probabilities must have the same length.');
+    }
+    this.strategies = strategies;
+    this.probabilities = probabilities;
+  }
+
+  mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
+    const index = getIndexByFrequencies(this.probabilities);
+    return this.strategies[index].mutate(genome, newGenomeId);
   }
 }
 

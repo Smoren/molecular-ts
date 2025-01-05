@@ -31,7 +31,7 @@ import {
   RandomPopulateStrategy,
   SourceMutationPopulateStrategy,
   SourceMutationStrategy,
-  ClassicCrossoverStrategy,
+  ClassicCrossoverStrategy, ComposedMutationStrategy, CopyTypeMutationStrategy,
 } from '../genetic/strategies';
 import { repeatRunSimulationForReferenceGrade } from './grade';
 import {
@@ -171,14 +171,20 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     config.typesCount,
   );
 
+  // TODO add condition and config
+  // const mutationStrategy = new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection);
+  const mutationStrategy = new ComposedMutationStrategy([
+    new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
+    new CopyTypeMutationStrategy(),
+  ], [0.9, 0.1]);
+
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
     metrics: new ClusterizationMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(),
-    mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
+    mutation: mutationStrategy,
     // crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
     crossover: new ClassicCrossoverStrategy(),
-    // cache: config.useCache ? new SimpleMetricsCache() : new AverageMetricsCache(),
     cache: config.useConstCache ? new SimpleMetricsCache() : new WeightedAgeAverageMetricsCache(config.genomeAgeWeight),
   };
 
