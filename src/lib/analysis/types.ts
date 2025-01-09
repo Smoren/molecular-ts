@@ -161,6 +161,7 @@ export type CompoundsClusterizationSummary = {
   filteredCount: number;
   clusteredCount: number;
   notClusteredCount: number;
+  clusteredTypesVector: NumericVector;
 }
 
 export type CompoundsClustersSummaryMetrics = [number, number, number, number, number];

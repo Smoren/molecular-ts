@@ -17,8 +17,8 @@ import {
 import { createCompoundGraph } from "./factories";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetry";
 import type { GraphInterface } from "../graph/types";
-import type { VectorInterface } from "../math/types";
-import { createFilledArray, createVector } from "../math";
+import type { NumericVector, VectorInterface } from "../math/types";
+import { arrayBinaryOperation, arrayUnaryOperation, createFilledArray, createVector } from "../math";
 import type { ClusterizationWeightsConfig } from '../genetic/types';
 
 export function gradeCompoundClusters(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
@@ -31,17 +31,29 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
   // TODO таким образом повышаем разнообразие кластеров
 
   clusterGrades.sort((lhs, rhs) => rhs.size - lhs.size);
+
   const inputCount = compounds.length;
   const filteredCount = graphs.length;
   const clusteredCount = reduce.toSum(clusterGrades.map((cluster) => cluster.size));
   const notClusteredCount = filteredCount - clusteredCount;
+  const clusteredTypesVector = calcClusteredTypesVector(clusterGrades, typesCount);
   return {
     clusters: clusterGrades,
     inputCount,
     filteredCount,
     clusteredCount,
     notClusteredCount,
+    clusteredTypesVector,
   };
+}
+
+export function calcClusteredTypesVector(clusterGrades: CompoundsClusterGrade[], typesCount: number): NumericVector {
+  return clusterGrades
+    .map((grade) => arrayUnaryOperation(grade.vertexTypesVector, (x) => x * grade.size))
+    .reduce(
+      (acc, x) => arrayBinaryOperation(acc, x, (a, b) => a + b),
+      createFilledArray(typesCount, 0),
+    );
 }
 
 export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade, weights: ClusterizationWeightsConfig): number {

@@ -6,7 +6,7 @@ import {
 } from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../analysis/types';
-import { arraySum, averageMatrixColumns } from '../math/operations';
+import { arrayBinaryOperation, arraySum, averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
 import type { ClusterizationTaskConfig, ClusterizationWeightsConfig } from './types';
 import { sleep } from "./utils";
@@ -78,7 +78,20 @@ export async function runSimulationForClustersGrade(
     );
     const clustersMetrics = calcMetricsForCompoundClustersSummary(clustersSummary, weights);
     const [clustersScore, clusterSize, clustersCount, relativeClustered, relativeFiltered] = clustersMetrics;
-    const linksCreated = sim.summary.LINKS_CREATED[0];
+
+    const linksCreatedVector = sim.summary.LINKS_TYPE_CREATED;
+    const clusteredTypesVector = clustersSummary.clusteredTypesVector;
+
+    if (linksCreatedVector.length !== clusteredTypesVector.length) {
+      throw new Error(`linksCreatedVector.length (${linksCreatedVector.length}) !== clusteredTypesVector.length (${clusteredTypesVector.length})`);
+    }
+
+    const linksCreated = clustersSummary.clusteredCount < 1 ? 0 : arraySum(arrayBinaryOperation(
+      linksCreatedVector,
+      clusteredTypesVector,
+      (a, b) => a * b / clustersSummary.clusteredCount,
+    ));
+
     const rawMatrix = [
       clustersScore,
       clusterSize ** weights.clusterSizeWeight,
