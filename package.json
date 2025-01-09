@@ -25,7 +25,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.10.3",
     "browser-process": "^0.0.1",
-    "genetic-search-multiprocess": "^2.2.0",
+    "genetic-search-multiprocess": "^2.2.1",
     "itertools-ts": "^1.27.1",
     "mdb-vue-ui-kit": "^4.1.1",
     "node-fetch": "^3.3.2",
