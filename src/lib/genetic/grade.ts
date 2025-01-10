@@ -6,7 +6,7 @@ import {
 } from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../analysis/types';
-import { arrayBinaryOperation, arrayProduct, arraySum, averageMatrixColumns } from '../math/operations';
+import { arrayProduct, averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
 import type { ClusterizationTaskConfig, ClusterizationWeightsConfig } from './types';
 import { sleep } from "./utils";
@@ -41,8 +41,8 @@ export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesCo
       COMPOUNDS: compoundsAnalyzer.summary,
       CLUSTERS: clusterizationScoreValue,
     };
-    const rawMatrix = convertTotalSummaryToSummaryMatrixRow(totalSummary);
-    summaryMatrix.push(rawMatrix);
+    const resultMetricsRow = convertTotalSummaryToSummaryMatrixRow(totalSummary);
+    summaryMatrix.push(resultMetricsRow);
   }
 
   return averageMatrixColumns(summaryMatrix);
@@ -76,30 +76,14 @@ export async function runSimulationForClustersGrade(
 
     const compounds = sim.exportCompounds();
 
-    const clusterizationSummary = calcCompoundsClusterizationSummary(
-      compounds,
-      typesConfig.FREQUENCIES.length,
-      weights.minCompoundSize,
-    );
+    const clusterizationSummary = calcCompoundsClusterizationSummary(compounds, typesConfig.FREQUENCIES.length, weights.minCompoundSize);
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
+    const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
 
-    const rawMatrix = [
-      clusterizationScore.averageVertexesCount ** weights.vertexesCountWeight,
-      clusterizationScore.averageEdgesCount ** weights.edgesCountWeight,
-      clusterizationScore.averageUniqueTypesCount ** weights.uniqueTypesCountWeight,
-      clusterizationScore.symmetryGrade ** weights.symmetryWeight,
-      clusterizationScore.averageRadius ** weights.radiusWeight,
-      clusterizationScore.averageSpeed ** weights.speedWeight,
-      clusterizationScore.averageDifference ** weights.differenceWeight,
-      clusterizationScore.averageClusterSize ** weights.averageClusterSizeWeight,
-      clusterizationScore.clustersCount ** weights.clustersCountWeight,
-      clusterizationScore.relativeClustered ** weights.relativeClusteredCountWeight,
-      clusterizationScore.relativeFiltered ** weights.relativeFilteredCountWeight,
-      clusterizationScore.relativeCompoundedAtomsCount ** weights.relativeCompoundedAtomsCountWeight,
-      clusterizationScore.relativeLinksCount ** weights.relativeLinksCountWeight,
-      clusterizationScore.linksCreatedScore ** weights.linksCreatedWeight,
-    ];
-    summaryMatrix.push(rawMatrix);
+    // TODO move to fitness function
+    const resultMetricsRow = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
+
+    summaryMatrix.push(resultMetricsRow);
 
     if (timeout) {
       await sleep(timeout);

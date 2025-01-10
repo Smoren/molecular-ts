@@ -24,11 +24,10 @@ import {
   calcCompoundsClusterizationScore,
 } from "../analysis/utils";
 import {
-  convertCompoundsClusterizationMetricsRowToScoreObject,
   convertCompoundsClusterizationScoreToMetricsRow,
   weighCompoundClusterizationMetricsRow
 } from "../genetic/converters";
-import { arrayProduct } from "@/lib/math/operations";
+import { arrayProduct } from "../math/operations";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
