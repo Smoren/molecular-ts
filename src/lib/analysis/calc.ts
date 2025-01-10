@@ -147,11 +147,23 @@ export function calcClusterizationLinksCreatedScore(
     throw new Error(`linksCreatedVector.length (${linksCreatedVector.length}) !== clusteredTypesVector.length (${clusteredTypesVector.length})`);
   }
 
-  return clusterizationSummary.clusteredCount < 1 ? 0 : arraySum(arrayBinaryOperation(
+  const totalLinksCount = worldSummary.LINKS_COUNT[0];
+
+  if (totalLinksCount < 1) {
+    return 0;
+  }
+
+  const normalizedVector = arrayBinaryOperation(
     linksCreatedVector,
     clusteredTypesVector,
-    (a, b) => a * b / clusterizationSummary.clusteredCount,
-  ));
+    (a, b) => a * b / totalLinksCount,
+  );
+
+  console.log('linksCreatedVector', linksCreatedVector);
+  console.log('clusteredTypesVector', clusteredTypesVector);
+  console.log('normalizedVector', normalizedVector);
+
+  return arraySum(normalizedVector);
 }
 
 export function calcClusteredTypesVector(clusterGrades: CompoundsClusterGrade[], typesCount: number): NumericVector {
