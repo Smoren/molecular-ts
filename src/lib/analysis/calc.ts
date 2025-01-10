@@ -159,10 +159,6 @@ export function calcClusterizationLinksCreatedScore(
     (a, b) => a * b / totalLinksCount,
   );
 
-  console.log('linksCreatedVector', linksCreatedVector);
-  console.log('clusteredTypesVector', clusteredTypesVector);
-  console.log('normalizedVector', normalizedVector);
-
   return arraySum(normalizedVector);
 }
 
