@@ -10,7 +10,6 @@ export function convertCompoundsClusterizationScoreToMetricsRow(score: Compounds
     score.symmetryGrade,
     score.averageRadius,
     score.averageSpeed,
-    score.averageDifference,
     score.averageClusterSize,
     score.clustersCount,
     score.relativeClustered,
@@ -29,7 +28,6 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
     symmetryGrade,
     averageRadius,
     averageSpeed,
-    averageDifference,
     averageClusterSize,
     clustersCount,
     relativeClustered,
@@ -45,7 +43,6 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
     symmetryGrade,
     averageRadius,
     averageSpeed,
-    averageDifference,
     averageClusterSize,
     clustersCount,
     relativeClustered,
@@ -56,23 +53,28 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
   };
 }
 
-export function weighCompoundClusterizationMetricsRow(metrics: NumericVector, weights: ClusterizationWeightsConfig): NumericVector {
+export function weighCompoundClusterizationMetricsRow(
+  metrics: NumericVector,
+  weights: ClusterizationWeightsConfig,
+  weigher?: (value: number, weight: number) => number,
+): NumericVector {
+  weigher = weigher ?? ((value: number, weight: number) => Math.log(1+value) * weight);
+  // weigher = weigher ?? ((value: number, weight: number) => value**weight);
   const score = convertCompoundsClusterizationMetricsRowToScoreObject(metrics);
 
-  score.averageVertexesCount **= weights.vertexesCountWeight;
-  score.averageEdgesCount **= weights.edgesCountWeight;
-  score.averageUniqueTypesCount **= weights.uniqueTypesCountWeight;
-  score.symmetryGrade **= weights.symmetryWeight;
-  score.averageRadius **= weights.radiusWeight;
-  score.averageSpeed **= weights.speedWeight;
-  // score.averageDifference **= weights.differenceWeight; // TODO подумать, иначе без diff занулляется общий score
-  score.averageClusterSize **= weights.averageClusterSizeWeight;
-  score.clustersCount **= weights.clustersCountWeight;
-  score.relativeClustered **= weights.relativeClusteredCountWeight;
-  score.relativeFiltered **= weights.relativeFilteredCountWeight;
-  score.relativeCompoundedAtomsCount **= weights.relativeCompoundedAtomsCountWeight;
-  score.relativeLinksCount **= weights.relativeLinksCountWeight;
-  score.linksCreatedScore **= weights.linksCreatedWeight;
+  score.averageVertexesCount = weigher(score.averageVertexesCount, weights.vertexesCountWeight);
+  score.averageEdgesCount = weigher(score.averageEdgesCount, weights.edgesCountWeight);
+  score.averageUniqueTypesCount = weigher(score.averageUniqueTypesCount, weights.uniqueTypesCountWeight);
+  score.symmetryGrade = weigher(score.symmetryGrade, weights.symmetryWeight);
+  score.averageRadius = weigher(score.averageRadius, weights.radiusWeight);
+  score.averageSpeed = weigher(score.averageSpeed, weights.speedWeight);
+  score.averageClusterSize = weigher(score.averageClusterSize, weights.averageClusterSizeWeight);
+  score.clustersCount = weigher(score.clustersCount, weights.clustersCountWeight);
+  score.relativeClustered = weigher(score.relativeClustered, weights.relativeClusteredCountWeight);
+  score.relativeFiltered = weigher(score.relativeFiltered, weights.relativeFilteredCountWeight);
+  score.relativeCompoundedAtomsCount = weigher(score.relativeCompoundedAtomsCount, weights.relativeCompoundedAtomsCountWeight);
+  score.relativeLinksCount = weigher(score.relativeLinksCount, weights.relativeLinksCountWeight);
+  score.linksCreatedScore = weigher(score.linksCreatedScore, weights.linksCreatedWeight);
 
   return convertCompoundsClusterizationScoreToMetricsRow(score);
 }

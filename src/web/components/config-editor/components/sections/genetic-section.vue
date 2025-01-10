@@ -128,10 +128,6 @@ const fitnessHistoryChartData = computed(() => geneticStore.statsHistory.map((st
           <input type="number" step="0.5" v-model="geneticStore.weightsConfig.symmetryWeight" />
         </div>
         <div>
-          <input-header name="Weight of difference grade of compounds in cluster" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.differenceWeight" />
-        </div>
-        <div>
           <input-header name="Weight of compounds radii in clusters" />
           <input type="number" step="0.5" v-model="geneticStore.weightsConfig.radiusWeight" />
         </div>

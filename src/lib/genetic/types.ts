@@ -95,7 +95,6 @@ export type ClusterizationWeightsConfig = {
   edgesCountWeight: number;
   uniqueTypesCountWeight: number;
   symmetryWeight: number;
-  differenceWeight: number;
   radiusWeight: number;
   speedWeight: number;
   relativeCompoundedAtomsCountWeight: number;

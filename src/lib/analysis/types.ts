@@ -171,7 +171,6 @@ export type CompoundsClusterScore = {
   symmetryGrade: number;
   averageRadius: number;
   averageSpeed: number;
-  averageDifference: number;
 }
 
 export type CompoundsClusterizationScore = CompoundsClusterScore & {

@@ -27,7 +27,7 @@ import {
   randomCrossTypesConfigs,
   randomizeTypesConfig,
 } from '../config/atom-types';
-import { createRandomInteger, getIndexByFrequencies } from '../math';
+import { arraySum, createRandomInteger, getIndexByFrequencies } from '../math';
 import { fullCopyObject } from '../utils/functions';
 import { getRandomArrayItem } from "../math/random";
 import { arrayProduct } from "../math/operations";
@@ -222,6 +222,7 @@ export class ClusterizationMetricsStrategy extends BaseMetricsStrategy<Simulatio
 
 export class ClusterizationFitnessStrategy implements FitnessStrategyInterface {
   score(results: GenerationMetricsMatrix): GenerationFitnessColumn {
-    return results.map((result) => arrayProduct(result));
+    return results.map((result) => arraySum(result)*arrayProduct(result));
+    // return results.map((result) => arrayProduct(result));
   }
 }

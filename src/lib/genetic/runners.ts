@@ -75,9 +75,9 @@ export async function runSimulationForClustersGrade(
     const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
 
     // TODO move to fitness function
-    const resultMetricsRow = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
+    const weighedMetricsRow = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
 
-    summaryMatrix.push(resultMetricsRow);
+    summaryMatrix.push(weighedMetricsRow);
 
     if (timeout) {
       await sleep(timeout);

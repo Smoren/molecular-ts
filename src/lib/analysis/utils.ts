@@ -13,7 +13,6 @@ export function createEmptyCompoundClusterScore(): CompoundsClusterScore {
     symmetryGrade: 0,
     averageRadius: 0,
     averageSpeed: 0,
-    averageDifference: 0,
   };
 }
 
@@ -24,16 +23,15 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
     averageClusterSizeWeight: 1,
     relativeFilteredCountWeight: 1,
     relativeClusteredCountWeight: 1,
-    vertexesCountWeight: 1.25,
+    vertexesCountWeight: 1,
     edgesCountWeight: 1,
-    uniqueTypesCountWeight: 2,
+    uniqueTypesCountWeight: 1,
     symmetryWeight: 1,
-    differenceWeight: 1,
     radiusWeight: 1,
-    speedWeight: 0.5,
+    speedWeight: 1,
     relativeCompoundedAtomsCountWeight: 1,
     relativeLinksCountWeight: 1,
-    linksCreatedWeight: 0.5
+    linksCreatedWeight: 1,
   };
 }
 
@@ -48,7 +46,6 @@ export function createModifiedClusterizationWeightsConfig(): ClusterizationWeigh
     edgesCountWeight: 1,
     uniqueTypesCountWeight: 1,
     symmetryWeight: 1,
-    differenceWeight: 1,
     radiusWeight: 0.5,
     speedWeight: 0.5,
     relativeCompoundedAtomsCountWeight: 1,

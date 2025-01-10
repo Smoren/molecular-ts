@@ -103,7 +103,6 @@ export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): Compo
   const symmetryGrade = clusterGrade.symmetry;
   const averageRadius = clusterGrade.radius;
   const averageSpeed = clusterGrade.speedAverage;
-  const averageDifference = 1 + clusterGrade.difference;
 
   return {
     averageVertexesCount,
@@ -112,7 +111,6 @@ export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): Compo
     symmetryGrade,
     averageRadius,
     averageSpeed,
-    averageDifference,
   };
 }
 
@@ -163,7 +161,7 @@ export function calcClusterizationLinksCreatedScore(
   const normalizedVector = arrayBinaryOperation(
     linksCreatedVector,
     clusteredTypesVectorNormalized,
-    (a, b) => a * b / totalAtomsCount,
+    (a, b) => a * b / Math.log(totalAtomsCount),
   );
 
   return arraySum(normalizedVector);
