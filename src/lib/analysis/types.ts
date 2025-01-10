@@ -155,6 +155,16 @@ export type CompoundsClusterGrade = {
   speedAverage: number;
 }
 
+export type CompoundsClusterScore = {
+  averageVertexesCount: number;
+  averageEdgesCount: number;
+  averageUniqueTypesCount: number;
+  symmetryGrade: number;
+  averageRadius: number;
+  averageSpeed: number;
+  averageDifference: number;
+}
+
 export type CompoundsClusterizationSummary = {
   clusters: CompoundsClusterGrade[];
   inputCount: number;

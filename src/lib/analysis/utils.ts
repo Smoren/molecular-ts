@@ -1,9 +1,9 @@
-import { multi, reduce, single } from "itertools-ts";
+import { createPipe, multi, reduce, single } from "itertools-ts";
 import type {
   CompoundsClusterGrade,
   Compound,
   CompoundsClusterizationSummary,
-  CompoundsClustersSummaryMetrics
+  CompoundsClustersSummaryMetrics, CompoundsClusterScore
 } from "./types";
 import { clusterGraphs } from "../graph/clusterization";
 import {
@@ -56,7 +56,7 @@ export function calcClusteredTypesVector(clusterGrades: CompoundsClusterGrade[],
     );
 }
 
-export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade, weights: ClusterizationWeightsConfig): number {
+export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): CompoundsClusterScore {
   const averageVertexesCount = reduce.toAverage(clusterGrade.vertexesBounds)!;
   const averageEdgesCount = reduce.toAverage(clusterGrade.edgesBounds)!;
   const averageUniqueTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)! - 1;
@@ -65,13 +65,15 @@ export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade, weight
   const averageSpeed = clusterGrade.speedAverage;
   const averageDifference = 1 + clusterGrade.difference;
 
-  return averageVertexesCount ** weights.vertexesCountWeight
-    * averageEdgesCount ** weights.edgesCountWeight
-    * averageUniqueTypesCount ** weights.uniqueTypesCountWeight
-    * symmetryGrade ** weights.symmetryWeight
-    * averageRadius ** weights.radiusWeight
-    * averageSpeed ** weights.speedWeight
-    / averageDifference ** weights.differenceWeight;
+  return {
+    averageVertexesCount,
+    averageEdgesCount,
+    averageUniqueTypesCount,
+    symmetryGrade,
+    averageRadius,
+    averageSpeed,
+    averageDifference,
+  };
 }
 
 export function calcMetricsForCompoundClustersSummary(
@@ -82,10 +84,32 @@ export function calcMetricsForCompoundClustersSummary(
   const clusterSize = reduce.toAverage(clustersSizes) ?? 0;
   const clustersRelativeSizes = summary.clusters.map((c) => c.size / summary.clusteredCount);
 
-  const clustersScore = reduce.toSum(single.map(
-    multi.zip(summary.clusters, clustersRelativeSizes),
-    ([cluster, relativeSize]) => (relativeSize) * scoreCompoundCluster(cluster, weights),
-  ));
+  // const clustersScore = reduce.toSum(single.map(
+  //   multi.zip(summary.clusters, clustersRelativeSizes),
+  //   ([cluster, relativeSize]) => (relativeSize) * scoreCompoundCluster(cluster, weights),
+  // ));
+
+  const clustersScores = summary.clusters.map((cluster) => scoreCompoundCluster(cluster));
+  const clustersScoresVectors = clustersScores.map((score) => [
+    score.averageVertexesCount,
+    score.averageEdgesCount,
+    score.averageUniqueTypesCount,
+    score.symmetryGrade,
+    score.averageRadius,
+    score.averageSpeed,
+    score.averageDifference,
+  ]);
+  const clustersScoresNormalizedVectors = [...multi.zip(clustersScoresVectors, clustersRelativeSizes)]
+    .map(([clusterScoreVector, relativeSize]) => arrayUnaryOperation(clusterScoreVector, (x) => x * relativeSize));
+
+  // return averageVertexesCount ** weights.vertexesCountWeight
+  //   * averageEdgesCount ** weights.edgesCountWeight
+  //   * averageUniqueTypesCount ** weights.uniqueTypesCountWeight
+  //   * symmetryGrade ** weights.symmetryWeight
+  //   * averageRadius ** weights.radiusWeight
+  //   * averageSpeed ** weights.speedWeight
+  //   / averageDifference ** weights.differenceWeight;
+
 
   const clustersCount = summary.clusters.length;
   const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
