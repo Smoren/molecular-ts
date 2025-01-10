@@ -18,15 +18,9 @@ import { createAtom } from '../utils/functions';
 import { createCompoundGraphByAtom } from "../analysis/factories";
 import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "../graph/utils";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "../analysis/symmetry";
-import {
-  createDefaultClusterizationWeightsConfig,
-  calcCompoundsClusterizationSummary,
-  calcCompoundsClusterizationScore,
-} from "../analysis/utils";
-import {
-  convertCompoundsClusterizationScoreToMetricsRow,
-  weighCompoundClusterizationMetricsRow
-} from "../genetic/converters";
+import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from "../analysis/calc";
+import { createDefaultClusterizationWeightsConfig } from "../analysis/utils";
+import { convertCompoundsClusterizationScoreToMetricsRow, weighCompoundClusterizationMetricsRow } from "../genetic/converters";
 import { arrayProduct } from "../math/operations";
 
 export class Simulation implements SimulationInterface {

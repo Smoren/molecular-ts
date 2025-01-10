@@ -1,19 +1,13 @@
 import type { TypesConfig, WorldConfig } from '../config/types';
-import {
-  createDefaultClusterizationWeightsConfig,
-  calcCompoundsClusterizationSummary,
-  calcCompoundsClusterizationScore,
-} from '../analysis/utils';
+import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from '../analysis/calc';
+import { createDefaultClusterizationWeightsConfig } from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../analysis/types';
 import { arrayProduct, averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
 import type { ClusterizationTaskConfig, ClusterizationWeightsConfig } from './types';
 import { sleep } from "./utils";
-import {
-  convertCompoundsClusterizationScoreToMetricsRow,
-  weighCompoundClusterizationMetricsRow,
-} from "./converters";
+import { convertCompoundsClusterizationScoreToMetricsRow, weighCompoundClusterizationMetricsRow } from "./converters";
 
 export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
   const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
