@@ -20,9 +20,13 @@ import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "../g
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "../analysis/symmetry";
 import {
   createDefaultClusterizationWeightsConfig,
-  gradeCompoundClusters,
-  calcMetricsForCompoundClustersSummary, weighCompoundClustersSummaryMetrics
+  calcCompoundsClusterizationSummary,
+  calcCompoundsClusterizationScore,
 } from "../analysis/utils";
+import {
+  convertCompoundsClusterizationScoreToMetricsRow,
+  weighCompoundClusterizationMetricsRow
+} from "../genetic/converters";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -260,13 +264,14 @@ export class Simulation implements SimulationInterface {
 
       if (event.shiftKey) {
         const weights = createDefaultClusterizationWeightsConfig();
-        const clustersSummary = gradeCompoundClusters(
+        const clustersSummary = calcCompoundsClusterizationSummary(
           this.exportCompounds(),
           this.config.typesConfig.FREQUENCIES.length,
           weights.minCompoundSize,
         );
-        const metrics = calcMetricsForCompoundClustersSummary(clustersSummary, weights);
-        const score = weighCompoundClustersSummaryMetrics(metrics, weights);
+        const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary);
+        const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
+        const score = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
         console.log('CLUSTERIZATION GRADE', clustersSummary);
         console.log('CLUSTERIZATION SCORE', score);
       }

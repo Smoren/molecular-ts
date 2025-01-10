@@ -175,10 +175,8 @@ export type CompoundsClusterScore = {
 }
 
 export type CompoundsClusterizationScore = CompoundsClusterScore & {
-  clusterSize: number;
+  averageClusterSize: number;
   clustersCount: number;
   relativeClustered: number;
   relativeFiltered: number;
 }
-
-export type CompoundsClustersSummaryMetrics = [number, number, number, number, number];

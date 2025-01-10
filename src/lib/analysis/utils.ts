@@ -1,9 +1,10 @@
-import { createPipe, multi, reduce, single } from "itertools-ts";
+import { multi, reduce } from "itertools-ts";
 import type {
   CompoundsClusterGrade,
   Compound,
   CompoundsClusterizationSummary,
-  CompoundsClustersSummaryMetrics, CompoundsClusterScore, CompoundsClusterizationScore
+  CompoundsClusterScore,
+  CompoundsClusterizationScore,
 } from "./types";
 import { clusterGraphs } from "../graph/clusterization";
 import {
@@ -18,11 +19,17 @@ import { createCompoundGraph } from "./factories";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "./symmetry";
 import type { GraphInterface } from "../graph/types";
 import type { NumericVector, VectorInterface } from "../math/types";
-import { arrayBinaryOperation, arrayUnaryOperation, createFilledArray, createVector } from "../math";
+import {
+  arrayBinaryOperation,
+  arrayUnaryOperation,
+  objectBinaryOperation,
+  objectUnaryOperation,
+  createFilledArray,
+  createVector,
+} from "../math";
 import type { ClusterizationWeightsConfig } from '../genetic/types';
-import {objectBinaryOperation, objectUnaryOperation} from "@/lib/math/operations";
 
-export function gradeCompoundClusters(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
+export function calcCompoundsClusterizationSummary(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds
     .filter((compound) => compound.size >= minCompoundSize)
     .map((compound) => createCompoundGraph(compound, typesCount));
@@ -48,13 +55,30 @@ export function gradeCompoundClusters(compounds: Compound[], typesCount: number,
   };
 }
 
-export function calcClusteredTypesVector(clusterGrades: CompoundsClusterGrade[], typesCount: number): NumericVector {
-  return clusterGrades
-    .map((grade) => arrayUnaryOperation(grade.vertexTypesVector, (x) => x * grade.size))
-    .reduce(
-      (acc, x) => arrayBinaryOperation(acc, x, (a, b) => a + b),
-      createFilledArray(typesCount, 0),
-    );
+export function calcCompoundsClusterizationScore(summary: CompoundsClusterizationSummary): CompoundsClusterizationScore {
+  const clustersSizes = summary.clusters.map((c) => c.size);
+  const averageClusterSize = reduce.toAverage(clustersSizes) ?? 0;
+  const clustersRelativeSizes = summary.clusters.map((c) => c.size / summary.clusteredCount);
+
+  const clustersScores = summary.clusters.map((cluster) => scoreCompoundCluster(cluster));
+  const normalizedClusterScores = [...multi.zip(clustersScores, clustersRelativeSizes)]
+    .map(([score, relativeSize]) => objectUnaryOperation(score, (x: number) => x * relativeSize));
+  const normalizedClusterSumScores = normalizedClusterScores.reduce(
+      (acc, x) => objectBinaryOperation(acc, x, (a: number, b: number) => a + b),
+      createEmptyCompoundClusterScore(),
+  )
+
+  const clustersCount = summary.clusters.length;
+  const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
+  const relativeFiltered = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
+
+  return {
+    ...normalizedClusterSumScores,
+    averageClusterSize,
+    clustersCount,
+    relativeClustered,
+    relativeFiltered,
+  };
 }
 
 export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): CompoundsClusterScore {
@@ -77,56 +101,6 @@ export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): Compo
   };
 }
 
-export function createEmptyCompoundClusterScore(): CompoundsClusterScore {
-  return {
-    averageVertexesCount: 0,
-    averageEdgesCount: 0,
-    averageUniqueTypesCount: 0,
-    symmetryGrade: 0,
-    averageRadius: 0,
-    averageSpeed: 0,
-    averageDifference: 0,
-  };
-}
-
-export function calcMetricsForCompoundClustersSummary(summary: CompoundsClusterizationSummary): CompoundsClusterizationScore {
-  const clustersSizes = summary.clusters.map((c) => c.size);
-  const clusterSize = reduce.toAverage(clustersSizes) ?? 0;
-  const clustersRelativeSizes = summary.clusters.map((c) => c.size / summary.clusteredCount);
-
-  const clustersScores = summary.clusters.map((cluster) => scoreCompoundCluster(cluster));
-  const normalizedClusterScores = [...multi.zip(clustersScores, clustersRelativeSizes)]
-    .map(([score, relativeSize]) => objectUnaryOperation(score, (x: number) => x * relativeSize));
-  const normalizedClusterSumScores = normalizedClusterScores.reduce(
-      (acc, x) => objectBinaryOperation(acc, x, (a: number, b: number) => a + b),
-      createEmptyCompoundClusterScore(),
-  )
-
-  const clustersCount = summary.clusters.length;
-  const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
-  const relativeFiltered = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
-
-  return {
-    ...normalizedClusterSumScores,
-    clusterSize,
-    clustersCount,
-    relativeClustered,
-    relativeFiltered,
-  };
-}
-
-export function weighCompoundClustersSummaryMetrics(
-  metrics: CompoundsClustersSummaryMetrics,
-  weights: ClusterizationWeightsConfig,
-): number {
-  const [clustersScore, clusterSize, clustersCount, relativeClustered, relativeFiltered] = metrics;
-  return clustersScore
-    * clusterSize ** weights.clusterSizeWeight
-    * clustersCount ** weights.clustersCountWeight
-    * relativeClustered ** weights.relativeClusteredCountWeight
-    * relativeFiltered ** weights.relativeFilteredCountWeight;
-}
-
 export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsClusterGrade {
   const vertexTypesVector = calcAverageVertexTypesVector(cluster);
   const edgeTypesVector = calcAverageEdgeTypesVector(cluster);
@@ -145,6 +119,15 @@ export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsC
     speedBounds: calcSpeedBounds(cluster),
     speedAverage: calcAverageSpeed(cluster),
   };
+}
+
+export function calcClusteredTypesVector(clusterGrades: CompoundsClusterGrade[], typesCount: number): NumericVector {
+  return clusterGrades
+    .map((grade) => arrayUnaryOperation(grade.vertexTypesVector, (x) => x * grade.size))
+    .reduce(
+        (acc, x) => arrayBinaryOperation(acc, x, (a, b) => a + b),
+        createFilledArray(typesCount, 0),
+    );
 }
 
 export function calcAverageSymmetry(cluster: GraphInterface[]): number {
@@ -203,11 +186,23 @@ export function convertDifferenceToNormalizedSimilarityGrade(diff: number, normC
   return 1 / (1 + Math.abs(diff)*normCoefficient);
 }
 
+export function createEmptyCompoundClusterScore(): CompoundsClusterScore {
+  return {
+    averageVertexesCount: 0,
+    averageEdgesCount: 0,
+    averageUniqueTypesCount: 0,
+    symmetryGrade: 0,
+    averageRadius: 0,
+    averageSpeed: 0,
+    averageDifference: 0,
+  };
+}
+
 export function createDefaultClusterizationWeightsConfig(): ClusterizationWeightsConfig {
   return {
     minCompoundSize: 5,
     clustersCountWeight: 1,
-    clusterSizeWeight: 1,
+    averageClusterSizeWeight: 1,
     relativeFilteredCountWeight: 1,
     relativeClusteredCountWeight: 1,
     vertexesCountWeight: 1,
@@ -227,7 +222,7 @@ export function createModifiedClusterizationWeightsConfig(): ClusterizationWeigh
   return {
     minCompoundSize: 6,
     clustersCountWeight: 1,
-    clusterSizeWeight: 1,
+    averageClusterSizeWeight: 1,
     relativeFilteredCountWeight: 1,
     relativeClusteredCountWeight: 1,
     vertexesCountWeight: 2,

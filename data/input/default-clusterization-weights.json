@@ -1,7 +1,7 @@
 {
   "minCompoundSize": 5,
   "clustersCountWeight": 1,
-  "clusterSizeWeight": 1,
+  "averageClusterSizeWeight": 1,
   "relativeFilteredCountWeight": 1,
   "relativeClusteredCountWeight": 1,
   "vertexesCountWeight": 2,

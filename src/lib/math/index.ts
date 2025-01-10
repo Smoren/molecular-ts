@@ -9,6 +9,8 @@ import {
 import {
   arrayUnaryOperation,
   arrayBinaryOperation,
+  objectUnaryOperation,
+  objectBinaryOperation,
   arraySum,
   concatArrays,
   concatMatrices,
@@ -62,6 +64,8 @@ export {
   isEqual,
   getEpsilon,
   changeEpsilon,
+  objectUnaryOperation,
+  objectBinaryOperation,
   arrayUnaryOperation,
   arrayBinaryOperation,
   arraySum,
