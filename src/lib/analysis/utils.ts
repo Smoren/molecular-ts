@@ -71,7 +71,7 @@ export function calcCompoundsClusterizationScore(
   const normalizedClusterSumScores = normalizedClusterScores.reduce(
     (acc, x) => objectBinaryOperation(acc, x, (a: number, b: number) => a + b),
     createEmptyCompoundClusterScore(),
-  )
+  );
 
   const clustersCount = summary.clusters.length;
   const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
