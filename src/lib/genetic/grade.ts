@@ -6,7 +6,7 @@ import {
 } from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../analysis/types';
-import { arrayBinaryOperation, arraySum, averageMatrixColumns } from '../math/operations';
+import { arrayBinaryOperation, arrayProduct, arraySum, averageMatrixColumns } from '../math/operations';
 import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
 import type { ClusterizationTaskConfig, ClusterizationWeightsConfig } from './types';
 import { sleep } from "./utils";
@@ -32,7 +32,8 @@ export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesCo
     );
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
     const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
-    const clusterizationScoreValue = weighCompoundClusterizationMetricsRow(clusterizationMetrics, clusterizationWeights);
+    const clusterizationMetricsWeighed = weighCompoundClusterizationMetricsRow(clusterizationMetrics, clusterizationWeights);
+    const clusterizationScoreValue = arrayProduct(clusterizationMetricsWeighed);
 
     const compoundsAnalyzer = new CompoundsAnalyzer(compounds, sim.atoms, typesConfig.FREQUENCIES.length);
     const totalSummary: TotalSummary = {

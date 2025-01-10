@@ -56,20 +56,23 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
   };
 }
 
-export function weighCompoundClusterizationMetricsRow(metrics: NumericVector, weights: ClusterizationWeightsConfig): number {
+export function weighCompoundClusterizationMetricsRow(metrics: NumericVector, weights: ClusterizationWeightsConfig): NumericVector {
   const score = convertCompoundsClusterizationMetricsRowToScoreObject(metrics);
-  return score.averageVertexesCount ** weights.vertexesCountWeight
-    * score.averageEdgesCount ** weights.edgesCountWeight
-    * score.averageUniqueTypesCount ** weights.uniqueTypesCountWeight
-    * score.symmetryGrade ** weights.symmetryWeight
-    * score.averageRadius ** weights.radiusWeight
-    * score.averageSpeed ** weights.speedWeight
-    * score.averageDifference ** weights.differenceWeight
-    * score.averageClusterSize ** weights.averageClusterSizeWeight
-    * score.clustersCount ** weights.clustersCountWeight
-    * score.relativeClustered ** weights.relativeClusteredCountWeight
-    * score.relativeFiltered ** weights.relativeFilteredCountWeight
-    * score.relativeCompoundedAtomsCount ** weights.relativeCompoundedAtomsCountWeight
-    * score.relativeLinksCount ** weights.relativeLinksCountWeight
-    * score.linksCreatedScore ** weights.linksCreatedWeight;
+
+  score.averageVertexesCount **= weights.vertexesCountWeight;
+  score.averageEdgesCount **= weights.edgesCountWeight;
+  score.averageUniqueTypesCount **= weights.uniqueTypesCountWeight;
+  score.symmetryGrade **= weights.symmetryWeight;
+  score.averageRadius **= weights.radiusWeight;
+  score.averageSpeed **= weights.speedWeight;
+  score.averageDifference **= weights.differenceWeight;
+  score.averageClusterSize **= weights.averageClusterSizeWeight;
+  score.clustersCount **= weights.clustersCountWeight;
+  score.relativeClustered **= weights.relativeClusteredCountWeight;
+  score.relativeFiltered **= weights.relativeFilteredCountWeight;
+  score.relativeCompoundedAtomsCount **= weights.relativeCompoundedAtomsCountWeight;
+  score.relativeLinksCount **= weights.relativeLinksCountWeight;
+  score.linksCreatedScore **= weights.linksCreatedWeight;
+
+  return convertCompoundsClusterizationScoreToMetricsRow(score);
 }

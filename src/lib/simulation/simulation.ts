@@ -13,7 +13,7 @@ import type { NumericVector } from '../math/types';
 import type { Compound } from '../analysis/types';
 import { CompoundsCollector } from '../analysis/compounds';
 import { PreventException } from "../drawer/utils";
-import { toVector } from "../math";
+import { arraySum, toVector } from "../math";
 import { createAtom } from '../utils/functions';
 import { createCompoundGraphByAtom } from "../analysis/factories";
 import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "../graph/utils";
@@ -28,6 +28,7 @@ import {
   convertCompoundsClusterizationScoreToMetricsRow,
   weighCompoundClusterizationMetricsRow
 } from "../genetic/converters";
+import { arrayProduct } from "@/lib/math/operations";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -273,12 +274,14 @@ export class Simulation implements SimulationInterface {
         );
         const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary, compounds, this);
         const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
-        const score = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
+        const clusterizationMetricsWeighed = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
+        const totalScore = arrayProduct(clusterizationMetricsWeighed);
 
         console.log('CLUSTERIZATION SUMMARY', clustersSummary);
         console.log('CLUSTERIZATION SCORE', clusterizationScore);
         console.log('CLUSTERIZATION METRICS', clusterizationMetrics);
-        console.log('CLUSTERIZATION SCORE VALUE', score);
+        console.log('CLUSTERIZATION METRICS WEIGHED', clusterizationMetricsWeighed);
+        console.log('CLUSTERIZATION TOTAL SCORE', totalScore);
       }
     });
 
