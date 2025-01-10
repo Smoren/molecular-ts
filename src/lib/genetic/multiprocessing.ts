@@ -6,7 +6,7 @@ import type {
   SimulationMultiprocessingMetricsStrategyConfig,
 } from "./types";
 import { BaseMultiprocessingMetricsStrategy } from "genetic-search-multiprocess";
-import { repeatRunSimulationForReferenceGrade } from "./grade";
+import { repeatRunSimulationForReferenceGrade } from "./runners";
 
 export class ReferenceMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>, ReferenceTaskConfig> {
   protected createTaskInput(genome: SimulationGenome): ReferenceTaskConfig {
@@ -37,7 +37,7 @@ export const referenceGradeMultiprocessingTask = async ([
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocessor/lib', '/src');
-  const { repeatRunSimulationForReferenceGrade } = await import(`${dirName}/lib/genetic/grade`);
+  const { repeatRunSimulationForReferenceGrade } = await import(`${dirName}/lib/genetic/runners`);
 
   return repeatRunSimulationForReferenceGrade(worldConfig, typesConfig, checkpoints, repeats);
 }
@@ -64,7 +64,7 @@ export const clusterizationGradeMultiprocessingTask = async ([
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocessor/lib', '/src');
-  const { repeatRunSimulationForClustersGrade } = await import(`${dirName}/lib/genetic/grade`);
+  const { repeatRunSimulationForClustersGrade } = await import(`${dirName}/lib/genetic/runners`);
 
   return repeatRunSimulationForClustersGrade([
     _,

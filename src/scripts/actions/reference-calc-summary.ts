@@ -6,7 +6,7 @@ import {
   writeJsonFile,
 } from "@/scripts/lib/genetic/io";
 import { convertSummaryMatrixRowToObject } from "@/lib/genetic/helpers";
-import { repeatRunSimulationForReferenceGrade } from '@/lib/genetic/grade';
+import { repeatRunSimulationForReferenceGrade } from '@/lib/genetic/runners';
 
 export const actionReferenceCalcSummary = async (...args: string[]) => {
   const ts = Date.now();

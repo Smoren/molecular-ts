@@ -33,7 +33,7 @@ import {
   SourceMutationStrategy,
   ClassicCrossoverStrategy, ComposedMutationStrategy, CopyTypeMutationStrategy,
 } from '../genetic/strategies';
-import { repeatRunSimulationForReferenceGrade } from './grade';
+import { repeatRunSimulationForReferenceGrade } from './runners';
 import {
   ClusterizationMultiprocessingMetricsStrategy,
   ReferenceMultiprocessingMetricsStrategy

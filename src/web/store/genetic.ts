@@ -35,7 +35,7 @@ import {
   createDefaultMutationRandomTypesConfigCollection,
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
-import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/grade";
+import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/runners";
 import type { GenomeMetricsRow, PopulationSummary } from "genetic-search/src/types";
 
 class StopException extends Error {}
