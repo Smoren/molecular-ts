@@ -80,7 +80,9 @@ export class Simulation implements SimulationInterface {
   }
 
   step() {
-    this.summaryManager.startStep(this.config.typesConfig);
+    if (!this.runningState.isPaused) {
+      this.summaryManager.startStep(this.config.typesConfig);
+    }
 
     if (this.config.worldConfig.SPEED > 0 && !this.runningState.isPaused) {
       for (let i=0; i<this.config.worldConfig.PLAYBACK_SPEED; ++i) {
@@ -90,7 +92,9 @@ export class Simulation implements SimulationInterface {
 
     this.drawer.draw(this._atoms, this._links);
 
-    this.summaryManager.finishStep();
+    if (!this.runningState.isPaused) {
+      this.summaryManager.finishStep();
+    }
   }
 
   togglePause() {
