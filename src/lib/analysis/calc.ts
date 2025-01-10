@@ -147,16 +147,16 @@ export function calcClusterizationLinksCreatedScore(
     throw new Error(`linksCreatedVector.length (${linksCreatedVector.length}) !== clusteredTypesVector.length (${clusteredTypesVector.length})`);
   }
 
-  const totalLinksCount = worldSummary.LINKS_COUNT[0];
+  const totalAtomsCount = worldSummary.ATOMS_COUNT[0];
 
-  if (totalLinksCount < 1) {
+  if (totalAtomsCount < 1) {
     return 0;
   }
 
   const normalizedVector = arrayBinaryOperation(
     linksCreatedVector,
     clusteredTypesVector,
-    (a, b) => a * b / totalLinksCount,
+    (a, b) => a * b / totalAtomsCount,
   );
 
   return arraySum(normalizedVector);

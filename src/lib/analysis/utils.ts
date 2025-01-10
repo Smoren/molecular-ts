@@ -24,16 +24,16 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
     averageClusterSizeWeight: 1,
     relativeFilteredCountWeight: 1,
     relativeClusteredCountWeight: 1,
-    vertexesCountWeight: 1,
+    vertexesCountWeight: 2,
     edgesCountWeight: 1,
-    uniqueTypesCountWeight: 1,
+    uniqueTypesCountWeight: 2,
     symmetryWeight: 1,
     differenceWeight: 1,
-    radiusWeight: 0.5,
+    radiusWeight: 1,
     speedWeight: 0.5,
     relativeCompoundedAtomsCountWeight: 1,
     relativeLinksCountWeight: 1,
-    linksCreatedWeight: 1,
+    linksCreatedWeight: 0.5
   };
 }
 

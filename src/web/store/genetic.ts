@@ -22,7 +22,10 @@ import {
   WeightedAgeAverageMetricsCache,
 } from "genetic-search";
 import { useConfigStore } from "@/web/store/config";
-import { createModifiedClusterizationWeightsConfig } from "@/lib/analysis/utils";
+import {
+  createDefaultClusterizationWeightsConfig,
+  createModifiedClusterizationWeightsConfig,
+} from "@/lib/analysis/utils";
 import {
   ClassicCrossoverStrategy,
   ClusterizationFitnessStrategy,
@@ -51,7 +54,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   const worldConfigRaw: WorldConfig = fullCopyObject(configStore.worldConfig);
   const typesConfigRaw: TypesConfig = fullCopyObject(configStore.typesConfig);
   const randomTypesConfigRaw: RandomTypesConfig = fullCopyObject(configStore.randomTypesConfig);
-  const weightsConfigRaw: ClusterizationWeightsConfig = createModifiedClusterizationWeightsConfig();
+  const weightsConfigRaw: ClusterizationWeightsConfig = createDefaultClusterizationWeightsConfig();
 
   const worldConfig = ref<WorldConfig>(worldConfigRaw);
   const typesConfig = ref<TypesConfig>(typesConfigRaw);
