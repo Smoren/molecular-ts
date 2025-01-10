@@ -2,7 +2,7 @@ import type { TypesConfig, WorldConfig } from '../config/types';
 import {
   createDefaultClusterizationWeightsConfig,
   calcCompoundsClusterizationSummary,
-  calcCompoundsClusterizationScore,
+  calcCompoundsClusterizationScore, calcClusterizationLinksCreatedScore,
 } from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../analysis/types';
@@ -30,7 +30,7 @@ export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesCo
       typesConfig.FREQUENCIES.length,
       clusterizationWeights.minCompoundSize,
     );
-    const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary);
+    const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
     const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
     const clusterizationScoreValue = weighCompoundClusterizationMetricsRow(clusterizationMetrics, clusterizationWeights);
 
@@ -74,28 +74,13 @@ export async function runSimulationForClustersGrade(
     }
 
     const compounds = sim.exportCompounds();
-    const relativeCompoundedAtomsCount = arraySum(compounds.map((compound) => compound.size)) / sim.atoms.length;
-    const relativeLinksCount = sim.links.length / sim.atoms.length;
 
     const clusterizationSummary = calcCompoundsClusterizationSummary(
       compounds,
       typesConfig.FREQUENCIES.length,
       weights.minCompoundSize,
     );
-    const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary);
-
-    const linksCreatedVector = sim.summary.LINKS_TYPE_CREATED;
-    const clusteredTypesVector = clusterizationSummary.clusteredTypesVector;
-
-    if (linksCreatedVector.length !== clusteredTypesVector.length) {
-      throw new Error(`linksCreatedVector.length (${linksCreatedVector.length}) !== clusteredTypesVector.length (${clusteredTypesVector.length})`);
-    }
-
-    const linksCreated = clusterizationSummary.clusteredCount < 1 ? 0 : arraySum(arrayBinaryOperation(
-      linksCreatedVector,
-      clusteredTypesVector,
-      (a, b) => a * b / clusterizationSummary.clusteredCount,
-    ));
+    const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
 
     const rawMatrix = [
       clusterizationScore.averageVertexesCount ** weights.vertexesCountWeight,
@@ -109,11 +94,9 @@ export async function runSimulationForClustersGrade(
       clusterizationScore.clustersCount ** weights.clustersCountWeight,
       clusterizationScore.relativeClustered ** weights.relativeClusteredCountWeight,
       clusterizationScore.relativeFiltered ** weights.relativeFilteredCountWeight,
-
-      // TODO move to calcCompoundsClusterizationScore()
-      relativeCompoundedAtomsCount ** weights.relativeCompoundedAtomsCountWeight,
-      relativeLinksCount ** weights.relativeLinksCountWeight,
-      linksCreated ** weights.linksCreatedWeight,
+      clusterizationScore.relativeCompoundedAtomsCount ** weights.relativeCompoundedAtomsCountWeight,
+      clusterizationScore.relativeLinksCount ** weights.relativeLinksCountWeight,
+      clusterizationScore.linksCreatedScore ** weights.linksCreatedWeight,
     ];
     summaryMatrix.push(rawMatrix);
 

@@ -1,6 +1,6 @@
-import type {CompoundsClusterizationScore} from "@/lib/analysis/types";
-import type {NumericVector} from "@/lib/math/types";
-import type {ClusterizationWeightsConfig} from "@/lib/genetic/types";
+import type { CompoundsClusterizationScore } from "../analysis/types";
+import type { NumericVector } from "../math/types";
+import type { ClusterizationWeightsConfig } from "./types";
 
 export function convertCompoundsClusterizationScoreToMetricsRow(score: CompoundsClusterizationScore): NumericVector {
   return [
@@ -15,6 +15,9 @@ export function convertCompoundsClusterizationScoreToMetricsRow(score: Compounds
     score.clustersCount,
     score.relativeClustered,
     score.relativeFiltered,
+    score.relativeCompoundedAtomsCount,
+    score.relativeLinksCount,
+    score.linksCreatedScore,
   ]
 }
 
@@ -31,6 +34,9 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
     clustersCount,
     relativeClustered,
     relativeFiltered,
+    relativeCompoundedAtomsCount,
+    relativeLinksCount,
+    linksCreatedScore,
   ] = metrics;
   return {
     averageVertexesCount,
@@ -44,6 +50,9 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
     clustersCount,
     relativeClustered,
     relativeFiltered,
+    relativeCompoundedAtomsCount,
+    relativeLinksCount,
+    linksCreatedScore,
   };
 }
 
@@ -59,5 +68,8 @@ export function weighCompoundClusterizationMetricsRow(metrics: NumericVector, we
     * score.averageClusterSize ** weights.averageClusterSizeWeight
     * score.clustersCount ** weights.clustersCountWeight
     * score.relativeClustered ** weights.relativeClusteredCountWeight
-    * score.relativeFiltered ** weights.relativeFilteredCountWeight;
+    * score.relativeFiltered ** weights.relativeFilteredCountWeight
+    * score.relativeCompoundedAtomsCount ** weights.relativeCompoundedAtomsCountWeight
+    * score.relativeLinksCount ** weights.relativeLinksCountWeight
+    * score.linksCreatedScore ** weights.linksCreatedWeight;
 }

@@ -265,14 +265,16 @@ export class Simulation implements SimulationInterface {
 
       if (event.shiftKey) {
         const weights = createDefaultClusterizationWeightsConfig();
+        const compounds = this.exportCompounds();
         const clustersSummary = calcCompoundsClusterizationSummary(
-          this.exportCompounds(),
+          compounds,
           this.config.typesConfig.FREQUENCIES.length,
           weights.minCompoundSize,
         );
-        const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary);
+        const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary, compounds, this);
         const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
         const score = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
+
         console.log('CLUSTERIZATION SUMMARY', clustersSummary);
         console.log('CLUSTERIZATION SCORE', clusterizationScore);
         console.log('CLUSTERIZATION METRICS', clusterizationMetrics);

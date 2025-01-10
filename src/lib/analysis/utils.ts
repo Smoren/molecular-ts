@@ -4,7 +4,7 @@ import type {
   Compound,
   CompoundsClusterizationSummary,
   CompoundsClusterScore,
-  CompoundsClusterizationScore,
+  CompoundsClusterizationScore, WorldSummary,
 } from "./types";
 import { clusterGraphs } from "../graph/clusterization";
 import {
@@ -25,9 +25,10 @@ import {
   objectBinaryOperation,
   objectUnaryOperation,
   createFilledArray,
-  createVector,
+  createVector, arraySum,
 } from "../math";
 import type { ClusterizationWeightsConfig } from '../genetic/types';
+import type { SimulationInterface } from "../simulation/types/simulation";
 
 export function calcCompoundsClusterizationSummary(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds
@@ -55,7 +56,11 @@ export function calcCompoundsClusterizationSummary(compounds: Compound[], typesC
   };
 }
 
-export function calcCompoundsClusterizationScore(summary: CompoundsClusterizationSummary): CompoundsClusterizationScore {
+export function calcCompoundsClusterizationScore(
+  summary: CompoundsClusterizationSummary,
+  compounds: Compound[],
+  simulation: SimulationInterface,
+): CompoundsClusterizationScore {
   const clustersSizes = summary.clusters.map((c) => c.size);
   const averageClusterSize = reduce.toAverage(clustersSizes) ?? 0;
   const clustersRelativeSizes = summary.clusters.map((c) => c.size / summary.clusteredCount);
@@ -64,13 +69,18 @@ export function calcCompoundsClusterizationScore(summary: CompoundsClusterizatio
   const normalizedClusterScores = [...multi.zip(clustersScores, clustersRelativeSizes)]
     .map(([score, relativeSize]) => objectUnaryOperation(score, (x: number) => x * relativeSize));
   const normalizedClusterSumScores = normalizedClusterScores.reduce(
-      (acc, x) => objectBinaryOperation(acc, x, (a: number, b: number) => a + b),
-      createEmptyCompoundClusterScore(),
+    (acc, x) => objectBinaryOperation(acc, x, (a: number, b: number) => a + b),
+    createEmptyCompoundClusterScore(),
   )
 
   const clustersCount = summary.clusters.length;
   const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
   const relativeFiltered = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
+
+  const relativeCompoundedAtomsCount = arraySum(compounds.map((compound) => compound.size)) / simulation.atoms.length;
+  const relativeLinksCount = simulation.links.length / simulation.atoms.length;
+
+  const linksCreatedScore = calcClusterizationLinksCreatedScore(summary, simulation.summary);
 
   return {
     ...normalizedClusterSumScores,
@@ -78,6 +88,9 @@ export function calcCompoundsClusterizationScore(summary: CompoundsClusterizatio
     clustersCount,
     relativeClustered,
     relativeFiltered,
+    relativeCompoundedAtomsCount,
+    relativeLinksCount,
+    linksCreatedScore,
   };
 }
 
@@ -119,6 +132,24 @@ export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsC
     speedBounds: calcSpeedBounds(cluster),
     speedAverage: calcAverageSpeed(cluster),
   };
+}
+
+export function calcClusterizationLinksCreatedScore(
+  clusterizationSummary: CompoundsClusterizationSummary,
+  worldSummary: WorldSummary<number[]>,
+): number {
+  const linksCreatedVector = worldSummary.LINKS_TYPE_CREATED;
+  const clusteredTypesVector = clusterizationSummary.clusteredTypesVector;
+
+  if (linksCreatedVector.length !== clusteredTypesVector.length) {
+    throw new Error(`linksCreatedVector.length (${linksCreatedVector.length}) !== clusteredTypesVector.length (${clusteredTypesVector.length})`);
+  }
+
+  return clusterizationSummary.clusteredCount < 1 ? 0 : arraySum(arrayBinaryOperation(
+    linksCreatedVector,
+    clusteredTypesVector,
+    (a, b) => a * b / clusterizationSummary.clusteredCount,
+  ));
 }
 
 export function calcClusteredTypesVector(clusterGrades: CompoundsClusterGrade[], typesCount: number): NumericVector {
