@@ -1,4 +1,4 @@
-import type { InitialConfig, TypesConfig, WorldConfig, ViewMode } from '../../config/types';
+import type { TypesConfig, WorldConfig, ViewMode } from '../../config/types';
 import type { AtomInterface } from './atomic';
 import type { DrawerInterface } from '../../drawer/types';
 import type { PhysicModelInterface } from './interaction';

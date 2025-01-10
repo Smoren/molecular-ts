@@ -2,7 +2,7 @@ import type { TypesConfig, WorldConfig } from '../config/types';
 import {
   createDefaultClusterizationWeightsConfig,
   calcCompoundsClusterizationSummary,
-  calcCompoundsClusterizationScore, calcClusterizationLinksCreatedScore,
+  calcCompoundsClusterizationScore,
 } from '../analysis/utils';
 import { CompoundsAnalyzer } from '../analysis/compounds';
 import type { TotalSummary } from '../analysis/types';
