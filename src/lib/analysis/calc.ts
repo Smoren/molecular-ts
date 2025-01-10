@@ -142,6 +142,12 @@ export function calcClusterizationLinksCreatedScore(
 ): number {
   const linksCreatedVector = worldSummary.LINKS_TYPE_CREATED;
   const clusteredTypesVector = clusterizationSummary.clusteredTypesVector;
+  const clusteredTypesSum = arraySum(clusteredTypesVector);
+
+  if (clusteredTypesSum === 0) {
+    return 0;
+  }
+
 
   if (linksCreatedVector.length !== clusteredTypesVector.length) {
     throw new Error(`linksCreatedVector.length (${linksCreatedVector.length}) !== clusteredTypesVector.length (${clusteredTypesVector.length})`);
@@ -153,9 +159,10 @@ export function calcClusterizationLinksCreatedScore(
     return 0;
   }
 
+  const clusteredTypesVectorNormalized = arrayUnaryOperation(clusteredTypesVector, (x) => x / clusteredTypesSum);
   const normalizedVector = arrayBinaryOperation(
     linksCreatedVector,
-    clusteredTypesVector,
+    clusteredTypesVectorNormalized,
     (a, b) => a * b / totalAtomsCount,
   );
 
