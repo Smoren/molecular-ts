@@ -24,6 +24,7 @@ import {
   calcCompoundsClusterizationScore,
 } from "../analysis/utils";
 import {
+  convertCompoundsClusterizationMetricsRowToScoreObject,
   convertCompoundsClusterizationScoreToMetricsRow,
   weighCompoundClusterizationMetricsRow
 } from "../genetic/converters";
@@ -272,8 +273,10 @@ export class Simulation implements SimulationInterface {
         const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary);
         const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
         const score = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
-        console.log('CLUSTERIZATION GRADE', clustersSummary);
-        console.log('CLUSTERIZATION SCORE', score);
+        console.log('CLUSTERIZATION SUMMARY', clustersSummary);
+        console.log('CLUSTERIZATION SCORE', clusterizationScore);
+        console.log('CLUSTERIZATION METRICS', clusterizationMetrics);
+        console.log('CLUSTERIZATION SCORE VALUE', score);
       }
     });
 

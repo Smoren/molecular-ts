@@ -55,7 +55,7 @@ export function weighCompoundClusterizationMetricsRow(metrics: NumericVector, we
     * score.symmetryGrade ** weights.symmetryWeight
     * score.averageRadius ** weights.radiusWeight
     * score.averageSpeed ** weights.speedWeight
-    / score.averageDifference ** weights.differenceWeight
+    * score.averageDifference ** weights.differenceWeight
     * score.averageClusterSize ** weights.averageClusterSizeWeight
     * score.clustersCount ** weights.clustersCountWeight
     * score.relativeClustered ** weights.relativeClusteredCountWeight
