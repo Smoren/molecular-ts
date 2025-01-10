@@ -109,6 +109,8 @@ export async function runSimulationForClustersGrade(
       clusterizationScore.clustersCount ** weights.clustersCountWeight,
       clusterizationScore.relativeClustered ** weights.relativeClusteredCountWeight,
       clusterizationScore.relativeFiltered ** weights.relativeFilteredCountWeight,
+
+      // TODO move to calcCompoundsClusterizationScore()
       relativeCompoundedAtomsCount ** weights.relativeCompoundedAtomsCountWeight,
       relativeLinksCount ** weights.relativeLinksCountWeight,
       linksCreated ** weights.linksCreatedWeight,
