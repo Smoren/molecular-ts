@@ -106,6 +106,26 @@ export function arrayBinaryOperation<T>(lhs: Array<T>, rhs: Array<T>, operator: 
   return result;
 }
 
+export function objectUnaryOperation<T, U extends Record<string, T>>(input: U, operator: (item: T) => T): U {
+  const result: Record<string, T> = {};
+
+  for (const key of Object.keys(input)) {
+    result[key] = operator(input[key]);
+  }
+
+  return result as U;
+}
+
+export function objectBinaryOperation<T, U extends Record<string, T>>(lhs: U, rhs: U, operator: (lhs: T, rhs: T) => T): U {
+  const result: Record<string, T> = {};
+
+  for (const key of Object.keys(lhs)) {
+    result[key] = operator(lhs[key], rhs[key]);
+  }
+
+  return result as U;
+}
+
 export function arraySum(input: number[]): number {
   return input.reduce((acc, val) => acc + val, 0);
 }

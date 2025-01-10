@@ -4,7 +4,7 @@ import {
   crossArrays,
   crossArraysByIndexes,
   crossMatrices, crossMatricesByIndexes,
-  crossTensors, crossTensorsByIndexes,
+  crossTensors, crossTensorsByIndexes, objectBinaryOperation, objectUnaryOperation,
   removeIndexFromArray,
   removeIndexFromMatrix,
   removeIndexFromTensor,
@@ -316,6 +316,120 @@ function dataProviderForTensorBinaryOperation(): Array<[Tensor<number>, Tensor<n
           ],
         ],
       ],
+    ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForObjectUnaryOperation(),
+] as Array<[Record<string, number>, (x: number) => number, Record<string, number>]>)(
+    'Object Unary Operation Test',
+    (input, operation, expected) => {
+      it('', () => {
+        const result = objectUnaryOperation(input, operation);
+        expect(result).toEqual(expected);
+      });
+    },
+);
+
+function dataProviderForObjectUnaryOperation(): Array<[Record<string, number>, (x: number) => number, Record<string, number>]> {
+  return [
+    [
+      {},
+      () => 0,
+      {},
+    ],
+    [
+      {},
+      (x: number) => x,
+      {},
+    ],
+    [
+      {},
+      (x: number) => x*2,
+      {},
+    ],
+    [
+      {a: 1},
+      () => 0,
+      {a: 0},
+    ],
+    [
+      {a: 1},
+      (x: number) => x,
+      {a: 1},
+    ],
+    [
+      {a: 1},
+      (x: number) => x*2,
+      {a: 2},
+    ],
+    [
+      {a: 1, b: 2},
+      (x: number) => x*2,
+      {a: 2, b: 4},
+    ],
+    [
+      {a: 1, b: 2, c: 3},
+      (x: number) => x+1,
+      {a: 2, b: 3, c: 4},
+    ],
+    [
+      {a: 0, b: 2, c: 3},
+      (x: number) => x+1,
+      {a: 1, b: 3, c: 4},
+    ],
+    [
+      {a: 0, b: 2, c: 3},
+      () => 11,
+      {a: 11, b: 11, c: 11},
+    ],
+  ];
+}
+
+describe.each([
+  ...dataProviderForObjectBinaryOperation(),
+] as Array<[Record<string, number>, Record<string, number>, (lhs: number, rhs: number) => number, Record<string, number>]>)(
+    'Object Binary Operation Test',
+    (lhs, rhs, operation, expected) => {
+      it('', () => {
+        const result = objectBinaryOperation(lhs, rhs, operation);
+        expect(result).toEqual(expected);
+      });
+    },
+);
+
+function dataProviderForObjectBinaryOperation(): Array<[Record<string, number>, Record<string, number>, (lhs: number, rhs: number) => number, Record<string, number>]> {
+  return [
+    [
+      {},
+      {},
+      (lhs: number) => lhs,
+      {},
+    ],
+    [
+      {a: 2},
+      {a: 3},
+      (lhs: number) => lhs,
+      {a: 2},
+    ],
+    [
+      {a: 2},
+      {a: 3},
+      (lhs: number, rhs: number) => lhs + rhs,
+      {a: 5},
+    ],
+    [
+      {a: 2, b: 5},
+      {a: 3, b: -1},
+      (lhs: number, rhs: number) => lhs + rhs,
+      {a: 5, b: 4},
+    ],
+    [
+      {a: 2, b: 5, c: -3},
+      {a: 3, b: -1, c: 3},
+      (lhs: number, rhs: number) => lhs + rhs,
+      {a: 5, b: 4, c: 0},
     ],
   ];
 }

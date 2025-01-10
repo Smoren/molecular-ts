@@ -26,7 +26,7 @@ export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesCo
       typesConfig.FREQUENCIES.length,
       clusterizationWeights.minCompoundSize,
     );
-    const clustersMetrics = calcMetricsForCompoundClustersSummary(clustersSummary, clusterizationWeights);
+    const clustersMetrics = calcMetricsForCompoundClustersSummary(clustersSummary);
     const clustersScore = weighCompoundClustersSummaryMetrics(clustersMetrics, clusterizationWeights);
 
     const compoundsAnalyzer = new CompoundsAnalyzer(compounds, sim.atoms, typesConfig.FREQUENCIES.length);
@@ -76,7 +76,7 @@ export async function runSimulationForClustersGrade(
       typesConfig.FREQUENCIES.length,
       weights.minCompoundSize,
     );
-    const clustersMetrics = calcMetricsForCompoundClustersSummary(clustersSummary, weights);
+    const clustersMetrics = calcMetricsForCompoundClustersSummary(clustersSummary);
     const [clustersScore, clusterSize, clustersCount, relativeClustered, relativeFiltered] = clustersMetrics;
 
     const linksCreatedVector = sim.summary.LINKS_TYPE_CREATED;

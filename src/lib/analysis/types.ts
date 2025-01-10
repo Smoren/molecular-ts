@@ -155,6 +155,15 @@ export type CompoundsClusterGrade = {
   speedAverage: number;
 }
 
+export type CompoundsClusterizationSummary = {
+  clusters: CompoundsClusterGrade[];
+  inputCount: number;
+  filteredCount: number;
+  clusteredCount: number;
+  notClusteredCount: number;
+  clusteredTypesVector: NumericVector;
+}
+
 export type CompoundsClusterScore = {
   averageVertexesCount: number;
   averageEdgesCount: number;
@@ -165,13 +174,11 @@ export type CompoundsClusterScore = {
   averageDifference: number;
 }
 
-export type CompoundsClusterizationSummary = {
-  clusters: CompoundsClusterGrade[];
-  inputCount: number;
-  filteredCount: number;
-  clusteredCount: number;
-  notClusteredCount: number;
-  clusteredTypesVector: NumericVector;
+export type CompoundsClusterizationScore = CompoundsClusterScore & {
+  clusterSize: number;
+  clustersCount: number;
+  relativeClustered: number;
+  relativeFiltered: number;
 }
 
 export type CompoundsClustersSummaryMetrics = [number, number, number, number, number];
