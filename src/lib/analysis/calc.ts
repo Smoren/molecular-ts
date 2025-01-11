@@ -171,8 +171,8 @@ export function calcClusteredTypesVector(clusterGrades: CompoundsClusterGrade[],
   return clusterGrades
     .map((grade) => arrayUnaryOperation(grade.vertexTypesVector, (x) => x * grade.size))
     .reduce(
-        (acc, x) => arrayBinaryOperation(acc, x, (a, b) => a + b),
-        createFilledArray(typesCount, 0),
+      (acc, x) => arrayBinaryOperation(acc, x, (a, b) => a + b),
+      createFilledArray(typesCount, 0),
     );
 }
 

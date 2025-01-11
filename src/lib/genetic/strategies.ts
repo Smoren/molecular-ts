@@ -222,7 +222,7 @@ export class ClusterizationMetricsStrategy extends BaseMetricsStrategy<Simulatio
 
 export class ClusterizationFitnessStrategy implements FitnessStrategyInterface {
   score(results: GenerationMetricsMatrix): GenerationFitnessColumn {
-    return results.map((result) => arraySum(result)*arrayProduct(result));
+    return results.map((result) => arraySum(result));
     // return results.map((result) => arrayProduct(result));
   }
 }

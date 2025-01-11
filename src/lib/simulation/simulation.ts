@@ -272,7 +272,7 @@ export class Simulation implements SimulationInterface {
         const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary, compounds, this);
         const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
         const clusterizationMetricsWeighed = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
-        const totalScore = arraySum(clusterizationMetricsWeighed)*arrayProduct(clusterizationMetricsWeighed);
+        const totalScore = arraySum(clusterizationMetricsWeighed);
         // const totalScore = arrayProduct(clusterizationMetricsWeighed);
 
         console.log('CLUSTERIZATION SUMMARY', clustersSummary);
