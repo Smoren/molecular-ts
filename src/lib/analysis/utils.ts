@@ -18,20 +18,20 @@ export function createEmptyCompoundClusterScore(): CompoundsClusterScore {
 
 export function createDefaultClusterizationWeightsConfig(): ClusterizationWeightsConfig {
   return {
-    minCompoundSize: 6,
-    vertexesCountWeight: 0.5,
-    edgesCountWeight: 0.5,
-    uniqueTypesCountWeight: 1,
-    symmetryWeight: 3,
-    radiusWeight: 0.3,
-    speedWeight: 2,
-    averageClusterSizeWeight: 0.5,
-    clustersCountWeight: 0.5,
-    relativeClusteredCountWeight: 2,
-    relativeFilteredCountWeight: 2,
-    relativeCompoundedAtomsCountWeight: 2,
+    minCompoundSize: 5,
+    clustersCountWeight: 1,
+    averageClusterSizeWeight: 1,
+    relativeFilteredCountWeight: 1,
+    relativeClusteredCountWeight: 1,
+    vertexesCountWeight: 2,
+    edgesCountWeight: 1,
+    uniqueTypesCountWeight: 2,
+    symmetryWeight: 1,
+    radiusWeight: 1,
+    speedWeight: 0.5,
+    relativeCompoundedAtomsCountWeight: 1,
     relativeLinksCountWeight: 1,
-    linksCreatedWeight: 2,
+    linksCreatedWeight: 1
   };
 }
 
