@@ -36,6 +36,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       poolSize,
       typesCount,
       generationsCount,
+      populationSize,
       mainConfigFileName,
       populateRandomizeConfigCollectionFileName,
       mutationRandomizeConfigCollectionFileName,
@@ -62,6 +63,11 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     };
 
     const mainConfig = getGeneticMainConfig(mainConfigFileName, poolSize, clusterizationGradeMultiprocessingTask);
+
+    if (populationSize !== undefined) {
+      mainConfig.macro.populationSize = populationSize;
+    }
+
     const config: ClusterGradeMaximizeConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
       runnerStrategyConfig: mainConfig.metrics,
@@ -154,6 +160,7 @@ function parseArgs(argsParser: ArgsParser) {
   const poolSize = argsParser.getInt('poolSize', os.cpus().length);
   const typesCount = argsParser.getInt('typesCount', 3);
   const generationsCount = argsParser.getNullableInt('generationsCount');
+  const populationSize = argsParser.getNullableInt('populationSize');
 
   const mainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
@@ -181,6 +188,7 @@ function parseArgs(argsParser: ArgsParser) {
     poolSize,
     typesCount,
     generationsCount,
+    populationSize,
     mainConfigFileName,
     populateRandomizeConfigCollectionFileName,
     mutationRandomizeConfigCollectionFileName,
