@@ -7,7 +7,7 @@
   "vertexesCountWeight": 1.5,
   "edgesCountWeight": 1,
   "uniqueTypesCountWeight": 1.5,
-  "symmetryWeight": 1,
+  "symmetryWeight": 3,
   "radiusWeight": 0.2,
   "speedWeight": 0.5,
   "relativeCompoundedAtomsCountWeight": 1,
