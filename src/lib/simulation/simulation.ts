@@ -22,6 +22,7 @@ import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } 
 import { createDefaultClusterizationWeightsConfig } from "../analysis/utils";
 import { convertCompoundsClusterizationScoreToMetricsRow, weighCompoundClusterizationMetricsRow } from "../genetic/converters";
 import { arrayProduct } from "../math/operations";
+import { clusterizationFitnessMul } from "@/lib/genetic/fitness";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -271,14 +272,9 @@ export class Simulation implements SimulationInterface {
         );
         const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary, compounds, this);
         const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
-        const clusterizationMetricsWeighed = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
-        const totalScore = arraySum(clusterizationMetricsWeighed);
-        // const totalScore = arrayProduct(clusterizationMetricsWeighed);
+        const totalScore = clusterizationFitnessMul(clusterizationMetrics, weights, true);
 
         console.log('CLUSTERIZATION SUMMARY', clustersSummary);
-        console.log('CLUSTERIZATION SCORE', clusterizationScore);
-        console.log('CLUSTERIZATION METRICS', clusterizationMetrics);
-        console.log('CLUSTERIZATION METRICS WEIGHED', clusterizationMetricsWeighed);
         console.log('CLUSTERIZATION TOTAL SCORE', totalScore);
       }
     });

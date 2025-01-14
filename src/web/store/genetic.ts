@@ -232,7 +232,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
     populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
     metrics: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), weightsConfigRaw),
-    fitness: new ClusterizationFitnessStrategy(),
+    fitness: new ClusterizationFitnessStrategy(weightsConfigRaw),
     mutation: new DynamicProbabilityMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
     crossover: new ClassicCrossoverStrategy(),
     cache: new WeightedAgeAverageMetricsCache(0.5),

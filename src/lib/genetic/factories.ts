@@ -181,7 +181,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
     metrics: new ClusterizationMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
-    fitness: new ClusterizationFitnessStrategy(),
+    fitness: new ClusterizationFitnessStrategy(config.weightsConfig),
     mutation: mutationStrategy,
     // crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
     crossover: new ClassicCrossoverStrategy(),

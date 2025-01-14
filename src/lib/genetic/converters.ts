@@ -56,11 +56,13 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
 export function weighCompoundClusterizationMetricsRow(
   metrics: NumericVector,
   weights: ClusterizationWeightsConfig,
-  weigher?: (value: number, weight: number) => number,
+  weigher: (value: number, weight: number) => number,
+  debug: boolean = false,
 ): NumericVector {
-  weigher = weigher ?? ((value: number, weight: number) => Math.log(1+value) * weight);
-  // weigher = weigher ?? ((value: number, weight: number) => value**weight);
   const score = convertCompoundsClusterizationMetricsRowToScoreObject(metrics);
+  if (debug) {
+    console.log('RAW SCORE', { ...score });
+  }
 
   score.averageVertexesCount = weigher(score.averageVertexesCount, weights.vertexesCountWeight);
   score.averageEdgesCount = weigher(score.averageEdgesCount, weights.edgesCountWeight);
@@ -75,6 +77,10 @@ export function weighCompoundClusterizationMetricsRow(
   score.relativeCompoundedAtomsCount = weigher(score.relativeCompoundedAtomsCount, weights.relativeCompoundedAtomsCountWeight);
   score.relativeLinksCount = weigher(score.relativeLinksCount, weights.relativeLinksCountWeight);
   score.linksCreatedScore = weigher(score.linksCreatedScore, weights.linksCreatedWeight);
+
+  if (debug) {
+    console.log('WEIGHTED SCORE', { ...score });
+  }
 
   return convertCompoundsClusterizationScoreToMetricsRow(score);
 }

@@ -32,6 +32,8 @@ import { fullCopyObject } from '../utils/functions';
 import { getRandomArrayItem } from "../math/random";
 import { arrayProduct } from "../math/operations";
 import { shuffleArray } from "../math/helpers";
+import { clusterizationFitnessMul } from "@/lib/genetic/fitness";
+import type { NumericVector } from "@/lib/math/types";
 
 export class RandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly randomizeConfigCollection: RandomTypesConfig[];
@@ -221,8 +223,13 @@ export class ClusterizationMetricsStrategy extends BaseMetricsStrategy<Simulatio
 }
 
 export class ClusterizationFitnessStrategy implements FitnessStrategyInterface {
+  private readonly weights: ClusterizationWeightsConfig;
+
+  constructor(weights: ClusterizationWeightsConfig) {
+    this.weights = weights;
+  }
+
   score(results: GenerationMetricsMatrix): GenerationFitnessColumn {
-    return results.map((result) => arraySum(result));
-    // return results.map((result) => arrayProduct(result));
+    return results.map((result) => clusterizationFitnessMul(result, this.weights));
   }
 }

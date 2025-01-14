@@ -26,7 +26,11 @@ export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesCo
     );
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
     const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
-    const clusterizationMetricsWeighed = weighCompoundClusterizationMetricsRow(clusterizationMetrics, clusterizationWeights);
+    const clusterizationMetricsWeighed = weighCompoundClusterizationMetricsRow(
+      clusterizationMetrics,
+      clusterizationWeights,
+      (value: number, weight: number) => value ** weight,
+    );
     const clusterizationScoreValue = arrayProduct(clusterizationMetricsWeighed);
 
     const compoundsAnalyzer = new CompoundsAnalyzer(compounds, sim.atoms, typesConfig.FREQUENCIES.length);
@@ -74,10 +78,7 @@ export async function runSimulationForClustersGrade(
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
     const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
 
-    // TODO move to fitness function
-    const weighedMetricsRow = weighCompoundClusterizationMetricsRow(clusterizationMetrics, weights);
-
-    summaryMatrix.push(weighedMetricsRow);
+    summaryMatrix.push(clusterizationMetrics);
 
     if (timeout) {
       await sleep(timeout);
