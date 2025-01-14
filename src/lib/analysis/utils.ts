@@ -27,11 +27,11 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
     edgesCountWeight: 1,
     uniqueTypesCountWeight: 2,
     symmetryWeight: 1,
-    radiusWeight: 1,
+    radiusWeight: 0.2,
     speedWeight: 0.5,
     relativeCompoundedAtomsCountWeight: 1,
     relativeLinksCountWeight: 1,
-    linksCreatedWeight: 1
+    linksCreatedWeight: 0.2,
   };
 }
 
