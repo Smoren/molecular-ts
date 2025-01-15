@@ -2,6 +2,65 @@ import type { GeneticSearchInterface, SchedulerRule } from "genetic-search";
 import type { ClusterizationWeightsConfig, SimulationGenome } from "./types";
 import { Scheduler } from "genetic-search";
 import { single, summary } from "itertools-ts";
+import { fullCopyObject } from "@/lib/utils/functions";
+import { shuffleArray } from "@/lib/math/helpers";
+import { createRandomInteger } from "@/lib/math";
+
+export class WeightsDropout<T extends Record<string, number>> {
+  private readonly sourceWeights: T;
+  private readonly weights: T;
+  private readonly minDropoutCount: number;
+  private readonly maxDropoutCount: number;
+
+  constructor(weights: T, minDropoutCount: number = 0, maxDropoutCount: number = 1) {
+    this.sourceWeights = fullCopyObject(weights);
+    this.weights = weights;
+    this.minDropoutCount = minDropoutCount;
+    this.maxDropoutCount = maxDropoutCount;
+  }
+
+  public dropout(): (keyof T)[] {
+    this.reset();
+    const keys = shuffleArray(Object.keys(this.weights));
+    const result: (keyof T)[] = [];
+
+    const currentDropoutCount = createRandomInteger([this.minDropoutCount, this.maxDropoutCount]);
+
+    if (currentDropoutCount === 0) {
+      return result;
+    }
+
+    for (const key of keys.slice(0, currentDropoutCount)) {
+      result.push(key);
+      (this.weights as any)[key] = 0;
+    }
+
+    return result;
+  }
+
+  public reset() {
+    for (const key of Object.keys(this.sourceWeights)) {
+      (this.weights as any)[key] = (this.sourceWeights as any)[key];
+    }
+  }
+}
+
+export function createDropoutRule(
+  weightsConfig: ClusterizationWeightsConfig,
+  minDropoutCount: number,
+  maxDropoutCount: number,
+): SchedulerRule<SimulationGenome, ClusterizationWeightsConfig> {
+  const dropout = new WeightsDropout<ClusterizationWeightsConfig>(weightsConfig, minDropoutCount, maxDropoutCount);
+  return {
+    condition: () => true,
+    action: (input) => {
+      const dropped = dropout.dropout();
+      if (dropped.length) {
+        input.logger(`Weights dropout: ${dropped.join(', ')}`);
+      }
+    },
+  };
+}
 
 export function createMinCompoundSizeIncreaseRule(
   stepsInterval: number,
@@ -52,8 +111,9 @@ export function createMinCompoundSizeDecreaseRule(
   };
 }
 
-export function createDefaultClustersGradeMaximizeRules(): SchedulerRule<SimulationGenome, ClusterizationWeightsConfig>[] {
+export function createDefaultClustersGradeMaximizeRules(weightsConfig: ClusterizationWeightsConfig): SchedulerRule<SimulationGenome, ClusterizationWeightsConfig>[] {
   return [
+    createDropoutRule(weightsConfig, 0, 2),
     createMinCompoundSizeIncreaseRule(15, 25),
     createMinCompoundSizeDecreaseRule(10, 5),
   ];
@@ -65,7 +125,7 @@ export function createSchedulerForClustersGradeMaximize(
   config: ClusterizationWeightsConfig,
   maxHistoryLength: number = 10,
 ): Scheduler<SimulationGenome, ClusterizationWeightsConfig> {
-  const rules = useScheduler ? createDefaultClustersGradeMaximizeRules() : [];
+  const rules = useScheduler ? createDefaultClustersGradeMaximizeRules(config) : [];
   return new Scheduler({
     runner,
     maxHistoryLength,
