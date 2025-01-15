@@ -54,6 +54,25 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface<Simulat
   }
 }
 
+export class ZeroValuesPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
+  private readonly typesCount: number;
+
+  constructor(typesCount: number) {
+    this.typesCount = typesCount;
+  }
+
+  public populate(size: number, idGenerator: IdGeneratorInterface<SimulationGenome>): Population<SimulationGenome> {
+    const population: Population<SimulationGenome> = [];
+    for (let i = 0; i < size; i++) {
+      population.push({
+        id: idGenerator.nextId(),
+        typesConfig: createTransparentTypesConfig(this.typesCount),
+      });
+    }
+    return population;
+  }
+}
+
 export class SourceMutationPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfigCollection: TypesConfig[];
   private readonly randomizeConfigCollection: RandomTypesConfig[];

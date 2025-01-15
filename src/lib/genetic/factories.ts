@@ -32,7 +32,7 @@ import {
   SourceMutationStrategy,
   ClassicCrossoverStrategy,
   ComposedMutationStrategy,
-  CopyTypeMutationStrategy,
+  CopyTypeMutationStrategy, ZeroValuesPopulateStrategy,
 } from '../genetic/strategies';
 import { repeatRunSimulationForReferenceGrade } from './runners';
 import {
@@ -170,6 +170,8 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
   );
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
+    // TODO choice to config
+    // populate: new ZeroValuesPopulateStrategy(config.typesCount),
     populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
     metrics: new ClusterizationMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(config.weightsConfig),
