@@ -30,7 +30,7 @@ import {
   arraySum,
 } from "../math";
 import type { SimulationInterface } from "../simulation/types/simulation";
-import { createEmptyCompoundClusterScore } from "@/lib/analysis/utils";
+import { createEmptyCompoundClusterScore } from "./utils";
 
 export function calcCompoundsClusterizationSummary(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
   const graphs = compounds

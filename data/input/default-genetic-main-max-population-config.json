@@ -9,7 +9,8 @@
     "repeats": 3
   },
   "mutation": {
-    "probabilities": [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5]
+    "dynamicProbabilities": [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5],
+    "composedProbabilities": [0.9, 0.1]
   },
   "initial": {
     "ATOMS_COUNT": 800,

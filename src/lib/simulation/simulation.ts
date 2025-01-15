@@ -13,16 +13,15 @@ import type { NumericVector } from '../math/types';
 import type { Compound } from '../analysis/types';
 import { CompoundsCollector } from '../analysis/compounds';
 import { PreventException } from "../drawer/utils";
-import { arraySum, toVector } from "../math";
+import { toVector } from "../math";
 import { createAtom } from '../utils/functions';
 import { createCompoundGraphByAtom } from "../analysis/factories";
 import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "../graph/utils";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "../analysis/symmetry";
 import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from "../analysis/calc";
 import { createDefaultClusterizationWeightsConfig } from "../analysis/utils";
-import { convertCompoundsClusterizationScoreToMetricsRow, weighCompoundClusterizationMetricsRow } from "../genetic/converters";
-import { arrayProduct } from "../math/operations";
-import { clusterizationFitnessMul } from "@/lib/genetic/fitness";
+import { convertCompoundsClusterizationScoreToMetricsRow } from "../genetic/converters";
+import { clusterizationFitnessMul } from "../genetic/fitness";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;

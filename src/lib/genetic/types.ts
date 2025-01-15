@@ -24,14 +24,15 @@ export type SimulationGenome = BaseGenome & {
   typesConfig: TypesConfig;
 }
 
-export type DynamicProbabilityMutationStrategyConfig = {
-  probabilities: number[];
+export type MutationStrategyConfig = {
+  dynamicProbabilities: number[];
+  composedProbabilities: number[];
 }
 
 export type ReferenceSearchConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   metricsStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>;
-  mutationStrategyConfig: DynamicProbabilityMutationStrategyConfig;
+  mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
@@ -45,7 +46,7 @@ export type ReferenceSearchConfigFactoryConfig = {
 export type ReferenceRandomSearchConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   metricsStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>;
-  mutationStrategyConfig: DynamicProbabilityMutationStrategyConfig;
+  mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfig: RandomTypesConfig;
   mutationRandomizeConfig: RandomTypesConfig;
   crossoverRandomizeConfig: RandomTypesConfig;
@@ -60,7 +61,7 @@ export type ReferenceRandomSearchConfigFactoryConfig = {
 export type ClusterGradeMaximizeConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
   runnerStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>;
-  mutationStrategyConfig: DynamicProbabilityMutationStrategyConfig;
+  mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfigCollection: RandomTypesConfig[];
   mutationRandomizeConfigCollection: RandomTypesConfig[];
   crossoverRandomizeConfigCollection: RandomTypesConfig[];
@@ -77,7 +78,7 @@ export type SimulationGeneticMainConfig<TTaskConfig> = {
   macro: GeneticSearchConfig;
   initial: InitialConfig;
   metrics: SimulationMultiprocessingMetricsStrategyConfig<TTaskConfig>;
-  mutation: DynamicProbabilityMutationStrategyConfig;
+  mutation: MutationStrategyConfig;
 }
 
 export type SimulationMainConfig<TTaskConfig> = {

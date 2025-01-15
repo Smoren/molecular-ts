@@ -2,7 +2,6 @@ import {
   ComposedGeneticSearch,
   GeneticSearch,
   SimpleMetricsCache,
-  AverageMetricsCache,
   WeightedAgeAverageMetricsCache,
   ReferenceLossFitnessStrategy,
 } from "genetic-search";
@@ -16,7 +15,7 @@ import type {
   ClusterGradeMaximizeConfigFactoryConfig,
   ReferenceSearchConfigFactoryConfig,
   ReferenceRandomSearchConfigFactoryConfig,
-  SimulationGenome,
+  SimulationGenome, MutationStrategyConfig,
 } from './types';
 import {
   convertWeightsToSummaryMatrixRow,
@@ -31,13 +30,16 @@ import {
   RandomPopulateStrategy,
   SourceMutationPopulateStrategy,
   SourceMutationStrategy,
-  ClassicCrossoverStrategy, ComposedMutationStrategy, CopyTypeMutationStrategy,
+  ClassicCrossoverStrategy,
+  ComposedMutationStrategy,
+  CopyTypeMutationStrategy,
 } from '../genetic/strategies';
 import { repeatRunSimulationForReferenceGrade } from './runners';
 import {
   ClusterizationMultiprocessingMetricsStrategy,
-  ReferenceMultiprocessingMetricsStrategy
+  ReferenceMultiprocessingMetricsStrategy,
 } from "./multiprocessing";
+import type { RandomTypesConfig } from "../config/types";
 
 export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   const typesCount = config.referenceTypesConfig.FREQUENCIES.length;
@@ -75,7 +77,7 @@ export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig
     populate: new RandomPopulateStrategy([populateRandomTypesConfig]),
     metrics: new ReferenceMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
-    mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig]),
+    mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig.dynamicProbabilities, [mutationRandomTypesConfig]),
     crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
     cache: new SimpleMetricsCache(),
   };
@@ -143,11 +145,11 @@ export function createReferenceRandomSearch(config: ReferenceRandomSearchConfigF
     populate: new SourceMutationPopulateStrategy(
       [config.sourceTypesConfig],
       [populateRandomTypesConfig],
-      config.mutationStrategyConfig.probabilities,
+      config.mutationStrategyConfig.dynamicProbabilities,
     ),
     metrics: new ReferenceMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
-    mutation: new SourceMutationStrategy(config.mutationStrategyConfig, [mutationRandomTypesConfig], config.sourceTypesConfig),
+    mutation: new SourceMutationStrategy(config.mutationStrategyConfig.dynamicProbabilities, [mutationRandomTypesConfig], config.sourceTypesConfig),
     crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
     cache: new SimpleMetricsCache(),
   };
@@ -166,24 +168,12 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     config.mutationRandomizeConfigCollection,
     config.typesCount,
   );
-  const crossoverRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
-    config.crossoverRandomizeConfigCollection,
-    config.typesCount,
-  );
-
-  // TODO add condition and config
-  // const mutationStrategy = new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection);
-  const mutationStrategy = new ComposedMutationStrategy([
-    new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
-    new CopyTypeMutationStrategy(),
-  ], [0.9, 0.1]);
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
     metrics: new ClusterizationMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(config.weightsConfig),
-    mutation: mutationStrategy,
-    // crossover: new ComposedCrossoverStrategy(crossoverRandomTypesConfigCollection),
+    mutation: createComposedMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ClassicCrossoverStrategy(),
     cache: config.useConstCache ? new SimpleMetricsCache() : new WeightedAgeAverageMetricsCache(config.genomeAgeWeight),
   };
@@ -210,4 +200,11 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
   }
 
   return result;
+}
+
+export function createComposedMutationStrategy(config: MutationStrategyConfig, randomTypesConfigCollection: RandomTypesConfig[]): ComposedMutationStrategy {
+  return new ComposedMutationStrategy([
+    new DynamicProbabilityMutationStrategy(config.dynamicProbabilities, randomTypesConfigCollection),
+    new CopyTypeMutationStrategy(),
+  ], config.composedProbabilities)
 }

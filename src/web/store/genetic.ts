@@ -7,11 +7,13 @@ import type {
   GeneticSearchStrategyConfig,
   Population,
   GenomeStats,
+  GenomeMetricsRow,
+  PopulationSummary,
 } from "genetic-search";
 import type {
   ClusterizationTaskConfig,
   ClusterizationWeightsConfig,
-  DynamicProbabilityMutationStrategyConfig,
+  MutationStrategyConfig,
   SimulationGenome,
   SimulationMetricsStrategyConfig,
 } from "@/lib/genetic/types";
@@ -30,6 +32,8 @@ import {
   ClassicCrossoverStrategy,
   ClusterizationFitnessStrategy,
   ClusterizationMetricsStrategy,
+  ComposedMutationStrategy,
+  CopyTypeMutationStrategy,
   DynamicProbabilityMutationStrategy,
   RandomPopulateStrategy,
 } from "@/lib/genetic/strategies";
@@ -39,7 +43,6 @@ import {
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
 import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/runners";
-import type { GenomeMetricsRow, PopulationSummary } from "genetic-search/src/types";
 
 class StopException extends Error {}
 
@@ -218,8 +221,9 @@ export const useGeneticStore = defineStore("genetic", () => {
     return x;
   });
 
-  const createMutationStrategyConfig = (): DynamicProbabilityMutationStrategyConfig => ({
-    probabilities: createDefaultMutationProbabilities(),
+  const createMutationStrategyConfig = (): MutationStrategyConfig => ({
+    dynamicProbabilities: createDefaultMutationDynamicProbabilities(),
+    composedProbabilities: createDefaultMutationComposedProbabilities(),
   });
 
   let time = Date.now();
@@ -232,11 +236,18 @@ export const useGeneticStore = defineStore("genetic", () => {
     onTaskResult: onTaskResultHandler, // TODO TTaskConfig to input
   });
 
+  function createComposedMutationStrategy(config: MutationStrategyConfig, randomTypesConfigCollection: RandomTypesConfig[]): ComposedMutationStrategy {
+    return new ComposedMutationStrategy([
+      new DynamicProbabilityMutationStrategy(config.dynamicProbabilities, randomTypesConfigCollection),
+      new CopyTypeMutationStrategy(),
+    ], config.composedProbabilities)
+  }
+
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
     populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
     metrics: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), weightsConfigRaw),
     fitness: new ClusterizationFitnessStrategy(weightsConfigRaw),
-    mutation: new DynamicProbabilityMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
+    mutation: createComposedMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
     crossover: new ClassicCrossoverStrategy(),
     cache: new WeightedAgeAverageMetricsCache(0.5),
   });
@@ -252,8 +263,12 @@ export const useGeneticStore = defineStore("genetic", () => {
     return new GeneticSearch<SimulationGenome>(macroConfig.value, createStrategyConfig());
   };
 
-  const createDefaultMutationProbabilities = (): number[] => {
+  const createDefaultMutationDynamicProbabilities = (): number[] => {
     return [0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5];
+  }
+
+  const createDefaultMutationComposedProbabilities = (): number[] => {
+    return [0.9, 0.1];
   }
 
   const createDefaultInitialConfig = (): InitialConfig => {

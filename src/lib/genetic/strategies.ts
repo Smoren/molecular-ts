@@ -10,11 +10,9 @@ import type {
 } from "genetic-search";
 import type {
   SimulationGenome,
-  SimulationMultiprocessingMetricsStrategyConfig,
   SimulationMetricsStrategyConfig,
   ClusterizationTaskConfig,
   ClusterizationWeightsConfig,
-  DynamicProbabilityMutationStrategyConfig,
 } from './types';
 import type { RandomTypesConfig, TypesConfig } from '../config/types';
 import type { ReferenceTaskConfig } from './types';
@@ -27,13 +25,11 @@ import {
   randomCrossTypesConfigs,
   randomizeTypesConfig,
 } from '../config/atom-types';
-import { arraySum, createRandomInteger, getIndexByFrequencies } from '../math';
+import { createRandomInteger, getIndexByFrequencies } from '../math';
 import { fullCopyObject } from '../utils/functions';
 import { getRandomArrayItem } from "../math/random";
-import { arrayProduct } from "../math/operations";
 import { shuffleArray } from "../math/helpers";
-import { clusterizationFitnessMul } from "@/lib/genetic/fitness";
-import type { NumericVector } from "@/lib/math/types";
+import { clusterizationFitnessMul } from "./fitness";
 
 export class RandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly randomizeConfigCollection: RandomTypesConfig[];
@@ -142,17 +138,17 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface<Sim
 }
 
 export class DynamicProbabilityMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
-  private readonly config: DynamicProbabilityMutationStrategyConfig;
+  private readonly probabilities: number[];
   private readonly randomizeConfigCollection: RandomTypesConfig[];
 
-  constructor(config: DynamicProbabilityMutationStrategyConfig, randomizeConfigCollection: RandomTypesConfig[]) {
-    this.config = config;
+  constructor(probabilities: number[], randomizeConfigCollection: RandomTypesConfig[]) {
+    this.probabilities = probabilities;
     this.randomizeConfigCollection = randomizeConfigCollection;
   }
 
   mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
     const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
-    const probability = getRandomArrayItem(this.config.probabilities);
+    const probability = getRandomArrayItem(this.probabilities);
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
     const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig);
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
@@ -193,8 +189,8 @@ export class ComposedMutationStrategy implements MutationStrategyInterface<Simul
 export class SourceMutationStrategy extends DynamicProbabilityMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
   private readonly sourceTypesConfig: TypesConfig;
 
-  constructor(config: DynamicProbabilityMutationStrategyConfig, randomizeConfigCollection: RandomTypesConfig[], sourceTypesConfig: TypesConfig) {
-    super(config, randomizeConfigCollection);
+  constructor(probabilities: number[], randomizeConfigCollection: RandomTypesConfig[], sourceTypesConfig: TypesConfig) {
+    super(probabilities, randomizeConfigCollection);
     this.sourceTypesConfig = sourceTypesConfig;
   }
 

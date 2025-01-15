@@ -1,8 +1,7 @@
 import type { NumericVector } from "../math/types";
 import type { ClusterizationWeightsConfig } from "./types";
 import { weighCompoundClusterizationMetricsRow } from "./converters";
-import { arraySum } from "@/lib/math";
-import { arrayProduct } from "@/lib/math/operations";
+import { arraySum, arrayProduct } from "../math";
 
 export function clusterizationFitnessMul(
   metrics: NumericVector,
