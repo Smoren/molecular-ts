@@ -43,6 +43,7 @@ import {
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
 import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/runners";
+import { convertCompoundsClusterizationMetricsRowToScoreObject } from "@/lib/genetic/converters";
 
 class StopException extends Error {}
 
@@ -152,7 +153,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     console.log('time spent', Date.now() - time);
     time = Date.now();
 
-    console.log('genome handled', metrics);
+    console.log('genome handled', metrics, convertCompoundsClusterizationMetricsRowToScoreObject(metrics));
     genomesHandled.value++;
     if (isStopping.value) {
       throw new StopException();
