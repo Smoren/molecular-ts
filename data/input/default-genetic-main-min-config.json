@@ -1,6 +1,6 @@
 {
   "macro": {
-    "populationSize": 20,
+    "populationSize": 50,
     "survivalRate": 0.5,
     "crossoverRate": 0.5
   },
