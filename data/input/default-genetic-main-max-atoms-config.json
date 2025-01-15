@@ -5,7 +5,7 @@
     "crossoverRate": 0.5
   },
   "metrics": {
-    "checkpoints": [400, 1, 50, 1, 50],
+    "checkpoints": [700, 5, 300, 5],
     "repeats": 2
   },
   "mutation": {
