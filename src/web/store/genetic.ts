@@ -77,7 +77,8 @@ export const useGeneticStore = defineStore("genetic", () => {
   const populationSize = ref<number>(0);
   const populationSummary = ref<PopulationSummary | undefined>();
   const populationStats = ref<GenomeStats[]>([]);
-  const statsHistory = ref<GenomeStats[]>([]);
+  const bestGenomeStatsHistory = ref<GenomeStats[]>([]);
+  const populationSummaryHistory = ref<PopulationSummary[]>([]);
 
   const progress = computed(() => macroConfig.value.populationSize
     ? (genomesHandled.value / populationSize.value * 100)
@@ -123,7 +124,8 @@ export const useGeneticStore = defineStore("genetic", () => {
     isStopping.value = false;
     generation.value = 0;
     genomesHandled.value = 0;
-    statsHistory.value = [];
+    bestGenomeStatsHistory.value = [];
+    populationSummaryHistory.value = [];
   };
 
   const beforeStart = () => {
@@ -166,7 +168,8 @@ export const useGeneticStore = defineStore("genetic", () => {
     population.value = algoRaw!.population;
     populationStats.value = algoRaw!.population.map((x) => x.stats!);
     populationSummary.value = algoRaw!.getPopulationSummary(4);
-    statsHistory.value.push(bestGenome.value!.stats!);
+    bestGenomeStatsHistory.value.push(bestGenome.value!.stats!);
+    populationSummaryHistory.value.push(populationSummary.value);
     genomesHandled.value = 0;
 
     if (!isStopping.value) {
@@ -299,7 +302,8 @@ export const useGeneticStore = defineStore("genetic", () => {
     populationSummary,
     populationStats,
     populationFitness,
-    statsHistory,
+    bestGenomeStatsHistory,
+    populationSummaryHistory,
     generation,
     genomesHandled,
     progress,
