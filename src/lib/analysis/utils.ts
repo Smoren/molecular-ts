@@ -26,7 +26,7 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
     vertexesCountWeight: 1.5,
     edgesCountWeight: 1,
     uniqueTypesCountWeight: 1.5,
-    symmetryWeight: 3,
+    symmetryWeight: 2,
     radiusWeight: 0.2,
     speedWeight: 0.5,
     relativeCompoundedAtomsCountWeight: 1,
