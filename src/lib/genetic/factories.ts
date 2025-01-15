@@ -15,7 +15,8 @@ import type {
   ClusterGradeMaximizeConfigFactoryConfig,
   ReferenceSearchConfigFactoryConfig,
   ReferenceRandomSearchConfigFactoryConfig,
-  SimulationGenome, MutationStrategyConfig,
+  SimulationGenome,
+  MutationStrategyConfig,
 } from './types';
 import {
   convertWeightsToSummaryMatrixRow,
@@ -32,7 +33,8 @@ import {
   SourceMutationStrategy,
   ClassicCrossoverStrategy,
   ComposedMutationStrategy,
-  CopyTypeMutationStrategy, ZeroValuesPopulateStrategy,
+  CopyTypeMutationStrategy,
+  ZeroValuesPopulateStrategy,
 } from '../genetic/strategies';
 import { repeatRunSimulationForReferenceGrade } from './runners';
 import {
