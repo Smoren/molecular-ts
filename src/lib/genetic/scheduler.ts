@@ -118,8 +118,8 @@ export function createMinCompoundSizeDecreaseRule(
 export function createDefaultClustersGradeMaximizeRules(weightsConfig: ClusterizationWeightsConfig): SchedulerRule<SimulationGenome, ClusterizationWeightsConfig>[] {
   return [
     createDropoutRule(weightsConfig, 0, 2),
-    createMinCompoundSizeIncreaseRule(15, 25),
-    createMinCompoundSizeDecreaseRule(10, 5),
+    // createMinCompoundSizeIncreaseRule(15, 25),
+    // createMinCompoundSizeDecreaseRule(10, 5),
   ];
 }
 
