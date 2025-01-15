@@ -7,14 +7,15 @@ import { shuffleArray } from "@/lib/math/helpers";
 import { createRandomInteger } from "@/lib/math";
 
 export class WeightsDropout<T extends Record<string, number>> {
-  private readonly sourceWeights: T;
   private readonly weights: T;
+  private readonly weightsBuffer: T;
   private readonly minDropoutCount: number;
   private readonly maxDropoutCount: number;
+  private weightsAffected: (keyof T)[] = [];
 
   constructor(weights: T, minDropoutCount: number = 0, maxDropoutCount: number = 1) {
-    this.sourceWeights = fullCopyObject(weights);
     this.weights = weights;
+    this.weightsBuffer = fullCopyObject(weights);
     this.minDropoutCount = minDropoutCount;
     this.maxDropoutCount = maxDropoutCount;
   }
@@ -32,16 +33,19 @@ export class WeightsDropout<T extends Record<string, number>> {
 
     for (const key of keys.slice(0, currentDropoutCount)) {
       result.push(key);
-      (this.weights as any)[key] = 0;
+      [(this.weightsBuffer as any)[key], (this.weights as any)[key]] = [(this.weights as any)[key], 0];
     }
+
+    this.weightsAffected = result;
 
     return result;
   }
 
   public reset() {
-    for (const key of Object.keys(this.sourceWeights)) {
-      (this.weights as any)[key] = (this.sourceWeights as any)[key];
+    for (const key of this.weightsAffected) {
+      (this.weights as any)[key] = (this.weightsBuffer as any)[key];
     }
+    this.weightsAffected = [];
   }
 }
 
