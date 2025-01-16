@@ -7,12 +7,12 @@ export function convertDifferenceToNormalizedSimilarityGrade(diff: number, normC
 
 export function createEmptyCompoundClusterScore(): CompoundsClusterScore {
   return {
-    averageVertexesCount: 0,
-    averageEdgesCount: 0,
-    averageUniqueTypesCount: 0,
-    symmetryGrade: 0,
-    averageRadius: 0,
-    averageSpeed: 0,
+    averageClusteredCompoundVertexesCount: 0,
+    averageClusteredCompoundEdgesCount: 0,
+    averageClusteredCompoundUniqueTypesCount: 0,
+    averageClusteredCompoundSymmetryScore: 0,
+    averageClusteredCompoundRadius: 0,
+    averageClusteredCompoundSpeed: 0,
   };
 }
 
@@ -21,17 +21,17 @@ export function createDefaultClusterizationWeightsConfig(): ClusterizationWeight
     minCompoundSize: 5,
     clustersCountWeight: 1,
     averageClusterSizeWeight: 1,
-    relativeFilteredCountWeight: 1,
-    relativeClusteredCountWeight: 1,
-    vertexesCountWeight: 1.5,
-    edgesCountWeight: 0.7,
-    uniqueTypesCountWeight: 1.5,
-    symmetryWeight: 2,
-    radiusWeight: 0.5,
-    speedWeight: 0.5,
+    relativeFilteredCompoundsWeight: 1,
+    relativeClusteredCompoundsWeight: 1,
+    averageClusteredCompoundVertexesCountWeight: 1.5,
+    averageClusteredCompoundEdgesCountWeight: 0.7,
+    averageClusteredCompoundUniqueTypesCountWeight: 1.5,
+    averageClusteredCompoundSymmetryScoreWeight: 2,
+    averageClusteredCompoundRadiusWeight: 0.5,
+    averageClusteredCompoundSpeedWeight: 0.5,
     relativeCompoundedAtomsCountWeight: 1,
-    relativeLinksCountWeight: 1,
-    linksCreatedWeight: 0.2,
+    averageAtomLinksWeight: 1,
+    newLinksCreatedPerStepScoreWeight: 0.2,
   };
 }
 
@@ -40,16 +40,16 @@ export function createModifiedClusterizationWeightsConfig(): ClusterizationWeigh
     minCompoundSize: 6,
     clustersCountWeight: 1,
     averageClusterSizeWeight: 1,
-    relativeFilteredCountWeight: 1,
-    relativeClusteredCountWeight: 1,
-    vertexesCountWeight: 2,
-    edgesCountWeight: 1,
-    uniqueTypesCountWeight: 1,
-    symmetryWeight: 1,
-    radiusWeight: 0.5,
-    speedWeight: 0.5,
+    relativeFilteredCompoundsWeight: 1,
+    relativeClusteredCompoundsWeight: 1,
+    averageClusteredCompoundVertexesCountWeight: 2,
+    averageClusteredCompoundEdgesCountWeight: 1,
+    averageClusteredCompoundUniqueTypesCountWeight: 1,
+    averageClusteredCompoundSymmetryScoreWeight: 1,
+    averageClusteredCompoundRadiusWeight: 0.5,
+    averageClusteredCompoundSpeedWeight: 0.5,
     relativeCompoundedAtomsCountWeight: 1,
-    relativeLinksCountWeight: 1,
-    linksCreatedWeight: 1,
+    averageAtomLinksWeight: 1,
+    newLinksCreatedPerStepScoreWeight: 1,
   };
 }

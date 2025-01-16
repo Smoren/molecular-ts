@@ -115,35 +115,35 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
         </div>
         <div>
           <input-header name="Weight of filtered compounds count" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeFilteredCountWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeFilteredCompoundsWeight" />
         </div>
         <div>
           <input-header name="Weight of clustered compounds count" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeClusteredCountWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeClusteredCompoundsWeight" />
         </div>
         <div>
           <input-header name="Weight of atoms count in clustered compound" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.vertexesCountWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.averageClusteredCompoundVertexesCountWeight" />
         </div>
         <div>
           <input-header name="Weight of links count in clustered compound" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.edgesCountWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.averageClusteredCompoundEdgesCountWeight" />
         </div>
         <div>
           <input-header name="Weight of unique types count in clustered compound" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.uniqueTypesCountWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.averageClusteredCompoundUniqueTypesCountWeight" />
         </div>
         <div>
           <input-header name="Weight of symmetry grade of clustered compounds" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.symmetryWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.averageClusteredCompoundSymmetryScoreWeight" />
         </div>
         <div>
           <input-header name="Weight of compounds radii in clusters" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.radiusWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.averageClusteredCompoundRadiusWeight" />
         </div>
         <div>
           <input-header name="Weight of compounds speeds in clusters" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.speedWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.averageClusteredCompoundSpeedWeight" />
         </div>
         <div>
           <input-header name="Relative compounded atoms count weight" />
@@ -151,11 +151,11 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
         </div>
         <div>
           <input-header name="Relative compounded links count weight" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.relativeLinksCountWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.averageAtomLinksWeight" />
         </div>
         <div>
           <input-header name="New created links per step weight" />
-          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.linksCreatedWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.weightsConfig.newLinksCreatedPerStepScoreWeight" />
         </div>
       </div>
     </MDBAccordionItem>

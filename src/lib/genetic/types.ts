@@ -90,15 +90,15 @@ export type ClusterizationWeightsConfig = {
   minCompoundSize: number;
   clustersCountWeight: number;
   averageClusterSizeWeight: number;
-  relativeFilteredCountWeight: number;
-  relativeClusteredCountWeight: number;
-  vertexesCountWeight: number;
-  edgesCountWeight: number;
-  uniqueTypesCountWeight: number;
-  symmetryWeight: number;
-  radiusWeight: number;
-  speedWeight: number;
+  relativeFilteredCompoundsWeight: number;
+  relativeClusteredCompoundsWeight: number;
+  averageClusteredCompoundVertexesCountWeight: number;
+  averageClusteredCompoundEdgesCountWeight: number;
+  averageClusteredCompoundUniqueTypesCountWeight: number;
+  averageClusteredCompoundSymmetryScoreWeight: number;
+  averageClusteredCompoundRadiusWeight: number;
+  averageClusteredCompoundSpeedWeight: number;
   relativeCompoundedAtomsCountWeight: number;
-  relativeLinksCountWeight: number;
-  linksCreatedWeight: number;
+  averageAtomLinksWeight: number;
+  newLinksCreatedPerStepScoreWeight: number;
 }

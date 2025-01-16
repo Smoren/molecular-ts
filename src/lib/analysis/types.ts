@@ -165,20 +165,20 @@ export type CompoundsClusterizationSummary = {
 }
 
 export type CompoundsClusterScore = {
-  averageVertexesCount: number;
-  averageEdgesCount: number;
-  averageUniqueTypesCount: number;
-  symmetryGrade: number;
-  averageRadius: number;
-  averageSpeed: number;
+  averageClusteredCompoundVertexesCount: number;
+  averageClusteredCompoundEdgesCount: number;
+  averageClusteredCompoundUniqueTypesCount: number;
+  averageClusteredCompoundSymmetryScore: number;
+  averageClusteredCompoundRadius: number;
+  averageClusteredCompoundSpeed: number;
 }
 
 export type CompoundsClusterizationScore = CompoundsClusterScore & {
   averageClusterSize: number;
   clustersCount: number;
-  relativeClustered: number;
-  relativeFiltered: number;
+  relativeClusteredCompounds: number;
+  relativeFilteredCompounds: number;
   relativeCompoundedAtomsCount: number;
-  relativeLinksCount: number;
-  linksCreatedScore: number;
+  averageAtomLinks: number;
+  newLinksCreatedPerStepScore: number;
 }

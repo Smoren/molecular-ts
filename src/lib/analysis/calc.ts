@@ -88,11 +88,11 @@ export function calcCompoundsClusterizationScore(
     ...normalizedClusterSumScores,
     averageClusterSize,
     clustersCount,
-    relativeClustered,
-    relativeFiltered,
+    relativeClusteredCompounds: relativeClustered,
+    relativeFilteredCompounds: relativeFiltered,
     relativeCompoundedAtomsCount,
-    relativeLinksCount,
-    linksCreatedScore,
+    averageAtomLinks: relativeLinksCount,
+    newLinksCreatedPerStepScore: linksCreatedScore,
   };
 }
 
@@ -105,12 +105,12 @@ export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): Compo
   const averageSpeed = clusterGrade.speedAverage;
 
   return {
-    averageVertexesCount,
-    averageEdgesCount,
-    averageUniqueTypesCount,
-    symmetryGrade,
-    averageRadius,
-    averageSpeed,
+    averageClusteredCompoundVertexesCount: averageVertexesCount,
+    averageClusteredCompoundEdgesCount: averageEdgesCount,
+    averageClusteredCompoundUniqueTypesCount: averageUniqueTypesCount,
+    averageClusteredCompoundSymmetryScore: symmetryGrade,
+    averageClusteredCompoundRadius: averageRadius,
+    averageClusteredCompoundSpeed: averageSpeed,
   };
 }
 
