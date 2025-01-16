@@ -12,6 +12,7 @@ const activeAccordionItem = ref('collapse-macro');
 const fitnessChartData = computed(() => geneticStore.populationFitness.map((y, x) => ({x, y})));
 const bestFitnessHistoryChartData = computed(() => geneticStore.bestGenomeStatsHistory.map((stats, x) => ({x, y: stats.fitness})));
 const meanFitnessHistoryChartData = computed(() => geneticStore.populationSummaryHistory.map((stats, x) => ({x, y: stats.fitnessSummary.mean})));
+const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHistory.map((stats, x) => ({x, y: stats.ageSummary.mean})));
 
 </script>
 
@@ -76,6 +77,10 @@ const meanFitnessHistoryChartData = computed(() => geneticStore.populationSummar
   <div class="genetic-charts-container" v-if="meanFitnessHistoryChartData.length > 1">
     <h6>Mean fitness history</h6>
     <chart-static :data="meanFitnessHistoryChartData" />
+  </div>
+  <div class="genetic-charts-container" v-if="meanAgeHistoryChartData.length > 1">
+    <h6>Mean age history</h6>
+    <chart-static :data="meanAgeHistoryChartData" />
   </div>
   <MDBAccordion v-model="activeAccordionItem">
     <MDBAccordionItem headerTitle="Macro config" collapseId="collapse-macro">
