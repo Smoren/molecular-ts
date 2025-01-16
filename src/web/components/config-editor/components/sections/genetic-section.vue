@@ -43,6 +43,10 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
           <td>Stagnation counter</td>
           <td>{{ geneticStore.populationSummary!.stagnationCounter }}</td>
         </tr>
+        <tr v-if="geneticStore.populationSummary">
+          <td>Average genome age</td>
+          <td>{{ geneticStore.populationSummary!.ageSummary.mean }}</td>
+        </tr>
         <tr v-if="geneticStore.bestGenome">
           <td>Best genome ID</td>
           <td>{{ geneticStore.bestGenome!.id }}</td>
