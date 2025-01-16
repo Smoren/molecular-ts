@@ -22,6 +22,7 @@ import {
   GeneticSearch,
   Scheduler,
   WeightedAgeAverageMetricsCache,
+  DescendingSortingStrategy,
 } from "genetic-search";
 import { useConfigStore } from "@/web/store/config";
 import {
@@ -248,6 +249,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
     metrics: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), weightsConfigRaw),
     fitness: new ClusterizationFitnessStrategy(weightsConfigRaw),
+    sorting: new DescendingSortingStrategy(),
     mutation: createComposedMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
     crossover: new ClassicCrossoverStrategy(),
     cache: new WeightedAgeAverageMetricsCache(0.5),

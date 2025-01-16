@@ -1,15 +1,16 @@
+import type {
+  GeneticSearchInterface,
+  GeneticSearchReferenceConfig,
+  GeneticSearchStrategyConfig,
+  ComposedGeneticSearchConfig,
+} from "genetic-search";
 import {
   ComposedGeneticSearch,
   GeneticSearch,
   SimpleMetricsCache,
   WeightedAgeAverageMetricsCache,
   ReferenceLossFitnessStrategy,
-} from "genetic-search";
-import type {
-  GeneticSearchInterface,
-  GeneticSearchReferenceConfig,
-  GeneticSearchStrategyConfig,
-  ComposedGeneticSearchConfig,
+  DescendingSortingStrategy,
 } from "genetic-search";
 import type {
   ClusterGradeMaximizeConfigFactoryConfig,
@@ -79,6 +80,7 @@ export function createReferenceSearch(config: ReferenceSearchConfigFactoryConfig
     populate: new RandomPopulateStrategy([populateRandomTypesConfig]),
     metrics: new ReferenceMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
+    sorting: new DescendingSortingStrategy(),
     mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig.dynamicProbabilities, [mutationRandomTypesConfig]),
     crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
     cache: new SimpleMetricsCache(),
@@ -151,6 +153,7 @@ export function createReferenceRandomSearch(config: ReferenceRandomSearchConfigF
     ),
     metrics: new ReferenceMultiprocessingMetricsStrategy(config.metricsStrategyConfig),
     fitness: new ReferenceLossFitnessStrategy(referenceConfig),
+    sorting: new DescendingSortingStrategy(),
     mutation: new SourceMutationStrategy(config.mutationStrategyConfig.dynamicProbabilities, [mutationRandomTypesConfig], config.sourceTypesConfig),
     crossover: new ComposedCrossoverStrategy([crossoverRandomTypesConfig]),
     cache: new SimpleMetricsCache(),
@@ -177,6 +180,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
     metrics: new ClusterizationMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(config.weightsConfig),
+    sorting: new DescendingSortingStrategy(),
     mutation: createComposedMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ClassicCrossoverStrategy(),
     cache: config.useConstCache ? new SimpleMetricsCache() : new WeightedAgeAverageMetricsCache(config.genomeAgeWeight),
