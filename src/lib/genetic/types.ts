@@ -5,9 +5,7 @@ import type {
 } from "genetic-search";
 import type { MultiprocessingMetricsStrategyConfig } from "genetic-search-multiprocess";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from '../config/types';
-import type { SummaryMatrixRowObject, TotalSummaryWeights } from '../analysis/types';
 
-export type ReferenceTaskConfig = [number, WorldConfig, TypesConfig, number[], number];
 export type ClusterizationTaskConfig = [number, WorldConfig, TypesConfig, ClusterizationWeightsConfig, number[], number];
 
 export type SimulationMetricsStrategyConfig<TTaskConfig> = MetricsStrategyConfig<TTaskConfig> & {
@@ -27,35 +25,6 @@ export type SimulationGenome = BaseGenome & {
 export type MutationStrategyConfig = {
   dynamicProbabilities: number[];
   composedProbabilities: number[];
-}
-
-export type ReferenceSearchConfigFactoryConfig = {
-  geneticSearchMacroConfig: GeneticSearchConfig;
-  metricsStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>;
-  mutationStrategyConfig: MutationStrategyConfig;
-  populateRandomizeConfig: RandomTypesConfig;
-  mutationRandomizeConfig: RandomTypesConfig;
-  crossoverRandomizeConfig: RandomTypesConfig;
-  referenceTypesConfig: TypesConfig;
-  referenceSummaryRowObject?: SummaryMatrixRowObject;
-  weights: TotalSummaryWeights;
-  worldConfig: WorldConfig;
-  targetClustersScore?: number;
-}
-
-export type ReferenceRandomSearchConfigFactoryConfig = {
-  geneticSearchMacroConfig: GeneticSearchConfig;
-  metricsStrategyConfig: SimulationMultiprocessingMetricsStrategyConfig<ReferenceTaskConfig>;
-  mutationStrategyConfig: MutationStrategyConfig;
-  populateRandomizeConfig: RandomTypesConfig;
-  mutationRandomizeConfig: RandomTypesConfig;
-  crossoverRandomizeConfig: RandomTypesConfig;
-  sourceTypesConfig: TypesConfig;
-  referenceTypesConfig: TypesConfig;
-  referenceSummaryRowObject?: SummaryMatrixRowObject;
-  weights: TotalSummaryWeights;
-  worldConfig: WorldConfig;
-  targetClustersScore?: number;
 }
 
 export type ClusterGradeMaximizeConfigFactoryConfig = {

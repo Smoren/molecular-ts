@@ -1,58 +1,9 @@
 import type { TypesConfig, WorldConfig } from '../config/types';
 import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from '../analysis/calc';
-import { createDefaultClusterizationWeightsConfig } from '../analysis/utils';
-import { CompoundsAnalyzer } from '../analysis/compounds';
-import type { TotalSummary } from '../analysis/types';
-import { arrayProduct, averageMatrixColumns } from '../math/operations';
-import { convertTotalSummaryToSummaryMatrixRow, createHeadless2dSimulationRunner } from './helpers';
+import { averageMatrixColumns } from '../math/operations';
 import type { ClusterizationTaskConfig, ClusterizationWeightsConfig } from './types';
-import { sleep } from "./utils";
-import { convertCompoundsClusterizationScoreToMetricsRow, weighCompoundClusterizationMetricsRow } from "./converters";
-
-export function runSimulationForReferenceGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[]): number[] {
-  const runner = createHeadless2dSimulationRunner(worldConfig, typesConfig);
-  const sim = runner.simulation;
-  const summaryMatrix: number[][] = [];
-
-  for (const stepsCount of checkpoints) {
-    runner.runSteps(stepsCount);
-
-    const clusterizationWeights = createDefaultClusterizationWeightsConfig();
-    const compounds = sim.exportCompounds();
-    const clusterizationSummary = calcCompoundsClusterizationSummary(
-      compounds,
-      typesConfig.FREQUENCIES.length,
-      clusterizationWeights.minCompoundSize,
-    );
-    const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
-    const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
-    const clusterizationMetricsWeighed = weighCompoundClusterizationMetricsRow(
-      clusterizationMetrics,
-      clusterizationWeights,
-      (value: number, weight: number) => value ** weight,
-    );
-    const clusterizationScoreValue = arrayProduct(clusterizationMetricsWeighed);
-
-    const compoundsAnalyzer = new CompoundsAnalyzer(compounds, sim.atoms, typesConfig.FREQUENCIES.length);
-    const totalSummary: TotalSummary = {
-      WORLD: sim.summary,
-      COMPOUNDS: compoundsAnalyzer.summary,
-      CLUSTERS: clusterizationScoreValue,
-    };
-    const resultMetricsRow = convertTotalSummaryToSummaryMatrixRow(totalSummary);
-    summaryMatrix.push(resultMetricsRow);
-  }
-
-  return averageMatrixColumns(summaryMatrix);
-}
-
-export function repeatRunSimulationForReferenceGrade(worldConfig: WorldConfig, typesConfig: TypesConfig, checkpoints: number[], repeats: number): number[] {
-  const result = [];
-  for (let i=0; i<repeats; i++) {
-    result.push(runSimulationForReferenceGrade(worldConfig, typesConfig, checkpoints));
-  }
-  return averageMatrixColumns(result);
-}
+import { sleep, createHeadless2dSimulationRunner } from "./utils";
+import { convertCompoundsClusterizationScoreToMetricsRow } from "./converters";
 
 export async function runSimulationForClustersGrade(
   worldConfig: WorldConfig,

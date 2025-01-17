@@ -15,7 +15,6 @@ import type {
   ClusterizationWeightsConfig,
 } from './types';
 import type { RandomTypesConfig, TypesConfig } from '../config/types';
-import type { ReferenceTaskConfig } from './types';
 import { BaseMetricsStrategy } from "genetic-search";
 import {
   copyIndexInTypesConfig,
@@ -215,12 +214,6 @@ export class SourceMutationStrategy extends DynamicProbabilityMutationStrategy i
 
   public mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
     return super.mutate({ id: genome.id, typesConfig: this.sourceTypesConfig }, newGenomeId);
-  }
-}
-
-export class ReferenceMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig<ReferenceTaskConfig>, ReferenceTaskConfig> {
-  protected createTaskInput(genome: SimulationGenome): ReferenceTaskConfig {
-    return [genome.id, this.config.worldConfig, genome.typesConfig, this.config.checkpoints, this.config.repeats];
   }
 }
 
