@@ -22,6 +22,8 @@ import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } 
 import { createDefaultClusterizationWeightsConfig } from "../analysis/utils";
 import { convertCompoundsClusterizationScoreToMetricsRow } from "../genetic/converters";
 import { clusterizationFitnessMul } from "../genetic/fitness";
+import type { GraphInterface } from "../graph/types";
+import { gradeMonomerPolymerPair } from "../analysis/polymers";
 
 export class Simulation implements SimulationInterface {
   readonly config: SimulationConfig;
@@ -224,6 +226,7 @@ export class Simulation implements SimulationInterface {
     }
 
     let grabbedAtom: AtomInterface | undefined = undefined;
+    let graphCandidate: GraphInterface | undefined = undefined;
 
     this.drawer.eventManager.onClick((event) => {
       if (event.extraKey === undefined || event.extraKey > this.config.typesConfig.FREQUENCIES.length) {
@@ -259,6 +262,11 @@ export class Simulation implements SimulationInterface {
         console.log('COUNT VERTEXES', countVertexesGroupedByType(graph));
         console.log('COUNT EDGES', countEdgesGroupedByVertexTypes(graph));
         console.log('SYMMETRY', symmetryData);
+
+        if (graphCandidate) {
+          const polymerGrade = gradeMonomerPolymerPair(graphCandidate, graph);
+          console.log('POLYMER GRADE', polymerGrade);
+        }
       }
 
       if (event.shiftKey) {
@@ -275,6 +283,11 @@ export class Simulation implements SimulationInterface {
 
         console.log('CLUSTERIZATION SUMMARY', clustersSummary);
         console.log('CLUSTERIZATION TOTAL SCORE', totalScore);
+      }
+
+      if (event.altKey && atom) {
+        graphCandidate = createCompoundGraphByAtom(atom, this.config.typesConfig.FREQUENCIES.length);
+        console.log('MONOMER CANDIDATE', graphCandidate);
       }
     });
 

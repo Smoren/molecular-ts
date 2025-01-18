@@ -180,6 +180,7 @@ export class Drawer2d implements DrawerInterface {
         extraKey: keyDown,
         ctrlKey: event.ctrlKey,
         shiftKey: event.shiftKey,
+        altKey: event.altKey,
       });
     });
 
@@ -223,6 +224,7 @@ export class Drawer2d implements DrawerInterface {
           extraKey: keyDown,
           ctrlKey: event.ctrlKey,
           shiftKey: event.shiftKey,
+          altKey: event.altKey,
         });
       } catch (e) {
         return;
@@ -242,6 +244,7 @@ export class Drawer2d implements DrawerInterface {
         extraKey: keyDown,
         ctrlKey: event.ctrlKey,
         shiftKey: event.shiftKey,
+        altKey: event.altKey,
       });
     };
     const mouseMoveHandler = (event: MouseEvent | TouchEvent) => {
@@ -254,6 +257,7 @@ export class Drawer2d implements DrawerInterface {
         extraKey: keyDown,
         ctrlKey: event.ctrlKey,
         shiftKey: event.shiftKey,
+        altKey: event.altKey,
       });
 
       if (mouseDownVector === undefined) {
@@ -265,6 +269,7 @@ export class Drawer2d implements DrawerInterface {
         extraKey: keyDown,
         ctrlKey: event.ctrlKey,
         shiftKey: event.shiftKey,
+        altKey: event.altKey,
       });
 
       const diff = coords.clone().sub(mouseDownVector);

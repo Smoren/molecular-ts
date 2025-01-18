@@ -313,6 +313,7 @@ export class Drawer3d implements DrawerInterface {
             extraKey: keyDown,
             ctrlKey: event.ctrlKey,
             shiftKey: event.shiftKey,
+            altKey: event.altKey,
           });
         } catch (e) {
         }
@@ -327,6 +328,7 @@ export class Drawer3d implements DrawerInterface {
           extraKey: keyDown,
           ctrlKey: event.ctrlKey,
           shiftKey: event.shiftKey,
+          altKey: event.altKey,
         });
       }
     };
@@ -339,6 +341,7 @@ export class Drawer3d implements DrawerInterface {
           extraKey: keyDown,
           ctrlKey: event.ctrlKey,
           shiftKey: event.shiftKey,
+          altKey: event.altKey,
         });
       } catch (e) {
       }

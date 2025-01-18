@@ -2,9 +2,9 @@ import type { GeneticSearchInterface, SchedulerRule } from "genetic-search";
 import type { ClusterizationWeightsConfig, SimulationGenome } from "./types";
 import { Scheduler } from "genetic-search";
 import { single, summary } from "itertools-ts";
-import { fullCopyObject } from "@/lib/utils/functions";
-import { shuffleArray } from "@/lib/math/helpers";
-import { createRandomInteger } from "@/lib/math";
+import { fullCopyObject } from "../utils/functions";
+import { shuffleArray } from "../math/helpers";
+import { createRandomInteger } from "../math";
 
 export class WeightsDropout<T extends Record<string, number>> {
   private readonly weights: T;

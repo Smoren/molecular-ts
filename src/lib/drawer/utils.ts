@@ -90,6 +90,7 @@ export class EventManager implements EventManagerInterface {
         extraKey: undefined,
         ctrlKey: false,
         shiftKey: false,
+        altKey: false,
       }, false);
     }, 30);
   }

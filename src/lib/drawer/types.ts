@@ -13,6 +13,7 @@ export type MouseEventData = {
   extraKey: number | undefined;
   ctrlKey: boolean;
   shiftKey: boolean;
+  altKey: boolean;
 }
 
 export type MouseEventListenerCallback = (event: MouseEventData) => void;

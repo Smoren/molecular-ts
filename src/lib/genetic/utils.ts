@@ -1,9 +1,9 @@
-import type { RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
-import { Runner } from "@/lib/simulation/runner";
-import { Simulation } from "@/lib/simulation/simulation";
-import { createPhysicModel } from "@/lib/utils/functions";
-import { create2dRandomDistribution } from "@/lib/config/atoms";
-import { createDummyDrawer } from "@/lib/drawer/dummy";
+import type { RandomTypesConfig, TypesConfig, WorldConfig } from "../config/types";
+import { Runner } from "../simulation/runner";
+import { Simulation } from "../simulation/simulation";
+import { createPhysicModel } from "../utils/functions";
+import { create2dRandomDistribution } from "../config/atoms";
+import { createDummyDrawer } from "../drawer/dummy";
 
 export async function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
