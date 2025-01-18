@@ -19,4 +19,4 @@ jobs:
 
       - name: Start
         run: |
-          npm run tool clusters-grade-maximize typesCount=6
+          npm run tool clusters-grade-maximize typesCount=6 useAnsiCursor=0
