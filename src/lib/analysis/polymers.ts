@@ -34,6 +34,15 @@ export function gradeMonomerPolymerPair(
   minPolymerSize: number = 2,
   normCoefficient: number = 0.5,
 ): PolymerSummary {
+  if (
+    monomerCandidate.vertexes.length >= polymerCandidate.vertexes.length ||
+    monomerCandidate.edges.length >= polymerCandidate.edges.length
+  ) {
+    return createBadPolymerGradeSummary(monomerCandidate.vertexes.length);
+  }
+
+  // TODO заменить все Math.floor на Math.round ???
+
   const monomerVertexesVector = toVector(countVertexesGroupedByType(monomerCandidate));
   const monomerEdgesVector = toVector(countEdgesGroupedByVertexTypes(monomerCandidate));
   const polymerVertexesVector = toVector(countVertexesGroupedByType(polymerCandidate));
