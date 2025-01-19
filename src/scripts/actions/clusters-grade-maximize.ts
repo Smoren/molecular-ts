@@ -120,6 +120,9 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       afterStep: (generation) => {
         stdoutInterceptor.finish();
 
+        writeJsonFile(getPopulationOutputFilePath(), geneticSearch.population);
+        writeJsonFile(getCacheOutputFilePath(), geneticSearch.cache.export());
+
         const bestGenome = geneticSearch.bestGenome;
         const bestScore = bestGenome.stats!.fitness;
 
