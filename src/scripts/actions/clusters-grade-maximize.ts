@@ -2,7 +2,7 @@ import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
 import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/genetic/types";
-import { printGenerationSummary } from "@/scripts/lib/genetic/helpers";
+import { modifyMacroConfig, printGenerationSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getWorldConfig,
   getGeneticMainConfig,
@@ -37,6 +37,8 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       typesCount,
       generationsCount,
       populationSize,
+      survivalRate,
+      crossoverRate,
       mainConfigFileName,
       populateRandomizeConfigCollectionFileName,
       mutationRandomizeConfigCollectionFileName,
@@ -63,10 +65,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     };
 
     const mainConfig = getGeneticMainConfig(mainConfigFileName, poolSize, clusterizationGradeMultiprocessingTask);
-
-    if (populationSize !== undefined) {
-      mainConfig.macro.populationSize = populationSize;
-    }
+    modifyMacroConfig(mainConfig.macro, populationSize, survivalRate, crossoverRate);
 
     const config: ClusterGradeMaximizeConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
@@ -161,6 +160,8 @@ function parseArgs(argsParser: ArgsParser) {
   const typesCount = argsParser.getInt('typesCount', 3);
   const generationsCount = argsParser.getNullableInt('generationsCount');
   const populationSize = argsParser.getNullableInt('populationSize');
+  const survivalRate = argsParser.getNullableFloat('survivalRate');
+  const crossoverRate = argsParser.getNullableFloat('crossoverRate');
 
   const mainConfigFileName = argsParser.getString('mainConfigFileName', 'default-genetic-main-config');
 
@@ -189,6 +190,8 @@ function parseArgs(argsParser: ArgsParser) {
     typesCount,
     generationsCount,
     populationSize,
+    survivalRate,
+    crossoverRate,
     mainConfigFileName,
     populateRandomizeConfigCollectionFileName,
     mutationRandomizeConfigCollectionFileName,

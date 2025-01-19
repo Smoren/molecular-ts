@@ -1,9 +1,7 @@
 import fs from "node:fs";
 import fetch from 'node-fetch';
 import type { CalcMetricsTask, IdGeneratorInterface, Population } from "genetic-search";
-import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
-import type { SimulationConfig } from "@/lib/simulation/types/simulation";
-import type { SummaryMatrixRowObject, TotalSummaryWeights } from "@/lib/analysis/types";
+import type { InitialConfig, RandomTypesConfig, WorldConfig } from "@/lib/config/types";
 import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 import type {
   ClusterizationWeightsConfig,
@@ -27,26 +25,6 @@ export function getGeneticMainConfig<TTaskConfig>(
   return result;
 }
 
-export function getSimulationMainConfig<TTaskConfig>(fileName: string): SimulationMainConfig<TTaskConfig> {
-  return readJsonFile(`data/input/${fileName}`) as SimulationMainConfig<TTaskConfig>;
-}
-
-export function getTypesConfig(fileName: string): TypesConfig {
-  const simulationConfig = readJsonFile(`data/input/${fileName}`) as SimulationConfig;
-  return simulationConfig.typesConfig;
-}
-
-export function getSummaryRowObject(fileName?: string): SummaryMatrixRowObject | undefined {
-  if (fileName === undefined) {
-    return undefined;
-  }
-  return readJsonFile(`data/input/${fileName}`) as SummaryMatrixRowObject;
-}
-
-export function getRandomizeConfig(fileName: string): RandomTypesConfig {
-  return readJsonFile(`data/input/${fileName}`) as RandomTypesConfig;
-}
-
 export function getRandomizeConfigCollection(fileName: string, typesCount?: number): RandomTypesConfig[] {
   const result = readJsonFile(`data/input/${fileName}`) as RandomTypesConfig[];
   if (typesCount !== undefined) {
@@ -59,10 +37,6 @@ export function getWorldConfig(fileName: string, initialConfig: InitialConfig): 
   const worldConfig = readJsonFile(`data/input/${fileName}`) as WorldConfig;
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
   return createWorldConfig2d(initialConfig, worldConfig);
-}
-
-export function getReferenceWeights(fileName: string): TotalSummaryWeights {
-  return readJsonFile(`data/input/${fileName}`) as TotalSummaryWeights;
 }
 
 export function getClusterizationWeights(fileName: string): ClusterizationWeightsConfig {
