@@ -86,15 +86,6 @@ export function gradeMonomerPolymerPair(
     normCoefficient,
   );
 
-  // const monomerVertexesDiff = monomerVertexesDiffVector.abs;
-  // // TODO допущение, что дополнительная связь только одна
-  // const monomerEdgesDiff = Math.max(0, monomerEdgesDiffVector.abs-1);
-  //
-  // const similarity = convertDifferenceToNormalizedSimilarityGrade(
-  //   monomerVertexesDiff + monomerEdgesDiff,
-  //   normCoefficient,
-  // );
-
   return {
     monomerSize: monomerCandidate.vertexes.length,
     polymerSize: polymerSize,
