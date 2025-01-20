@@ -6,9 +6,10 @@ import type {
 import {
   ComposedGeneticSearch,
   GeneticSearch,
-  SimpleMetricsCache,
-  WeightedAgeAverageMetricsCache,
+  SimplePhenotypeCache,
+  WeightedAgeAveragePhenotypeCache,
   DescendingSortingStrategy,
+  RandomSelectionStrategy,
 } from "genetic-search";
 import type {
   ClusterGradeMaximizeConfigFactoryConfig,
@@ -25,7 +26,7 @@ import {
   CopyTypeMutationStrategy,
   ZeroValuesPopulateStrategy,
 } from '../genetic/strategies';
-import { ClusterizationMultiprocessingMetricsStrategy } from "./multiprocessing";
+import { ClusterizationMultiprocessingPhenotypeStrategy } from "./multiprocessing";
 import type { RandomTypesConfig } from "../config/types";
 
 export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
@@ -44,12 +45,13 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     // TODO choice to config
     // populate: new ZeroValuesPopulateStrategy(config.typesCount),
     populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
-    metrics: new ClusterizationMultiprocessingMetricsStrategy(config.runnerStrategyConfig, config.weightsConfig),
+    phenotype: new ClusterizationMultiprocessingPhenotypeStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(config.weightsConfig),
     sorting: new DescendingSortingStrategy(),
+    selection: new RandomSelectionStrategy(2),
     mutation: createComposedMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ClassicCrossoverStrategy(),
-    cache: config.useConstCache ? new SimpleMetricsCache() : new WeightedAgeAverageMetricsCache(config.genomeAgeWeight),
+    cache: config.useConstCache ? new SimplePhenotypeCache() : new WeightedAgeAveragePhenotypeCache(config.genomeAgeWeight),
   };
 
   let result: GeneticSearchInterface<SimulationGenome>;

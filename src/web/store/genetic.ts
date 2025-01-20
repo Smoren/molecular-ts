@@ -7,7 +7,7 @@ import type {
   GeneticSearchStrategyConfig,
   Population,
   GenomeStats,
-  GenomeMetricsRow,
+  GenomePhenotypeRow,
   PopulationSummary,
 } from "genetic-search";
 import type {
@@ -21,8 +21,9 @@ import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from 
 import {
   GeneticSearch,
   Scheduler,
-  WeightedAgeAverageMetricsCache,
+  WeightedAgeAveragePhenotypeCache,
   DescendingSortingStrategy,
+  RandomSelectionStrategy,
 } from "genetic-search";
 import { useConfigStore } from "@/web/store/config";
 import {
@@ -150,7 +151,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     resetState();
   }
 
-  const onTaskResultHandler = (metrics: GenomeMetricsRow) => {
+  const onTaskResultHandler = (metrics: GenomePhenotypeRow) => {
     console.log('time spent', Date.now() - time);
     time = Date.now();
 
@@ -247,12 +248,13 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
     populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
-    metrics: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), weightsConfigRaw),
+    phenotype: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), weightsConfigRaw),
     fitness: new ClusterizationFitnessStrategy(weightsConfigRaw),
     sorting: new DescendingSortingStrategy(),
+    selection: new RandomSelectionStrategy(2),
     mutation: createComposedMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
     crossover: new ClassicCrossoverStrategy(),
-    cache: new WeightedAgeAverageMetricsCache(0.5),
+    cache: new WeightedAgeAveragePhenotypeCache(0.5),
   });
 
   const createFitConfig = (): GeneticSearchFitConfig => ({

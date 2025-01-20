@@ -4,9 +4,9 @@ import type {
   SimulationGenome,
   SimulationMultiprocessingMetricsStrategyConfig,
 } from "./types";
-import { BaseMultiprocessingMetricsStrategy } from "genetic-search-multiprocess";
+import { BaseMultiprocessingPhenotypeStrategy } from "genetic-search-multiprocess";
 
-export class ClusterizationMultiprocessingMetricsStrategy extends BaseMultiprocessingMetricsStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
+export class ClusterizationMultiprocessingPhenotypeStrategy extends BaseMultiprocessingPhenotypeStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
   private readonly weights: ClusterizationWeightsConfig;
 
   constructor(config: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {

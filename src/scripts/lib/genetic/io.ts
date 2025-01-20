@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import fetch from 'node-fetch';
-import type { CalcMetricsTask, IdGeneratorInterface, Population } from "genetic-search";
+import type { CalcPhenotypeTask, IdGeneratorInterface, Population } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, WorldConfig } from "@/lib/config/types";
 import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 import type {
@@ -15,7 +15,7 @@ import { addLeadingZeros, formatJsonString } from "@/scripts/lib/helpers";
 export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
   poolSize: number,
-  task: CalcMetricsTask<TTaskConfig>,
+  task: CalcPhenotypeTask<TTaskConfig>,
 ): SimulationGeneticMainConfig<TTaskConfig> {
   const result = readJsonFile(`data/input/${fileName}`) as SimulationGeneticMainConfig<TTaskConfig>;
   result.metrics.poolSize = poolSize;

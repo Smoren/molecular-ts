@@ -2,7 +2,7 @@ import type {
   CrossoverStrategyInterface,
   FitnessStrategyInterface,
   GenerationFitnessColumn,
-  GenerationMetricsMatrix,
+  GenerationPhenotypeMatrix,
   IdGeneratorInterface,
   MutationStrategyInterface,
   PopulateStrategyInterface,
@@ -15,7 +15,7 @@ import type {
   ClusterizationWeightsConfig,
 } from './types';
 import type { RandomTypesConfig, TypesConfig } from '../config/types';
-import { BaseMetricsStrategy } from "genetic-search";
+import { BasePhenotypeStrategy } from "genetic-search";
 import {
   copyIndexInTypesConfig,
   createTransparentTypesConfig,
@@ -102,7 +102,8 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
 }
 
 export class ClassicCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
-  public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
+  public cross(parents: SimulationGenome[], newGenomeId: number): SimulationGenome {
+    const [lhs, rhs] = parents;
     const crossed = crossTypesConfigsByIndexes(lhs.typesConfig, rhs.typesConfig, this.getRandomIndexes(lhs));
     return { id: newGenomeId, typesConfig: crossed };
   }
@@ -120,7 +121,8 @@ export class SubmatrixCrossoverStrategy implements CrossoverStrategyInterface<Si
     this.randomizeConfigCollection = randomizeConfigCollection;
   }
 
-  public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
+  public cross(parents: SimulationGenome[], newGenomeId: number): SimulationGenome {
+    const [lhs, rhs] = parents;
     const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = crossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
@@ -130,7 +132,8 @@ export class SubmatrixCrossoverStrategy implements CrossoverStrategyInterface<Si
 }
 
 export class RandomCrossoverStrategy implements CrossoverStrategyInterface<SimulationGenome> {
-  public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
+  public cross(parents: SimulationGenome[], newGenomeId: number): SimulationGenome {
+    const [lhs, rhs] = parents;
     const separator = createRandomInteger([1, lhs.typesConfig.FREQUENCIES.length-1]);
     const crossed = randomCrossTypesConfigs(lhs.typesConfig, rhs.typesConfig, separator);
     return { id: newGenomeId, typesConfig: crossed };
@@ -146,12 +149,12 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface<Sim
     this.subMatrixStrategy = new SubmatrixCrossoverStrategy(randomizeConfigCollection);
   }
 
-  public cross(lhs: SimulationGenome, rhs: SimulationGenome, newGenomeId: number): SimulationGenome {
+  public cross(parents: SimulationGenome[], newGenomeId: number): SimulationGenome {
     if (Math.random() > 0.5) {
-      return this.randomStrategy.cross(lhs, rhs, newGenomeId);
+      return this.randomStrategy.cross(parents, newGenomeId);
     }
 
-    return this.subMatrixStrategy.cross(lhs, rhs, newGenomeId);
+    return this.subMatrixStrategy.cross(parents, newGenomeId);
   }
 }
 
@@ -217,7 +220,7 @@ export class SourceMutationStrategy extends DynamicProbabilityMutationStrategy i
   }
 }
 
-export class ClusterizationMetricsStrategy extends BaseMetricsStrategy<SimulationGenome, SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
+export class ClusterizationMetricsStrategy extends BasePhenotypeStrategy<SimulationGenome, SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
   private readonly weights: ClusterizationWeightsConfig;
 
   constructor(config: SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
@@ -237,7 +240,7 @@ export class ClusterizationFitnessStrategy implements FitnessStrategyInterface {
     this.weights = weights;
   }
 
-  score(results: GenerationMetricsMatrix): GenerationFitnessColumn {
+  score(results: GenerationPhenotypeMatrix): GenerationFitnessColumn {
     return results.map((result) => clusterizationFitnessMul(result, this.weights));
   }
 }

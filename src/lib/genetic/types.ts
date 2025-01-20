@@ -1,21 +1,21 @@
 import type {
   BaseGenome,
   GeneticSearchConfig,
-  MetricsStrategyConfig,
+  PhenotypeStrategyConfig,
 } from "genetic-search";
-import type { MultiprocessingMetricsStrategyConfig } from "genetic-search-multiprocess";
+import type { MultiprocessingPhenotypeStrategyConfig } from "genetic-search-multiprocess";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from '../config/types';
 
 export type ClusterizationTaskConfig = [number, WorldConfig, TypesConfig, ClusterizationWeightsConfig, number[], number];
 
-export type SimulationMetricsStrategyConfig<TTaskConfig> = MetricsStrategyConfig<TTaskConfig> & {
+export type SimulationMetricsStrategyConfig<TTaskConfig> = PhenotypeStrategyConfig<TTaskConfig> & {
   worldConfig: WorldConfig;
   checkpoints: number[];
   repeats: number;
 };
 
 export type SimulationMultiprocessingMetricsStrategyConfig<TTaskConfig> = SimulationMetricsStrategyConfig<TTaskConfig>
-  & MultiprocessingMetricsStrategyConfig<TTaskConfig>;
+  & MultiprocessingPhenotypeStrategyConfig<TTaskConfig>;
 
 export type SimulationGenome = BaseGenome & {
   id: number;
