@@ -47,7 +47,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       weightsFileName,
       populationFileName,
       cacheFileName,
-      useConstCache,
+      useCache,
       useScheduler,
       useComposedAlgo,
       composedFinalPopulation,
@@ -77,7 +77,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       weightsConfig: getClusterizationWeights(weightsFileName),
       typesCount,
-      useConstCache,
+      useCache,
       useComposedAlgo,
       composedFinalPopulation,
       genomeAgeWeight,
@@ -177,11 +177,11 @@ function parseArgs(argsParser: ArgsParser) {
   const populationFileName = argsParser.getNullableString('populationFileName');
   const cacheFileName = argsParser.getNullableString('cacheFileName');
 
-  const useConstCache = argsParser.getBool('useConstCache', false);
+  const useCache = argsParser.getBool('useCache', true);
   const useScheduler = argsParser.getBool('useScheduler', false);
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = useComposedAlgo ? argsParser.getInt('composedFinalPopulation', 5) : 0;
-  const genomeAgeWeight = useConstCache ? 0 : argsParser.getFloat('genomeAgeWeight', 0.5);
+  const genomeAgeWeight = useCache ? 0 : argsParser.getFloat('genomeAgeWeight', 0.5);
 
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
@@ -203,7 +203,7 @@ function parseArgs(argsParser: ArgsParser) {
     weightsFileName,
     populationFileName,
     cacheFileName,
-    useConstCache,
+    useCache,
     useScheduler,
     useComposedAlgo,
     composedFinalPopulation,

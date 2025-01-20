@@ -37,7 +37,7 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   worldConfig: WorldConfig;
   weightsConfig: ClusterizationWeightsConfig;
   typesCount: number;
-  useConstCache: boolean;
+  useCache: boolean;
   useComposedAlgo: boolean;
   composedFinalPopulation: number;
   genomeAgeWeight: number;

@@ -6,7 +6,7 @@ import type {
 import {
   ComposedGeneticSearch,
   GeneticSearch,
-  SimplePhenotypeCache,
+  DummyPhenotypeCache,
   WeightedAgeAveragePhenotypeCache,
   DescendingSortingStrategy,
   RandomSelectionStrategy,
@@ -51,7 +51,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     selection: new RandomSelectionStrategy(2),
     mutation: createComposedMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ClassicCrossoverStrategy(),
-    cache: config.useConstCache ? new SimplePhenotypeCache() : new WeightedAgeAveragePhenotypeCache(config.genomeAgeWeight),
+    cache: config.useCache ? new WeightedAgeAveragePhenotypeCache(config.genomeAgeWeight) : new DummyPhenotypeCache(),
   };
 
   let result: GeneticSearchInterface<SimulationGenome>;
