@@ -12,7 +12,8 @@ import type {
   SimulationGenome,
   SimulationMetricsStrategyConfig,
   ClusterizationTaskConfig,
-  ClusterizationWeightsConfig,
+  ClusterizationWeights,
+  ClusterizationParams,
 } from './types';
 import type { RandomTypesConfig, TypesConfig } from '../config/types';
 import { BasePhenotypeStrategy } from "genetic-search";
@@ -221,22 +222,22 @@ export class SourceMutationStrategy extends DynamicProbabilityMutationStrategy i
 }
 
 export class ClusterizationMetricsStrategy extends BasePhenotypeStrategy<SimulationGenome, SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
-  private readonly weights: ClusterizationWeightsConfig;
+  private readonly params: ClusterizationParams;
 
-  constructor(config: SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
+  constructor(config: SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, params: ClusterizationParams) {
     super(config);
-    this.weights = weights;
+    this.params = params;
   }
 
   protected createTaskInput(genome: SimulationGenome): ClusterizationTaskConfig {
-    return [genome.id, this.config.worldConfig, genome.typesConfig, this.weights, this.config.checkpoints, this.config.repeats];
+    return [genome.id, this.config.worldConfig, genome.typesConfig, this.params, this.config.checkpoints, this.config.repeats];
   }
 }
 
 export class ClusterizationFitnessStrategy implements FitnessStrategyInterface {
-  private readonly weights: ClusterizationWeightsConfig;
+  private readonly weights: ClusterizationWeights;
 
-  constructor(weights: ClusterizationWeightsConfig) {
+  constructor(weights: ClusterizationWeights) {
     this.weights = weights;
   }
 

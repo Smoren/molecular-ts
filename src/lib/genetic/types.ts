@@ -6,7 +6,7 @@ import type {
 import type { MultiprocessingPhenotypeStrategyConfig } from "genetic-search-multiprocess";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from '../config/types';
 
-export type ClusterizationTaskConfig = [number, WorldConfig, TypesConfig, ClusterizationWeightsConfig, number[], number];
+export type ClusterizationTaskConfig = [number, WorldConfig, TypesConfig, ClusterizationParams, number[], number];
 
 export type SimulationMetricsStrategyConfig<TTaskConfig> = PhenotypeStrategyConfig<TTaskConfig> & {
   worldConfig: WorldConfig;
@@ -36,7 +36,7 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   crossoverRandomizeConfigCollection: RandomTypesConfig[];
   randomizeStartPopulation: boolean;
   worldConfig: WorldConfig;
-  weightsConfig: ClusterizationWeightsConfig;
+  clusterizationConfig: ClusterizationConfig;
   typesCount: number;
   useCache: boolean;
   useComposedAlgo: boolean;
@@ -56,8 +56,11 @@ export type SimulationMainConfig<TTaskConfig> = {
   metrics: SimulationMultiprocessingMetricsStrategyConfig<TTaskConfig>;
 }
 
-export type ClusterizationWeightsConfig = {
+export type ClusterizationParams = {
   minCompoundSize: number;
+}
+
+export type ClusterizationWeights = {
   clustersCountWeight: number;
   averageClusterSizeWeight: number;
   relativeFilteredCompoundsWeight: number;
@@ -71,4 +74,9 @@ export type ClusterizationWeightsConfig = {
   relativeCompoundedAtomsCountWeight: number;
   averageAtomLinksWeight: number;
   newLinksCreatedPerStepScoreWeight: number;
+}
+
+export type ClusterizationConfig = {
+  params: ClusterizationParams;
+  weights: ClusterizationWeights;
 }

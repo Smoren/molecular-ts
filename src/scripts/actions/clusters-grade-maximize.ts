@@ -7,7 +7,7 @@ import {
   getWorldConfig,
   getGeneticMainConfig,
   writeJsonFile,
-  getClusterizationWeights,
+  getClusterizationConfig,
   getRandomizeConfigCollection,
   getPopulation,
   getCache,
@@ -45,7 +45,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       crossoverRandomizeConfigCollectionFileName,
       randomizeStartPopulation,
       worldConfigFileName,
-      weightsFileName,
+      configFileName,
       populationFileName,
       cacheFileName,
       useCache,
@@ -76,7 +76,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       mutationRandomizeConfigCollection: getRandomizeConfigCollection(mutationRandomizeConfigCollectionFileName),
       crossoverRandomizeConfigCollection: getRandomizeConfigCollection(crossoverRandomizeConfigCollectionFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
-      weightsConfig: getClusterizationWeights(weightsFileName),
+      clusterizationConfig: getClusterizationConfig(configFileName),
       randomizeStartPopulation,
       typesCount,
       useCache,
@@ -100,7 +100,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
 
     console.log('[START] Running genetic search');
     const foundGenomeIds: Set<number> = new Set();
-    const scheduler = createSchedulerForClustersGradeMaximize(useScheduler, geneticSearch, config.weightsConfig);
+    const scheduler = createSchedulerForClustersGradeMaximize(useScheduler, geneticSearch, config.clusterizationConfig);
     const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
     const formatString = (count: number) => `Genomes handled: ${count}`;
 
@@ -177,7 +177,7 @@ function parseArgs(argsParser: ArgsParser) {
   const randomizeStartPopulation = argsParser.getBool('randomizeStartPopulation', true);
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
-  const weightsFileName = argsParser.getString('weightsFileName', 'default-clusterization-weights');
+  const configFileName = argsParser.getString('configFileName', 'default-clusterization-config');
   const populationFileName = argsParser.getNullableString('populationFileName');
   const cacheFileName = argsParser.getNullableString('cacheFileName');
 
@@ -205,7 +205,7 @@ function parseArgs(argsParser: ArgsParser) {
     crossoverRandomizeConfigCollectionFileName,
     randomizeStartPopulation,
     worldConfigFileName,
-    weightsFileName,
+    configFileName,
     populationFileName,
     cacheFileName,
     useCache,

@@ -1,21 +1,21 @@
 import type {
   ClusterizationTaskConfig,
-  ClusterizationWeightsConfig,
+  ClusterizationParams,
   SimulationGenome,
   SimulationMultiprocessingMetricsStrategyConfig,
 } from "./types";
 import { BaseMultiprocessingPhenotypeStrategy } from "genetic-search-multiprocess";
 
 export class ClusterizationMultiprocessingPhenotypeStrategy extends BaseMultiprocessingPhenotypeStrategy<SimulationGenome, SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
-  private readonly weights: ClusterizationWeightsConfig;
+  private readonly params: ClusterizationParams;
 
-  constructor(config: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, weights: ClusterizationWeightsConfig) {
+  constructor(config: SimulationMultiprocessingMetricsStrategyConfig<ClusterizationTaskConfig>, params: ClusterizationParams) {
     super(config);
-    this.weights = weights;
+    this.params = params;
   }
 
   protected createTaskInput(genome: SimulationGenome): ClusterizationTaskConfig {
-    return [genome.id, this.config.worldConfig, genome.typesConfig, this.weights, this.config.checkpoints, this.config.repeats];
+    return [genome.id, this.config.worldConfig, genome.typesConfig, this.params, this.config.checkpoints, this.config.repeats];
   }
 }
 
@@ -23,7 +23,7 @@ export const clusterizationGradeMultiprocessingTask = async ([
   _,
   worldConfig,
   typesConfig,
-  weights,
+  clusterizationParams,
   checkpoints,
   repeats,
 ]: ClusterizationTaskConfig): Promise<number[]> => {
@@ -36,7 +36,7 @@ export const clusterizationGradeMultiprocessingTask = async ([
     _,
     worldConfig,
     typesConfig,
-    weights,
+    clusterizationParams,
     checkpoints,
     repeats,
   ]);

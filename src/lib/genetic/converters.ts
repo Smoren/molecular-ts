@@ -1,6 +1,6 @@
 import type { CompoundsClusterizationScore } from "../analysis/types";
 import type { NumericVector } from "../math/types";
-import type { ClusterizationWeightsConfig } from "./types";
+import type { ClusterizationWeights } from "./types";
 
 export function convertCompoundsClusterizationScoreToMetricsRow(score: CompoundsClusterizationScore): NumericVector {
   return [
@@ -55,7 +55,7 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
 
 export function weighCompoundClusterizationMetricsRow(
   metrics: NumericVector,
-  weights: ClusterizationWeightsConfig,
+  weights: ClusterizationWeights,
   weigher: (value: number, weight: number) => number,
   debug: boolean = false,
 ): NumericVector {

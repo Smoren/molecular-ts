@@ -19,7 +19,7 @@ import { createCompoundGraphByAtom } from "../analysis/factories";
 import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "../graph/utils";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "../analysis/symmetry";
 import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from "../analysis/calc";
-import { createDefaultClusterizationWeightsConfig } from "../analysis/utils";
+import { createDefaultClusterizationConfig } from "../analysis/utils";
 import { convertCompoundsClusterizationScoreToMetricsRow } from "../genetic/converters";
 import { clusterizationFitnessMul } from "../genetic/fitness";
 import type { GraphInterface } from "../graph/types";
@@ -270,16 +270,16 @@ export class Simulation implements SimulationInterface {
       }
 
       if (event.shiftKey) {
-        const weights = createDefaultClusterizationWeightsConfig();
+        const clusterizationConfig = createDefaultClusterizationConfig();
         const compounds = this.exportCompounds();
         const clustersSummary = calcCompoundsClusterizationSummary(
           compounds,
           this.config.typesConfig.FREQUENCIES.length,
-          weights.minCompoundSize,
+          clusterizationConfig.params.minCompoundSize,
         );
         const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary, compounds, this);
         const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
-        const totalScore = clusterizationFitnessMul(clusterizationMetrics, weights, true);
+        const totalScore = clusterizationFitnessMul(clusterizationMetrics, clusterizationConfig.weights, true);
 
         console.log('CLUSTERIZATION SUMMARY', clustersSummary);
         console.log('CLUSTERIZATION TOTAL SCORE', totalScore);

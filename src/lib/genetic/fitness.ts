@@ -1,11 +1,11 @@
 import type { NumericVector } from "../math/types";
-import type { ClusterizationWeightsConfig } from "./types";
+import type { ClusterizationWeights } from "./types";
 import { weighCompoundClusterizationMetricsRow } from "./converters";
 import { arraySum, arrayProduct } from "../math";
 
 export function clusterizationFitnessMul(
   metrics: NumericVector,
-  weights: ClusterizationWeightsConfig,
+  weights: ClusterizationWeights,
   debug: boolean = false,
 ): number {
   const weigher = ((value: number, weight: number) => value**weight);
@@ -14,7 +14,7 @@ export function clusterizationFitnessMul(
 
 export function clusterizationFitnessLog(
   metrics: NumericVector,
-  weights: ClusterizationWeightsConfig,
+  weights: ClusterizationWeights,
   debug: boolean = false,
 ): number {
   const weigher = ((value: number, weight: number) => Math.log(1+value) * weight);

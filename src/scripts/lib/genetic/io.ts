@@ -4,7 +4,7 @@ import type { CalcPhenotypeTask, IdGeneratorInterface, Population } from "geneti
 import type { InitialConfig, RandomTypesConfig, WorldConfig } from "@/lib/config/types";
 import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 import type {
-  ClusterizationWeightsConfig,
+  ClusterizationConfig,
   SimulationGeneticMainConfig,
   SimulationMainConfig,
   SimulationGenome,
@@ -39,8 +39,8 @@ export function getWorldConfig(fileName: string, initialConfig: InitialConfig): 
   return createWorldConfig2d(initialConfig, worldConfig);
 }
 
-export function getClusterizationWeights(fileName: string): ClusterizationWeightsConfig {
-  return readJsonFile(`data/input/${fileName}`) as ClusterizationWeightsConfig;
+export function getClusterizationConfig(fileName: string): ClusterizationConfig {
+  return readJsonFile(`data/input/${fileName}`) as ClusterizationConfig;
 }
 
 export function getSourcePopulation(fileName: string, idGenerator: IdGeneratorInterface<SimulationGenome>): Population<SimulationGenome> {

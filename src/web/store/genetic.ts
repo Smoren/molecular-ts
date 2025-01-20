@@ -12,7 +12,7 @@ import type {
 } from "genetic-search";
 import type {
   ClusterizationTaskConfig,
-  ClusterizationWeightsConfig,
+  ClusterizationConfig,
   MutationStrategyConfig,
   SimulationGenome,
   SimulationMetricsStrategyConfig,
@@ -27,8 +27,8 @@ import {
 } from "genetic-search";
 import { useConfigStore } from "@/web/store/config";
 import {
-  createDefaultClusterizationWeightsConfig,
-  createModifiedClusterizationWeightsConfig,
+  createDefaultClusterizationConfig,
+  createModifiedClusterizationConfig,
 } from "@/lib/analysis/utils";
 import {
   ClassicCrossoverStrategy,
@@ -60,12 +60,12 @@ export const useGeneticStore = defineStore("genetic", () => {
   const worldConfigRaw: WorldConfig = fullCopyObject(configStore.worldConfig);
   const typesConfigRaw: TypesConfig = fullCopyObject(configStore.typesConfig);
   const randomTypesConfigRaw: RandomTypesConfig = fullCopyObject(configStore.randomTypesConfig);
-  const weightsConfigRaw: ClusterizationWeightsConfig = createDefaultClusterizationWeightsConfig();
+  const clusterizationConfigRaw: ClusterizationConfig = createDefaultClusterizationConfig();
 
   const worldConfig = ref<WorldConfig>(worldConfigRaw);
   const typesConfig = ref<TypesConfig>(typesConfigRaw);
   const randomTypesConfig = ref<RandomTypesConfig>(randomTypesConfigRaw);
-  const weightsConfig = ref<ClusterizationWeightsConfig>(weightsConfigRaw);
+  const clusterizationConfig = ref<ClusterizationConfig>(clusterizationConfigRaw);
 
   let algoRaw: GeneticSearchInterface<SimulationGenome> | undefined;
   let schedulerRaw: Scheduler<SimulationGenome, Record<string, unknown>>;
@@ -248,8 +248,8 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
     populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
-    phenotype: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), weightsConfigRaw),
-    fitness: new ClusterizationFitnessStrategy(weightsConfigRaw),
+    phenotype: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), clusterizationConfigRaw.params),
+    fitness: new ClusterizationFitnessStrategy(clusterizationConfigRaw.weights),
     sorting: new DescendingSortingStrategy(),
     selection: new RandomSelectionStrategy(2),
     mutation: createComposedMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
@@ -308,13 +308,13 @@ export const useGeneticStore = defineStore("genetic", () => {
     setConfigRaw(newConfig, randomTypesConfigRaw);
   }, { deep: true });
 
-  watch(weightsConfig, (newConfig: ClusterizationWeightsConfig) => {
-    setConfigRaw(newConfig, weightsConfigRaw);
+  watch(clusterizationConfig, (newConfig: ClusterizationConfig) => {
+    setConfigRaw(newConfig, clusterizationConfigRaw);
   }, { deep: true });
 
   return {
     macroConfig,
-    weightsConfig,
+    clusterizationConfig,
     isRunning,
     isStopping,
     bestGenome,
