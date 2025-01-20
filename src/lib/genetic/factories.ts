@@ -41,17 +41,23 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     config.typesCount,
   );
 
+  const cache = config.useCache
+    ? new WeightedAgeAveragePhenotypeCache(config.genomeAgeWeight)
+    : new DummyPhenotypeCache();
+
+  const populateStrategy = config.randomizeStartPopulation
+    ? new RandomPopulateStrategy(populateRandomTypesConfigCollection)
+    : new ZeroValuesPopulateStrategy(config.typesCount);
+
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
-    // TODO choice to config
-    // populate: new ZeroValuesPopulateStrategy(config.typesCount),
-    populate: new RandomPopulateStrategy(populateRandomTypesConfigCollection),
+    populate: populateStrategy,
     phenotype: new ClusterizationMultiprocessingPhenotypeStrategy(config.runnerStrategyConfig, config.weightsConfig),
     fitness: new ClusterizationFitnessStrategy(config.weightsConfig),
     sorting: new DescendingSortingStrategy(),
     selection: new RandomSelectionStrategy(2),
     mutation: createComposedMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ClassicCrossoverStrategy(),
-    cache: config.useCache ? new WeightedAgeAveragePhenotypeCache(config.genomeAgeWeight) : new DummyPhenotypeCache(),
+    cache,
   };
 
   let result: GeneticSearchInterface<SimulationGenome>;

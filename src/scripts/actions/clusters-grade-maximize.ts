@@ -43,6 +43,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       populateRandomizeConfigCollectionFileName,
       mutationRandomizeConfigCollectionFileName,
       crossoverRandomizeConfigCollectionFileName,
+      randomizeStartPopulation,
       worldConfigFileName,
       weightsFileName,
       populationFileName,
@@ -76,6 +77,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       crossoverRandomizeConfigCollection: getRandomizeConfigCollection(crossoverRandomizeConfigCollectionFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       weightsConfig: getClusterizationWeights(weightsFileName),
+      randomizeStartPopulation,
       typesCount,
       useCache,
       useComposedAlgo,
@@ -172,6 +174,8 @@ function parseArgs(argsParser: ArgsParser) {
   const mutationRandomizeConfigCollectionFileName = argsParser.getString('mutationRandomizeConfigCollectionFileName', 'default-randomize-config-mutate-collection');
   const crossoverRandomizeConfigCollectionFileName = argsParser.getString('crossoverRandomizeConfigCollectionFileName', 'default-randomize-config-crossover-collection');
 
+  const randomizeStartPopulation = argsParser.getBool('randomizeStartPopulation', true);
+
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
   const weightsFileName = argsParser.getString('weightsFileName', 'default-clusterization-weights');
   const populationFileName = argsParser.getNullableString('populationFileName');
@@ -199,6 +203,7 @@ function parseArgs(argsParser: ArgsParser) {
     populateRandomizeConfigCollectionFileName,
     mutationRandomizeConfigCollectionFileName,
     crossoverRandomizeConfigCollectionFileName,
+    randomizeStartPopulation,
     worldConfigFileName,
     weightsFileName,
     populationFileName,

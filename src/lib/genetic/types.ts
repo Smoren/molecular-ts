@@ -34,6 +34,7 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   populateRandomizeConfigCollection: RandomTypesConfig[];
   mutationRandomizeConfigCollection: RandomTypesConfig[];
   crossoverRandomizeConfigCollection: RandomTypesConfig[];
+  randomizeStartPopulation: boolean;
   worldConfig: WorldConfig;
   weightsConfig: ClusterizationWeightsConfig;
   typesCount: number;
