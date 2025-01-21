@@ -4,7 +4,7 @@ import type { ClustersGradeMaximizeTaskConfig } from './types';
 import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from '../../analysis/calc';
 import { averageMatrixColumns } from '../../math/operations';
 import { sleep, createHeadless2dSimulationRunner } from "../utils";
-import { convertCompoundsClusterizationScoreToMetricsRow } from "../clusters-grade-maximize/converters";
+import { convertCompoundsClusterizationScoreToPhenotypeRow } from "../clusters-grade-maximize/converters";
 
 // TODO rename run to calcPhenotype
 export async function runSimulationForClustersGrade(
@@ -29,9 +29,9 @@ export async function runSimulationForClustersGrade(
 
     const clusterizationSummary = calcCompoundsClusterizationSummary(compounds, typesConfig.FREQUENCIES.length, clusterizationParams.minCompoundSize);
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
-    const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
+    const clusterizationPhenotype = convertCompoundsClusterizationScoreToPhenotypeRow(clusterizationScore);
 
-    summaryMatrix.push(clusterizationMetrics);
+    summaryMatrix.push(clusterizationPhenotype);
 
     if (timeout) {
       await sleep(timeout);

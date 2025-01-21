@@ -2,7 +2,7 @@ import type { CompoundsClusterizationScore } from "../../analysis/types";
 import type { NumericVector } from "../../math/types";
 import type { ClusterizationWeights } from "../types";
 
-export function convertCompoundsClusterizationScoreToMetricsRow(score: CompoundsClusterizationScore): NumericVector {
+export function convertCompoundsClusterizationScoreToPhenotypeRow(score: CompoundsClusterizationScore): NumericVector {
   return [
     score.averageClusteredCompoundVertexesCount,
     score.averageClusteredCompoundEdgesCount,
@@ -20,7 +20,7 @@ export function convertCompoundsClusterizationScoreToMetricsRow(score: Compounds
   ]
 }
 
-export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: NumericVector): CompoundsClusterizationScore {
+export function convertCompoundsClusterizationPhenotypeRowToScoreObject(phenotype: NumericVector): CompoundsClusterizationScore {
   const [
     averageClusteredCompoundVertexesCount,
     averageClusteredCompoundEdgesCount,
@@ -35,7 +35,7 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
     relativeCompoundedAtomsCount,
     averageAtomLinks,
     newLinksCreatedPerStepScore,
-  ] = metrics;
+  ] = phenotype;
   return {
     averageClusteredCompoundVertexesCount,
     averageClusteredCompoundEdgesCount,
@@ -53,13 +53,13 @@ export function convertCompoundsClusterizationMetricsRowToScoreObject(metrics: N
   };
 }
 
-export function weighCompoundClusterizationMetricsRow(
-  metrics: NumericVector,
+export function weighCompoundClusterizationPhenotypeRow(
+  phenotype: NumericVector,
   weights: ClusterizationWeights,
   weigher: (value: number, weight: number) => number,
   debug: boolean = false,
 ): NumericVector {
-  const score = convertCompoundsClusterizationMetricsRowToScoreObject(metrics);
+  const score = convertCompoundsClusterizationPhenotypeRowToScoreObject(phenotype);
   if (debug) {
     console.log('RAW SCORE', { ...score });
   }
@@ -82,5 +82,5 @@ export function weighCompoundClusterizationMetricsRow(
     console.log('WEIGHTED SCORE', { ...score });
   }
 
-  return convertCompoundsClusterizationScoreToMetricsRow(score);
+  return convertCompoundsClusterizationScoreToPhenotypeRow(score);
 }

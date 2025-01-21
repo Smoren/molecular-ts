@@ -24,7 +24,7 @@ import { ClusterizationMultiprocessingPhenotypeStrategy } from "./multiprocessin
 import { ClustersGradeMaximizeFitnessStrategy } from "./strategies";
 
 export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
-  config.runnerStrategyConfig.worldConfig = config.worldConfig;
+  config.phenotypeStrategyConfig.worldConfig = config.worldConfig;
 
   const populateRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
     config.populateRandomizeConfigCollection,
@@ -45,7 +45,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: populateStrategy,
-    phenotype: new ClusterizationMultiprocessingPhenotypeStrategy(config.runnerStrategyConfig, config.clusterizationConfig.params),
+    phenotype: new ClusterizationMultiprocessingPhenotypeStrategy(config.phenotypeStrategyConfig, config.clusterizationConfig.params),
     fitness: new ClustersGradeMaximizeFitnessStrategy(config.clusterizationConfig.weights),
     sorting: new DescendingSortingStrategy(),
     selection: new RandomSelectionStrategy(2),

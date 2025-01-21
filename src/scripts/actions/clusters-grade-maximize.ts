@@ -70,7 +70,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
 
     const config: ClusterGradeMaximizeConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
-      runnerStrategyConfig: mainConfig.metrics,
+      phenotypeStrategyConfig: mainConfig.phenotype,
       mutationStrategyConfig: mainConfig.mutation,
       populateRandomizeConfigCollection: getRandomizeConfigCollection(populateRandomizeConfigCollectionFileName),
       mutationRandomizeConfigCollection: getRandomizeConfigCollection(mutationRandomizeConfigCollectionFileName),

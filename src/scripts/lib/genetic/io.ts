@@ -14,9 +14,9 @@ export function getGeneticMainConfig<TTaskConfig>(
   task: CalcPhenotypeTask<TTaskConfig>,
 ): ClusterGradeMaximizeGeneticMainConfig<TTaskConfig> {
   const result = readJsonFile(`data/input/${fileName}`) as ClusterGradeMaximizeGeneticMainConfig<TTaskConfig>;
-  result.metrics.poolSize = poolSize;
-  result.metrics.task = task;
-  result.metrics.onTaskResult = () => process.stdout.write('.');
+  result.phenotype.poolSize = poolSize;
+  result.phenotype.task = task;
+  result.phenotype.onTaskResult = () => process.stdout.write('.');
 
   return result;
 }

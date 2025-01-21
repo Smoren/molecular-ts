@@ -42,7 +42,7 @@ import {
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
 import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/clusters-grade-maximize/phenotype";
-import { convertCompoundsClusterizationMetricsRowToScoreObject } from "@/lib/genetic/clusters-grade-maximize/converters";
+import { convertCompoundsClusterizationPhenotypeRowToScoreObject } from "@/lib/genetic/clusters-grade-maximize/converters";
 import type { ClustersGradeMaximizeTaskConfig } from "@/lib/genetic/clusters-grade-maximize/types";
 import {
   ClustersGradeMaximizeFitnessStrategy,
@@ -157,7 +157,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     console.log('time spent', Date.now() - time);
     time = Date.now();
 
-    console.log('genome handled', metrics, convertCompoundsClusterizationMetricsRowToScoreObject(metrics));
+    console.log('genome handled', metrics, convertCompoundsClusterizationPhenotypeRowToScoreObject(metrics));
     genomesHandled.value++;
     if (isStopping.value) {
       throw new StopException();

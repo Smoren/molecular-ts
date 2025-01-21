@@ -11,7 +11,7 @@ export type ClustersGradeMaximizeTaskConfig = [number, WorldConfig, TypesConfig,
 
 export type ClusterGradeMaximizeConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
-  runnerStrategyConfig: SimulationMultiprocessingPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>;
+  phenotypeStrategyConfig: SimulationMultiprocessingPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>;
   mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfigCollection: RandomTypesConfig[];
   mutationRandomizeConfigCollection: RandomTypesConfig[];
@@ -29,6 +29,6 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
 export type ClusterGradeMaximizeGeneticMainConfig<TTaskConfig> = {
   macro: GeneticSearchConfig;
   initial: InitialConfig;
-  metrics: SimulationMultiprocessingPhenotypeStrategyConfig<TTaskConfig>;
+  phenotype: SimulationMultiprocessingPhenotypeStrategyConfig<TTaskConfig>;
   mutation: MutationStrategyConfig;
 }
