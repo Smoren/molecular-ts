@@ -369,3 +369,17 @@ export function averageMatrixColumns(input: number[][]): number[] {
   }
   return result;
 }
+
+export function transposeMatrix<T>(input: T[][]): T[][] {
+  if (input.length === 0) {
+    return [];
+  }
+  const result: T[][] = [];
+  for (let i = 0; i < input[0].length; ++i) {
+    result[i] = [];
+    for (let j = 0; j < input.length; ++j) {
+      result[i][j] = input[j][i];
+    }
+  }
+  return result;
+}

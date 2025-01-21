@@ -31,9 +31,9 @@ import {
   weighMatrix,
 } from './operations';
 import {
-  normalizeArray,
   normalizeMatrixColumns,
-  normalizeMatrixColumnsUnion,
+  normalizeMatrixColumnsMinMax,
+  normalizeArrayMinMax,
 } from './normalization';
 import {
   createVector,
@@ -87,9 +87,9 @@ export {
   sortedNumbers,
   weighArray,
   weighMatrix,
-  normalizeArray,
   normalizeMatrixColumns,
-  normalizeMatrixColumnsUnion,
+  normalizeMatrixColumnsMinMax,
+  normalizeArrayMinMax,
   round,
   roundWithStep,
 };

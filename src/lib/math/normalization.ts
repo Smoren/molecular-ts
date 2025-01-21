@@ -1,69 +1,46 @@
 import { fullCopyObject } from '../utils/functions';
-import { isEqual } from './helpers';
+import { arrayify } from './helpers';
+import { transposeMatrix } from "@/lib/math/operations";
+import type { Arrayify } from "@/lib/math/types";
+import { reduce } from "itertools-ts";
 
-export function normalizeArray(input: number[], mean: number): number[] {
-  const max = Math.max(...input, mean);
-  const min = Math.min(...input, mean);
-
-  let std = 1;
-  if (!isEqual(min, max)) {
-    std = max - min;
-  } else if (!isEqual(mean, max)) {
-    std = Math.abs(max - mean);
-  }
-
-  return input.map((x) => (x - mean) / std);
-}
-
-export function normalizeMatrixColumns(input: number[][], mean: number[], inplace: boolean = false): number[][] {
-  const result = inplace ? input : fullCopyObject(input);
+export function normalizeMatrixColumns<T extends Array<unknown>, U extends Array<unknown>>(
+  input: number[][],
+  arrayNormalizer: (arr: number[], ...extraArgs: U) => [number[], ...T],
+  ...extraArgs: U
+): [number[][], ...Arrayify<T>] {
+  const result = fullCopyObject(input);
+  const extraData: T[] = [];
 
   if (result.length === 0) {
-    return result;
+    const [columnNormalized, ...columnExtraData] = arrayNormalizer([], ...extraArgs);
+    return [[columnNormalized], ...arrayify(columnExtraData)];
   }
 
   for (let i = 0; i < result[0].length; i++) {
-    const columnNormalized = normalizeArray(result.map((row) => row[i]), mean[i]);
+    const [columnNormalized, ...columnExtraData] = arrayNormalizer(result.map((row) => row[i]), ...extraArgs);
+    extraData.push(columnExtraData);
+
     for (let j = 0; j < result.length; j++) {
       result[j][i] = columnNormalized[j];
     }
   }
 
-  return result;
+  return [result, ...transposeMatrix(extraData) as Arrayify<T>];
 }
 
-function getBoundsOfMatrixColumnsUnion(matrix: number[][], columns: number[]): [number, number] {
-  if (columns.length === 0 || matrix.length === 0) {
-    return [0, 0];
+export function normalizeArrayMinMax(input: number[], defaultValue = 0.5): [number[], number, number, number] {
+  const min = reduce.toMin(input) ?? 0;
+  const max = reduce.toMax(input) ?? 0;
+  const mean = reduce.toAverage(input) ?? 0;
+
+  if (max === min) {
+    return [input.map(() => defaultValue), mean, min, max];
   }
 
-  let min = Infinity;
-  let max = -Infinity;
-
-  for (const column of columns) {
-    for (let i = 0; i < matrix.length; i++) {
-      min = Math.min(min, matrix[i][column]);
-      max = Math.max(max, matrix[i][column]);
-    }
-  }
-
-  return [min, max];
+  return [input.map((x) => (x - min) / (max - min)), mean, min, max];
 }
 
-export function normalizeMatrixColumnsUnion(matrix: number[][], columns: number[], inplace: boolean = false): number[][] {
-  const result = inplace ? matrix : fullCopyObject(matrix);
-
-  const [min, max] = getBoundsOfMatrixColumnsUnion(result, columns);
-
-  for (const column of columns) {
-    for (let i = 0; i < result.length; i++) {
-      if (isEqual(min, max)) {
-        result[i][column] = 0.5;
-      } else {
-        result[i][column] = (result[i][column] - min) / (max - min);
-      }
-    }
-  }
-
-  return result;
+export function normalizeMatrixColumnsMinMax(input: number[][], defaultValue = 0.5): [number[][], number[], number[], number[]] {
+  return normalizeMatrixColumns(input, normalizeArrayMinMax, defaultValue);
 }

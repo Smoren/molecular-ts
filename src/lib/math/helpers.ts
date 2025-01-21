@@ -1,4 +1,4 @@
-import type { Tensor } from './types';
+import type { Arrayify, Tensor } from './types';
 
 let EPSILON = 0.0000001;
 
@@ -70,4 +70,8 @@ export function shuffleArray<T>(array: T[]): T[] {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+export function arrayify<T extends Array<unknown>>(value: T): Arrayify<T> {
+  return value.map((x) => [x]) as Arrayify<T>;
 }

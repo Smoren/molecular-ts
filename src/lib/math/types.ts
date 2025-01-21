@@ -169,3 +169,7 @@ export interface PositionalVectorInterface {
 }
 
 export type LineCoefficients = [number, number];
+
+export type Arrayify<T extends unknown[]> = {
+  [K in keyof T]: T[K][];
+};
