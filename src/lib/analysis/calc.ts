@@ -32,12 +32,20 @@ import {
 import type { SimulationInterface } from "../simulation/types/simulation";
 import { createEmptyCompoundClusterScore } from "./utils";
 
-export function calcCompoundsClusterizationSummary(compounds: Compound[], typesCount: number, minCompoundSize = 2): CompoundsClusterizationSummary {
+export function calcCompoundsClusterizationSummary(
+  compounds: Compound[],
+  typesCount: number,
+  minCompoundSize = 2,
+  minUniqueTypesCount = 2, // TODO to config
+): CompoundsClusterizationSummary {
   const graphs = compounds
     .filter((compound) => compound.size >= minCompoundSize)
     .map((compound) => createCompoundGraph(compound, typesCount));
   const clusters = clusterGraphs(graphs);
-  const clusterGrades: CompoundsClusterGrade[] = clusters.map((cluster) => calcCompoundsClusterGrade(cluster));
+  const clusterGrades: CompoundsClusterGrade[] = clusters
+    .map((cluster) => calcCompoundsClusterGrade(cluster))
+    .filter((grade) => grade.typesCountAverage >= minUniqueTypesCount);
+
   // TODO считать средний параметрический вектор всех кластеров, считать расстояния до него от каждого кластера
   // TODO таким образом повышаем разнообразие кластеров
 
@@ -64,6 +72,7 @@ export function calcCompoundsClusterizationScore(
   simulation: SimulationInterface,
 ): CompoundsClusterizationScore {
   const clustersSizes = summary.clusters.map((c) => c.size);
+  const maxClusterSize = reduce.toMax(clustersSizes) ?? 0;
   const averageClusterSize = reduce.toAverage(clustersSizes) ?? 0;
   const clustersRelativeSizes = summary.clusters.map((c) => c.size / summary.clusteredCount);
 
@@ -75,42 +84,55 @@ export function calcCompoundsClusterizationScore(
     createEmptyCompoundClusterScore(),
   );
 
+  const clusterScoresMax = clustersScores.reduce(
+    (acc, x) => objectBinaryOperation(acc, x, (lhs: number, rhs: number) => Math.max(lhs, rhs)),
+    createEmptyCompoundClusterScore(),
+  );
+
   const clustersCount = summary.clusters.length;
-  const relativeClustered = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
-  const relativeFiltered = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
+  const relativeClusteredCompounds = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
+  const relativeFilteredCompounds = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
 
   const relativeCompoundedAtomsCount = arraySum(compounds.map((compound) => compound.size)) / simulation.atoms.length;
-  const relativeLinksCount = simulation.links.length / simulation.atoms.length;
+  const averageAtomLinks = simulation.links.length / simulation.atoms.length;
 
-  const linksCreatedScore = calcClusterizationLinksCreatedScore(summary, simulation.summary);
+  const newLinksCreatedPerStepScore = calcClusterizationLinksCreatedScore(summary, simulation.summary);
 
   return {
-    ...normalizedClusterSumScores,
+    maxClusterSize,
     averageClusterSize,
     clustersCount,
-    relativeClusteredCompounds: relativeClustered,
-    relativeFilteredCompounds: relativeFiltered,
+    relativeClusteredCompounds,
+    relativeFilteredCompounds,
     relativeCompoundedAtomsCount,
-    averageAtomLinks: relativeLinksCount,
-    newLinksCreatedPerStepScore: linksCreatedScore,
+    averageAtomLinks,
+    newLinksCreatedPerStepScore,
+
+    maxClusteredCompoundVertexesCount: clusterScoresMax.compoundVertexesCount,
+    averageClusteredCompoundVertexesCount: normalizedClusterSumScores.compoundVertexesCount,
+    averageClusteredCompoundEdgesCount: normalizedClusterSumScores.compoundEdgesCount,
+    averageClusteredCompoundUniqueTypesCount: normalizedClusterSumScores.compoundUniqueTypesCount,
+    averageClusteredCompoundSymmetryScore: normalizedClusterSumScores.compoundSymmetryScore,
+    averageClusteredCompoundRadius: normalizedClusterSumScores.compoundRadius,
+    averageClusteredCompoundSpeed: normalizedClusterSumScores.compoundSpeed,
   };
 }
 
 export function scoreCompoundCluster(clusterGrade: CompoundsClusterGrade): CompoundsClusterScore {
-  const averageVertexesCount = reduce.toAverage(clusterGrade.vertexesBounds)!;
-  const averageEdgesCount = reduce.toAverage(clusterGrade.edgesBounds)!;
-  const averageUniqueTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)! - 1;
+  const averageVertexesCount = reduce.toSum(clusterGrade.vertexTypesVector)!;
+  const averageEdgesCount = reduce.toSum(clusterGrade.edgeTypesVector)!;
+  const averageUniqueTypesCount = reduce.toAverage(clusterGrade.typesCountBounds)!;
   const symmetryGrade = clusterGrade.symmetry;
   const averageRadius = clusterGrade.radius;
   const averageSpeed = clusterGrade.speedAverage;
 
   return {
-    averageClusteredCompoundVertexesCount: averageVertexesCount,
-    averageClusteredCompoundEdgesCount: averageEdgesCount,
-    averageClusteredCompoundUniqueTypesCount: averageUniqueTypesCount,
-    averageClusteredCompoundSymmetryScore: symmetryGrade,
-    averageClusteredCompoundRadius: averageRadius,
-    averageClusteredCompoundSpeed: averageSpeed,
+    compoundVertexesCount: averageVertexesCount,
+    compoundEdgesCount: averageEdgesCount,
+    compoundUniqueTypesCount: averageUniqueTypesCount,
+    compoundSymmetryScore: symmetryGrade,
+    compoundRadius: averageRadius,
+    compoundSpeed: averageSpeed,
   };
 }
 
@@ -125,6 +147,7 @@ export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsC
     vertexesBounds: calcVertexesBounds(cluster),
     edgesBounds: calcEdgesBounds(cluster),
     typesCountBounds: calcTypesCountBounds(cluster),
+    typesCountAverage: calcTypesCountAverage(cluster),
     vertexTypesVector,
     edgeTypesVector,
     typesVector,
@@ -195,6 +218,10 @@ export function calcEdgesBounds(cluster: GraphInterface[]): [number, number] {
 
 export function calcTypesCountBounds(cluster: GraphInterface[]): [number, number] {
   return reduce.toMinMax(cluster.map((graph) => countUniqueTypes(graph))) as [number, number];
+}
+
+export function calcTypesCountAverage(cluster: GraphInterface[]): number {
+  return reduce.toAverage(cluster.map((graph) => countUniqueTypes(graph))) as number;
 }
 
 export function calcAverageVertexTypesVector(cluster: GraphInterface[]): VectorInterface {

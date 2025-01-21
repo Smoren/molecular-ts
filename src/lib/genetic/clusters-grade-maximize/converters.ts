@@ -4,12 +4,14 @@ import type { ClusterizationWeights } from "../types";
 
 export function convertCompoundsClusterizationScoreToPhenotypeRow(score: CompoundsClusterizationScore): NumericVector {
   return [
+    score.maxClusteredCompoundVertexesCount,
     score.averageClusteredCompoundVertexesCount,
     score.averageClusteredCompoundEdgesCount,
     score.averageClusteredCompoundUniqueTypesCount,
     score.averageClusteredCompoundSymmetryScore,
     score.averageClusteredCompoundRadius,
     score.averageClusteredCompoundSpeed,
+    score.maxClusterSize,
     score.averageClusterSize,
     score.clustersCount,
     score.relativeClusteredCompounds,
@@ -22,12 +24,14 @@ export function convertCompoundsClusterizationScoreToPhenotypeRow(score: Compoun
 
 export function convertCompoundsClusterizationPhenotypeRowToScoreObject(phenotype: NumericVector): CompoundsClusterizationScore {
   const [
+    maxClusteredCompoundVertexesCount,
     averageClusteredCompoundVertexesCount,
     averageClusteredCompoundEdgesCount,
     averageClusteredCompoundUniqueTypesCount,
     averageClusteredCompoundSymmetryScore,
     averageClusteredCompoundRadius,
     averageClusteredCompoundSpeed,
+    maxClusterSize,
     averageClusterSize,
     clustersCount,
     relativeClusteredCompounds,
@@ -37,12 +41,14 @@ export function convertCompoundsClusterizationPhenotypeRowToScoreObject(phenotyp
     newLinksCreatedPerStepScore,
   ] = phenotype;
   return {
+    maxClusteredCompoundVertexesCount,
     averageClusteredCompoundVertexesCount,
     averageClusteredCompoundEdgesCount,
     averageClusteredCompoundUniqueTypesCount,
     averageClusteredCompoundSymmetryScore,
     averageClusteredCompoundRadius,
     averageClusteredCompoundSpeed,
+    maxClusterSize,
     averageClusterSize,
     clustersCount,
     relativeClusteredCompounds,
@@ -64,12 +70,14 @@ export function weighCompoundClusterizationPhenotypeRow(
     console.log('RAW SCORE', { ...score });
   }
 
+  score.maxClusteredCompoundVertexesCount = weigher(score.maxClusteredCompoundVertexesCount, weights.maxClusteredCompoundVertexesCountWeight);
   score.averageClusteredCompoundVertexesCount = weigher(score.averageClusteredCompoundVertexesCount, weights.averageClusteredCompoundVertexesCountWeight);
   score.averageClusteredCompoundEdgesCount = weigher(score.averageClusteredCompoundEdgesCount, weights.averageClusteredCompoundEdgesCountWeight);
   score.averageClusteredCompoundUniqueTypesCount = weigher(score.averageClusteredCompoundUniqueTypesCount, weights.averageClusteredCompoundUniqueTypesCountWeight);
   score.averageClusteredCompoundSymmetryScore = weigher(score.averageClusteredCompoundSymmetryScore, weights.averageClusteredCompoundSymmetryScoreWeight);
   score.averageClusteredCompoundRadius = weigher(score.averageClusteredCompoundRadius, weights.averageClusteredCompoundRadiusWeight);
   score.averageClusteredCompoundSpeed = weigher(score.averageClusteredCompoundSpeed, weights.averageClusteredCompoundSpeedWeight);
+  score.maxClusterSize = weigher(score.maxClusterSize, weights.maxClusterSizeWeight);
   score.averageClusterSize = weigher(score.averageClusterSize, weights.averageClusterSizeWeight);
   score.clustersCount = weigher(score.clustersCount, weights.clustersCountWeight);
   score.relativeClusteredCompounds = weigher(score.relativeClusteredCompounds, weights.relativeClusteredCompoundsWeight);

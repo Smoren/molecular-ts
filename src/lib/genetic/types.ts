@@ -29,9 +29,11 @@ export type ClusterizationParams = {
 
 export type ClusterizationWeights = {
   clustersCountWeight: number;
+  maxClusterSizeWeight: number;
   averageClusterSizeWeight: number;
   relativeFilteredCompoundsWeight: number;
   relativeClusteredCompoundsWeight: number;
+  maxClusteredCompoundVertexesCountWeight: number;
   averageClusteredCompoundVertexesCountWeight: number;
   averageClusteredCompoundEdgesCountWeight: number;
   averageClusteredCompoundUniqueTypesCountWeight: number;

@@ -4,9 +4,11 @@
   },
   "weights": {
     "clustersCountWeight": 1,
+    "maxClusterSizeWeight": 0.7,
     "averageClusterSizeWeight": 1,
     "relativeFilteredCompoundsWeight": 1,
     "relativeClusteredCompoundsWeight": 1,
+    "maxClusteredCompoundVertexesCountWeight": 0.7,
     "averageClusteredCompoundVertexesCountWeight": 1.5,
     "averageClusteredCompoundEdgesCountWeight": 0.7,
     "averageClusteredCompoundUniqueTypesCountWeight": 1.5,

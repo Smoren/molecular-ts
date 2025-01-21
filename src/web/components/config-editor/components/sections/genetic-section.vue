@@ -114,8 +114,12 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.clustersCountWeight" />
         </div>
         <div>
-          <input-header name="Weight of cluster size" />
+          <input-header name="Average weight of cluster size" />
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusterSizeWeight" />
+        </div>
+        <div>
+          <input-header name="Max Weight of cluster size" />
+          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.maxClusterSizeWeight" />
         </div>
         <div>
           <input-header name="Weight of filtered compounds count" />
@@ -126,8 +130,12 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.relativeClusteredCompoundsWeight" />
         </div>
         <div>
-          <input-header name="Weight of atoms count in clustered compound" />
+          <input-header name="Weight of average atoms count in clustered compound" />
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundVertexesCountWeight" />
+        </div>
+        <div>
+          <input-header name="Weight of max atoms count in clustered compound" />
+          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.maxClusteredCompoundVertexesCountWeight" />
         </div>
         <div>
           <input-header name="Weight of links count in clustered compound" />

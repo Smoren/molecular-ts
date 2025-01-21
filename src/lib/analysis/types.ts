@@ -147,6 +147,7 @@ export type CompoundsClusterGrade = {
   vertexesBounds: [number, number];
   edgesBounds: [number, number];
   typesCountBounds: [number, number],
+  typesCountAverage: number,
   vertexTypesVector: NumericVector;
   edgeTypesVector: NumericVector;
   typesVector: NumericVector;
@@ -165,15 +166,16 @@ export type CompoundsClusterizationSummary = {
 }
 
 export type CompoundsClusterScore = {
-  averageClusteredCompoundVertexesCount: number;
-  averageClusteredCompoundEdgesCount: number;
-  averageClusteredCompoundUniqueTypesCount: number;
-  averageClusteredCompoundSymmetryScore: number;
-  averageClusteredCompoundRadius: number;
-  averageClusteredCompoundSpeed: number;
+  compoundVertexesCount: number;
+  compoundEdgesCount: number;
+  compoundUniqueTypesCount: number;
+  compoundSymmetryScore: number;
+  compoundRadius: number;
+  compoundSpeed: number;
 }
 
-export type CompoundsClusterizationScore = CompoundsClusterScore & {
+export type CompoundsClusterizationScore = {
+  maxClusterSize: number;
   averageClusterSize: number;
   clustersCount: number;
   relativeClusteredCompounds: number;
@@ -181,4 +183,12 @@ export type CompoundsClusterizationScore = CompoundsClusterScore & {
   relativeCompoundedAtomsCount: number;
   averageAtomLinks: number;
   newLinksCreatedPerStepScore: number;
+
+  maxClusteredCompoundVertexesCount: number;
+  averageClusteredCompoundVertexesCount: number;
+  averageClusteredCompoundEdgesCount: number;
+  averageClusteredCompoundUniqueTypesCount: number;
+  averageClusteredCompoundSymmetryScore: number;
+  averageClusteredCompoundRadius: number;
+  averageClusteredCompoundSpeed: number;
 }
