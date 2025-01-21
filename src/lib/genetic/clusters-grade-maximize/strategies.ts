@@ -12,6 +12,8 @@ import type {
 import type { ClustersGradeMaximizeTaskConfig } from "./types";
 import { BasePhenotypeStrategy } from "genetic-search";
 import { clustersGradeMaximizeFitnessMul } from "./fitness";
+import { arrayProduct, normalizeMatrixColumnsMinMax } from "@/lib/math";
+import { reduce } from "itertools-ts";
 
 export class ClustersGradeMaximizePhenotypeStrategy extends BasePhenotypeStrategy<SimulationGenome, SimulationPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, ClustersGradeMaximizeTaskConfig> {
   private readonly params: ClusterizationParams;
@@ -34,6 +36,7 @@ export class ClustersGradeMaximizeFitnessStrategy implements FitnessStrategyInte
   }
 
   score(results: GenerationPhenotypeMatrix): GenerationFitnessColumn {
-    return results.map((result) => clustersGradeMaximizeFitnessMul(result, this.weights));
+    const [normalized, mean] = normalizeMatrixColumnsMinMax(results);
+    return normalized.map((result) => clustersGradeMaximizeFitnessMul(result, this.weights) * arrayProduct(mean));
   }
 }
