@@ -41,7 +41,7 @@ import {
   createDefaultMutationRandomTypesConfigCollection,
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
-import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/clusters-grade-maximize/phenotype";
+import { calcPhenotypeForClustersGradeMaximizeAsync } from "@/lib/genetic/clusters-grade-maximize/phenotype";
 import { convertCompoundsClusterizationPhenotypeRowToScoreObject } from "@/lib/genetic/clusters-grade-maximize/converters";
 import type { ClustersGradeMaximizeTaskConfig } from "@/lib/genetic/clusters-grade-maximize/types";
 import {
@@ -237,7 +237,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     worldConfig: worldConfigRaw,
     checkpoints: [100, 100],
     repeats: 1,
-    task: repeatRunSimulationForClustersGradeWithTimeout,
+    task: calcPhenotypeForClustersGradeMaximizeAsync,
     onTaskResult: onTaskResultHandler, // TODO TTaskConfig to input
   });
 

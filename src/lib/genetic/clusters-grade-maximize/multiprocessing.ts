@@ -30,9 +30,9 @@ export const clusterizationGradeMultiprocessingTask = async ([
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocessor/lib', '/src');
-  const { repeatRunSimulationForClustersGrade } = await import(`${dirName}/lib/genetic/clusters-grade-maximize/phenotype`);
+  const { calcPhenotypeForClustersGradeMaximize } = await import(`${dirName}/lib/genetic/clusters-grade-maximize/phenotype`);
 
-  return repeatRunSimulationForClustersGrade([
+  return calcPhenotypeForClustersGradeMaximize([
     _,
     worldConfig,
     typesConfig,
