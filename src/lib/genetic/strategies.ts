@@ -10,8 +10,8 @@ import type {
 } from "genetic-search";
 import type {
   SimulationGenome,
-  SimulationMetricsStrategyConfig,
-  ClusterizationTaskConfig,
+  SimulationPhenotypeStrategyConfig,
+  ClustersGradeMaximizeTaskConfig,
   ClusterizationWeights,
   ClusterizationParams,
 } from './types';
@@ -221,15 +221,15 @@ export class SourceMutationStrategy extends DynamicProbabilityMutationStrategy i
   }
 }
 
-export class ClusterizationMetricsStrategy extends BasePhenotypeStrategy<SimulationGenome, SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, ClusterizationTaskConfig> {
+export class ClusterizationMetricsStrategy extends BasePhenotypeStrategy<SimulationGenome, SimulationPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, ClustersGradeMaximizeTaskConfig> {
   private readonly params: ClusterizationParams;
 
-  constructor(config: SimulationMetricsStrategyConfig<ClusterizationTaskConfig>, params: ClusterizationParams) {
+  constructor(config: SimulationPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, params: ClusterizationParams) {
     super(config);
     this.params = params;
   }
 
-  protected createTaskInput(genome: SimulationGenome): ClusterizationTaskConfig {
+  protected createTaskInput(genome: SimulationGenome): ClustersGradeMaximizeTaskConfig {
     return [genome.id, this.config.worldConfig, genome.typesConfig, this.params, this.config.checkpoints, this.config.repeats];
   }
 }

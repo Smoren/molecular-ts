@@ -5,8 +5,7 @@ import type { InitialConfig, RandomTypesConfig, WorldConfig } from "@/lib/config
 import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 import type {
   ClusterizationConfig,
-  SimulationGeneticMainConfig,
-  SimulationMainConfig,
+  ClusterGradeMaximizeGeneticMainConfig,
   SimulationGenome,
 } from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
@@ -16,8 +15,8 @@ export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
   poolSize: number,
   task: CalcPhenotypeTask<TTaskConfig>,
-): SimulationGeneticMainConfig<TTaskConfig> {
-  const result = readJsonFile(`data/input/${fileName}`) as SimulationGeneticMainConfig<TTaskConfig>;
+): ClusterGradeMaximizeGeneticMainConfig<TTaskConfig> {
+  const result = readJsonFile(`data/input/${fileName}`) as ClusterGradeMaximizeGeneticMainConfig<TTaskConfig>;
   result.metrics.poolSize = poolSize;
   result.metrics.task = task;
   result.metrics.onTaskResult = () => process.stdout.write('.');

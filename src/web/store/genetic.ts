@@ -11,11 +11,11 @@ import type {
   PopulationSummary,
 } from "genetic-search";
 import type {
-  ClusterizationTaskConfig,
+  ClustersGradeMaximizeTaskConfig,
   ClusterizationConfig,
   MutationStrategyConfig,
   SimulationGenome,
-  SimulationMetricsStrategyConfig,
+  SimulationPhenotypeStrategyConfig,
 } from "@/lib/genetic/types";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
 import {
@@ -231,7 +231,7 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   let time = Date.now();
 
-  const createMetricsStrategyConfig = (): SimulationMetricsStrategyConfig<ClusterizationTaskConfig> => ({
+  const createMetricsStrategyConfig = (): SimulationPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig> => ({
     worldConfig: worldConfigRaw,
     checkpoints: [100, 100],
     repeats: 1,

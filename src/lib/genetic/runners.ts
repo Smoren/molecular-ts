@@ -1,7 +1,7 @@
 import type { TypesConfig, WorldConfig } from '../config/types';
 import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from '../analysis/calc';
 import { averageMatrixColumns } from '../math/operations';
-import type { ClusterizationTaskConfig, ClusterizationParams } from './types';
+import type { ClustersGradeMaximizeTaskConfig, ClusterizationParams } from './types';
 import { sleep, createHeadless2dSimulationRunner } from "./utils";
 import { convertCompoundsClusterizationScoreToMetricsRow } from "./converters";
 
@@ -46,7 +46,7 @@ export async function repeatRunSimulationForClustersGrade([
   clusterizationParams,
   checkpoints,
   repeats,
-]: ClusterizationTaskConfig): Promise<number[]> {
+]: ClustersGradeMaximizeTaskConfig): Promise<number[]> {
   const result = [];
   for (let i=0; i<repeats; i++) {
     result.push(await runSimulationForClustersGrade(worldConfig, typesConfig, clusterizationParams, checkpoints));
@@ -61,7 +61,7 @@ export async function repeatRunSimulationForClustersGradeWithTimeout([
   clusterizationParams,
   checkpoints,
   repeats,
-]: ClusterizationTaskConfig): Promise<number[]> {
+]: ClustersGradeMaximizeTaskConfig): Promise<number[]> {
   const result = [];
   for (let i=0; i<repeats; i++) {
     result.push(await runSimulationForClustersGrade(worldConfig, typesConfig, clusterizationParams, checkpoints, 1));
