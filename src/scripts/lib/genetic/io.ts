@@ -3,13 +3,10 @@ import fetch from 'node-fetch';
 import type { CalcPhenotypeTask, IdGeneratorInterface, Population } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, WorldConfig } from "@/lib/config/types";
 import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
-import type {
-  ClusterizationConfig,
-  ClusterGradeMaximizeGeneticMainConfig,
-  SimulationGenome,
-} from "@/lib/genetic/types";
+import type { ClusterizationConfig, SimulationGenome } from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
 import { addLeadingZeros, formatJsonString } from "@/scripts/lib/helpers";
+import type { ClusterGradeMaximizeGeneticMainConfig } from "@/lib/genetic/clusters-grade-maximize/types";
 
 export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,

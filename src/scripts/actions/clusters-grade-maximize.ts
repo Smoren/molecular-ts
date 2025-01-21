@@ -1,7 +1,7 @@
 import os from 'os';
 import type { GeneticSearchFitConfig } from "genetic-search";
 import { ArgsParser } from "@/scripts/lib/router";
-import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/genetic/types";
+import type { ClusterGradeMaximizeConfigFactoryConfig } from "@/lib/genetic/clusters-grade-maximize/types";
 import { modifyMacroConfig, printGenerationSummary } from "@/scripts/lib/genetic/helpers";
 import {
   getWorldConfig,
