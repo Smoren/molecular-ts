@@ -11,7 +11,6 @@ import type {
   PopulationSummary,
 } from "genetic-search";
 import type {
-  ClustersGradeMaximizeTaskConfig,
   ClusterizationConfig,
   MutationStrategyConfig,
   SimulationGenome,
@@ -32,8 +31,6 @@ import {
 } from "@/lib/analysis/utils";
 import {
   ClassicCrossoverStrategy,
-  ClustersGradeMaximizeFitnessStrategy,
-  ClustersGradeMaximizePhenotypeStrategy,
   ComposedMutationStrategy,
   CopyTypeMutationStrategy,
   DynamicProbabilityMutationStrategy,
@@ -44,8 +41,13 @@ import {
   createDefaultMutationRandomTypesConfigCollection,
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
-import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/runners";
+import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/clusters-grade-maximize/phenotype";
 import { convertCompoundsClusterizationMetricsRowToScoreObject } from "@/lib/genetic/clusters-grade-maximize/converters";
+import type { ClustersGradeMaximizeTaskConfig } from "@/lib/genetic/clusters-grade-maximize/types";
+import {
+  ClustersGradeMaximizeFitnessStrategy,
+  ClustersGradeMaximizePhenotypeStrategy,
+} from "@/lib/genetic/clusters-grade-maximize/strategies";
 
 class StopException extends Error {}
 
