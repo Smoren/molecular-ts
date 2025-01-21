@@ -1,10 +1,12 @@
-import type { TypesConfig, WorldConfig } from '../config/types';
-import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from '../analysis/calc';
-import { averageMatrixColumns } from '../math/operations';
-import type { ClustersGradeMaximizeTaskConfig, ClusterizationParams } from './types';
-import { sleep, createHeadless2dSimulationRunner } from "./utils";
-import { convertCompoundsClusterizationScoreToMetricsRow } from "./converters";
+import type { TypesConfig, WorldConfig } from '../../config/types';
+import type { ClusterizationParams } from '../types';
+import type { ClustersGradeMaximizeTaskConfig } from './types';
+import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from '../../analysis/calc';
+import { averageMatrixColumns } from '../../math/operations';
+import { sleep, createHeadless2dSimulationRunner } from "../utils";
+import { convertCompoundsClusterizationScoreToMetricsRow } from "../clusters-grade-maximize/converters";
 
+// TODO rename run to calcPhenotype
 export async function runSimulationForClustersGrade(
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,

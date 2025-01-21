@@ -1,10 +1,10 @@
+import { BaseMultiprocessingPhenotypeStrategy } from "genetic-search-multiprocess";
 import type {
-  ClustersGradeMaximizeTaskConfig,
   ClusterizationParams,
   SimulationGenome,
   SimulationMultiprocessingPhenotypeStrategyConfig,
-} from "./types";
-import { BaseMultiprocessingPhenotypeStrategy } from "genetic-search-multiprocess";
+} from "../types";
+import type { ClustersGradeMaximizeTaskConfig } from "./types";
 
 export class ClusterizationMultiprocessingPhenotypeStrategy extends BaseMultiprocessingPhenotypeStrategy<SimulationGenome, SimulationMultiprocessingPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, ClustersGradeMaximizeTaskConfig> {
   private readonly params: ClusterizationParams;
@@ -30,7 +30,7 @@ export const clusterizationGradeMultiprocessingTask = async ([
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocessor/lib', '/src');
-  const { repeatRunSimulationForClustersGrade } = await import(`${dirName}/lib/genetic/runners`);
+  const { repeatRunSimulationForClustersGrade } = await import(`${dirName}/lib/genetic/clusters-grade-maximize/phenotype`);
 
   return repeatRunSimulationForClustersGrade([
     _,

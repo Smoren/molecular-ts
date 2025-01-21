@@ -1,22 +1,12 @@
 import type {
   CrossoverStrategyInterface,
-  FitnessStrategyInterface,
-  GenerationFitnessColumn,
-  GenerationPhenotypeMatrix,
   IdGeneratorInterface,
   MutationStrategyInterface,
   PopulateStrategyInterface,
   Population,
 } from "genetic-search";
-import type {
-  SimulationGenome,
-  SimulationPhenotypeStrategyConfig,
-  ClustersGradeMaximizeTaskConfig,
-  ClusterizationWeights,
-  ClusterizationParams,
-} from './types';
+import type { SimulationGenome } from './types';
 import type { RandomTypesConfig, TypesConfig } from '../config/types';
-import { BasePhenotypeStrategy } from "genetic-search";
 import {
   copyIndexInTypesConfig,
   createTransparentTypesConfig,
@@ -29,7 +19,6 @@ import { createRandomInteger, getIndexByFrequencies } from '../math';
 import { fullCopyObject } from '../utils/functions';
 import { getRandomArrayItem } from "../math/random";
 import { shuffleArray } from "../math/helpers";
-import { clusterizationFitnessMul } from "./fitness";
 
 export class RandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly randomizeConfigCollection: RandomTypesConfig[];
@@ -218,30 +207,5 @@ export class SourceMutationStrategy extends DynamicProbabilityMutationStrategy i
 
   public mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
     return super.mutate({ id: genome.id, typesConfig: this.sourceTypesConfig }, newGenomeId);
-  }
-}
-
-export class ClusterizationMetricsStrategy extends BasePhenotypeStrategy<SimulationGenome, SimulationPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, ClustersGradeMaximizeTaskConfig> {
-  private readonly params: ClusterizationParams;
-
-  constructor(config: SimulationPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, params: ClusterizationParams) {
-    super(config);
-    this.params = params;
-  }
-
-  protected createTaskInput(genome: SimulationGenome): ClustersGradeMaximizeTaskConfig {
-    return [genome.id, this.config.worldConfig, genome.typesConfig, this.params, this.config.checkpoints, this.config.repeats];
-  }
-}
-
-export class ClusterizationFitnessStrategy implements FitnessStrategyInterface {
-  private readonly weights: ClusterizationWeights;
-
-  constructor(weights: ClusterizationWeights) {
-    this.weights = weights;
-  }
-
-  score(results: GenerationPhenotypeMatrix): GenerationFitnessColumn {
-    return results.map((result) => clusterizationFitnessMul(result, this.weights));
   }
 }

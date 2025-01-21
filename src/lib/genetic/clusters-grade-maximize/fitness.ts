@@ -1,9 +1,9 @@
-import type { NumericVector } from "../math/types";
-import type { ClusterizationWeights } from "./types";
+import type { NumericVector } from "../../math/types";
+import type { ClusterizationWeights } from "../types";
 import { weighCompoundClusterizationMetricsRow } from "./converters";
-import { arraySum, arrayProduct } from "../math";
+import { arraySum, arrayProduct } from "../../math";
 
-export function clusterizationFitnessMul(
+export function clustersGradeMaximizeFitnessMul(
   metrics: NumericVector,
   weights: ClusterizationWeights,
   debug: boolean = false,
@@ -12,7 +12,7 @@ export function clusterizationFitnessMul(
   return arrayProduct(weighCompoundClusterizationMetricsRow(metrics, weights, weigher, debug));
 }
 
-export function clusterizationFitnessLog(
+export function clustersGradeMaximizeFitnessLog(
   metrics: NumericVector,
   weights: ClusterizationWeights,
   debug: boolean = false,

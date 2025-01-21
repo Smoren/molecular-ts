@@ -20,8 +20,8 @@ import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "../g
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "../analysis/symmetry";
 import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from "../analysis/calc";
 import { createDefaultClusterizationConfig } from "../analysis/utils";
-import { convertCompoundsClusterizationScoreToMetricsRow } from "../genetic/converters";
-import { clusterizationFitnessMul } from "../genetic/fitness";
+import { convertCompoundsClusterizationScoreToMetricsRow } from "../genetic/clusters-grade-maximize/converters";
+import { clustersGradeMaximizeFitnessMul } from "../genetic/clusters-grade-maximize/fitness";
 import type { GraphInterface } from "../graph/types";
 import { gradeMonomerPolymerPair } from "../analysis/polymers";
 
@@ -279,7 +279,7 @@ export class Simulation implements SimulationInterface {
         );
         const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary, compounds, this);
         const clusterizationMetrics = convertCompoundsClusterizationScoreToMetricsRow(clusterizationScore);
-        const totalScore = clusterizationFitnessMul(clusterizationMetrics, clusterizationConfig.weights, true);
+        const totalScore = clustersGradeMaximizeFitnessMul(clusterizationMetrics, clusterizationConfig.weights, true);
 
         console.log('CLUSTERIZATION SUMMARY', clustersSummary);
         console.log('CLUSTERIZATION TOTAL SCORE', totalScore);

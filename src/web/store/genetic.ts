@@ -32,8 +32,8 @@ import {
 } from "@/lib/analysis/utils";
 import {
   ClassicCrossoverStrategy,
-  ClusterizationFitnessStrategy,
-  ClusterizationMetricsStrategy,
+  ClustersGradeMaximizeFitnessStrategy,
+  ClustersGradeMaximizePhenotypeStrategy,
   ComposedMutationStrategy,
   CopyTypeMutationStrategy,
   DynamicProbabilityMutationStrategy,
@@ -45,7 +45,7 @@ import {
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
 import { repeatRunSimulationForClustersGradeWithTimeout } from "@/lib/genetic/runners";
-import { convertCompoundsClusterizationMetricsRowToScoreObject } from "@/lib/genetic/converters";
+import { convertCompoundsClusterizationMetricsRowToScoreObject } from "@/lib/genetic/clusters-grade-maximize/converters";
 
 class StopException extends Error {}
 
@@ -248,8 +248,8 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
     populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
-    phenotype: new ClusterizationMetricsStrategy(createMetricsStrategyConfig(), clusterizationConfigRaw.params),
-    fitness: new ClusterizationFitnessStrategy(clusterizationConfigRaw.weights),
+    phenotype: new ClustersGradeMaximizePhenotypeStrategy(createMetricsStrategyConfig(), clusterizationConfigRaw.params),
+    fitness: new ClustersGradeMaximizeFitnessStrategy(clusterizationConfigRaw.weights),
     sorting: new DescendingSortingStrategy(),
     selection: new RandomSelectionStrategy(2),
     mutation: createComposedMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),

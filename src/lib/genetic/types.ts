@@ -1,10 +1,6 @@
-import type {
-  BaseGenome,
-  GeneticSearchConfig,
-  PhenotypeStrategyConfig,
-} from "genetic-search";
+import type { BaseGenome, PhenotypeStrategyConfig } from "genetic-search";
 import type { MultiprocessingPhenotypeStrategyConfig } from "genetic-search-multiprocess";
-import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from '../config/types';
+import type { TypesConfig, WorldConfig } from '../config/types';
 
 export type SimulationGenome = BaseGenome & {
   id: number;
@@ -25,32 +21,6 @@ export type SimulationMultiprocessingPhenotypeStrategyConfig<TTaskConfig> = Simu
 export type MutationStrategyConfig = {
   dynamicProbabilities: number[];
   composedProbabilities: number[];
-}
-
-export type ClustersGradeMaximizeTaskConfig = [number, WorldConfig, TypesConfig, ClusterizationParams, number[], number];
-
-export type ClusterGradeMaximizeConfigFactoryConfig = {
-  geneticSearchMacroConfig: GeneticSearchConfig;
-  runnerStrategyConfig: SimulationMultiprocessingPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>;
-  mutationStrategyConfig: MutationStrategyConfig;
-  populateRandomizeConfigCollection: RandomTypesConfig[];
-  mutationRandomizeConfigCollection: RandomTypesConfig[];
-  crossoverRandomizeConfigCollection: RandomTypesConfig[];
-  randomizeStartPopulation: boolean;
-  worldConfig: WorldConfig;
-  clusterizationConfig: ClusterizationConfig;
-  typesCount: number;
-  useCache: boolean;
-  useComposedAlgo: boolean;
-  composedFinalPopulation: number;
-  genomeAgeWeight: number;
-}
-
-export type ClusterGradeMaximizeGeneticMainConfig<TTaskConfig> = {
-  macro: GeneticSearchConfig;
-  initial: InitialConfig;
-  metrics: SimulationMultiprocessingPhenotypeStrategyConfig<TTaskConfig>;
-  mutation: MutationStrategyConfig;
 }
 
 export type ClusterizationParams = {

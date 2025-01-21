@@ -1,6 +1,6 @@
-import type { CompoundsClusterizationScore } from "../analysis/types";
-import type { NumericVector } from "../math/types";
-import type { ClusterizationWeights } from "./types";
+import type { CompoundsClusterizationScore } from "../../analysis/types";
+import type { NumericVector } from "../../math/types";
+import type { ClusterizationWeights } from "../types";
 
 export function convertCompoundsClusterizationScoreToMetricsRow(score: CompoundsClusterizationScore): NumericVector {
   return [

@@ -17,12 +17,12 @@ import {
   sendStateToServer,
   sendGenomeToServer,
 } from "@/scripts/lib/genetic/io";
-import { createClusterGradeMaximize } from "@/lib/genetic/factories";
-import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/multiprocessing";
+import { createClusterGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/factories";
+import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/clusters-grade-maximize/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getCurrentDateTime } from '@/scripts/lib/helpers';
 import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
-import { createSchedulerForClustersGradeMaximize } from "@/lib/genetic/scheduler";
+import { createSchedulerForClustersGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/scheduler";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
