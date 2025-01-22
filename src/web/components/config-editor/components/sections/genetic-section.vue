@@ -51,6 +51,10 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
           <td>Best genome ID</td>
           <td>{{ geneticStore.bestGenome!.id }}</td>
         </tr>
+        <tr v-if="geneticStore.bestGenome">
+          <td>Best genome origin</td>
+          <td>{{ geneticStore.bestGenome!.stats!.origin }}</td>
+        </tr>
         <tr v-if="geneticStore.populationSummary">
           <td>Best genome score</td>
           <td>{{ round(geneticStore.populationSummary!.fitnessSummary.best, 4) }}</td>
