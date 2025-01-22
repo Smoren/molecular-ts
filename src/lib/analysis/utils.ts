@@ -91,7 +91,6 @@ export function createModifiedClusterizationConfig(): ClusterizationConfig {
   };
 }
 
-// TODO доработать
 export function createClusterizationReferenceWeights(): ClusterizationWeights {
   return {
     clustersCountWeight: 5,
@@ -99,15 +98,15 @@ export function createClusterizationReferenceWeights(): ClusterizationWeights {
     averageClusterSizeWeight: 5,
     relativeFilteredCompoundsWeight: 1,
     relativeClusteredCompoundsWeight: 1,
-    maxClusteredCompoundVertexesCountWeight: 0.5,
-    averageClusteredCompoundVertexesCountWeight: 2,
+    maxClusteredCompoundVertexesCountWeight: 10,
+    averageClusteredCompoundVertexesCountWeight: 5,
     averageClusteredCompoundEdgesCountWeight: 1,
     averageClusteredCompoundUniqueTypesCountWeight: 1,
     averageClusteredCompoundSymmetryScoreWeight: 1,
-    averageClusteredCompoundRadiusWeight: 0.5,
-    averageClusteredCompoundSpeedWeight: 0.5,
+    averageClusteredCompoundRadiusWeight: 20,
+    averageClusteredCompoundSpeedWeight: 1,
     relativeCompoundedAtomsCountWeight: 1,
     averageAtomLinksWeight: 1,
-    newLinksCreatedPerStepScoreWeight: 1,
+    newLinksCreatedPerStepScoreWeight: 0.1,
   };
 }

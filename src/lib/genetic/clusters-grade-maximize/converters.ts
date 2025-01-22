@@ -1,6 +1,7 @@
 import type { CompoundsClusterizationScore } from "../../analysis/types";
 import type { NumericVector } from "../../math/types";
 import type { ClusterizationWeights } from "../types";
+import { createClusterizationReferenceWeights } from "../../analysis/utils";
 
 export function convertCompoundsClusterizationScoreToPhenomeRow(score: CompoundsClusterizationScore): NumericVector {
   return [
@@ -91,4 +92,12 @@ export function weighCompoundClusterizationPhenomeRow(
   }
 
   return convertCompoundsClusterizationScoreToPhenomeRow(score);
+}
+
+export function applyReferenceWeightsToCompoundsClusterizationPhenomeRow(
+  phenome: NumericVector,
+  weights?: ClusterizationWeights,
+) {
+  weights = weights ?? createClusterizationReferenceWeights();
+  return weighCompoundClusterizationPhenomeRow(phenome, weights, (x, w) => x/w);
 }
