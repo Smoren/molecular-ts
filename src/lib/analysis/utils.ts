@@ -23,6 +23,31 @@ export function createDefaultClusterizationConfig(): ClusterizationConfig {
     },
     weights: {
       clustersCountWeight: 1,
+      maxClusterSizeWeight: 0.5,
+      averageClusterSizeWeight: 1,
+      relativeFilteredCompoundsWeight: 0.7,
+      relativeClusteredCompoundsWeight: 0.7,
+      maxClusteredCompoundVertexesCountWeight: 0.5,
+      averageClusteredCompoundVertexesCountWeight: 2,
+      averageClusteredCompoundEdgesCountWeight: 0.7,
+      averageClusteredCompoundUniqueTypesCountWeight: 2,
+      averageClusteredCompoundSymmetryScoreWeight: 2,
+      averageClusteredCompoundRadiusWeight: 0.5,
+      averageClusteredCompoundSpeedWeight: 0.5,
+      relativeCompoundedAtomsCountWeight: 1,
+      averageAtomLinksWeight: 0.5,
+      newLinksCreatedPerStepScoreWeight: 0.3,
+    },
+  };
+}
+
+export function createOldClusterizationConfig(): ClusterizationConfig {
+  return {
+    params: {
+      minCompoundSize: 5,
+    },
+    weights: {
+      clustersCountWeight: 1,
       maxClusterSizeWeight: 0.3,
       averageClusterSizeWeight: 1,
       relativeFilteredCompoundsWeight: 1,

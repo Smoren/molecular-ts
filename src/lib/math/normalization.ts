@@ -1,7 +1,7 @@
 import { fullCopyObject } from '../utils/functions';
 import { arrayify } from './helpers';
-import { transposeMatrix } from "@/lib/math/operations";
-import type { Arrayify } from "@/lib/math/types";
+import { transposeMatrix } from "./operations";
+import type { Arrayify } from "./types";
 import { reduce } from "itertools-ts";
 
 export function normalizeMatrixColumns<T extends Array<unknown>, U extends Array<unknown>>(

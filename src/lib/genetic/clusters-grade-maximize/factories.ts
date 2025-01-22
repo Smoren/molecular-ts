@@ -21,7 +21,7 @@ import {
 } from '../strategies';
 import { createComposedMutationStrategy } from "../factories";
 import { ClusterizationMultiprocessingPhenotypeStrategy } from "./multiprocessing";
-import { ClustersGradeMaximizeFitnessStrategy } from "./strategies";
+import { ClustersGradeMaximizeNormalizedFitnessStrategy } from "./strategies";
 
 export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
   config.phenotypeStrategyConfig.worldConfig = config.worldConfig;
@@ -46,7 +46,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: populateStrategy,
     phenotype: new ClusterizationMultiprocessingPhenotypeStrategy(config.phenotypeStrategyConfig, config.clusterizationConfig.params),
-    fitness: new ClustersGradeMaximizeFitnessStrategy(config.clusterizationConfig.weights),
+    fitness: new ClustersGradeMaximizeNormalizedFitnessStrategy(config.clusterizationConfig.weights),
     sorting: new DescendingSortingStrategy(),
     selection: new RandomSelectionStrategy(2),
     mutation: createComposedMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),

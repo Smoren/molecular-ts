@@ -45,7 +45,7 @@ import { calcPhenotypeForClustersGradeMaximizeAsync } from "@/lib/genetic/cluste
 import { convertCompoundsClusterizationPhenotypeRowToScoreObject } from "@/lib/genetic/clusters-grade-maximize/converters";
 import type { ClustersGradeMaximizeTaskConfig } from "@/lib/genetic/clusters-grade-maximize/types";
 import {
-  ClustersGradeMaximizeFitnessStrategy,
+  ClustersGradeMaximizeNormalizedFitnessStrategy,
   ClustersGradeMaximizePhenotypeStrategy,
 } from "@/lib/genetic/clusters-grade-maximize/strategies";
 
@@ -251,7 +251,7 @@ export const useGeneticStore = defineStore("genetic", () => {
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
     populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
     phenotype: new ClustersGradeMaximizePhenotypeStrategy(createMetricsStrategyConfig(), clusterizationConfigRaw.params),
-    fitness: new ClustersGradeMaximizeFitnessStrategy(clusterizationConfigRaw.weights),
+    fitness: new ClustersGradeMaximizeNormalizedFitnessStrategy(clusterizationConfigRaw.weights),
     sorting: new DescendingSortingStrategy(),
     selection: new RandomSelectionStrategy(2),
     mutation: createComposedMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
