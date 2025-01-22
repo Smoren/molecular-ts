@@ -68,3 +68,14 @@ export function convertToTable(data: string[][], padding: number = 0): string {
 
   return result.join('\n');
 }
+
+export function formatRounded(value: number, precision: number): string {
+  const factor = Math.pow(10, precision);
+  const rounded = Math.round(value * factor) / factor;
+
+  if (rounded === 0 && value !== 0) {
+    return value.toExponential(precision);
+  }
+
+  return String(rounded);
+}

@@ -128,7 +128,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
         const bestGenome = geneticSearch.bestGenome;
         const bestScore = bestGenome.stats!.fitness;
 
-        const summary = geneticSearch.getPopulationSummary(3);
+        const summary = geneticSearch.getPopulationSummary();
 
         printGenerationSummary(generation, bestGenome, summary);
         scheduler.logs.forEach((line) => console.log(`[SCHEDULER] ${line}`));

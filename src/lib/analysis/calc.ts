@@ -90,6 +90,7 @@ export function calcCompoundsClusterizationScore(
   );
 
   const clustersCount = summary.clusters.length;
+  // TODO делить на inputCount ???
   const relativeClusteredCompounds = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
   const relativeFilteredCompounds = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
 
