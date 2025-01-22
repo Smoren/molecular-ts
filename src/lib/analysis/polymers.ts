@@ -49,7 +49,7 @@ export function gradeMonomerPolymerPair(
   const polymerEdgesVector = toVector(countEdgesGroupedByVertexTypes(polymerCandidate));
 
   const multiplier = findPolymerMultiplier(monomerVertexesVector, polymerVertexesVector);
-  const polymerSize = Math.floor(multiplier);
+  const polymerSize = Math.round(multiplier);
 
   if (polymerSize < minPolymerSize) {
     return createBadPolymerGradeSummary(monomerCandidate.vertexes.length);
@@ -63,8 +63,8 @@ export function gradeMonomerPolymerPair(
   // Extra edges between 2 monomers
   const monomerEdgesDiffVector = edgesDiffVector.clone().div(polymerSize-1);
 
-  const monomerExtraVertexesVector = toVector(monomerVertexesDiffVector.map((x) => Math.floor(x)));
-  const monomerExtraEdgesVector = toVector(monomerEdgesDiffVector.map((x) => Math.floor(x)));
+  const monomerExtraVertexesVector = toVector(monomerVertexesDiffVector.map((x) => Math.round(x)));
+  const monomerExtraEdgesVector = toVector(monomerEdgesDiffVector.map((x) => Math.round(x)));
 
   // TODO доработать условие
   if (monomerExtraVertexesVector.abs2 >= monomerVertexesVector.abs2 || monomerExtraEdgesVector.abs2 >= monomerEdgesVector.abs2) {
