@@ -48,7 +48,7 @@ export function batchNormalizedClustersGradeMaximizeFitnessMul(
   weights: ClusterizationWeights,
 ): GenerationFitnessColumn {
   const [normalized, means] = normalizeMatrixColumnsMinMax(results);
-  // TODO попробовать тоже нормализовать? Брать не среднее, а максимум? Или вообще среднее от среднего?
+  // TODO попробовать тоже нормализовать? Брать не среднее, а максимум? Или вообще взвешенное среднее от среднего?
   const mean = clustersGradeMaximizeFitnessMul(means, weights);
   const fitnessColumn = normalized.map((result) => clustersGradeMaximizeFitnessMul(result, weights));
   const [normalizedFitnessColumn] = normalizeArrayMinMax(fitnessColumn);
