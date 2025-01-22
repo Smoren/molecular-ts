@@ -1,4 +1,4 @@
-import type { ClusterizationConfig } from "../genetic/types";
+import type { ClusterizationConfig, ClusterizationWeights } from "../genetic/types";
 import type { CompoundsClusterScore } from "./types";
 
 export function convertDifferenceToNormalizedSimilarityGrade(diff: number, normCoefficient: number = 0.5): number {
@@ -88,5 +88,26 @@ export function createModifiedClusterizationConfig(): ClusterizationConfig {
       averageAtomLinksWeight: 1,
       newLinksCreatedPerStepScoreWeight: 1,
     },
+  };
+}
+
+// TODO доработать
+export function createClusterizationReferenceWeights(): ClusterizationWeights {
+  return {
+    clustersCountWeight: 5,
+    maxClusterSizeWeight: 20,
+    averageClusterSizeWeight: 5,
+    relativeFilteredCompoundsWeight: 1,
+    relativeClusteredCompoundsWeight: 1,
+    maxClusteredCompoundVertexesCountWeight: 0.5,
+    averageClusteredCompoundVertexesCountWeight: 2,
+    averageClusteredCompoundEdgesCountWeight: 1,
+    averageClusteredCompoundUniqueTypesCountWeight: 1,
+    averageClusteredCompoundSymmetryScoreWeight: 1,
+    averageClusteredCompoundRadiusWeight: 0.5,
+    averageClusteredCompoundSpeedWeight: 0.5,
+    relativeCompoundedAtomsCountWeight: 1,
+    averageAtomLinksWeight: 1,
+    newLinksCreatedPerStepScoreWeight: 1,
   };
 }

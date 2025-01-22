@@ -155,6 +155,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     await geneticSearch.fit(fitConfig);
   } catch (e) {
     console.error('[ERROR]', (e as Error).message);
+    console.error(e);
   }
 
   console.log(`[FINISH] in ${Date.now() - ts} ms`);
