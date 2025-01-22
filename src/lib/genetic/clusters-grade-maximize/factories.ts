@@ -1,79 +1,96 @@
-import type {
-  GeneticSearchInterface,
-  GeneticSearchStrategyConfig,
-  ComposedGeneticSearchConfig,
-} from "genetic-search";
-import type { SimulationGenome } from '../types';
-import type { ClusterGradeMaximizeConfigFactoryConfig } from "./types";
-import {
-  ComposedGeneticSearch,
-  GeneticSearch,
-  DummyPhenomeCache,
-  WeightedAgeAveragePhenomeCache,
-  DescendingSortingStrategy,
-  RandomSelectionStrategy,
-} from "genetic-search";
-import { setTypesCountToRandomizeConfigCollection } from '../utils';
-import {
-  RandomPopulateStrategy,
-  ClassicCrossoverStrategy,
-  ZeroValuesPopulateStrategy,
-} from '../strategies';
-import { createComposedMutationStrategy } from "../factories";
-import { ClusterizationMultiprocessingPhenomeStrategy } from "./multiprocessing";
-import { ClustersGradeMaximizeNormalizedFitnessStrategy } from "./strategies";
+import type { ClusterizationConfig, ClusterizationWeights } from "../types";
 
-export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
-  config.phenomeStrategyConfig.worldConfig = config.worldConfig;
-
-  const populateRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
-    config.populateRandomizeConfigCollection,
-    config.typesCount,
-  );
-  const mutationRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
-    config.mutationRandomizeConfigCollection,
-    config.typesCount,
-  );
-
-  const cache = config.useCache
-    ? new WeightedAgeAveragePhenomeCache(config.genomeAgeWeight)
-    : new DummyPhenomeCache();
-
-  const populateStrategy = config.randomizeStartPopulation
-    ? new RandomPopulateStrategy(populateRandomTypesConfigCollection)
-    : new ZeroValuesPopulateStrategy(config.typesCount);
-
-  const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
-    populate: populateStrategy,
-    phenome: new ClusterizationMultiprocessingPhenomeStrategy(config.phenomeStrategyConfig, config.clusterizationConfig.params),
-    fitness: new ClustersGradeMaximizeNormalizedFitnessStrategy(config.clusterizationConfig.weights),
-    sorting: new DescendingSortingStrategy(),
-    selection: new RandomSelectionStrategy(2),
-    mutation: createComposedMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
-    crossover: new ClassicCrossoverStrategy(),
-    cache,
+export function createDefaultClusterizationConfig(): ClusterizationConfig {
+  return {
+    params: {
+      minCompoundSize: 5,
+    },
+    weights: {
+      clustersCountWeight: 1.5,
+      maxClusterSizeWeight: 0.5,
+      averageClusterSizeWeight: 1,
+      relativeFilteredCompoundsWeight: 0.7,
+      relativeClusteredCompoundsWeight: 1,
+      maxClusteredCompoundVertexesCountWeight: 0.5,
+      averageClusteredCompoundVertexesCountWeight: 1.5,
+      averageClusteredCompoundEdgesCountWeight: 0.7,
+      averageClusteredCompoundUniqueTypesCountWeight: 1.5,
+      averageClusteredCompoundSymmetryScoreWeight: 2,
+      averageClusteredCompoundRadiusWeight: 0.5,
+      averageClusteredCompoundSpeedWeight: 0.5,
+      relativeCompoundedAtomsCountWeight: 1,
+      averageAtomLinksWeight: 0.5,
+      newLinksCreatedPerStepScoreWeight: 0.3,
+    },
   };
+}
 
-  let result: GeneticSearchInterface<SimulationGenome>;
+export function createOldClusterizationConfig(): ClusterizationConfig {
+  return {
+    params: {
+      minCompoundSize: 5,
+    },
+    weights: {
+      clustersCountWeight: 1,
+      maxClusterSizeWeight: 0.5,
+      averageClusterSizeWeight: 1,
+      relativeFilteredCompoundsWeight: 0.7,
+      relativeClusteredCompoundsWeight: 1,
+      maxClusteredCompoundVertexesCountWeight: 0.5,
+      averageClusteredCompoundVertexesCountWeight: 1.5,
+      averageClusteredCompoundEdgesCountWeight: 0.7,
+      averageClusteredCompoundUniqueTypesCountWeight: 1.5,
+      averageClusteredCompoundSymmetryScoreWeight: 2,
+      averageClusteredCompoundRadiusWeight: 0.5,
+      averageClusteredCompoundSpeedWeight: 0.5,
+      relativeCompoundedAtomsCountWeight: 1,
+      averageAtomLinksWeight: 0.5,
+      newLinksCreatedPerStepScoreWeight: 0.3,
+    },
+  };
+}
 
-  if (config.useComposedAlgo) {
-    const composedConfig: ComposedGeneticSearchConfig = {
-      eliminators: {
-        populationSize: Math.round(config.geneticSearchMacroConfig.populationSize / config.composedFinalPopulation),
-        survivalRate: config.geneticSearchMacroConfig.survivalRate,
-        crossoverRate: config.geneticSearchMacroConfig.crossoverRate,
-      },
-      final: {
-        populationSize: config.composedFinalPopulation,
-        survivalRate: config.geneticSearchMacroConfig.survivalRate,
-        crossoverRate: config.geneticSearchMacroConfig.crossoverRate,
-      },
-    };
+export function createModifiedClusterizationConfig(): ClusterizationConfig {
+  return {
+    params: {
+      minCompoundSize: 6,
+    },
+    weights: {
+      clustersCountWeight: 1,
+      maxClusterSizeWeight: 0.2,
+      averageClusterSizeWeight: 1,
+      relativeFilteredCompoundsWeight: 1,
+      relativeClusteredCompoundsWeight: 1,
+      maxClusteredCompoundVertexesCountWeight: 0.5,
+      averageClusteredCompoundVertexesCountWeight: 2,
+      averageClusteredCompoundEdgesCountWeight: 1,
+      averageClusteredCompoundUniqueTypesCountWeight: 1,
+      averageClusteredCompoundSymmetryScoreWeight: 1,
+      averageClusteredCompoundRadiusWeight: 0.5,
+      averageClusteredCompoundSpeedWeight: 0.5,
+      relativeCompoundedAtomsCountWeight: 1,
+      averageAtomLinksWeight: 1,
+      newLinksCreatedPerStepScoreWeight: 1,
+    },
+  };
+}
 
-    result = new ComposedGeneticSearch<SimulationGenome>(composedConfig, strategyConfig);
-  } else {
-    result = new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
-  }
-
-  return result;
+export function createClusterizationReferenceWeights(): ClusterizationWeights {
+  return {
+    clustersCountWeight: 5,
+    maxClusterSizeWeight: 20,
+    averageClusterSizeWeight: 5,
+    relativeFilteredCompoundsWeight: 1,
+    relativeClusteredCompoundsWeight: 1,
+    maxClusteredCompoundVertexesCountWeight: 10,
+    averageClusteredCompoundVertexesCountWeight: 5,
+    averageClusteredCompoundEdgesCountWeight: 1,
+    averageClusteredCompoundUniqueTypesCountWeight: 1,
+    averageClusteredCompoundSymmetryScoreWeight: 1,
+    averageClusteredCompoundRadiusWeight: 20,
+    averageClusteredCompoundSpeedWeight: 1,
+    relativeCompoundedAtomsCountWeight: 1,
+    averageAtomLinksWeight: 1,
+    newLinksCreatedPerStepScoreWeight: 0.1,
+  };
 }

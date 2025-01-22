@@ -5,12 +5,13 @@ import type { LinkManagerInterface, RunningStateInterface } from './types/utils'
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
 import type { ClusterManagerInterface } from './types/cluster';
 import type { WorldSummary, SummaryManagerInterface } from '../analysis/types';
+import type { GraphInterface } from "../graph/types";
+import type { NumericVector } from '../math/types';
+import type { Compound } from '../analysis/types';
 import { ClusterManager } from './cluster';
 import { LinkManager, RulesHelper, RunningState } from '../utils/structs';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from '../analysis/summary';
-import type { NumericVector } from '../math/types';
-import type { Compound } from '../analysis/types';
 import { CompoundsCollector } from '../analysis/compounds';
 import { PreventException } from "../drawer/utils";
 import { toVector } from "../math";
@@ -19,13 +20,12 @@ import { createCompoundGraphByAtom } from "../analysis/factories";
 import { countEdgesGroupedByVertexTypes, countVertexesGroupedByType } from "../graph/utils";
 import { scoreBilateralSymmetry, scoreSymmetryAxisByQuartering } from "../analysis/symmetry";
 import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from "../analysis/calc";
-import { createDefaultClusterizationConfig } from "../analysis/utils";
+import { createDefaultClusterizationConfig } from "../genetic/clusters-grade-maximize/factories";
 import {
   applyReferenceWeightsToCompoundsClusterizationPhenomeRow,
-  convertCompoundsClusterizationScoreToPhenomeRow
+  convertCompoundsClusterizationScoreToPhenomeRow,
 } from "../genetic/clusters-grade-maximize/converters";
 import { clustersGradeMaximizeFitnessMul } from "../genetic/clusters-grade-maximize/fitness";
-import type { GraphInterface } from "../graph/types";
 import { gradeMonomerPolymerPair } from "../analysis/polymers";
 
 export class Simulation implements SimulationInterface {

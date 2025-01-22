@@ -28,7 +28,7 @@ import { useConfigStore } from "@/web/store/config";
 import {
   createDefaultClusterizationConfig,
   createModifiedClusterizationConfig,
-} from "@/lib/analysis/utils";
+} from "@/lib/genetic/clusters-grade-maximize/factories";
 import {
   ClassicCrossoverStrategy,
   ComposedMutationStrategy,

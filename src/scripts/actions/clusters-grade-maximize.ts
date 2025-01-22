@@ -17,7 +17,7 @@ import {
   sendStateToServer,
   sendGenomeToServer,
 } from "@/scripts/lib/genetic/io";
-import { createClusterGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/factories";
+import { createClusterGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/search";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/clusters-grade-maximize/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getCurrentDateTime } from '@/scripts/lib/helpers';
