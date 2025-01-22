@@ -67,9 +67,6 @@ export function weighCompoundClusterizationPhenomeRow(
   debug: boolean = false,
 ): NumericVector {
   const score = convertCompoundsClusterizationPhenomeRowToScoreObject(phenome);
-  if (debug) {
-    console.log('RAW SCORE', { ...score });
-  }
 
   score.maxClusteredCompoundVertexesCount = weigher(score.maxClusteredCompoundVertexesCount, weights.maxClusteredCompoundVertexesCountWeight);
   score.averageClusteredCompoundVertexesCount = weigher(score.averageClusteredCompoundVertexesCount, weights.averageClusteredCompoundVertexesCountWeight);
@@ -88,7 +85,7 @@ export function weighCompoundClusterizationPhenomeRow(
   score.newLinksCreatedPerStepScore = weigher(score.newLinksCreatedPerStepScore, weights.newLinksCreatedPerStepScoreWeight);
 
   if (debug) {
-    console.log('WEIGHTED SCORE', { ...score });
+    console.log('WEIGHTED PHENOME', { ...score });
   }
 
   return convertCompoundsClusterizationScoreToPhenomeRow(score);

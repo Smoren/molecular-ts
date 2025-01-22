@@ -1,8 +1,9 @@
-import type { GeneticSearchConfig } from "genetic-search";
+import type { GeneticSearchConfig, PhenomeRow } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "../../config/types";
 import type {
   ClusterizationConfig,
   ClusterizationParams,
+  ClusterizationWeights,
   MutationStrategyConfig,
   SimulationMultiprocessingPhenomeStrategyConfig,
 } from "../types";
@@ -31,4 +32,11 @@ export type ClusterGradeMaximizeGeneticMainConfig<TTaskConfig> = {
   initial: InitialConfig;
   phenome: SimulationMultiprocessingPhenomeStrategyConfig<TTaskConfig>;
   mutation: MutationStrategyConfig;
+}
+
+export type ClustersGradeMaximizeFitnessParams = {
+  phenome: PhenomeRow;
+  weights: ClusterizationWeights;
+  weigher: (value: number, weight: number) => number;
+  debug: boolean;
 }

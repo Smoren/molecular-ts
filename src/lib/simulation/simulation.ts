@@ -281,6 +281,9 @@ export class Simulation implements SimulationInterface {
           clusterizationConfig.params.minCompoundSize,
         );
         const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary, compounds, this);
+
+        console.log('RAW PHENOME', clusterizationScore);
+
         const clusterizationMetrics = convertCompoundsClusterizationScoreToPhenomeRow(clusterizationScore);
         const totalScore = clustersGradeMaximizeFitnessMul(
           applyReferenceWeightsToCompoundsClusterizationPhenomeRow(clusterizationMetrics),

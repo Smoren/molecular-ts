@@ -6,6 +6,7 @@ import {
 } from "./converters";
 import { arraySum, arrayProduct, normalizeMatrixColumnsMinMax, normalizeArrayMinMax } from "../../math";
 import type { GenerationFitnessColumn, GenerationPhenomeMatrix } from "genetic-search";
+import { multi, reduce } from "itertools-ts";
 
 export function clustersGradeMaximizeFitnessSum(
   phenome: NumericVector,
@@ -37,28 +38,32 @@ export function clustersGradeMaximizeFitnessLog(
 export function batchNormalizedClustersGradeMaximizeFitnessSum(
   results: GenerationPhenomeMatrix,
   weights: ClusterizationWeights,
-  applyReferenceWeights: boolean = true,
 ): GenerationFitnessColumn {
   // TODO try to use it in strategy
   const [normalized, _, maxColumns] = normalizeMatrixColumnsMinMax(results);
-  const referencedMaxColumns = applyReferenceWeights ? applyReferenceWeightsToCompoundsClusterizationPhenomeRow(maxColumns) : maxColumns;
-  const max = clustersGradeMaximizeFitnessSum(referencedMaxColumns, weights);
   const fitnessColumn = normalized.map((result) => clustersGradeMaximizeFitnessSum(result, weights));
   const [normalizedFitnessColumn] = normalizeArrayMinMax(fitnessColumn);
-  return normalizedFitnessColumn.map((result) => result * max);
+
+  const [bestPhenome] = reduce.toMax(multi.zip(results, normalizedFitnessColumn), ([_, fitness]) => fitness)!;
+  const referencedBestPhenome = applyReferenceWeightsToCompoundsClusterizationPhenomeRow(bestPhenome);
+  const referencedBestPhenomeScore = clustersGradeMaximizeFitnessSum(referencedBestPhenome, weights);
+
+  return normalizedFitnessColumn.map((result) => result * referencedBestPhenomeScore);
 }
 
 export function batchNormalizedClustersGradeMaximizeFitnessMul(
   results: GenerationPhenomeMatrix,
   weights: ClusterizationWeights,
-  applyReferenceWeights: boolean = true,
 ): GenerationFitnessColumn {
   // TODO попробовать тоже нормализовать? Брать не среднее, а максимум? Или вообще взвешенное среднее от среднего или максимума?
 
-  const [normalized, _1, maxColumns] = normalizeMatrixColumnsMinMax(results);
-  const referencedMaxColumns = applyReferenceWeights ? applyReferenceWeightsToCompoundsClusterizationPhenomeRow(maxColumns) : maxColumns;
-  const max = clustersGradeMaximizeFitnessMul(referencedMaxColumns, weights);
+  const [normalized] = normalizeMatrixColumnsMinMax(results);
   const fitnessColumn = normalized.map((result) => clustersGradeMaximizeFitnessMul(result, weights));
   const [normalizedFitnessColumn] = normalizeArrayMinMax(fitnessColumn);
-  return normalizedFitnessColumn.map((result) => result * max);
+
+  const [bestPhenome] = reduce.toMax(multi.zip(results, normalizedFitnessColumn), ([_, fitness]) => fitness)!;
+  const referencedBestPhenome = applyReferenceWeightsToCompoundsClusterizationPhenomeRow(bestPhenome);
+  const referencedBestPhenomeScore = clustersGradeMaximizeFitnessMul(referencedBestPhenome, weights);
+
+  return normalizedFitnessColumn.map((result) => result * referencedBestPhenomeScore);
 }
