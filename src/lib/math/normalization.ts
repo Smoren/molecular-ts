@@ -35,10 +35,10 @@ export function normalizeArrayMinMax(input: number[], defaultValue = 0.5): [numb
   const mean = reduce.toAverage(input) ?? 0;
 
   if (max === min) {
-    return [input.map(() => defaultValue), mean, min, max];
+    return [input.map(() => defaultValue), min, max, mean];
   }
 
-  return [input.map((x) => (x - min) / (max - min)), mean, min, max];
+  return [input.map((x) => (x - min) / (max - min)), min, max, mean];
 }
 
 export function normalizeMatrixColumnsMinMax(input: number[][], defaultValue = 0.5): [number[][], number[], number[], number[]] {

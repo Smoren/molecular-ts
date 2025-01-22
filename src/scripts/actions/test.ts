@@ -2,7 +2,7 @@ import { normalizeMatrixColumnsMinMax } from "@/lib/math";
 
 export const actionTest = async () => {
   console.log('test action');
-  const [normalized, mean, min, max] = normalizeMatrixColumnsMinMax([
+  const [normalized, min, max, mean] = normalizeMatrixColumnsMinMax([
     [1, 2, 3],
     [2, 2, 3],
     [3, 2, 3],
@@ -11,5 +11,5 @@ export const actionTest = async () => {
     [2, 2, 3],
   ]);
 
-  console.log(normalized, mean, min, max);
+  console.log(normalized, min, max, mean);
 }

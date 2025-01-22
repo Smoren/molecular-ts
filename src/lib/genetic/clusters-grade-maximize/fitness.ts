@@ -40,14 +40,12 @@ export function batchNormalizedClustersGradeMaximizeFitnessSum(
   applyReferenceWeights: boolean = true,
 ): GenerationFitnessColumn {
   // TODO try to use it in strategy
-  const [normalized, means] = normalizeMatrixColumnsMinMax(results);
-  const mean = clustersGradeMaximizeFitnessSum(
-    applyReferenceWeights ? applyReferenceWeightsToCompoundsClusterizationPhenomeRow(means) : means,
-    weights,
-  );
+  const [normalized, _, maxColumns] = normalizeMatrixColumnsMinMax(results);
+  const referencedMaxColumns = applyReferenceWeights ? applyReferenceWeightsToCompoundsClusterizationPhenomeRow(maxColumns) : maxColumns;
+  const max = clustersGradeMaximizeFitnessSum(referencedMaxColumns, weights);
   const fitnessColumn = normalized.map((result) => clustersGradeMaximizeFitnessSum(result, weights));
   const [normalizedFitnessColumn] = normalizeArrayMinMax(fitnessColumn);
-  return normalizedFitnessColumn.map((result) => result * mean);
+  return normalizedFitnessColumn.map((result) => result * max);
 }
 
 export function batchNormalizedClustersGradeMaximizeFitnessMul(
@@ -55,13 +53,12 @@ export function batchNormalizedClustersGradeMaximizeFitnessMul(
   weights: ClusterizationWeights,
   applyReferenceWeights: boolean = true,
 ): GenerationFitnessColumn {
-  const [normalized, means] = normalizeMatrixColumnsMinMax(results);
   // TODO попробовать тоже нормализовать? Брать не среднее, а максимум? Или вообще взвешенное среднее от среднего или максимума?
-  const mean = clustersGradeMaximizeFitnessMul(
-    applyReferenceWeights ? applyReferenceWeightsToCompoundsClusterizationPhenomeRow(means) : means,
-    weights,
-  );
+
+  const [normalized, _1, maxColumns] = normalizeMatrixColumnsMinMax(results);
+  const referencedMaxColumns = applyReferenceWeights ? applyReferenceWeightsToCompoundsClusterizationPhenomeRow(maxColumns) : maxColumns;
+  const max = clustersGradeMaximizeFitnessMul(referencedMaxColumns, weights);
   const fitnessColumn = normalized.map((result) => clustersGradeMaximizeFitnessMul(result, weights));
   const [normalizedFitnessColumn] = normalizeArrayMinMax(fitnessColumn);
-  return normalizedFitnessColumn.map((result) => result * mean);
+  return normalizedFitnessColumn.map((result) => result * max);
 }
