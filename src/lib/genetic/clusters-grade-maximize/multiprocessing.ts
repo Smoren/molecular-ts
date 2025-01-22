@@ -1,15 +1,15 @@
-import { BaseMultiprocessingPhenotypeStrategy } from "genetic-search-multiprocess";
+import { BaseMultiprocessingPhenomeStrategy } from "genetic-search-multiprocess";
 import type {
   ClusterizationParams,
   SimulationGenome,
-  SimulationMultiprocessingPhenotypeStrategyConfig,
+  SimulationMultiprocessingPhenomeStrategyConfig,
 } from "../types";
 import type { ClustersGradeMaximizeTaskConfig } from "./types";
 
-export class ClusterizationMultiprocessingPhenotypeStrategy extends BaseMultiprocessingPhenotypeStrategy<SimulationGenome, SimulationMultiprocessingPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, ClustersGradeMaximizeTaskConfig> {
+export class ClusterizationMultiprocessingPhenomeStrategy extends BaseMultiprocessingPhenomeStrategy<SimulationGenome, SimulationMultiprocessingPhenomeStrategyConfig<ClustersGradeMaximizeTaskConfig>, ClustersGradeMaximizeTaskConfig> {
   private readonly params: ClusterizationParams;
 
-  constructor(config: SimulationMultiprocessingPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, params: ClusterizationParams) {
+  constructor(config: SimulationMultiprocessingPhenomeStrategyConfig<ClustersGradeMaximizeTaskConfig>, params: ClusterizationParams) {
     super(config);
     this.params = params;
   }
@@ -30,9 +30,9 @@ export const clusterizationGradeMultiprocessingTask = async ([
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocessor/lib', '/src');
-  const { calcPhenotypeForClustersGradeMaximize } = await import(`${dirName}/lib/genetic/clusters-grade-maximize/phenotype`);
+  const { calcPhenomeForClustersGradeMaximize } = await import(`${dirName}/lib/genetic/clusters-grade-maximize/phenome`);
 
-  return calcPhenotypeForClustersGradeMaximize([
+  return calcPhenomeForClustersGradeMaximize([
     _,
     worldConfig,
     typesConfig,

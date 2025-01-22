@@ -4,10 +4,10 @@ import type { ClustersGradeMaximizeTaskConfig } from './types';
 import { calcCompoundsClusterizationSummary, calcCompoundsClusterizationScore } from '../../analysis/calc';
 import { averageMatrixColumns } from '../../math/operations';
 import { sleep, createHeadless2dSimulationRunner } from "../utils";
-import { convertCompoundsClusterizationScoreToPhenotypeRow } from "../clusters-grade-maximize/converters";
+import { convertCompoundsClusterizationScoreToPhenomeRow } from "../clusters-grade-maximize/converters";
 
 // Used by dynamic import in multiprocessing
-export function calcPhenotypeForClustersGradeMaximize([
+export function calcPhenomeForClustersGradeMaximize([
   _,
   worldConfig,
   typesConfig,
@@ -22,7 +22,7 @@ export function calcPhenotypeForClustersGradeMaximize([
   return averageMatrixColumns(result);
 }
 
-export async function calcPhenotypeForClustersGradeMaximizeAsync([
+export async function calcPhenomeForClustersGradeMaximizeAsync([
   _,
   worldConfig,
   typesConfig,
@@ -54,9 +54,9 @@ function runSimulationForClustersGrade(
 
     const clusterizationSummary = calcCompoundsClusterizationSummary(compounds, typesConfig.FREQUENCIES.length, clusterizationParams.minCompoundSize);
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
-    const clusterizationPhenotype = convertCompoundsClusterizationScoreToPhenotypeRow(clusterizationScore);
+    const clusterizationPhenome = convertCompoundsClusterizationScoreToPhenomeRow(clusterizationScore);
 
-    summaryMatrix.push(clusterizationPhenotype);
+    summaryMatrix.push(clusterizationPhenome);
   }
 
   return averageMatrixColumns(summaryMatrix);
@@ -80,9 +80,9 @@ async function runSimulationForClustersGradeAsync(
 
     const clusterizationSummary = calcCompoundsClusterizationSummary(compounds, typesConfig.FREQUENCIES.length, clusterizationParams.minCompoundSize);
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
-    const clusterizationPhenotype = convertCompoundsClusterizationScoreToPhenotypeRow(clusterizationScore);
+    const clusterizationPhenome = convertCompoundsClusterizationScoreToPhenomeRow(clusterizationScore);
 
-    summaryMatrix.push(clusterizationPhenotype);
+    summaryMatrix.push(clusterizationPhenome);
 
     await sleep(timeout);
   }

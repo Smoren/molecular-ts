@@ -4,14 +4,14 @@ import type {
   ClusterizationConfig,
   ClusterizationParams,
   MutationStrategyConfig,
-  SimulationMultiprocessingPhenotypeStrategyConfig,
+  SimulationMultiprocessingPhenomeStrategyConfig,
 } from "../types";
 
 export type ClustersGradeMaximizeTaskConfig = [number, WorldConfig, TypesConfig, ClusterizationParams, number[], number];
 
 export type ClusterGradeMaximizeConfigFactoryConfig = {
   geneticSearchMacroConfig: GeneticSearchConfig;
-  phenotypeStrategyConfig: SimulationMultiprocessingPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>;
+  phenomeStrategyConfig: SimulationMultiprocessingPhenomeStrategyConfig<ClustersGradeMaximizeTaskConfig>;
   mutationStrategyConfig: MutationStrategyConfig;
   populateRandomizeConfigCollection: RandomTypesConfig[];
   mutationRandomizeConfigCollection: RandomTypesConfig[];
@@ -29,6 +29,6 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
 export type ClusterGradeMaximizeGeneticMainConfig<TTaskConfig> = {
   macro: GeneticSearchConfig;
   initial: InitialConfig;
-  phenotype: SimulationMultiprocessingPhenotypeStrategyConfig<TTaskConfig>;
+  phenome: SimulationMultiprocessingPhenomeStrategyConfig<TTaskConfig>;
   mutation: MutationStrategyConfig;
 }

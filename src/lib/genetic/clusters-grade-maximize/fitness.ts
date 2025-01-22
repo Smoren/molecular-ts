@@ -1,38 +1,38 @@
 import type { NumericVector } from "../../math/types";
 import type { ClusterizationWeights } from "../types";
-import { weighCompoundClusterizationPhenotypeRow } from "./converters";
+import { weighCompoundClusterizationPhenomeRow } from "./converters";
 import { arraySum, arrayProduct, normalizeMatrixColumnsMinMax, normalizeArrayMinMax } from "../../math";
-import type { GenerationFitnessColumn, GenerationPhenotypeMatrix } from "genetic-search";
+import type { GenerationFitnessColumn, GenerationPhenomeMatrix } from "genetic-search";
 
 export function clustersGradeMaximizeFitnessSum(
-  phenotype: NumericVector,
+  phenome: NumericVector,
   weights: ClusterizationWeights,
   debug: boolean = false,
 ): number {
   const weigher = ((value: number, weight: number) => value*weight);
-  return arraySum(weighCompoundClusterizationPhenotypeRow(phenotype, weights, weigher, debug));
+  return arraySum(weighCompoundClusterizationPhenomeRow(phenome, weights, weigher, debug));
 }
 
 export function clustersGradeMaximizeFitnessMul(
-  phenotype: NumericVector,
+  phenome: NumericVector,
   weights: ClusterizationWeights,
   debug: boolean = false,
 ): number {
   const weigher = ((value: number, weight: number) => value**weight);
-  return arrayProduct(weighCompoundClusterizationPhenotypeRow(phenotype, weights, weigher, debug));
+  return arrayProduct(weighCompoundClusterizationPhenomeRow(phenome, weights, weigher, debug));
 }
 
 export function clustersGradeMaximizeFitnessLog(
-  phenotype: NumericVector,
+  phenome: NumericVector,
   weights: ClusterizationWeights,
   debug: boolean = false,
 ): number {
   const weigher = ((value: number, weight: number) => Math.log(1+value) * weight);
-  return arraySum(weighCompoundClusterizationPhenotypeRow(phenotype, weights, weigher, debug));
+  return arraySum(weighCompoundClusterizationPhenomeRow(phenome, weights, weigher, debug));
 }
 
 export function batchNormalizedClustersGradeMaximizeFitnessSum(
-  results: GenerationPhenotypeMatrix,
+  results: GenerationPhenomeMatrix,
   weights: ClusterizationWeights,
 ): GenerationFitnessColumn {
   // TODO try to use it in strategy
@@ -44,7 +44,7 @@ export function batchNormalizedClustersGradeMaximizeFitnessSum(
 }
 
 export function batchNormalizedClustersGradeMaximizeFitnessMul(
-  results: GenerationPhenotypeMatrix,
+  results: GenerationPhenomeMatrix,
   weights: ClusterizationWeights,
 ): GenerationFitnessColumn {
   const [normalized, means] = normalizeMatrixColumnsMinMax(results);

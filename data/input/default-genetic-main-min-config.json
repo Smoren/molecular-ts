@@ -4,7 +4,7 @@
     "survivalRate": 0.5,
     "crossoverRate": 0.5
   },
-  "phenotype": {
+  "phenome": {
     "checkpoints": [200, 5, 5, 50, 5, 5, 20, 5, 5],
     "repeats": 1
   },

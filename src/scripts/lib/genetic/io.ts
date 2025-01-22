@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import fetch from 'node-fetch';
-import type { CalcPhenotypeTask, IdGeneratorInterface, Population } from "genetic-search";
+import type { CalcPhenomeTask, IdGeneratorInterface, Population } from "genetic-search";
 import type { InitialConfig, RandomTypesConfig, WorldConfig } from "@/lib/config/types";
 import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 import type { ClusterizationConfig, SimulationGenome } from "@/lib/genetic/types";
@@ -11,12 +11,12 @@ import type { ClusterGradeMaximizeGeneticMainConfig } from "@/lib/genetic/cluste
 export function getGeneticMainConfig<TTaskConfig>(
   fileName: string,
   poolSize: number,
-  task: CalcPhenotypeTask<TTaskConfig>,
+  task: CalcPhenomeTask<TTaskConfig>,
 ): ClusterGradeMaximizeGeneticMainConfig<TTaskConfig> {
   const result = readJsonFile(`data/input/${fileName}`) as ClusterGradeMaximizeGeneticMainConfig<TTaskConfig>;
-  result.phenotype.poolSize = poolSize;
-  result.phenotype.task = task;
-  result.phenotype.onTaskResult = () => process.stdout.write('.');
+  result.phenome.poolSize = poolSize;
+  result.phenome.task = task;
+  result.phenome.onTaskResult = () => process.stdout.write('.');
 
   return result;
 }

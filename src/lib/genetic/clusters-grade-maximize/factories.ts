@@ -8,8 +8,8 @@ import type { ClusterGradeMaximizeConfigFactoryConfig } from "./types";
 import {
   ComposedGeneticSearch,
   GeneticSearch,
-  DummyPhenotypeCache,
-  WeightedAgeAveragePhenotypeCache,
+  DummyPhenomeCache,
+  WeightedAgeAveragePhenomeCache,
   DescendingSortingStrategy,
   RandomSelectionStrategy,
 } from "genetic-search";
@@ -20,11 +20,11 @@ import {
   ZeroValuesPopulateStrategy,
 } from '../strategies';
 import { createComposedMutationStrategy } from "../factories";
-import { ClusterizationMultiprocessingPhenotypeStrategy } from "./multiprocessing";
+import { ClusterizationMultiprocessingPhenomeStrategy } from "./multiprocessing";
 import { ClustersGradeMaximizeNormalizedFitnessStrategy } from "./strategies";
 
 export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
-  config.phenotypeStrategyConfig.worldConfig = config.worldConfig;
+  config.phenomeStrategyConfig.worldConfig = config.worldConfig;
 
   const populateRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
     config.populateRandomizeConfigCollection,
@@ -36,8 +36,8 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
   );
 
   const cache = config.useCache
-    ? new WeightedAgeAveragePhenotypeCache(config.genomeAgeWeight)
-    : new DummyPhenotypeCache();
+    ? new WeightedAgeAveragePhenomeCache(config.genomeAgeWeight)
+    : new DummyPhenomeCache();
 
   const populateStrategy = config.randomizeStartPopulation
     ? new RandomPopulateStrategy(populateRandomTypesConfigCollection)
@@ -45,7 +45,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: populateStrategy,
-    phenotype: new ClusterizationMultiprocessingPhenotypeStrategy(config.phenotypeStrategyConfig, config.clusterizationConfig.params),
+    phenome: new ClusterizationMultiprocessingPhenomeStrategy(config.phenomeStrategyConfig, config.clusterizationConfig.params),
     fitness: new ClustersGradeMaximizeNormalizedFitnessStrategy(config.clusterizationConfig.weights),
     sorting: new DescendingSortingStrategy(),
     selection: new RandomSelectionStrategy(2),

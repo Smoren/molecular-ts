@@ -1,5 +1,5 @@
-import type { BaseGenome, PhenotypeStrategyConfig } from "genetic-search";
-import type { MultiprocessingPhenotypeStrategyConfig } from "genetic-search-multiprocess";
+import type { BaseGenome, PhenomeStrategyConfig } from "genetic-search";
+import type { MultiprocessingPhenomeStrategyConfig } from "genetic-search-multiprocess";
 import type { TypesConfig, WorldConfig } from '../config/types';
 
 export type SimulationGenome = BaseGenome & {
@@ -13,10 +13,10 @@ export type SimulationRunConfig = {
   repeats: number;
 };
 
-export type SimulationPhenotypeStrategyConfig<TTaskConfig> = SimulationRunConfig
-  & PhenotypeStrategyConfig<TTaskConfig>;
-export type SimulationMultiprocessingPhenotypeStrategyConfig<TTaskConfig> = SimulationPhenotypeStrategyConfig<TTaskConfig>
-  & MultiprocessingPhenotypeStrategyConfig<TTaskConfig>;
+export type SimulationPhenomeStrategyConfig<TTaskConfig> = SimulationRunConfig
+  & PhenomeStrategyConfig<TTaskConfig>;
+export type SimulationMultiprocessingPhenomeStrategyConfig<TTaskConfig> = SimulationPhenomeStrategyConfig<TTaskConfig>
+  & MultiprocessingPhenomeStrategyConfig<TTaskConfig>;
 
 export type MutationStrategyConfig = {
   dynamicProbabilities: number[];

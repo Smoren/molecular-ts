@@ -7,20 +7,20 @@ import type {
   GeneticSearchStrategyConfig,
   Population,
   GenomeStats,
-  GenomePhenotypeRow,
+  PhenomeRow,
   PopulationSummary,
 } from "genetic-search";
 import type {
   ClusterizationConfig,
   MutationStrategyConfig,
   SimulationGenome,
-  SimulationPhenotypeStrategyConfig,
+  SimulationPhenomeStrategyConfig,
 } from "@/lib/genetic/types";
 import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "@/lib/config/types";
 import {
   GeneticSearch,
   Scheduler,
-  WeightedAgeAveragePhenotypeCache,
+  WeightedAgeAveragePhenomeCache,
   DescendingSortingStrategy,
   RandomSelectionStrategy,
 } from "genetic-search";
@@ -41,12 +41,12 @@ import {
   createDefaultMutationRandomTypesConfigCollection,
   createDefaultPopulateRandomTypesConfigCollection,
 } from "@/web/utils/genetic";
-import { calcPhenotypeForClustersGradeMaximizeAsync } from "@/lib/genetic/clusters-grade-maximize/phenotype";
-import { convertCompoundsClusterizationPhenotypeRowToScoreObject } from "@/lib/genetic/clusters-grade-maximize/converters";
+import { calcPhenomeForClustersGradeMaximizeAsync } from "@/lib/genetic/clusters-grade-maximize/phenome";
+import { convertCompoundsClusterizationPhenomeRowToScoreObject } from "@/lib/genetic/clusters-grade-maximize/converters";
 import type { ClustersGradeMaximizeTaskConfig } from "@/lib/genetic/clusters-grade-maximize/types";
 import {
   ClustersGradeMaximizeNormalizedFitnessStrategy,
-  ClustersGradeMaximizePhenotypeStrategy,
+  ClustersGradeMaximizePhenomeStrategy,
 } from "@/lib/genetic/clusters-grade-maximize/strategies";
 
 class StopException extends Error {}
@@ -153,11 +153,11 @@ export const useGeneticStore = defineStore("genetic", () => {
     resetState();
   }
 
-  const onTaskResultHandler = (metrics: GenomePhenotypeRow) => {
+  const onTaskResultHandler = (metrics: PhenomeRow) => {
     console.log('time spent', Date.now() - time);
     time = Date.now();
 
-    console.log('genome handled', metrics, convertCompoundsClusterizationPhenotypeRowToScoreObject(metrics));
+    console.log('genome handled', metrics, convertCompoundsClusterizationPhenomeRowToScoreObject(metrics));
     genomesHandled.value++;
     if (isStopping.value) {
       throw new StopException();
@@ -233,11 +233,11 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   let time = Date.now();
 
-  const createMetricsStrategyConfig = (): SimulationPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig> => ({
+  const createMetricsStrategyConfig = (): SimulationPhenomeStrategyConfig<ClustersGradeMaximizeTaskConfig> => ({
     worldConfig: worldConfigRaw,
     checkpoints: [100, 100],
     repeats: 1,
-    task: calcPhenotypeForClustersGradeMaximizeAsync,
+    task: calcPhenomeForClustersGradeMaximizeAsync,
     onTaskResult: onTaskResultHandler, // TODO TTaskConfig to input
   });
 
@@ -250,13 +250,13 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
     populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
-    phenotype: new ClustersGradeMaximizePhenotypeStrategy(createMetricsStrategyConfig(), clusterizationConfigRaw.params),
+    phenome: new ClustersGradeMaximizePhenomeStrategy(createMetricsStrategyConfig(), clusterizationConfigRaw.params),
     fitness: new ClustersGradeMaximizeNormalizedFitnessStrategy(clusterizationConfigRaw.weights),
     sorting: new DescendingSortingStrategy(),
     selection: new RandomSelectionStrategy(2),
     mutation: createComposedMutationStrategy(createMutationStrategyConfig(), createMutationRandomTypesConfigCollection()),
     crossover: new ClassicCrossoverStrategy(),
-    cache: new WeightedAgeAveragePhenotypeCache(0.5),
+    cache: new WeightedAgeAveragePhenomeCache(0.5),
   });
 
   const createFitConfig = (): GeneticSearchFitConfig => ({

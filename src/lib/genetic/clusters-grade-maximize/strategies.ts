@@ -1,23 +1,22 @@
 import type {
   FitnessStrategyInterface,
   GenerationFitnessColumn,
-  GenerationPhenotypeMatrix,
+  GenerationPhenomeMatrix,
 } from "genetic-search";
 import type {
   ClusterizationParams,
   ClusterizationWeights,
   SimulationGenome,
-  SimulationPhenotypeStrategyConfig
+  SimulationPhenomeStrategyConfig
 } from "../types";
 import type { ClustersGradeMaximizeTaskConfig } from "./types";
-import { BasePhenotypeStrategy } from "genetic-search";
+import { BasePhenomeStrategy } from "genetic-search";
 import { batchNormalizedClustersGradeMaximizeFitnessMul, clustersGradeMaximizeFitnessMul } from "./fitness";
-import { normalizeArrayMinMax, normalizeMatrixColumnsMinMax } from "../../math";
 
-export class ClustersGradeMaximizePhenotypeStrategy extends BasePhenotypeStrategy<SimulationGenome, SimulationPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, ClustersGradeMaximizeTaskConfig> {
+export class ClustersGradeMaximizePhenomeStrategy extends BasePhenomeStrategy<SimulationGenome, SimulationPhenomeStrategyConfig<ClustersGradeMaximizeTaskConfig>, ClustersGradeMaximizeTaskConfig> {
   private readonly params: ClusterizationParams;
 
-  constructor(config: SimulationPhenotypeStrategyConfig<ClustersGradeMaximizeTaskConfig>, params: ClusterizationParams) {
+  constructor(config: SimulationPhenomeStrategyConfig<ClustersGradeMaximizeTaskConfig>, params: ClusterizationParams) {
     super(config);
     this.params = params;
   }
@@ -34,7 +33,7 @@ export class ClustersGradeMaximizeFitnessStrategy implements FitnessStrategyInte
     this.weights = weights;
   }
 
-  score(results: GenerationPhenotypeMatrix): GenerationFitnessColumn {
+  score(results: GenerationPhenomeMatrix): GenerationFitnessColumn {
     return results.map((result) => clustersGradeMaximizeFitnessMul(result, this.weights));
   }
 }
@@ -46,7 +45,7 @@ export class ClustersGradeMaximizeNormalizedFitnessStrategy implements FitnessSt
     this.weights = weights;
   }
 
-  score(results: GenerationPhenotypeMatrix): GenerationFitnessColumn {
+  score(results: GenerationPhenomeMatrix): GenerationFitnessColumn {
     return batchNormalizedClustersGradeMaximizeFitnessMul(results, this.weights);
   }
 }
