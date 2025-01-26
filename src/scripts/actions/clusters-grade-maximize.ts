@@ -204,7 +204,7 @@ function parseArgs(argsParser: ArgsParser) {
   const composedFinalPopulation = useComposedAlgo ? argsParser.getInt('composedFinalPopulation', 10) : 0;
   const genomeAgeWeight = useCache ? 0 : argsParser.getFloat('genomeAgeWeight', 0.5);
 
-  const genomeMaxAge = useScheduler ? argsParser.getInt('genomeMaxAge', 5) : undefined;
+  const genomeMaxAge = useScheduler ? argsParser.getInt('genomeMaxAge', 10) : undefined;
   const useDropout = useScheduler ? argsParser.getBool('useDropout', true) : false;
 
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
