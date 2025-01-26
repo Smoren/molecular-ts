@@ -51,16 +51,22 @@ export function createMinCompoundSizeDecreaseAction(
   };
 }
 
-export function createDefaultClustersGradeMaximizeActions({ weightsConfig, maxAge }: {
+export function createDefaultClustersGradeMaximizeActions({ weightsConfig, maxAge, useDropout }: {
   weightsConfig: ClusterizationConfig;
   maxAge?: number;
+  useDropout?: boolean;
 }): SchedulerAction<SimulationGenome, ClusterizationConfig>[] {
-  return [
-    createDropoutAction(weightsConfig, 0, 2),
-    createRemoveOldGenomesAction(maxAge),
-    // createMinCompoundSizeIncreaseAction(15, 25),
-    // createMinCompoundSizeDecreaseAction(10, 5),
-  ];
+  const actions: SchedulerAction<SimulationGenome, ClusterizationConfig>[] = [];
+
+  if (maxAge) {
+    actions.push(createRemoveOldGenomesAction(maxAge));
+  }
+
+  if (useDropout) {
+    actions.push(createDropoutAction(weightsConfig, 0, 2));
+  }
+
+  return actions;
 }
 
 export function createRemoveOldGenomesAction(maxAge?: number): SchedulerAction<SimulationGenome, ClusterizationConfig> {
@@ -81,17 +87,20 @@ export function createSchedulerForClustersGradeMaximize({
   config,
   maxHistoryLength = 10,
   maxAge = undefined,
+  useDropout = true,
 }: {
   useScheduler: boolean;
   runner: GeneticSearchInterface<SimulationGenome>;
   config: ClusterizationConfig;
   maxHistoryLength?: number;
   maxAge?: number;
+  useDropout?: boolean;
 }): Scheduler<SimulationGenome, ClusterizationConfig> {
   const actions = useScheduler
     ? createDefaultClustersGradeMaximizeActions({
       weightsConfig: config,
       maxAge,
+      useDropout,
     })
     : [];
   return new Scheduler({

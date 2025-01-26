@@ -55,6 +55,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       composedFinalPopulation,
       genomeAgeWeight,
       genomeMaxAge,
+      useDropout,
       useAnsiCursor,
       remoteApiUrl,
       remoteApiToken,
@@ -107,6 +108,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       runner: geneticSearch,
       config: config.clusterizationConfig,
       maxAge: genomeMaxAge,
+      useDropout,
     });
     const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
     const formatString = (count: number) => `Genomes handled: ${count}`;
@@ -194,7 +196,9 @@ function parseArgs(argsParser: ArgsParser) {
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = useComposedAlgo ? argsParser.getInt('composedFinalPopulation', 5) : 0;
   const genomeAgeWeight = useCache ? 0 : argsParser.getFloat('genomeAgeWeight', 0.5);
-  const genomeMaxAge = useScheduler ? argsParser.getFloat('genomeMaxAge', 5) : undefined;
+
+  const genomeMaxAge = useScheduler ? argsParser.getInt('genomeMaxAge', 5) : undefined;
+  const useDropout = useScheduler ? argsParser.getBool('useDropout', true) : false;
 
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
@@ -223,6 +227,7 @@ function parseArgs(argsParser: ArgsParser) {
     composedFinalPopulation,
     genomeAgeWeight,
     genomeMaxAge,
+    useDropout,
     useAnsiCursor,
     remoteApiUrl,
     remoteApiToken,

@@ -11,6 +11,7 @@ import {
   DummyPhenomeCache,
   WeightedAgeAveragePhenomeCache,
   DescendingSortingStrategy,
+  TournamentSelectionStrategy,
   RandomSelectionStrategy,
 } from "genetic-search";
 import { setTypesCountToRandomizeConfigCollection } from '../utils';
@@ -48,7 +49,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     phenome: new ClusterizationMultiprocessingPhenomeStrategy(config.phenomeStrategyConfig, config.clusterizationConfig.params),
     fitness: new ClustersGradeMaximizeNormalizedFitnessStrategy(config.clusterizationConfig.weights),
     sorting: new DescendingSortingStrategy(),
-    selection: new RandomSelectionStrategy(2),
+    selection: new TournamentSelectionStrategy(2, 5), // TODO move to config
     mutation: createComposedMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ClassicCrossoverStrategy(),
     cache,
