@@ -74,9 +74,10 @@ export function createRemoveOldGenomesAction(maxAge?: number): SchedulerAction<S
     return () => {};
   }
   return (input) => {
-    const removedCount = input.evaluatedPopulationManager.remove((x) => x.genome.stats!.age > maxAge);
-    if (removedCount > 0) {
-      input.logger(`Removed ${removedCount} old genomes`);
+    const removed = input.evaluatedPopulationManager.remove((x) => x.genome.stats!.age > maxAge);
+    if (removed.length > 0) {
+      const removedIds = removed.map((x) => x.genome.id);
+      input.logger(`Removed ${removed.length} old genomes (ids: ${removedIds.join(', ')})`);
     }
   };
 }
