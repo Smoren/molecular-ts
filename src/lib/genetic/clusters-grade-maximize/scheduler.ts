@@ -3,7 +3,6 @@ import type { ClusterizationConfig, ClusterizationWeights, SimulationGenome } fr
 import { Scheduler, checkSchedulerCondition } from "genetic-search";
 import { single, summary } from "itertools-ts";
 import { WeightsDropout } from "../scheduler";
-import { StorageManager } from "../utils";
 
 export function createDropoutAction(
   config: ClusterizationConfig,
@@ -69,10 +68,7 @@ export function createRemoveOldGenomesAction(maxAge?: number): SchedulerAction<S
     return () => {};
   }
   return (input) => {
-    const manager = new StorageManager(input.evaluatedPopulation);
-    const removedCount = manager.remove({
-      filter: (x) => x.genome.stats!.age > maxAge,
-    });
+    const removedCount = input.evaluatedPopulationManager.remove((x) => x.genome.stats!.age > maxAge);
     if (removedCount > 0) {
       input.logger(`Removed ${removedCount} old genomes`);
     }
