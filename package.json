@@ -11,7 +11,8 @@
     "test": "jest",
     "tool": "tsx --no-warnings src/scripts/tool.ts",
     "cluster": "npm run tool clusters-grade-maximize",
-    "populate": "npm run tool populate"
+    "populate": "npm run tool populate",
+    "my": "npm run tool clusters-grade-maximize poolSize=10 typesCount=5 populationSize=20 mainConfigFileName=default-genetic-main-min-config useScheduler=1"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -24,7 +25,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.10.3",
     "browser-process": "^0.0.1",
-    "genetic-search-multiprocess": "^6.0.0",
+    "genetic-search-multiprocess": "^8.0.0",
     "itertools-ts": "^2.0.0",
     "mdb-vue-ui-kit": "^4.1.1",
     "node-fetch": "^3.3.2",

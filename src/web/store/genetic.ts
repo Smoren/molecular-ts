@@ -259,7 +259,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     cache: new WeightedAgeAveragePhenomeCache(0.5),
   });
 
-  const createFitConfig = (): GeneticSearchFitConfig => ({
+  const createFitConfig = (): GeneticSearchFitConfig<SimulationGenome> => ({
     beforeStep: beforeStepHandler,
     afterStep: afterStepHandler,
     stopCondition: () => isStopping.value,

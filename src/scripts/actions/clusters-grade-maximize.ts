@@ -23,6 +23,7 @@ import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getCurrentDateTime } from '@/scripts/lib/helpers';
 import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
 import { createSchedulerForClustersGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/scheduler";
+import type { SimulationGenome } from "@/lib/genetic/types";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -53,6 +54,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       useComposedAlgo,
       composedFinalPopulation,
       genomeAgeWeight,
+      genomeMaxAge,
       useAnsiCursor,
       remoteApiUrl,
       remoteApiToken,
@@ -100,11 +102,16 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
 
     console.log('[START] Running genetic search');
     const foundGenomeIds: Set<number> = new Set();
-    const scheduler = createSchedulerForClustersGradeMaximize(useScheduler, geneticSearch, config.clusterizationConfig);
+    const scheduler = createSchedulerForClustersGradeMaximize({
+      useScheduler,
+      runner: geneticSearch,
+      config: config.clusterizationConfig,
+      maxAge: genomeMaxAge,
+    });
     const stdoutInterceptor = new StdoutInterceptor(useAnsiCursor);
     const formatString = (count: number) => `Genomes handled: ${count}`;
 
-    const fitConfig: GeneticSearchFitConfig = {
+    const fitConfig: GeneticSearchFitConfig<SimulationGenome> = {
       generationsCount,
       scheduler,
       beforeStep: () => {
@@ -187,6 +194,7 @@ function parseArgs(argsParser: ArgsParser) {
   const useComposedAlgo = argsParser.getBool('useComposedAlgo', false);
   const composedFinalPopulation = useComposedAlgo ? argsParser.getInt('composedFinalPopulation', 5) : 0;
   const genomeAgeWeight = useCache ? 0 : argsParser.getFloat('genomeAgeWeight', 0.5);
+  const genomeMaxAge = useScheduler ? argsParser.getFloat('genomeMaxAge', 5) : undefined;
 
   const useAnsiCursor = argsParser.getBool('useAnsiCursor', true);
 
@@ -214,6 +222,7 @@ function parseArgs(argsParser: ArgsParser) {
     useComposedAlgo,
     composedFinalPopulation,
     genomeAgeWeight,
+    genomeMaxAge,
     useAnsiCursor,
     remoteApiUrl,
     remoteApiToken,
