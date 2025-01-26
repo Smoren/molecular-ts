@@ -5,6 +5,7 @@ import type {
   ClusterizationParams,
   ClusterizationWeights,
   MutationStrategyConfig,
+  SelectionStrategyFactoryConfig,
   SimulationMultiprocessingPhenomeStrategyConfig,
 } from "../types";
 
@@ -17,6 +18,7 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   populateRandomizeConfigCollection: RandomTypesConfig[];
   mutationRandomizeConfigCollection: RandomTypesConfig[];
   crossoverRandomizeConfigCollection: RandomTypesConfig[];
+  selectionStrategyFactoryConfig: SelectionStrategyFactoryConfig;
   randomizeStartPopulation: boolean;
   worldConfig: WorldConfig;
   clusterizationConfig: ClusterizationConfig;

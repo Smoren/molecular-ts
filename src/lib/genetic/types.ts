@@ -49,3 +49,12 @@ export type ClusterizationConfig = {
   params: ClusterizationParams;
   weights: ClusterizationWeights;
 }
+
+export type SelectionStrategyType = 'random' | 'truncation' | 'proportional' | 'tournament';
+
+export type SelectionStrategyFactoryConfig = {
+  type: SelectionStrategyType;
+  crossoverParentsCount?: number;
+  truncationSliceThresholdRate?: number;
+  tournamentSize?: number;
+}

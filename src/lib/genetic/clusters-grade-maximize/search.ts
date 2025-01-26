@@ -20,7 +20,7 @@ import {
   ClassicCrossoverStrategy,
   ZeroValuesPopulateStrategy,
 } from '../strategies';
-import { createComposedMutationStrategy } from "../factories";
+import { createComposedMutationStrategy, createSelectionStrategy } from "../factories";
 import { ClusterizationMultiprocessingPhenomeStrategy } from "./multiprocessing";
 import { ClustersGradeMaximizeNormalizedFitnessStrategy } from "./strategies";
 
@@ -49,7 +49,7 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     phenome: new ClusterizationMultiprocessingPhenomeStrategy(config.phenomeStrategyConfig, config.clusterizationConfig.params),
     fitness: new ClustersGradeMaximizeNormalizedFitnessStrategy(config.clusterizationConfig.weights),
     sorting: new DescendingSortingStrategy(),
-    selection: new TournamentSelectionStrategy(2, 5), // TODO move to config
+    selection: createSelectionStrategy(config.selectionStrategyFactoryConfig),
     mutation: createComposedMutationStrategy(config.mutationStrategyConfig, mutationRandomTypesConfigCollection),
     crossover: new ClassicCrossoverStrategy(),
     cache,

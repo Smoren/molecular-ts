@@ -23,7 +23,7 @@ import { StdoutInterceptor } from "@/scripts/lib/stdout";
 import { getCurrentDateTime } from '@/scripts/lib/helpers';
 import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
 import { createSchedulerForClustersGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/scheduler";
-import type { SimulationGenome } from "@/lib/genetic/types";
+import type { SelectionStrategyFactoryConfig, SelectionStrategyType, SimulationGenome } from "@/lib/genetic/types";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -44,6 +44,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       populateRandomizeConfigCollectionFileName,
       mutationRandomizeConfigCollectionFileName,
       crossoverRandomizeConfigCollectionFileName,
+      selectionStrategyType,
       randomizeStartPopulation,
       worldConfigFileName,
       configFileName,
@@ -71,6 +72,10 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     const mainConfig = getGeneticMainConfig(mainConfigFileName, poolSize, clusterizationGradeMultiprocessingTask);
     modifyMacroConfig(mainConfig.macro, populationSize, survivalRate, crossoverRate);
 
+    const selectionStrategyFactoryConfig: SelectionStrategyFactoryConfig = {
+      type: selectionStrategyType,
+    }
+
     const config: ClusterGradeMaximizeConfigFactoryConfig = {
       geneticSearchMacroConfig: mainConfig.macro,
       phenomeStrategyConfig: mainConfig.phenome,
@@ -80,6 +85,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       crossoverRandomizeConfigCollection: getRandomizeConfigCollection(crossoverRandomizeConfigCollectionFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       clusterizationConfig: getClusterizationConfig(configFileName),
+      selectionStrategyFactoryConfig,
       randomizeStartPopulation,
       typesCount,
       useCache,
@@ -183,6 +189,7 @@ function parseArgs(argsParser: ArgsParser) {
   const populateRandomizeConfigCollectionFileName = argsParser.getString('populateRandomizeConfigCollectionFileName', 'default-randomize-config-populate-collection');
   const mutationRandomizeConfigCollectionFileName = argsParser.getString('mutationRandomizeConfigCollectionFileName', 'default-randomize-config-mutate-collection');
   const crossoverRandomizeConfigCollectionFileName = argsParser.getString('crossoverRandomizeConfigCollectionFileName', 'default-randomize-config-crossover-collection');
+  const selectionStrategyType = argsParser.getString('selectionStrategyType', 'tournament') as SelectionStrategyType;
 
   const randomizeStartPopulation = argsParser.getBool('randomizeStartPopulation', true);
 
@@ -216,6 +223,7 @@ function parseArgs(argsParser: ArgsParser) {
     populateRandomizeConfigCollectionFileName,
     mutationRandomizeConfigCollectionFileName,
     crossoverRandomizeConfigCollectionFileName,
+    selectionStrategyType,
     randomizeStartPopulation,
     worldConfigFileName,
     configFileName,
