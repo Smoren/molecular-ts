@@ -180,7 +180,8 @@ export type CompoundsClusterizationScore = {
   clustersCount: number;
   relativeClusteredCompounds: number;
   relativeFilteredCompounds: number;
-  relativeCompoundedAtomsCount: number;
+  relativeCompoundedAtoms: number;
+  relativeClusteredAtoms: number;
   averageAtomLinks: number;
   newLinksCreatedPerStepScore: number;
 

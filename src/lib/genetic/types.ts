@@ -40,7 +40,8 @@ export type ClusterizationWeights = {
   averageClusteredCompoundSymmetryScoreWeight: number;
   averageClusteredCompoundRadiusWeight: number;
   averageClusteredCompoundSpeedWeight: number;
-  relativeCompoundedAtomsCountWeight: number;
+  relativeCompoundedAtomsWeight: number;
+  relativeClusteredAtomsWeight: number;
   averageAtomLinksWeight: number;
   newLinksCreatedPerStepScoreWeight: number;
 }

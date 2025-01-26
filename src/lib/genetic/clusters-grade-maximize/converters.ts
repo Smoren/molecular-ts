@@ -1,7 +1,7 @@
 import type { CompoundsClusterizationScore } from "../../analysis/types";
 import type { NumericVector } from "../../math/types";
 import type { ClusterizationWeights } from "../types";
-import { createClusterizationReferenceWeights } from "./factories";
+import { createClusterizationReferenceDividers } from "./factories";
 
 export function convertCompoundsClusterizationScoreToPhenomeRow(score: CompoundsClusterizationScore): NumericVector {
   return [
@@ -17,7 +17,8 @@ export function convertCompoundsClusterizationScoreToPhenomeRow(score: Compounds
     score.clustersCount,
     score.relativeClusteredCompounds,
     score.relativeFilteredCompounds,
-    score.relativeCompoundedAtomsCount,
+    score.relativeCompoundedAtoms,
+    score.relativeClusteredAtoms,
     score.averageAtomLinks,
     score.newLinksCreatedPerStepScore,
   ]
@@ -37,7 +38,8 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     clustersCount,
     relativeClusteredCompounds,
     relativeFilteredCompounds,
-    relativeCompoundedAtomsCount,
+    relativeCompoundedAtoms,
+    relativeClusteredAtoms,
     averageAtomLinks,
     newLinksCreatedPerStepScore,
   ] = phenome;
@@ -54,7 +56,8 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     clustersCount,
     relativeClusteredCompounds,
     relativeFilteredCompounds,
-    relativeCompoundedAtomsCount,
+    relativeCompoundedAtoms,
+    relativeClusteredAtoms,
     averageAtomLinks,
     newLinksCreatedPerStepScore,
   };
@@ -80,7 +83,8 @@ export function weighCompoundClusterizationPhenomeRow(
   score.clustersCount = weigher(score.clustersCount, weights.clustersCountWeight);
   score.relativeClusteredCompounds = weigher(score.relativeClusteredCompounds, weights.relativeClusteredCompoundsWeight);
   score.relativeFilteredCompounds = weigher(score.relativeFilteredCompounds, weights.relativeFilteredCompoundsWeight);
-  score.relativeCompoundedAtomsCount = weigher(score.relativeCompoundedAtomsCount, weights.relativeCompoundedAtomsCountWeight);
+  score.relativeCompoundedAtoms = weigher(score.relativeCompoundedAtoms, weights.relativeCompoundedAtomsWeight);
+  score.relativeClusteredAtoms = weigher(score.relativeClusteredAtoms, weights.relativeClusteredAtomsWeight);
   score.averageAtomLinks = weigher(score.averageAtomLinks, weights.averageAtomLinksWeight);
   score.newLinksCreatedPerStepScore = weigher(score.newLinksCreatedPerStepScore, weights.newLinksCreatedPerStepScoreWeight);
 
@@ -95,6 +99,6 @@ export function applyReferenceWeightsToCompoundsClusterizationPhenomeRow(
   phenome: NumericVector,
   weights?: ClusterizationWeights,
 ) {
-  weights = weights ?? createClusterizationReferenceWeights();
+  weights = weights ?? createClusterizationReferenceDividers();
   return weighCompoundClusterizationPhenomeRow(phenome, weights, (x, w) => x/w);
 }

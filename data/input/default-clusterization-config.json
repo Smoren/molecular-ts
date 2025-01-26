@@ -6,8 +6,6 @@
     "clustersCountWeight": 1.5,
     "maxClusterSizeWeight": 0.5,
     "averageClusterSizeWeight": 1,
-    "relativeFilteredCompoundsWeight": 0.7,
-    "relativeClusteredCompoundsWeight": 1,
     "maxClusteredCompoundVertexesCountWeight": 0.5,
     "averageClusteredCompoundVertexesCountWeight": 1.5,
     "averageClusteredCompoundEdgesCountWeight": 0.7,
@@ -15,7 +13,10 @@
     "averageClusteredCompoundSymmetryScoreWeight": 2,
     "averageClusteredCompoundRadiusWeight": 0.5,
     "averageClusteredCompoundSpeedWeight": 0.5,
-    "relativeCompoundedAtomsCountWeight": 1,
+    "relativeFilteredCompoundsWeight": 0.7,
+    "relativeClusteredCompoundsWeight": 1,
+    "relativeCompoundedAtomsWeight": 1,
+    "relativeClusteredAtomsWeight": 1,
     "averageAtomLinksWeight": 0.5,
     "newLinksCreatedPerStepScoreWeight": 0.3
   }

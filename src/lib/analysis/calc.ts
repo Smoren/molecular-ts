@@ -91,10 +91,12 @@ export function calcCompoundsClusterizationScore(
 
   const clustersCount = summary.clusters.length;
   // TODO делить на inputCount ???
-  const relativeClusteredCompounds = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
+  // const relativeClusteredCompounds = summary.filteredCount ? summary.clusteredCount / summary.filteredCount : 0;
+  const relativeClusteredCompounds = summary.inputCount ? summary.clusteredCount / summary.inputCount : 0;
   const relativeFilteredCompounds = summary.inputCount ? summary.filteredCount / summary.inputCount : 0;
 
-  const relativeCompoundedAtomsCount = arraySum(compounds.map((compound) => compound.size)) / simulation.atoms.length;
+  const relativeCompoundedAtoms = arraySum(compounds.map((compound) => compound.size)) / simulation.atoms.length;
+  const relativeClusteredAtoms = arraySum(summary.clusteredTypesVector) / simulation.atoms.length;
   const averageAtomLinks = simulation.links.length / simulation.atoms.length;
 
   const newLinksCreatedPerStepScore = calcClusterizationLinksCreatedScore(summary, simulation.summary);
@@ -105,7 +107,8 @@ export function calcCompoundsClusterizationScore(
     clustersCount,
     relativeClusteredCompounds,
     relativeFilteredCompounds,
-    relativeCompoundedAtomsCount,
+    relativeCompoundedAtoms,
+    relativeClusteredAtoms,
     averageAtomLinks,
     newLinksCreatedPerStepScore,
 

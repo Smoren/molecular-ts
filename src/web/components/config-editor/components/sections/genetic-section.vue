@@ -163,7 +163,7 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
         </div>
         <div>
           <input-header name="Relative compounded atoms count weight" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.relativeCompoundedAtomsCountWeight" />
+          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.relativeCompoundedAtomsWeight" />
         </div>
         <div>
           <input-header name="Relative compounded links count weight" />
