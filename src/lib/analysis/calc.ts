@@ -65,7 +65,7 @@ export function calcCompoundsClusterizationSummary(
     clusterGrades,
     graphsPolymerCandidates
   );
-  console.log('polymersScore', polymersScore);
+  // console.log('polymersScore', polymersScore);
 
   return {
     clusters: clusterGrades,
