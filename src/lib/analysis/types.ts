@@ -2,6 +2,7 @@ import type { AtomInterface, LinkInterface } from '../simulation/types/atomic';
 import type { QueueInterface } from '../simulation/types/utils';
 import type { TypesConfig, WorldConfig } from '../config/types';
 import type { NumericVector } from "../math/types";
+import type { GraphInterface } from "@/lib/graph/types";
 
 export type WorldSummary<T> = {
   ATOMS_COUNT: T;
@@ -154,6 +155,7 @@ export type CompoundsClusterGrade = {
   radius: number;
   speedBounds: [number, number];
   speedAverage: number;
+  graphExample: GraphInterface;
 }
 
 export type CompoundsClusterizationSummary = {

@@ -31,6 +31,7 @@ import {
 } from "../math";
 import type { SimulationInterface } from "../simulation/types/simulation";
 import { createEmptyCompoundClusterScore } from "./utils";
+import { gradeMonomerPolymerPair } from "@/lib/analysis/polymers";
 
 export function calcCompoundsClusterizationSummary(
   compounds: Compound[],
@@ -56,6 +57,16 @@ export function calcCompoundsClusterizationSummary(
   const clusteredCount = reduce.toSum(clusterGrades.map((cluster) => cluster.size));
   const notClusteredCount = filteredCount - clusteredCount;
   const clusteredTypesVector = calcClusteredTypesVector(clusterGrades, typesCount);
+
+  const graphsPolymerCandidates = graphs.filter(
+    (graph) => graph.vertexes.length > 10 && graph.edges.length < 30, // TODO to config
+  );
+  const polymersScore = calcClusterizationPolymersScore(
+    clusterGrades,
+    graphsPolymerCandidates
+  );
+  console.log('polymersScore', polymersScore);
+
   return {
     clusters: clusterGrades,
     inputCount,
@@ -156,7 +167,36 @@ export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsC
     radius: calcAverageGraphRadius(cluster),
     speedBounds: calcSpeedBounds(cluster),
     speedAverage: calcAverageSpeed(cluster),
+    graphExample: cluster[0], // TODO select average graph
   };
+}
+
+export function calcClusterizationPolymersScore(
+  clusterGrades: CompoundsClusterGrade[],
+  graphsPolymerCandidates: GraphInterface[],
+  minPolymerSize = 2, // TODO to config
+  minConfidenceScore = 0.5, // TODO to config
+): [number, number, number, number] {
+  const polymerScores: [number, number, number, number] = [0, 0, 0, 0];
+  for (const cluster of clusterGrades) {
+    const monomerCandidate = cluster.graphExample;
+    for (const polymerCandidate of graphsPolymerCandidates) {
+      const grade = gradeMonomerPolymerPair(monomerCandidate, polymerCandidate, minPolymerSize);
+      if (grade.confidenceScore < minConfidenceScore) {
+        // TODO check function of confidenceScore, monomerSize and polymerSize
+        continue;
+      }
+      polymerScores[0]++;
+      polymerScores[1] += grade.monomerSize;
+      polymerScores[2] += grade.polymerSize;
+      polymerScores[3] += grade.confidenceScore;
+    }
+  }
+  polymerScores[1] = polymerScores[0] > 0 ? polymerScores[1] / polymerScores[0] : 0;
+  polymerScores[2] = polymerScores[0] > 0 ? polymerScores[2] / polymerScores[0] : 0;
+  polymerScores[3] = polymerScores[0] > 0 ? polymerScores[3] / polymerScores[0] : 0;
+
+  return polymerScores;
 }
 
 export function calcClusterizationLinksCreatedScore(
