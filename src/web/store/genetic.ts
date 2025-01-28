@@ -8,7 +8,7 @@ import type {
   Population,
   GenomeStats,
   PhenomeRow,
-  PopulationSummary,
+  PopulationSummary, PopulateStrategyInterface,
 } from "genetic-search";
 import type {
   ClusterizationConfig,
@@ -34,7 +34,7 @@ import {
   ComposedMutationStrategy,
   CopyTypeMutationStrategy,
   DynamicProbabilityMutationStrategy,
-  RandomPopulateStrategy,
+  RandomPopulateStrategy, ZeroValuesPopulateStrategy,
 } from "@/lib/genetic/strategies";
 import { fullCopyObject } from "@/lib/utils/functions";
 import {
@@ -58,6 +58,10 @@ export const useGeneticStore = defineStore("genetic", () => {
     populationSize: 50,
     survivalRate: 0.5,
     crossoverRate: 0.5,
+  });
+  const launchConfig = ref({
+    randomizeStartPopulation: true,
+    addCurrentTypesConfig: true,
   });
   const worldConfigRaw: WorldConfig = fullCopyObject(configStore.worldConfig);
   const typesConfigRaw: TypesConfig = fullCopyObject(configStore.typesConfig);
@@ -143,7 +147,10 @@ export const useGeneticStore = defineStore("genetic", () => {
     algoRaw = createAlgo();
     algo.value = algoRaw;
 
-    algoRaw!.population[0].typesConfig = fullCopyObject(configStore.typesConfig);
+    if (launchConfig.value.addCurrentTypesConfig) {
+      algoRaw!.population[0].typesConfig = fullCopyObject(configStore.typesConfig);
+    }
+
     isStarted.value = true;
 
     console.log('init population', algoRaw!.population);
@@ -241,15 +248,23 @@ export const useGeneticStore = defineStore("genetic", () => {
     onTaskResult: onTaskResultHandler, // TODO TTaskConfig to input
   });
 
-  function createComposedMutationStrategy(config: MutationStrategyConfig, randomTypesConfigCollection: RandomTypesConfig[]): ComposedMutationStrategy {
+  const createComposedMutationStrategy = (config: MutationStrategyConfig, randomTypesConfigCollection: RandomTypesConfig[]): ComposedMutationStrategy => {
     return new ComposedMutationStrategy([
       new DynamicProbabilityMutationStrategy(config.dynamicProbabilities, randomTypesConfigCollection),
       new CopyTypeMutationStrategy(),
     ], config.composedProbabilities)
   }
 
+  const createPopulateStrategy = (): PopulateStrategyInterface<SimulationGenome> => {
+    if (launchConfig.value.randomizeStartPopulation) {
+      console.log('RandomPopulateStrategy!!!');
+      return new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection());
+    }
+    return new ZeroValuesPopulateStrategy(typesCount.value);
+  }
+
   const createStrategyConfig = (): GeneticSearchStrategyConfig<SimulationGenome> => ({
-    populate: new RandomPopulateStrategy(createPopulateRandomTypesConfigCollection()),
+    populate: createPopulateStrategy(),
     phenome: new ClustersGradeMaximizePhenomeStrategy(createMetricsStrategyConfig(), clusterizationConfigRaw.params),
     fitness: new ClustersGradeMaximizeNormalizedFitnessStrategy(clusterizationConfigRaw.weights),
     sorting: new DescendingSortingStrategy(),
@@ -316,6 +331,7 @@ export const useGeneticStore = defineStore("genetic", () => {
 
   return {
     macroConfig,
+    launchConfig,
     clusterizationConfig,
     isRunning,
     isStopping,

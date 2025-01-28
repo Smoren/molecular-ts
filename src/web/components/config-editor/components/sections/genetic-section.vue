@@ -105,6 +105,20 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
           <input-header name="Crossover rate" />
           <input type="number" step="0.1" v-model="geneticStore.macroConfig.crossoverRate" />
         </div>
+        <div>
+          <div>
+            <label>
+              <input type="checkbox" v-model="geneticStore.launchConfig.addCurrentTypesConfig" />
+              Add current types config to population
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" v-model="geneticStore.launchConfig.randomizeStartPopulation" />
+              Randomize start population
+            </label>
+          </div>
+        </div>
       </div>
     </MDBAccordionItem>
     <MDBAccordionItem headerTitle="Params and weights config" collapseId="collapse-weights">
