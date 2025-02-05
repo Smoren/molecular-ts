@@ -193,7 +193,13 @@ export class ComposedMutationStrategy implements MutationStrategyInterface<Simul
 
   mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
     const index = getIndexByFrequencies(this.probabilities);
-    return this.strategies[index].mutate(genome, newGenomeId);
+    const mutated = this.strategies[index].mutate(genome, newGenomeId);
+
+    if (JSON.stringify(mutated.typesConfig) === JSON.stringify(genome.typesConfig)) {
+      return this.mutate(genome, newGenomeId);
+    }
+
+    return mutated
   }
 }
 
