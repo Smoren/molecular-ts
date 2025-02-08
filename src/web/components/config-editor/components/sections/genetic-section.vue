@@ -132,19 +132,19 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.clustersCountWeight" />
         </div>
         <div>
-          <input-header name="Average weight of cluster size" />
+          <input-header name="Weight of average cluster size" />
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusterSizeWeight" />
         </div>
         <div>
-          <input-header name="Max Weight of cluster size" />
+          <input-header name="Weight of max cluster size" />
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.maxClusterSizeWeight" />
         </div>
         <div>
-          <input-header name="Weight of filtered compounds count" />
+          <input-header name="Weight of relative filtered compounds count" />
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.relativeFilteredCompoundsWeight" />
         </div>
         <div>
-          <input-header name="Weight of clustered compounds count" />
+          <input-header name="Weight of relative clustered compounds count" />
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.relativeClusteredCompoundsWeight" />
         </div>
         <div>
@@ -176,15 +176,15 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundSpeedWeight" />
         </div>
         <div>
-          <input-header name="Relative compounded atoms count weight" />
+          <input-header name="Weight of relative compounded atoms count" />
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.relativeCompoundedAtomsWeight" />
         </div>
         <div>
-          <input-header name="Relative compounded links count weight" />
+          <input-header name="Weight of average links weight" />
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageAtomLinksWeight" />
         </div>
         <div>
-          <input-header name="New created links per step weight" />
+          <input-header name="Weight of new created links per step weight" />
           <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.newLinksCreatedPerStepScoreWeight" />
         </div>
       </div>
