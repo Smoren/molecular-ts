@@ -2,7 +2,7 @@ import type { AtomInterface, LinkInterface } from '../simulation/types/atomic';
 import type { QueueInterface } from '../simulation/types/utils';
 import type { TypesConfig, WorldConfig } from '../config/types';
 import type { NumericVector } from "../math/types";
-import type { GraphInterface } from "@/lib/graph/types";
+import type { GraphInterface } from "../graph/types";
 
 export type WorldSummary<T> = {
   ATOMS_COUNT: T;
