@@ -160,12 +160,12 @@ export type CompoundsClusterGrade = {
 
 export type CompoundsClusterizationSummary = {
   clusters: CompoundsClusterGrade[];
+  polymers: PolymerCollectionSummary;
   inputCount: number;
   filteredCount: number;
   clusteredCount: number;
   notClusteredCount: number;
   clusteredTypesVector: NumericVector;
-  polymersSummary: PolymerCollectionSummary;
 }
 
 export type CompoundsClusterScore = {
@@ -188,6 +188,9 @@ export type PolymerCollectionSummary = {
   averageConfidenceScore: number;
   averageMonomerVertexesCount: number;
   averagePolymerSize: number;
+  maxMonomerVertexesCount: number;
+  maxPolymerSize: number;
+  polymersGrades: PolymerSummary[];
 }
 
 export type CompoundsClusterizationScore = {
