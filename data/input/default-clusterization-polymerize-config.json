@@ -1,0 +1,32 @@
+{
+  "params": {
+    "minCompoundSize": 5,
+    "minUniqueTypesCount": 2,
+    "monomerCandidateVertexesCountBounds": [2, 10],
+    "polymerCandidateVertexesCountBounds": [5, 30],
+    "minPolymerSize": 2,
+    "minPolymerConfidenceScore": 0.5
+  },
+  "weights": {
+    "clustersCountWeight": 1.5,
+    "maxClusterSizeWeight": 0.5,
+    "averageClusterSizeWeight": 1,
+    "maxClusteredCompoundVertexesCountWeight": 0.5,
+    "averageClusteredCompoundVertexesCountWeight": 1.5,
+    "averageClusteredCompoundEdgesCountWeight": 0.7,
+    "averageClusteredCompoundUniqueTypesCountWeight": 1.5,
+    "averageClusteredCompoundSymmetryScoreWeight": 2,
+    "averageClusteredCompoundRadiusWeight": 0.5,
+    "averageClusteredCompoundSpeedWeight": 0.5,
+    "relativeFilteredCompoundsWeight": 0.7,
+    "relativeClusteredCompoundsWeight": 1,
+    "relativeCompoundedAtomsWeight": 1,
+    "relativeClusteredAtomsWeight": 1,
+    "averageAtomLinksWeight": 0.5,
+    "newLinksCreatedPerStepScoreWeight": 0.3,
+    "relativePolymersCountWeight": 1,
+    "averageMonomerSizeWeight": 1,
+    "averagePolymerSizeWeight": 1,
+    "averagePolymerConfidenceScoreWeight": 1
+  }
+}
