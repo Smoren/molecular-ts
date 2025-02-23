@@ -5,7 +5,7 @@ import type {
   CompoundsClusterizationSummary,
   CompoundsClusterScore,
   CompoundsClusterizationScore,
-  WorldSummary,
+  WorldSummary, PolymerCollectionSummary,
 } from "./types";
 import { clusterGraphs } from "../graph/clusterization";
 import {
@@ -31,7 +31,7 @@ import {
 } from "../math";
 import type { SimulationInterface } from "../simulation/types/simulation";
 import { createEmptyCompoundClusterScore } from "./utils";
-import { gradeMonomerPolymerPair } from "@/lib/analysis/polymers";
+import { gradeMonomerPolymerPair } from "./polymers";
 
 export function calcCompoundsClusterizationSummary(
   compounds: Compound[],
@@ -61,9 +61,12 @@ export function calcCompoundsClusterizationSummary(
   const graphsPolymerCandidates = graphs.filter(
     (graph) => graph.vertexes.length > 10 && graph.edges.length < 30, // TODO to config
   );
-  const polymersScore = calcClusterizationPolymersScore(
+  const polymersSummary = calcClusterizationPolymersScore(
     clusterGrades,
-    graphsPolymerCandidates
+    graphsPolymerCandidates,
+    2, // TODO to config
+    2, // TODO to config
+    0.5, // TODO to config
   );
   // console.log('polymersScore', polymersScore);
 
@@ -74,6 +77,7 @@ export function calcCompoundsClusterizationSummary(
     clusteredCount,
     notClusteredCount,
     clusteredTypesVector,
+    polymersSummary,
   };
 }
 
@@ -174,29 +178,37 @@ export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsC
 export function calcClusterizationPolymersScore(
   clusterGrades: CompoundsClusterGrade[],
   graphsPolymerCandidates: GraphInterface[],
-  minPolymerSize = 2, // TODO to config
-  minConfidenceScore = 0.5, // TODO to config
-): [number, number, number, number] {
-  const polymerScores: [number, number, number, number] = [0, 0, 0, 0];
+  minMonomerSize: number = 2,
+  minPolymerSize: number = 2,
+  minConfidenceScore: number = 0.5,
+): PolymerCollectionSummary {
+  const summary: PolymerCollectionSummary = {
+    count: 0,
+    averageMonomerSize: 0,
+    averagePolymerSize: 0,
+    averageConfidenceScore: 0,
+  };
   for (const cluster of clusterGrades) {
     const monomerCandidate = cluster.graphExample;
     for (const polymerCandidate of graphsPolymerCandidates) {
+      if (monomerCandidate.vertexes.length < minMonomerSize) {
+          continue;
+      }
       const grade = gradeMonomerPolymerPair(monomerCandidate, polymerCandidate, minPolymerSize);
       if (grade.confidenceScore < minConfidenceScore) {
-        // TODO check function of confidenceScore, monomerSize and polymerSize
         continue;
       }
-      polymerScores[0]++;
-      polymerScores[1] += grade.monomerSize;
-      polymerScores[2] += grade.polymerSize;
-      polymerScores[3] += grade.confidenceScore;
+      summary.count++;
+      summary.averageMonomerSize += grade.monomerSize;
+      summary.averagePolymerSize += grade.polymerSize;
+      summary.averageConfidenceScore += grade.confidenceScore;
     }
   }
-  polymerScores[1] = polymerScores[0] > 0 ? polymerScores[1] / polymerScores[0] : 0;
-  polymerScores[2] = polymerScores[0] > 0 ? polymerScores[2] / polymerScores[0] : 0;
-  polymerScores[3] = polymerScores[0] > 0 ? polymerScores[3] / polymerScores[0] : 0;
+  summary.averageMonomerSize = summary.averageMonomerSize > 0 ? summary.averageMonomerSize / summary.averageMonomerSize : 0;
+  summary.averagePolymerSize = summary.averagePolymerSize > 0 ? summary.averagePolymerSize / summary.averagePolymerSize : 0;
+  summary.averageConfidenceScore = summary.averageConfidenceScore > 0 ? summary.averageConfidenceScore / summary.averageConfidenceScore : 0;
 
-  return polymerScores;
+  return summary;
 }
 
 export function calcClusterizationLinksCreatedScore(

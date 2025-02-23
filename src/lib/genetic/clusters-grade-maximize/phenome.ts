@@ -52,7 +52,12 @@ function runSimulationForClustersGrade(
 
     const compounds = sim.exportCompounds();
 
-    const clusterizationSummary = calcCompoundsClusterizationSummary(compounds, typesConfig.FREQUENCIES.length, clusterizationParams.minCompoundSize);
+    const clusterizationSummary = calcCompoundsClusterizationSummary(
+      compounds,
+      typesConfig.FREQUENCIES.length,
+      clusterizationParams.minCompoundSize,
+      // TODO minUniqueTypesCount to config
+    );
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
     const clusterizationPhenome = convertCompoundsClusterizationScoreToPhenomeRow(clusterizationScore);
 
@@ -78,7 +83,12 @@ async function runSimulationForClustersGradeAsync(
 
     const compounds = sim.exportCompounds();
 
-    const clusterizationSummary = calcCompoundsClusterizationSummary(compounds, typesConfig.FREQUENCIES.length, clusterizationParams.minCompoundSize);
+    const clusterizationSummary = calcCompoundsClusterizationSummary(
+      compounds,
+      typesConfig.FREQUENCIES.length,
+      clusterizationParams.minCompoundSize,
+      // TODO minUniqueTypesCount to config
+    );
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
     const clusterizationPhenome = convertCompoundsClusterizationScoreToPhenomeRow(clusterizationScore);
 

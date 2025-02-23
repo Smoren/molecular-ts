@@ -2,16 +2,11 @@ import type { NumericVector } from "../math/types";
 import { createVector, toVector } from "../math";
 import { convertDifferenceToNormalizedSimilarityGrade } from "./utils";
 import type { GraphInterface } from "../graph/types";
+import type { PolymerSummary } from "./types";
 import {
   countEdgesGroupedByVertexTypes,
   countVertexesGroupedByType,
 } from "../graph/utils";
-
-export type PolymerSummary = {
-  confidenceScore: number;
-  monomerSize: number;
-  polymerSize: number;
-}
 
 export function findPolymerMultiplier(monomerCandidateVector: NumericVector, polymerCandidateVector: NumericVector): number {
   // Using the least squares method to find multiplier

@@ -165,6 +165,7 @@ export type CompoundsClusterizationSummary = {
   clusteredCount: number;
   notClusteredCount: number;
   clusteredTypesVector: NumericVector;
+  polymersSummary: PolymerCollectionSummary;
 }
 
 export type CompoundsClusterScore = {
@@ -174,6 +175,19 @@ export type CompoundsClusterScore = {
   compoundSymmetryScore: number;
   compoundRadius: number;
   compoundSpeed: number;
+}
+
+export type PolymerSummary = {
+  confidenceScore: number;
+  monomerSize: number;
+  polymerSize: number;
+}
+
+export type PolymerCollectionSummary = {
+  count: number;
+  averageConfidenceScore: number;
+  averageMonomerSize: number;
+  averagePolymerSize: number;
 }
 
 export type CompoundsClusterizationScore = {
