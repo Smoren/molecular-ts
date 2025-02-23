@@ -69,12 +69,12 @@ export function calcCompoundsClusterizationSummary(
 
   return {
     clusters: clusterGrades,
+    polymers: polymersSummary,
     inputCount,
     filteredCount,
     clusteredCount,
     notClusteredCount,
     clusteredTypesVector,
-    polymers: polymersSummary,
   };
 }
 
@@ -111,9 +111,6 @@ export function calcCompoundsClusterizationScore(
 
   const newLinksCreatedPerStepScore = calcClusterizationLinksCreatedScore(summary, simulation.summary);
 
-  // if (summary.polymersSummary.count > 0) {
-  //   console.log(summary.polymersSummary);
-  // }
   return {
     maxClusterSize,
     averageClusterSize,
@@ -135,6 +132,7 @@ export function calcCompoundsClusterizationScore(
 
     relativePolymersCount: summary.polymers.count / simulation.atoms.length,
     averageMonomerVertexesCount: summary.polymers.averageMonomerVertexesCount,
+    averagePolymerVertexesCount: summary.polymers.averagePolymerVertexesCount,
     averagePolymerSize: summary.polymers.averagePolymerSize,
     averagePolymerConfidenceScore: summary.polymers.averageConfidenceScore,
   };
@@ -191,6 +189,7 @@ export function calcClusterizationPolymersScore(
   const summary: PolymerCollectionSummary = {
     count: 0,
     averageMonomerVertexesCount: 0,
+    averagePolymerVertexesCount: 0,
     averagePolymerSize: 0,
     averageConfidenceScore: 0,
     maxMonomerVertexesCount: 0,
@@ -219,6 +218,7 @@ export function calcClusterizationPolymersScore(
       }
       summary.count++;
       summary.averageMonomerVertexesCount += grade.monomerVertexesCount;
+      summary.averagePolymerVertexesCount += grade.polymerVertexesCount;
       summary.averagePolymerSize += grade.polymerSize;
       summary.averageConfidenceScore += grade.confidenceScore;
       summary.maxPolymerSize = Math.max(summary.maxPolymerSize, grade.polymerSize);
@@ -227,9 +227,10 @@ export function calcClusterizationPolymersScore(
     }
   }
   summary.averageMonomerVertexesCount = summary.count > 0 ? summary.averageMonomerVertexesCount / summary.count : 0;
+  summary.averagePolymerVertexesCount = summary.count > 0 ? summary.averagePolymerVertexesCount / summary.count : 0;
   summary.averagePolymerSize = summary.count > 0 ? summary.averagePolymerSize / summary.count : 0;
   summary.averageConfidenceScore = summary.count > 0 ? summary.averageConfidenceScore / summary.count : 0;
-  summary.polymersGrades.sort((lhs, rhs) => rhs.polymerSize - lhs.polymerSize);
+  summary.polymersGrades.sort((lhs, rhs) => rhs.polymerVertexesCount - lhs.polymerVertexesCount);
 
   return summary;
 }

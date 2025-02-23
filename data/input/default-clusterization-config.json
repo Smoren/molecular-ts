@@ -25,7 +25,8 @@
     "averageAtomLinksWeight": 0.5,
     "newLinksCreatedPerStepScoreWeight": 0.3,
     "relativePolymersCountWeight": 0,
-    "averageMonomerSizeWeight": 0,
+    "averageMonomerVertexesCountWeight": 0,
+    "averagePolymerVertexesCountWeight": 0,
     "averagePolymerSizeWeight": 0,
     "averagePolymerConfidenceScoreWeight": 0
   }

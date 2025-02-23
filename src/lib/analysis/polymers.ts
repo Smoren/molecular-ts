@@ -15,9 +15,10 @@ export function findPolymerMultiplier(monomerCandidateVector: NumericVector, pol
   return numerator / denominator;
 }
 
-function createBadPolymerGradeSummary(monomerSize: number): PolymerSummary {
+function createBadPolymerGradeSummary(monomerVertexesCount: number): PolymerSummary {
   return {
-    monomerVertexesCount: monomerSize,
+    monomerVertexesCount,
+    polymerVertexesCount: 0,
     polymerSize: 0,
     confidenceScore: 0,
   };
@@ -83,6 +84,7 @@ export function gradeMonomerPolymerPair(
 
   return {
     monomerVertexesCount: monomerCandidate.vertexes.length,
+    polymerVertexesCount: polymerCandidate.vertexes.length,
     polymerSize: polymerSize,
     confidenceScore: similarity,
   };
