@@ -1,7 +1,11 @@
 {
   "params": {
     "minCompoundSize": 5,
-    "minUniqueTypesCount": 2
+    "minUniqueTypesCount": 2,
+    "monomerCandidateVertexesCountBounds": [2, 10],
+    "polymerCandidateVertexesCountBounds": [5, 30],
+    "minPolymerSize": 2,
+    "minPolymerConfidenceScore": 0.5
   },
   "weights": {
     "clustersCountWeight": 1.5,

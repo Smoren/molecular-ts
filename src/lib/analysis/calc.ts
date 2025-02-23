@@ -32,20 +32,20 @@ import {
 import type { SimulationInterface } from "../simulation/types/simulation";
 import { createEmptyCompoundClusterScore } from "./utils";
 import { gradeMonomerPolymerPair } from "./polymers";
+import type { ClusterizationParams } from "@/lib/genetic/types";
 
 export function calcCompoundsClusterizationSummary(
   compounds: Compound[],
   typesCount: number,
-  minCompoundSize = 2,
-  minUniqueTypesCount = 2,
+  params: ClusterizationParams,
 ): CompoundsClusterizationSummary {
   const graphs = compounds
-    .filter((compound) => compound.size >= minCompoundSize)
+    .filter((compound) => compound.size >= params.minCompoundSize)
     .map((compound) => createCompoundGraph(compound, typesCount));
   const clusters = clusterGraphs(graphs);
   const clusterGrades: CompoundsClusterGrade[] = clusters
     .map((cluster) => calcCompoundsClusterGrade(cluster))
-    .filter((grade) => grade.typesCountAverage >= minUniqueTypesCount);
+    .filter((grade) => grade.typesCountAverage >= params.minUniqueTypesCount);
 
   // TODO считать средний параметрический вектор всех кластеров, считать расстояния до него от каждого кластера
   // TODO таким образом повышаем разнообразие кластеров
@@ -58,17 +58,14 @@ export function calcCompoundsClusterizationSummary(
   const notClusteredCount = filteredCount - clusteredCount;
   const clusteredTypesVector = calcClusteredTypesVector(clusterGrades, typesCount);
 
-  const graphsPolymerCandidates = graphs.filter(
-    (graph) => graph.vertexes.length > 10 && graph.edges.length < 30, // TODO to config
-  );
   const polymersSummary = calcClusterizationPolymersScore(
     clusterGrades,
-    graphsPolymerCandidates,
-    2, // TODO to config
-    2, // TODO to config
-    0.5, // TODO to config
+    graphs,
+    params.monomerCandidateVertexesCountBounds,
+    params.polymerCandidateVertexesCountBounds,
+    params.minPolymerSize,
+    params.minPolymerConfidenceScore,
   );
-  // console.log('polymersScore', polymersScore);
 
   return {
     clusters: clusterGrades,
@@ -182,10 +179,11 @@ export function calcCompoundsClusterGrade(cluster: GraphInterface[]): CompoundsC
 
 export function calcClusterizationPolymersScore(
   clusterGrades: CompoundsClusterGrade[],
-  graphsPolymerCandidates: GraphInterface[],
-  minMonomerSize: number = 2,
-  minPolymerSize: number = 2,
-  minConfidenceScore: number = 0.5,
+  allGraphs: GraphInterface[],
+  monomerVertexesCountBounds: [number, number],
+  polymerVertexesCountBounds: [number, number],
+  minPolymerSize: number,
+  minConfidenceScore: number,
 ): PolymerCollectionSummary {
   const summary: PolymerCollectionSummary = {
     count: 0,
@@ -193,12 +191,22 @@ export function calcClusterizationPolymersScore(
     averagePolymerSize: 0,
     averageConfidenceScore: 0,
   };
-  for (const cluster of clusterGrades) {
-    const monomerCandidate = cluster.graphExample;
-    for (const polymerCandidate of graphsPolymerCandidates) {
-      if (monomerCandidate.vertexes.length < minMonomerSize) {
-          continue;
-      }
+
+  const monomerCandidates = clusterGrades.map((cluster) => cluster.graphExample).filter(
+    (graph) => (
+      graph.vertexes.length > monomerVertexesCountBounds[0] &&
+      graph.vertexes.length < monomerVertexesCountBounds[1]
+    ),
+  );
+  const polymerCandidates = allGraphs.filter(
+    (graph) => (
+      graph.vertexes.length > polymerVertexesCountBounds[0] &&
+      graph.edges.length < polymerVertexesCountBounds[1]
+    ),
+  );
+
+  for (const monomerCandidate of monomerCandidates) {
+    for (const polymerCandidate of polymerCandidates) {
       const grade = gradeMonomerPolymerPair(monomerCandidate, polymerCandidate, minPolymerSize);
       if (grade.confidenceScore < minConfidenceScore) {
         continue;

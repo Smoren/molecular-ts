@@ -5,6 +5,10 @@ export function createDefaultClusterizationConfig(): ClusterizationConfig {
     params: {
       minCompoundSize: 5,
       minUniqueTypesCount: 2,
+      monomerCandidateVertexesCountBounds: [2, 10],
+      polymerCandidateVertexesCountBounds: [5, 30],
+      minPolymerSize: 2,
+      minPolymerConfidenceScore: 0.5,
     },
     weights: {
       clustersCountWeight: 1.5,
@@ -36,6 +40,10 @@ export function createOldClusterizationConfig(): ClusterizationConfig {
     params: {
       minCompoundSize: 5,
       minUniqueTypesCount: 2,
+      monomerCandidateVertexesCountBounds: [2, 10],
+      polymerCandidateVertexesCountBounds: [5, 30],
+      minPolymerSize: 2,
+      minPolymerConfidenceScore: 0.5,
     },
     weights: {
       clustersCountWeight: 1,
@@ -67,6 +75,10 @@ export function createModifiedClusterizationConfig(): ClusterizationConfig {
     params: {
       minCompoundSize: 6,
       minUniqueTypesCount: 2,
+      monomerCandidateVertexesCountBounds: [2, 10],
+      polymerCandidateVertexesCountBounds: [5, 30],
+      minPolymerSize: 2,
+      minPolymerConfidenceScore: 0.5,
     },
     weights: {
       clustersCountWeight: 1,

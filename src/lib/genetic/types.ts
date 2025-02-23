@@ -26,6 +26,10 @@ export type MutationStrategyConfig = {
 export type ClusterizationParams = {
   minCompoundSize: number;
   minUniqueTypesCount: number;
+  monomerCandidateVertexesCountBounds: [number, number];
+  polymerCandidateVertexesCountBounds: [number, number];
+  minPolymerSize: number;
+  minPolymerConfidenceScore: number;
 }
 
 export type ClusterizationWeights = {
