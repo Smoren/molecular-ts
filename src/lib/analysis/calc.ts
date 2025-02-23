@@ -37,7 +37,7 @@ export function calcCompoundsClusterizationSummary(
   compounds: Compound[],
   typesCount: number,
   minCompoundSize = 2,
-  minUniqueTypesCount = 2, // TODO to config
+  minUniqueTypesCount = 2,
 ): CompoundsClusterizationSummary {
   const graphs = compounds
     .filter((compound) => compound.size >= minCompoundSize)
