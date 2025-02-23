@@ -3,7 +3,7 @@
     "minCompoundSize": 5,
     "minUniqueTypesCount": 2,
     "monomerCandidateVertexesCountBounds": [2, 10],
-    "polymerCandidateVertexesCountBounds": [5, 30],
+    "polymerCandidateVertexesCountBounds": [5, 50],
     "minPolymerSize": 2,
     "minPolymerConfidenceScore": 0.5
   },
