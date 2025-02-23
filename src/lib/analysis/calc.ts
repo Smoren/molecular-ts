@@ -220,9 +220,9 @@ export function calcClusterizationPolymersScore(
       summary.averageConfidenceScore += grade.confidenceScore;
     }
   }
-  summary.averageMonomerVertexesCount = summary.averageMonomerVertexesCount > 0 ? summary.averageMonomerVertexesCount / summary.averageMonomerVertexesCount : 0;
-  summary.averagePolymerSize = summary.averagePolymerSize > 0 ? summary.averagePolymerSize / summary.averagePolymerSize : 0;
-  summary.averageConfidenceScore = summary.averageConfidenceScore > 0 ? summary.averageConfidenceScore / summary.averageConfidenceScore : 0;
+  summary.averageMonomerVertexesCount = summary.count > 0 ? summary.averageMonomerVertexesCount / summary.count : 0;
+  summary.averagePolymerSize = summary.count > 0 ? summary.averagePolymerSize / summary.count : 0;
+  summary.averageConfidenceScore = summary.count > 0 ? summary.averageConfidenceScore / summary.count : 0;
 
   return summary;
 }
