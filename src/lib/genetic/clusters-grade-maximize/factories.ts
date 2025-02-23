@@ -23,9 +23,9 @@ export function createDefaultClusterizationConfig(): ClusterizationConfig {
       averageAtomLinksWeight: 0.5,
       newLinksCreatedPerStepScoreWeight: 0.3,
       relativePolymersCountWeight: 0,
-      polymerAverageMonomerSizeWeight: 0,
-      polymerAveragePolymerSizeWeight: 0,
-      polymerAverageConfidenceScoreWeight: 0,
+      averageMonomerSizeWeight: 0,
+      averagePolymerSizeWeight: 0,
+      averagePolymerConfidenceScoreWeight: 0,
     },
   };
 }
@@ -53,9 +53,9 @@ export function createOldClusterizationConfig(): ClusterizationConfig {
       averageAtomLinksWeight: 0.5,
       newLinksCreatedPerStepScoreWeight: 0.3,
       relativePolymersCountWeight: 0,
-      polymerAverageMonomerSizeWeight: 0,
-      polymerAveragePolymerSizeWeight: 0,
-      polymerAverageConfidenceScoreWeight: 0,
+      averageMonomerSizeWeight: 0,
+      averagePolymerSizeWeight: 0,
+      averagePolymerConfidenceScoreWeight: 0,
     },
   };
 }
@@ -83,9 +83,9 @@ export function createModifiedClusterizationConfig(): ClusterizationConfig {
       averageAtomLinksWeight: 1,
       newLinksCreatedPerStepScoreWeight: 1,
       relativePolymersCountWeight: 0,
-      polymerAverageMonomerSizeWeight: 0,
-      polymerAveragePolymerSizeWeight: 0,
-      polymerAverageConfidenceScoreWeight: 0,
+      averageMonomerSizeWeight: 0,
+      averagePolymerSizeWeight: 0,
+      averagePolymerConfidenceScoreWeight: 0,
     },
   };
 }
@@ -109,8 +109,8 @@ export function createClusterizationReferenceDividers(): ClusterizationWeights {
     averageAtomLinksWeight: 1,
     newLinksCreatedPerStepScoreWeight: 0.1,
     relativePolymersCountWeight: 1,
-    polymerAverageMonomerSizeWeight: 1,
-    polymerAveragePolymerSizeWeight: 1,
-    polymerAverageConfidenceScoreWeight: 1,
+    averageMonomerSizeWeight: 1,
+    averagePolymerSizeWeight: 1,
+    averagePolymerConfidenceScoreWeight: 1,
   };
 }

@@ -134,9 +134,9 @@ export function calcCompoundsClusterizationScore(
     averageClusteredCompoundSpeed: normalizedClusterSumScores.compoundSpeed,
 
     relativePolymersCount: summary.polymersSummary.count / simulation.atoms.length,
-    polymerAverageMonomerSize: summary.polymersSummary.averageMonomerSize,
-    polymerAveragePolymerSize: summary.polymersSummary.averagePolymerSize,
-    polymerAverageConfidenceScore: summary.polymersSummary.averageConfidenceScore,
+    averageMonomerSize: summary.polymersSummary.averageMonomerSize,
+    averagePolymerSize: summary.polymersSummary.averagePolymerSize,
+    averagePolymerConfidenceScore: summary.polymersSummary.averageConfidenceScore,
   };
 }
 

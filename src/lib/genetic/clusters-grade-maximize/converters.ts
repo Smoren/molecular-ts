@@ -22,9 +22,9 @@ export function convertCompoundsClusterizationScoreToPhenomeRow(score: Compounds
     score.averageAtomLinks,
     score.newLinksCreatedPerStepScore,
     score.relativePolymersCount,
-    score.polymerAverageConfidenceScore,
-    score.polymerAverageMonomerSize,
-    score.polymerAveragePolymerSize,
+    score.averagePolymerConfidenceScore,
+    score.averageMonomerSize,
+    score.averagePolymerSize,
   ]
 }
 
@@ -47,9 +47,9 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     averageAtomLinks,
     newLinksCreatedPerStepScore,
     relativePolymersCount,
-    polymerAverageConfidenceScore,
-    polymerAverageMonomerSize,
-    polymerAveragePolymerSize,
+    averagePolymerConfidenceScore,
+    averageMonomerSize,
+    averagePolymerSize,
   ] = phenome;
   return {
     maxClusteredCompoundVertexesCount,
@@ -69,9 +69,9 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     averageAtomLinks,
     newLinksCreatedPerStepScore,
     relativePolymersCount,
-    polymerAverageConfidenceScore,
-    polymerAverageMonomerSize,
-    polymerAveragePolymerSize,
+    averagePolymerConfidenceScore,
+    averageMonomerSize,
+    averagePolymerSize,
   };
 }
 
@@ -100,9 +100,9 @@ export function weighCompoundClusterizationPhenomeRow(
   score.averageAtomLinks = weigher(score.averageAtomLinks, weights.averageAtomLinksWeight);
   score.newLinksCreatedPerStepScore = weigher(score.newLinksCreatedPerStepScore, weights.newLinksCreatedPerStepScoreWeight);
   score.relativePolymersCount = weigher(score.relativePolymersCount, weights.relativePolymersCountWeight);
-  score.polymerAverageConfidenceScore = weigher(score.polymerAverageConfidenceScore, weights.polymerAverageConfidenceScoreWeight);
-  score.polymerAverageMonomerSize = weigher(score.polymerAverageMonomerSize, weights.polymerAverageMonomerSizeWeight);
-  score.polymerAveragePolymerSize = weigher(score.polymerAveragePolymerSize, weights.polymerAveragePolymerSizeWeight);
+  score.averagePolymerConfidenceScore = weigher(score.averagePolymerConfidenceScore, weights.averagePolymerConfidenceScoreWeight);
+  score.averageMonomerSize = weigher(score.averageMonomerSize, weights.averageMonomerSizeWeight);
+  score.averagePolymerSize = weigher(score.averagePolymerSize, weights.averagePolymerSizeWeight);
 
   if (debug) {
     console.log('WEIGHTED PHENOME', { ...score });
