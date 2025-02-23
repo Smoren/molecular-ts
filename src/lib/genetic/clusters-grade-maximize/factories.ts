@@ -22,6 +22,10 @@ export function createDefaultClusterizationConfig(): ClusterizationConfig {
       relativeClusteredAtomsWeight: 1,
       averageAtomLinksWeight: 0.5,
       newLinksCreatedPerStepScoreWeight: 0.3,
+      relativePolymersCountWeight: 0,
+      polymerAverageMonomerSizeWeight: 0,
+      polymerAveragePolymerSizeWeight: 0,
+      polymerAverageConfidenceScoreWeight: 0,
     },
   };
 }
@@ -48,6 +52,10 @@ export function createOldClusterizationConfig(): ClusterizationConfig {
       relativeClusteredAtomsWeight: 2,
       averageAtomLinksWeight: 0.5,
       newLinksCreatedPerStepScoreWeight: 0.3,
+      relativePolymersCountWeight: 0,
+      polymerAverageMonomerSizeWeight: 0,
+      polymerAveragePolymerSizeWeight: 0,
+      polymerAverageConfidenceScoreWeight: 0,
     },
   };
 }
@@ -74,6 +82,10 @@ export function createModifiedClusterizationConfig(): ClusterizationConfig {
       relativeClusteredAtomsWeight: 2,
       averageAtomLinksWeight: 1,
       newLinksCreatedPerStepScoreWeight: 1,
+      relativePolymersCountWeight: 0,
+      polymerAverageMonomerSizeWeight: 0,
+      polymerAveragePolymerSizeWeight: 0,
+      polymerAverageConfidenceScoreWeight: 0,
     },
   };
 }
@@ -96,5 +108,9 @@ export function createClusterizationReferenceDividers(): ClusterizationWeights {
     relativeClusteredAtomsWeight: 0.3,
     averageAtomLinksWeight: 1,
     newLinksCreatedPerStepScoreWeight: 0.1,
+    relativePolymersCountWeight: 1,
+    polymerAverageMonomerSizeWeight: 1,
+    polymerAveragePolymerSizeWeight: 1,
+    polymerAverageConfidenceScoreWeight: 1,
   };
 }

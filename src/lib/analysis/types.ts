@@ -208,4 +208,9 @@ export type CompoundsClusterizationScore = {
   averageClusteredCompoundSymmetryScore: number;
   averageClusteredCompoundRadius: number;
   averageClusteredCompoundSpeed: number;
+
+  relativePolymersCount: number;
+  polymerAverageConfidenceScore: number;
+  polymerAverageMonomerSize: number;
+  polymerAveragePolymerSize: number;
 }

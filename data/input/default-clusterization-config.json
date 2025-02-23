@@ -18,6 +18,10 @@
     "relativeCompoundedAtomsWeight": 1,
     "relativeClusteredAtomsWeight": 1,
     "averageAtomLinksWeight": 0.5,
-    "newLinksCreatedPerStepScoreWeight": 0.3
+    "newLinksCreatedPerStepScoreWeight": 0.3,
+    "relativePolymersCountWeight": 0,
+    "polymerAverageMonomerSizeWeight": 0,
+    "polymerAveragePolymerSizeWeight": 0,
+    "polymerAverageConfidenceScoreWeight": 0
   }
 }
