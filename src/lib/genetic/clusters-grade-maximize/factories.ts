@@ -123,9 +123,9 @@ export function createClusterizationReferenceDividers(): ClusterizationWeights {
     relativeClusteredAtomsWeight: 0.3,
     averageAtomLinksWeight: 1,
     newLinksCreatedPerStepScoreWeight: 0.1,
-    relativePolymersCountWeight: 1,
-    averageMonomerSizeWeight: 1,
-    averagePolymerSizeWeight: 1,
-    averagePolymerConfidenceScoreWeight: 1,
+    relativePolymersCountWeight: 0.1,
+    averageMonomerSizeWeight: 0.1,
+    averagePolymerSizeWeight: 0.1,
+    averagePolymerConfidenceScoreWeight: 0.1,
   };
 }

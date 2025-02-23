@@ -22,9 +22,9 @@ export function convertCompoundsClusterizationScoreToPhenomeRow(score: Compounds
     score.averageAtomLinks,
     score.newLinksCreatedPerStepScore,
     score.relativePolymersCount,
-    score.averagePolymerConfidenceScore,
     score.averageMonomerSize,
     score.averagePolymerSize,
+    score.averagePolymerConfidenceScore,
   ]
 }
 
@@ -47,9 +47,9 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     averageAtomLinks,
     newLinksCreatedPerStepScore,
     relativePolymersCount,
-    averagePolymerConfidenceScore,
     averageMonomerSize,
     averagePolymerSize,
+    averagePolymerConfidenceScore,
   ] = phenome;
   return {
     maxClusteredCompoundVertexesCount,
@@ -69,9 +69,9 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     averageAtomLinks,
     newLinksCreatedPerStepScore,
     relativePolymersCount,
-    averagePolymerConfidenceScore,
     averageMonomerSize,
     averagePolymerSize,
+    averagePolymerConfidenceScore,
   };
 }
 
@@ -100,9 +100,9 @@ export function weighCompoundClusterizationPhenomeRow(
   score.averageAtomLinks = weigher(score.averageAtomLinks, weights.averageAtomLinksWeight);
   score.newLinksCreatedPerStepScore = weigher(score.newLinksCreatedPerStepScore, weights.newLinksCreatedPerStepScoreWeight);
   score.relativePolymersCount = weigher(score.relativePolymersCount, weights.relativePolymersCountWeight);
-  score.averagePolymerConfidenceScore = weigher(score.averagePolymerConfidenceScore, weights.averagePolymerConfidenceScoreWeight);
   score.averageMonomerSize = weigher(score.averageMonomerSize, weights.averageMonomerSizeWeight);
   score.averagePolymerSize = weigher(score.averagePolymerSize, weights.averagePolymerSizeWeight);
+  score.averagePolymerConfidenceScore = weigher(score.averagePolymerConfidenceScore, weights.averagePolymerConfidenceScoreWeight);
 
   if (debug) {
     console.log('WEIGHTED PHENOME', { ...score });
