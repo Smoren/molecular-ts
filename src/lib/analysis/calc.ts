@@ -111,6 +111,9 @@ export function calcCompoundsClusterizationScore(
 
   const newLinksCreatedPerStepScore = calcClusterizationLinksCreatedScore(summary, simulation.summary);
 
+  // if (summary.polymersSummary.count > 0) {
+  //   console.log(summary.polymersSummary);
+  // }
   return {
     maxClusterSize,
     averageClusterSize,
@@ -131,7 +134,7 @@ export function calcCompoundsClusterizationScore(
     averageClusteredCompoundSpeed: normalizedClusterSumScores.compoundSpeed,
 
     relativePolymersCount: summary.polymersSummary.count / simulation.atoms.length,
-    averageMonomerSize: summary.polymersSummary.averageMonomerSize,
+    averageMonomerVertexesCount: summary.polymersSummary.averageMonomerVertexesCount,
     averagePolymerSize: summary.polymersSummary.averagePolymerSize,
     averagePolymerConfidenceScore: summary.polymersSummary.averageConfidenceScore,
   };
@@ -187,7 +190,7 @@ export function calcClusterizationPolymersScore(
 ): PolymerCollectionSummary {
   const summary: PolymerCollectionSummary = {
     count: 0,
-    averageMonomerSize: 0,
+    averageMonomerVertexesCount: 0,
     averagePolymerSize: 0,
     averageConfidenceScore: 0,
   };
@@ -212,12 +215,12 @@ export function calcClusterizationPolymersScore(
         continue;
       }
       summary.count++;
-      summary.averageMonomerSize += grade.monomerSize;
+      summary.averageMonomerVertexesCount += grade.monomerVertexesCount;
       summary.averagePolymerSize += grade.polymerSize;
       summary.averageConfidenceScore += grade.confidenceScore;
     }
   }
-  summary.averageMonomerSize = summary.averageMonomerSize > 0 ? summary.averageMonomerSize / summary.averageMonomerSize : 0;
+  summary.averageMonomerVertexesCount = summary.averageMonomerVertexesCount > 0 ? summary.averageMonomerVertexesCount / summary.averageMonomerVertexesCount : 0;
   summary.averagePolymerSize = summary.averagePolymerSize > 0 ? summary.averagePolymerSize / summary.averagePolymerSize : 0;
   summary.averageConfidenceScore = summary.averageConfidenceScore > 0 ? summary.averageConfidenceScore / summary.averageConfidenceScore : 0;
 

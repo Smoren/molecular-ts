@@ -17,7 +17,7 @@ export function findPolymerMultiplier(monomerCandidateVector: NumericVector, pol
 
 function createBadPolymerGradeSummary(monomerSize: number): PolymerSummary {
   return {
-    monomerSize,
+    monomerVertexesCount: monomerSize,
     polymerSize: 0,
     confidenceScore: 0,
   };
@@ -82,7 +82,7 @@ export function gradeMonomerPolymerPair(
   );
 
   return {
-    monomerSize: monomerCandidate.vertexes.length,
+    monomerVertexesCount: monomerCandidate.vertexes.length,
     polymerSize: polymerSize,
     confidenceScore: similarity,
   };
