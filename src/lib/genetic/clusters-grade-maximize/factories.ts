@@ -4,6 +4,7 @@ export function createDefaultClusterizationConfig(): ClusterizationConfig {
   return {
     params: {
       minCompoundSize: 5,
+      minUniqueTypesCount: 2,
     },
     weights: {
       clustersCountWeight: 1.5,
@@ -34,6 +35,7 @@ export function createOldClusterizationConfig(): ClusterizationConfig {
   return {
     params: {
       minCompoundSize: 5,
+      minUniqueTypesCount: 2,
     },
     weights: {
       clustersCountWeight: 1,
@@ -64,6 +66,7 @@ export function createModifiedClusterizationConfig(): ClusterizationConfig {
   return {
     params: {
       minCompoundSize: 6,
+      minUniqueTypesCount: 2,
     },
     weights: {
       clustersCountWeight: 1,

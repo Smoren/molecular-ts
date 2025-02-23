@@ -279,6 +279,7 @@ export class Simulation implements SimulationInterface {
           compounds,
           this.config.typesConfig.FREQUENCIES.length,
           clusterizationConfig.params.minCompoundSize,
+          clusterizationConfig.params.minUniqueTypesCount,
         );
         const clusterizationScore = calcCompoundsClusterizationScore(clustersSummary, compounds, this);
 

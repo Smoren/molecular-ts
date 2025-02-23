@@ -1,6 +1,7 @@
 {
   "params": {
-    "minCompoundSize": 5
+    "minCompoundSize": 5,
+    "minUniqueTypesCount": 2
   },
   "weights": {
     "clustersCountWeight": 1.5,

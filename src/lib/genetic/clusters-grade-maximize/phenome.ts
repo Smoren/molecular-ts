@@ -56,7 +56,7 @@ function runSimulationForClustersGrade(
       compounds,
       typesConfig.FREQUENCIES.length,
       clusterizationParams.minCompoundSize,
-      // TODO minUniqueTypesCount to config
+      clusterizationParams.minUniqueTypesCount,
     );
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
     const clusterizationPhenome = convertCompoundsClusterizationScoreToPhenomeRow(clusterizationScore);
@@ -87,7 +87,7 @@ async function runSimulationForClustersGradeAsync(
       compounds,
       typesConfig.FREQUENCIES.length,
       clusterizationParams.minCompoundSize,
-      // TODO minUniqueTypesCount to config
+      clusterizationParams.minUniqueTypesCount,
     );
     const clusterizationScore = calcCompoundsClusterizationScore(clusterizationSummary, compounds, sim);
     const clusterizationPhenome = convertCompoundsClusterizationScoreToPhenomeRow(clusterizationScore);

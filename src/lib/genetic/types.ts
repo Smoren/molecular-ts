@@ -25,6 +25,7 @@ export type MutationStrategyConfig = {
 
 export type ClusterizationParams = {
   minCompoundSize: number;
+  minUniqueTypesCount: number;
 }
 
 export type ClusterizationWeights = {
