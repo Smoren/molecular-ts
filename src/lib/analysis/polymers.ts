@@ -37,8 +37,6 @@ export function gradeMonomerPolymerPair(
     return createBadPolymerGradeSummary(monomerCandidate.vertexes.length);
   }
 
-  // TODO заменить все Math.floor на Math.round ???
-
   const monomerVertexesVector = toVector(countVertexesGroupedByType(monomerCandidate));
   const monomerEdgesVector = toVector(countEdgesGroupedByVertexTypes(monomerCandidate));
   const polymerVertexesVector = toVector(countVertexesGroupedByType(polymerCandidate));
