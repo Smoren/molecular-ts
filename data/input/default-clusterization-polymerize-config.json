@@ -27,7 +27,7 @@
     "relativePolymersCountWeight": 1,
     "averageMonomerVertexesCountWeight": 0.5,
     "averagePolymerVertexesCountWeight": 1,
-    "averagePolymerSizeWeight": 0.5,
+    "averagePolymerSizeWeight": 1,
     "averagePolymerConfidenceScoreWeight": 0.5
   }
 }
