@@ -194,7 +194,7 @@ function parseArgs(argsParser: ArgsParser) {
   const randomizeStartPopulation = argsParser.getBool('randomizeStartPopulation', true);
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
-  const configFileName = argsParser.getString('configFileName', 'default-clusterization-config');
+  const configFileName = argsParser.getString('configFileName', 'default-clusterization-polymerize-config');
   const populationFileName = argsParser.getNullableString('populationFileName');
   const cacheFileName = argsParser.getNullableString('cacheFileName');
 
