@@ -39,13 +39,8 @@ export function calcCompoundsClusterizationSummary(
   typesCount: number,
   params: ClusterizationParams,
 ): CompoundsClusterizationSummary {
-  const graphs = compounds
-    .filter((compound) => compound.size >= params.minCompoundSize)
-    .map((compound) => createCompoundGraph(compound, typesCount));
-  const clusters = clusterGraphs(graphs);
-  const clusterGrades: CompoundsClusterGrade[] = clusters
-    .map((cluster) => calcCompoundsClusterGrade(cluster))
-    .filter((grade) => grade.typesCountAverage >= params.minUniqueTypesCount);
+  const [clusterGrades, graphs] = clusterizeCompounds(compounds, typesCount, params.minCompoundSize, params.minUniqueTypesCount);
+  const [clusterGradesForPolymers] = clusterizeCompounds(compounds, typesCount, params.monomerCandidateVertexesCountBounds[0], params.minUniqueTypesCount);
 
   // TODO считать средний параметрический вектор всех кластеров, считать расстояния до него от каждого кластера
   // TODO таким образом повышаем разнообразие кластеров
@@ -59,7 +54,7 @@ export function calcCompoundsClusterizationSummary(
   const clusteredTypesVector = calcClusteredTypesVector(clusterGrades, typesCount);
 
   const polymersSummary = calcClusterizationPolymersScore(
-    clusterGrades,
+    clusterGradesForPolymers,
     graphs,
     params.monomerCandidateVertexesCountBounds,
     params.polymerCandidateVertexesCountBounds,
@@ -76,6 +71,22 @@ export function calcCompoundsClusterizationSummary(
     notClusteredCount,
     clusteredTypesVector,
   };
+}
+
+export function clusterizeCompounds(
+  compounds: Compound[],
+  typesCount: number,
+  minCompoundSize: number,
+  minUniqueTypesCount: number
+): [CompoundsClusterGrade[], GraphInterface[]] {
+  const graphs = compounds
+    .filter((compound) => compound.size >= minCompoundSize)
+    .map((compound) => createCompoundGraph(compound, typesCount));
+  const clusterGrades = clusterGraphs(graphs)
+    .map((cluster) => calcCompoundsClusterGrade(cluster))
+    .filter((grade) => grade.typesCountAverage >= minUniqueTypesCount);
+
+  return [clusterGrades, graphs];
 }
 
 export function calcCompoundsClusterizationScore(
