@@ -142,6 +142,7 @@ export function calcCompoundsClusterizationScore(
     averageClusteredCompoundSpeed: normalizedClusterSumScores.compoundSpeed,
 
     relativePolymersCount: summary.polymers.count / simulation.atoms.length,
+    maxPolymerSize: summary.polymers.maxPolymerSize,
     averageMonomerVertexesCount: summary.polymers.averageMonomerVertexesCount,
     averagePolymerVertexesCount: summary.polymers.averagePolymerVertexesCount,
     averagePolymerSize: summary.polymers.averagePolymerSize,

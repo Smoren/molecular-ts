@@ -20,10 +20,11 @@ import {
 import { createClusterGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/search";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/clusters-grade-maximize/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
-import { getCurrentDateTime } from '@/scripts/lib/helpers';
+import { formatRounded, formatRoundedRecursive, getCurrentDateTime } from '@/scripts/lib/helpers';
 import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
 import { createSchedulerForClustersGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/scheduler";
 import type { SelectionStrategyFactoryConfig, SelectionStrategyType, SimulationGenome } from "@/lib/genetic/types";
+import { objectUnaryOperation } from "@/lib/math";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -143,7 +144,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
         const bestGenome = geneticSearch.bestGenome;
         const bestScore = bestGenome.stats!.fitness;
 
-        const summary = geneticSearch.getPopulationSummary(6);
+        const summary = formatRoundedRecursive(geneticSearch.getPopulationSummary(), 6);
 
         printGenerationSummary(generation, bestGenome, summary);
         scheduler.logs.forEach((line) => console.log(`[SCHEDULER] ${line}`));

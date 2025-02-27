@@ -215,6 +215,7 @@ export type CompoundsClusterizationScore = {
   averageClusteredCompoundSpeed: number;
 
   relativePolymersCount: number;
+  maxPolymerSize: number;
   averagePolymerConfidenceScore: number;
   averageMonomerVertexesCount: number;
   averagePolymerVertexesCount: number;

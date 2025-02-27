@@ -5,7 +5,7 @@ import type { InitialConfig, RandomTypesConfig, WorldConfig } from "@/lib/config
 import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 import type { ClusterizationConfig, SimulationGenome } from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
-import { addLeadingZeros, formatJsonString } from "@/scripts/lib/helpers";
+import { addLeadingZeros, formatJsonString, formatRounded } from "@/scripts/lib/helpers";
 import type { ClusterGradeMaximizeGeneticMainConfig } from "@/lib/genetic/clusters-grade-maximize/types";
 import { round } from "@/lib/math";
 
@@ -86,7 +86,7 @@ export function getGenerationResultFilePath(
   totalGenerations: number,
 ): string {
   const generationIndexStr = addLeadingZeros(generationIndex, String(totalGenerations).length);
-  return `data/output/${runId}_generation_${generationIndexStr}_id_${bestId}_score_${round(bestScore, 4)}.json`;
+  return `data/output/${runId}_generation_${generationIndexStr}_id_${bestId}_score_${formatRounded(bestScore, 6)}.json`;
 }
 
 export function getPopulationInputFilePath(fileName: string = 'population'): string {

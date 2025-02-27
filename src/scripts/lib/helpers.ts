@@ -1,4 +1,5 @@
 import { Router } from '@/scripts/lib/router';
+import { objectUnaryOperation, round } from "@/lib/math";
 
 export const createRouter = () => {
   const router = new Router();
@@ -69,13 +70,29 @@ export function convertToTable(data: string[][], padding: number = 0): string {
   return result.join('\n');
 }
 
-export function formatRounded(value: number, precision: number): string {
-  const factor = Math.pow(10, precision);
-  const rounded = Math.round(value * factor) / factor;
-
-  if (rounded === 0 && value !== 0) {
-    return value.toExponential(precision);
+export function formatRounded(num: number, precision: number): number {
+  if (num === 0) {
+    return 0;
   }
 
-  return String(rounded);
+  let roundedNum = round(num, precision);
+
+  if (roundedNum !== 0) {
+    return roundedNum;
+  }
+
+  const significantDigits = Math.abs(Math.ceil(Math.log10(num))) + 1;
+  return round(num, significantDigits);
+}
+
+export function formatRoundedRecursive<T extends Record<string, unknown>>(object: T, precision: number): T {
+  return objectUnaryOperation(object, (x) => {
+    if (typeof x === 'number') {
+      return formatRounded(Number(x), precision);
+    }
+    if (typeof x === 'object') {
+      return formatRoundedRecursive(x as Record<string, unknown>, precision);
+    }
+    return x;
+  });
 }
