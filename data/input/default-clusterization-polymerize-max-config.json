@@ -24,11 +24,11 @@
     "relativeClusteredAtomsWeight": 1,
     "averageAtomLinksWeight": 0.5,
     "newLinksCreatedPerStepScoreWeight": 0.3,
-    "relativePolymersCountWeight": 1,
-    "maxPolymerSizeWeight": 5,
-    "averageMonomerVertexesCountWeight": 1,
-    "averagePolymerVertexesCountWeight": 2,
-    "averagePolymerSizeWeight": 4,
+    "relativePolymersCountWeight": 2,
+    "maxPolymerSizeWeight": 8,
+    "averageMonomerVertexesCountWeight": 2,
+    "averagePolymerVertexesCountWeight": 4,
+    "averagePolymerSizeWeight": 8,
     "averagePolymerConfidenceScoreWeight": 2
   }
 }
