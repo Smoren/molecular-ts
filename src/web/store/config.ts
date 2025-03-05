@@ -12,6 +12,7 @@ import {
   copyIndexInTypesConfig,
   creatDefaultTypesConfig,
   createDefaultRandomTypesConfig,
+  createDisabledTypesSymmetricConfig,
   createSingleTypeConfig,
   createTransparentTypesConfig,
   removeIndexFromTypesConfig,
@@ -143,9 +144,11 @@ export const useConfigStore = defineStore("config", () => {
         setTypesConfig(convertTypesConfigForBackwardCompatibility(config.typesConfig));
         console.log('typesConfig upd');
       }
-      if (config.typesSymmetricConfig !== undefined && config.typesSymmetricConfig.GRAVITY_MATRIX_SYMMETRIC !== undefined) {
+      if (config.typesSymmetricConfig !== undefined) {
         setTypesSymmetricConfig(convertTypesSymmetricConfigForBackwardCompatibility(config.typesSymmetricConfig));
         console.log('typesSymmetricConfig upd');
+      } else {
+        setTypesSymmetricConfig(createDisabledTypesSymmetricConfig());
       }
 
       console.log('imported', config);

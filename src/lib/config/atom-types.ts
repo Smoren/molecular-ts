@@ -3,7 +3,8 @@ import type {
   LinkFactorDistanceConfig,
   LinkFactorElasticConfig,
   RandomTypesConfig,
-  TypesConfig
+  TypesConfig,
+  TypesSymmetricConfig,
 } from './types';
 import {
   getRandomColor,
@@ -321,6 +322,17 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: true,
     LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
     LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: true,
+  };
+}
+
+export function createDisabledTypesSymmetricConfig(): TypesSymmetricConfig {
+  return {
+    GRAVITY_MATRIX_SYMMETRIC: false,
+    LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+    LINK_TYPE_MATRIX_SYMMETRIC: false,
+    LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: false,
   };
 }
 
