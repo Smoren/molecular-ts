@@ -30,7 +30,13 @@ export const clusterizationGradeMultiprocessingTask = async ([
   worldConfig.TEMPERATURE_FUNCTION = () => 1;
 
   const dirName = __dirname.replace('/node_modules/multiprocessor/lib', '/src');
-  const { calcPhenomeForClustersGradeMaximize } = await import(`${dirName}/lib/genetic/clusters-grade-maximize/phenome`);
+
+  let { calcPhenomeForClustersGradeMaximize } = await import(`${dirName}/lib/genetic/clusters-grade-maximize/phenome`);
+  if (calcPhenomeForClustersGradeMaximize === undefined) {
+    // For compatibility with node 23+
+    const imported = await import(`${dirName}/lib/genetic/clusters-grade-maximize/phenome`);
+    calcPhenomeForClustersGradeMaximize = imported.default.calcPhenomeForClustersGradeMaximize;
+  }
 
   return calcPhenomeForClustersGradeMaximize([
     _,
