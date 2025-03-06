@@ -1,15 +1,11 @@
-import { normalizeMatrixColumnsMinMax } from "@/lib/math";
+import { parseArgsString } from "@/scripts/lib/args-parser";
 
 export const actionTest = async () => {
   console.log('test action');
-  const [normalized, min, max, mean] = normalizeMatrixColumnsMinMax([
-    [1, 2, 3],
-    [2, 2, 3],
-    [3, 2, 3],
-    [1, 2, 3],
-    [1, 2, 3],
-    [2, 2, 3],
-  ]);
 
-  console.log(normalized, min, max, mean);
+  // const argsString = '  -qwe  --my-first-argument   1 --my-second-argument --my-third-argument 33 44 55 -a 1 2 -b test -c -def -g 123';
+  const argsString = '  --my-first-argument   1 --my-second-argument --my-third-argument 33 44 55 -a 1 2 -b test -c -def -g 123 --test 345 --test 789';
+  const parsedArgs = parseArgsString(argsString)
+
+  console.log(parsedArgs);
 }
