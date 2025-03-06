@@ -15,9 +15,14 @@ export function findPolymerMultiplier(monomerCandidateVector: NumericVector, pol
   return numerator / denominator;
 }
 
-function createBadPolymerGradeSummary(monomerVertexesCount: number): PolymerSummary {
+function createBadPolymerGradeSummary(monomerCandidate: GraphInterface): PolymerSummary {
+  const monomerTypesVector = countVertexesGroupedByType(monomerCandidate);
+  const monomerVertexesCount = monomerCandidate.vertexes.length;
+  const monomerUniqueTypesCount = monomerTypesVector.filter((x) => x > 0).length;
   return {
     monomerVertexesCount,
+    monomerTypesVector,
+    monomerUniqueTypesCount,
     polymerVertexesCount: 0,
     polymerSize: 0,
     confidenceScore: 0,
@@ -34,7 +39,7 @@ export function gradeMonomerPolymerPair(
     monomerCandidate.vertexes.length >= polymerCandidate.vertexes.length ||
     monomerCandidate.edges.length >= polymerCandidate.edges.length
   ) {
-    return createBadPolymerGradeSummary(monomerCandidate.vertexes.length);
+    return createBadPolymerGradeSummary(monomerCandidate);
   }
 
   const monomerVertexesVector = toVector(countVertexesGroupedByType(monomerCandidate));
@@ -46,7 +51,7 @@ export function gradeMonomerPolymerPair(
   const polymerSize = Math.round(multiplier);
 
   if (polymerSize < minPolymerSize) {
-    return createBadPolymerGradeSummary(monomerCandidate.vertexes.length);
+    return createBadPolymerGradeSummary(monomerCandidate);
   }
 
   const vertexesDiffVector = createVector(polymerVertexesVector).sub(monomerVertexesVector.clone().mul(multiplier));
@@ -62,7 +67,7 @@ export function gradeMonomerPolymerPair(
 
   // TODO доработать условие
   if (monomerExtraVertexesVector.abs2 >= monomerVertexesVector.abs2 || monomerExtraEdgesVector.abs2 >= monomerEdgesVector.abs2) {
-    return createBadPolymerGradeSummary(monomerCandidate.vertexes.length);
+    return createBadPolymerGradeSummary(monomerCandidate);
   }
 
   // TODO можно попробовать выяснить, соотвтетсвуют ли дополнительные вертексы дополнительным связям
@@ -80,7 +85,11 @@ export function gradeMonomerPolymerPair(
     normCoefficient,
   );
 
+  const monomerUniqueTypesCount = monomerVertexesVector.filter((x) => x > 0).length;
+
   return {
+    monomerTypesVector: monomerVertexesVector,
+    monomerUniqueTypesCount,
     monomerVertexesCount: monomerCandidate.vertexes.length,
     polymerVertexesCount: polymerCandidate.vertexes.length,
     polymerSize: polymerSize,

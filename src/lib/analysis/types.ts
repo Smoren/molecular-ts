@@ -179,6 +179,8 @@ export type CompoundsClusterScore = {
 
 export type PolymerSummary = {
   confidenceScore: number;
+  monomerTypesVector: number[];
+  monomerUniqueTypesCount: number;
   monomerVertexesCount: number;
   polymerVertexesCount: number;
   polymerSize: number;
