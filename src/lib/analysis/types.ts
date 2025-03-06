@@ -190,6 +190,7 @@ export type PolymerCollectionSummary = {
   count: number;
   averageConfidenceScore: number;
   averageMonomerVertexesCount: number;
+  averageMonomerUniqueTypesCount: number;
   averagePolymerVertexesCount: number;
   averagePolymerSize: number;
   maxMonomerVertexesCount: number;
@@ -220,6 +221,7 @@ export type CompoundsClusterizationScore = {
   maxPolymerSize: number;
   averagePolymerConfidenceScore: number;
   averageMonomerVertexesCount: number;
+  averageMonomerUniqueTypesCount: number;
   averagePolymerVertexesCount: number;
   averagePolymerSize: number;
 }

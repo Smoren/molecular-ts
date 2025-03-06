@@ -144,6 +144,7 @@ export function calcCompoundsClusterizationScore(
     relativePolymersCount: summary.polymers.count / simulation.atoms.length,
     maxPolymerSize: summary.polymers.maxPolymerSize,
     averageMonomerVertexesCount: summary.polymers.averageMonomerVertexesCount,
+    averageMonomerUniqueTypesCount: summary.polymers.averageMonomerUniqueTypesCount,
     averagePolymerVertexesCount: summary.polymers.averagePolymerVertexesCount,
     averagePolymerSize: summary.polymers.averagePolymerSize,
     averagePolymerConfidenceScore: summary.polymers.averageConfidenceScore,
@@ -201,6 +202,7 @@ export function calcClusterizationPolymersScore(
   const summary: PolymerCollectionSummary = {
     count: 0,
     averageMonomerVertexesCount: 0,
+    averageMonomerUniqueTypesCount: 0,
     averagePolymerVertexesCount: 0,
     averagePolymerSize: 0,
     averageConfidenceScore: 0,
@@ -230,6 +232,7 @@ export function calcClusterizationPolymersScore(
       }
       summary.count++;
       summary.averageMonomerVertexesCount += grade.monomerVertexesCount;
+      summary.averageMonomerUniqueTypesCount += grade.monomerUniqueTypesCount;
       summary.averagePolymerVertexesCount += grade.polymerVertexesCount;
       summary.averagePolymerSize += grade.polymerSize;
       summary.averageConfidenceScore += grade.confidenceScore;
@@ -239,6 +242,7 @@ export function calcClusterizationPolymersScore(
     }
   }
   summary.averageMonomerVertexesCount = summary.count > 0 ? summary.averageMonomerVertexesCount / summary.count : 0;
+  summary.averageMonomerUniqueTypesCount = summary.count > 0 ? summary.averageMonomerUniqueTypesCount / summary.count : 0;
   summary.averagePolymerVertexesCount = summary.count > 0 ? summary.averagePolymerVertexesCount / summary.count : 0;
   summary.averagePolymerSize = summary.count > 0 ? summary.averagePolymerSize / summary.count : 0;
   summary.averageConfidenceScore = summary.count > 0 ? summary.averageConfidenceScore / summary.count : 0;

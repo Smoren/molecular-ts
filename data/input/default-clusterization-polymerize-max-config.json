@@ -27,6 +27,7 @@
     "relativePolymersCountWeight": 2,
     "maxPolymerSizeWeight": 8,
     "averageMonomerVertexesCountWeight": 2,
+    "averageMonomerUniqueTypesCountWeight": 4,
     "averagePolymerVertexesCountWeight": 4,
     "averagePolymerSizeWeight": 8,
     "averagePolymerConfidenceScoreWeight": 2

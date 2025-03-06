@@ -52,6 +52,7 @@ export type ClusterizationWeights = {
   relativePolymersCountWeight: number;
   maxPolymerSizeWeight: number;
   averageMonomerVertexesCountWeight: number;
+  averageMonomerUniqueTypesCountWeight: number;
   averagePolymerVertexesCountWeight: number;
   averagePolymerSizeWeight: number;
   averagePolymerConfidenceScoreWeight: number;

@@ -24,6 +24,7 @@ export function convertCompoundsClusterizationScoreToPhenomeRow(score: Compounds
     score.relativePolymersCount,
     score.maxPolymerSize,
     score.averageMonomerVertexesCount,
+    score.averageMonomerUniqueTypesCount,
     score.averagePolymerVertexesCount,
     score.averagePolymerSize,
     score.averagePolymerConfidenceScore,
@@ -51,6 +52,7 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     relativePolymersCount,
     maxPolymerSize,
     averageMonomerVertexesCount,
+    averageMonomerUniqueTypesCount,
     averagePolymerVertexesCount,
     averagePolymerSize,
     averagePolymerConfidenceScore,
@@ -75,6 +77,7 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     relativePolymersCount,
     maxPolymerSize,
     averageMonomerVertexesCount,
+    averageMonomerUniqueTypesCount,
     averagePolymerVertexesCount,
     averagePolymerSize,
     averagePolymerConfidenceScore,
@@ -108,6 +111,7 @@ export function weighCompoundClusterizationPhenomeRow(
   score.relativePolymersCount = weigher(score.relativePolymersCount, weights.relativePolymersCountWeight);
   score.maxPolymerSize = weigher(score.maxPolymerSize, weights.maxPolymerSizeWeight);
   score.averageMonomerVertexesCount = weigher(score.averageMonomerVertexesCount, weights.averageMonomerVertexesCountWeight);
+  score.averageMonomerUniqueTypesCount = weigher(score.averageMonomerUniqueTypesCount, weights.averageMonomerUniqueTypesCountWeight);
   score.averagePolymerVertexesCount = weigher(score.averagePolymerVertexesCount, weights.averagePolymerVertexesCountWeight);
   score.averagePolymerSize = weigher(score.averagePolymerSize, weights.averagePolymerSizeWeight);
   score.averagePolymerConfidenceScore = weigher(score.averagePolymerConfidenceScore, weights.averagePolymerConfidenceScoreWeight);
