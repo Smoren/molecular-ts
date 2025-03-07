@@ -31,6 +31,9 @@ export const actionTest = async () => {
     const argsString = '--my-first-argument test -2 --my-third-argument 1 2 3';
     const parsedArgs = parser.parse(argsString);
     console.log(parsedArgs.all);
+
+    const s = parsedArgs.get<string | undefined>('--my-first-argument');
+    console.log(s);
   } catch (e) {
     console.error('[ERROR]', (e as Error).message);
   }
