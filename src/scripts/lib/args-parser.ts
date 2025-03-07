@@ -9,6 +9,8 @@ export type ArgConfig = {
   notEmpty?: boolean;
   multiple?: boolean;
   default?: unknown;
+  allowedValues?: unknown[];
+  validator?: (value: unknown) => boolean;
 }
 
 export type FormattedArgConfig = ArgConfig & {
@@ -86,7 +88,15 @@ export class ArgsParser {
       const argConfig = this.getArgConfig(key);
 
       if (notEmpty.has(argConfig) && value === '') {
-        throw new ArgumentValueError(`Argument ${argConfig.name} ${argConfig.alias ? `(${argConfig.alias})` : ''} value cannot be empty.`);
+        throw new ArgumentValueError(`Argument ${this.formatNameWithAlias(argConfig)} value cannot be empty.`);
+      }
+
+      if (argConfig.allowedValues !== undefined && !argConfig.allowedValues.includes(value)) {
+        throw new ArgumentValueError(`Argument ${this.formatNameWithAlias(argConfig)} value must be one of ${argConfig.allowedValues.join(', ')}.`);
+      }
+
+      if (argConfig.validator !== undefined && !argConfig.validator(value)) {
+        throw new ArgumentValueError(`Argument ${this.formatNameWithAlias(argConfig)} value is invalid.`);
       }
 
       required.delete(argConfig);
@@ -114,6 +124,10 @@ export class ArgsParser {
       notEmpty: config.notEmpty ?? false,
       multiple: config.multiple ?? false,
     };
+  }
+
+  private formatNameWithAlias(argConfig: ArgConfig): string {
+    return `${argConfig.name} ${argConfig.alias ? `(${argConfig.alias})` : ''}`;
   }
 
   private checkArgumentConfig(config: ArgConfig) {

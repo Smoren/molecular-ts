@@ -9,6 +9,8 @@ export const actionTest = async () => {
         type: 'string',
         required: true,
         notEmpty: true,
+        allowedValues: ['test', 'dev', 'prod'],
+        validator: (x: unknown) => String(x).length > 2,
       },
       {
         name: '--my-second-argument',
