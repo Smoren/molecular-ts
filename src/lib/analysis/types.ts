@@ -8,6 +8,7 @@ export type WorldSummary<T> = {
   ATOMS_COUNT: T;
   ATOMS_MEAN_SPEED: T;
   ATOMS_TYPE_COUNT: T;
+  ATOMS_TYPE_MEAN_COUNT: T;
   ATOMS_TYPE_MEAN_SPEED: T;
   ATOMS_TYPE_LINKS_COUNT: T;
   ATOMS_TYPE_LINKS_MEAN_COUNT: T;
@@ -37,6 +38,7 @@ export interface StepSummaryManagerInterface<T> {
 export type QueueSummary<T> = {
   ATOMS_COUNT: QueueInterface<T>;
   ATOMS_TYPE_COUNT: QueueInterface<T>;
+  ATOMS_TYPE_MEAN_COUNT: QueueInterface<T>;
   ATOMS_MEAN_SPEED: QueueInterface<T>;
   ATOMS_TYPE_MEAN_SPEED: QueueInterface<T>;
   ATOMS_TYPE_LINKS_COUNT: QueueInterface<T>;
@@ -102,45 +104,6 @@ export type CompoundsAnalyzerSummary = {
   itemSpeedSummary: StatSummary;
   itemDensitySummary: StatSummary;
 }
-
-export type TotalSummary = {
-  WORLD: WorldSummary<number[]>;
-  COMPOUNDS: CompoundsAnalyzerSummary;
-  CLUSTERS: number;
-}
-
-export type TotalSummaryWeights = {
-  ATOMS_MEAN_SPEED: number;
-  ATOMS_TYPE_MEAN_SPEED: number;
-  ATOMS_TYPE_LINKS_MEAN_COUNT: number;
-  LINKS_CREATED_MEAN: number;
-  LINKS_DELETED_MEAN: number;
-  LINKS_TYPE_CREATED_MEAN: number;
-  LINKS_TYPE_DELETED_MEAN: number;
-  COMPOUNDS_PER_ATOM: number;
-  COMPOUNDS_PER_ATOM_BY_TYPES: number;
-  COMPOUND_LENGTH_SUMMARY: StatSummary;
-  COMPOUND_SPEED_SUMMARY: StatSummary;
-  COMPOUND_DENSITY_SUMMARY: StatSummary;
-  CLUSTERS_SCORE: number;
-}
-
-export type SummaryMatrixRowObject = {
-  atomsMeanSpeed: number;
-  atomTypeMeanSpeed: number[];
-  atomTypeLinksMeanCount: number[];
-  linksCreatedMean: number;
-  linksDeletedMean: number;
-  linksTypeCreatedMean: number[];
-  linksTypeDeletedMean: number[];
-  compoundsPerAtom: number;
-  compoundsPerAtomByTypes: number[];
-  compoundLengthSummary: StatSummary;
-  compoundSpeedSummary: StatSummary;
-  compoundDensitySummary: StatSummary;
-  clustersScore: number;
-}
-
 export type CompoundsClusterGrade = {
   size: number;
   difference: number;

@@ -66,6 +66,38 @@ const timeSeriesAtomsMeanSpeedConfig = {
     },
   ],
 }
+const timeSeriesAtomsTypesCountConfig = {
+  id: 'atoms-types-count',
+  name: 'Atoms Types Count',
+  height: 200,
+  data: () => getCurrentSimulation().summary['ATOMS_TYPE_COUNT'],
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
+    return {
+      name: 'Atoms Types Count',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+    };
+  }),
+}
+const timeSeriesAtomsTypesMeanCountConfig = {
+  id: 'atoms-types-mean-count',
+  name: 'Atoms Types Count',
+  height: 200,
+  data: () => getCurrentSimulation().summary['ATOMS_TYPE_MEAN_COUNT'],
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
+    return {
+      name: 'Atoms Types Count',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+    };
+  }),
+}
 const timeSeriesAtomsTypeMeanSpeedConfig = {
   id: 'atoms-type-mean-speed',
   name: 'Atoms Type Mean Speed',
@@ -236,17 +268,21 @@ const timeSeriesConfigBase: ChartConfig[] = [
 ];
 
 const timeSeriesConfigCount: ChartConfig[] = [
+  timeSeriesAtomsTypesCountConfig,
   timeSeriesAtomsTypeLinksCountConfig,
   timeSeriesLinksCreatedDeletedConfig,
   timeSeriesLinksTypeCreatedConfig,
   timeSeriesLinksTypeDeletedConfig,
+  timeSeriesAtomsTypeMeanSpeedConfig,
 ];
 
 const timeSeriesConfigMean: ChartConfig[] = [
+  timeSeriesAtomsTypesMeanCountConfig,
   timeSeriesAtomsTypeLinksMeanCountConfig,
   timeSeriesLinksCreatedDeletedMeanConfig,
   timeSeriesLinksTypeCreatedMeanConfig,
   timeSeriesLinksTypeDeletedMeanConfig,
+  timeSeriesAtomsTypeMeanSpeedConfig,
 ];
 
 </script>

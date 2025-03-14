@@ -15,6 +15,7 @@ const createEmptyStepSummary = (typesCount: number): WorldSummary<number[]> => (
   ATOMS_COUNT: [0],
   ATOMS_MEAN_SPEED: [0],
   ATOMS_TYPE_COUNT: Array(typesCount).fill(0),
+  ATOMS_TYPE_MEAN_COUNT: Array(typesCount).fill(0),
   ATOMS_TYPE_MEAN_SPEED: Array(typesCount).fill(0),
   ATOMS_TYPE_LINKS_COUNT: Array(typesCount).fill(0),
   ATOMS_TYPE_LINKS_MEAN_COUNT: Array(typesCount).fill(0),
@@ -89,6 +90,7 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
     ATOMS_COUNT: 0,
     ATOMS_MEAN_SPEED: 2,
     ATOMS_TYPE_COUNT: 0,
+    ATOMS_TYPE_MEAN_COUNT: 2,
     ATOMS_TYPE_MEAN_SPEED: 2,
     ATOMS_TYPE_LINKS_COUNT: 1,
     ATOMS_TYPE_LINKS_MEAN_COUNT: 1,
@@ -110,6 +112,7 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
       ATOMS_COUNT: new Queue(maxSize),
       ATOMS_MEAN_SPEED: new Queue(maxSize),
       ATOMS_TYPE_COUNT: new Queue(maxSize),
+      ATOMS_TYPE_MEAN_COUNT: new Queue(maxSize),
       ATOMS_TYPE_MEAN_SPEED: new Queue(maxSize),
       ATOMS_TYPE_LINKS_COUNT: new Queue(maxSize),
       ATOMS_TYPE_LINKS_MEAN_COUNT: new Queue(maxSize),
@@ -172,6 +175,8 @@ export class SummaryManager implements SummaryManagerInterface {
     this.stepManager.buffer.ATOMS_MEAN_SPEED[0] += speed;
 
     this.stepManager.buffer.ATOMS_TYPE_COUNT[atom.type]++;
+    this.stepManager.buffer.ATOMS_TYPE_MEAN_COUNT[atom.type]++;
+
     this.stepManager.buffer.ATOMS_TYPE_MEAN_SPEED[atom.type] += speed;
   }
 
@@ -201,6 +206,9 @@ export class SummaryManager implements SummaryManagerInterface {
   }
 
   finishStep(): void {
+    const totalCountFilled = Array(this.stepManager.buffer.ATOMS_TYPE_COUNT.length).fill(this.stepManager.buffer.ATOMS_COUNT[0]);
+    this.finishArrayMean('ATOMS_TYPE_MEAN_COUNT', totalCountFilled);
+
     this.finishMean('ATOMS_MEAN_SPEED', this.stepManager.buffer.ATOMS_COUNT);
     this.finishArrayMean('ATOMS_TYPE_MEAN_SPEED', this.stepManager.buffer.ATOMS_TYPE_COUNT);
 
