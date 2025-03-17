@@ -295,7 +295,6 @@ export function copyMatrixIndex<T>(matrix: T[][], indexFrom: number, indexTo: nu
 
 export function copyTensorIndex<T>(tensor: T[][][], indexFrom: number, indexTo: number): T[][][] {
   const result = fullCopyObject(tensor);
-  result[indexTo] = copyMatrixIndex(tensor[indexFrom], indexFrom, indexTo);
   for (let i = 0; i < tensor[indexFrom].length; ++i) {
     result[i][indexTo] = fullCopyObject(tensor[i][indexFrom]);
     for (let j = 0; j < tensor[i][indexFrom].length; ++j) {
@@ -303,6 +302,7 @@ export function copyTensorIndex<T>(tensor: T[][][], indexFrom: number, indexTo: 
     }
     result[i][indexTo][indexTo] = tensor[i][indexFrom][indexFrom];
   }
+  result[indexTo] = copyMatrixIndex(tensor[indexFrom], indexFrom, indexTo);
   return result;
 }
 
