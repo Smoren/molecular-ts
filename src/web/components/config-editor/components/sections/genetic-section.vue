@@ -121,71 +121,125 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
         </div>
       </div>
     </MDBAccordionItem>
-    <MDBAccordionItem headerTitle="Params and weights config" collapseId="collapse-weights">
+    <MDBAccordionItem headerTitle="Params config" collapseId="collapse-params">
       <div class="config-block">
         <div>
           <input-header name="Min compound size" />
           <input type="number" step="1" v-model="geneticStore.clusterizationConfig.params.minCompoundSize" />
         </div>
         <div>
+          <input-header name="Min unique types count" />
+          <input type="number" step="1" v-model="geneticStore.clusterizationConfig.params.minUniqueTypesCount" />
+        </div>
+        <div>
+          <input-header name="Min polymer size" />
+          <input type="number" step="1" v-model="geneticStore.clusterizationConfig.params.minPolymerSize" />
+        </div>
+        <div>
+          <input-header name="Min polymer confidence score" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.params.minPolymerConfidenceScore" />
+        </div>
+        <div>
+          <input-header name="Monomer candidate vertexes count bounds" />
+          <input type="number" step="1" style="width: 50%" v-model="geneticStore.clusterizationConfig.params.monomerCandidateVertexesCountBounds[0]" />
+          <input type="number" step="1" style="width: 50%" v-model="geneticStore.clusterizationConfig.params.monomerCandidateVertexesCountBounds[1]" />
+        </div>
+        <div>
+          <input-header name="Polymer candidate vertexes count bounds" />
+          <input type="number" step="1" style="width: 50%" v-model="geneticStore.clusterizationConfig.params.polymerCandidateVertexesCountBounds[0]" />
+          <input type="number" step="1" style="width: 50%" v-model="geneticStore.clusterizationConfig.params.polymerCandidateVertexesCountBounds[1]" />
+        </div>
+      </div>
+    </MDBAccordionItem>
+    <MDBAccordionItem headerTitle="Weights config" collapseId="collapse-weights">
+      <div class="config-block">
+        <div>
           <input-header name="Weight of clusters count" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.clustersCountWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.clustersCountWeight" />
         </div>
         <div>
           <input-header name="Weight of average cluster size" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusterSizeWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageClusterSizeWeight" />
         </div>
         <div>
           <input-header name="Weight of max cluster size" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.maxClusterSizeWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.maxClusterSizeWeight" />
         </div>
         <div>
           <input-header name="Weight of relative filtered compounds count" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.relativeFilteredCompoundsWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.relativeFilteredCompoundsWeight" />
         </div>
         <div>
           <input-header name="Weight of relative clustered compounds count" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.relativeClusteredCompoundsWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.relativeClusteredCompoundsWeight" />
+        </div>
+        <div>
+          <input-header name="Weight of relative clustered atoms count" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.relativeClusteredAtomsWeight" />
         </div>
         <div>
           <input-header name="Weight of average atoms count in clustered compound" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundVertexesCountWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundVertexesCountWeight" />
         </div>
         <div>
           <input-header name="Weight of max atoms count in clustered compound" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.maxClusteredCompoundVertexesCountWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.maxClusteredCompoundVertexesCountWeight" />
         </div>
         <div>
           <input-header name="Weight of links count in clustered compound" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundEdgesCountWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundEdgesCountWeight" />
         </div>
         <div>
           <input-header name="Weight of unique types count in clustered compound" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundUniqueTypesCountWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundUniqueTypesCountWeight" />
         </div>
         <div>
           <input-header name="Weight of symmetry grade of clustered compounds" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundSymmetryScoreWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundSymmetryScoreWeight" />
         </div>
         <div>
           <input-header name="Weight of compounds radii in clusters" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundRadiusWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundRadiusWeight" />
         </div>
         <div>
           <input-header name="Weight of compounds speeds in clusters" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundSpeedWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageClusteredCompoundSpeedWeight" />
         </div>
         <div>
           <input-header name="Weight of relative compounded atoms count" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.relativeCompoundedAtomsWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.relativeCompoundedAtomsWeight" />
         </div>
         <div>
           <input-header name="Weight of average links weight" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.averageAtomLinksWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageAtomLinksWeight" />
         </div>
         <div>
           <input-header name="Weight of new created links per step weight" />
-          <input type="number" step="0.5" v-model="geneticStore.clusterizationConfig.weights.newLinksCreatedPerStepScoreWeight" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.newLinksCreatedPerStepScoreWeight" />
+        </div>
+        <div>
+          <input-header name="Weight of max polymer size" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.maxPolymerSizeWeight" />
+        </div>
+        <div>
+          <input-header name="Weight of average monomer vertexes count" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageMonomerVertexesCountWeight" />
+        </div>
+        <div>
+          <input-header name="Weight of average monomer unique types count" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averageMonomerUniqueTypesCountWeight" />
+        </div>
+        <div>
+          <input-header name="Weight of average polymer vertexes count" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averagePolymerVertexesCountWeight" />
+        </div>
+        <div>
+          <input-header name="Weight of average polymer size" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averagePolymerSizeWeight" />
+        </div>
+        <div>
+          <input-header name="Weight of average polymer confidence score" />
+          <input type="number" step="0.1" v-model="geneticStore.clusterizationConfig.weights.averagePolymerConfidenceScoreWeight" />
         </div>
       </div>
     </MDBAccordionItem>
