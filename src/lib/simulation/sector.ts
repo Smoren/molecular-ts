@@ -1,6 +1,6 @@
 import type { AtomInterface } from './types/atomic';
 import type { NumericVector } from '../math/types';
-import type { ClusterInterface, ClusterManagerInterface, ClusterMapInterface } from './types/cluster';
+import type { SectorInterface, SectorManagerInterface, SectorMapInterface } from './types/sector';
 
 function incPoint(aPoint: NumericVector, aCenterPoint: NumericVector, aDim: number): boolean {
   aPoint[aDim]++;
@@ -26,7 +26,7 @@ function getNeighboursCoords(coords: NumericVector): Iterable<NumericVector> {
   return result;
 }
 
-class Cluster implements ClusterInterface {
+class Sector implements SectorInterface {
   atoms: Set<AtomInterface> = new Set<AtomInterface>();
   coords: NumericVector;
 
@@ -55,8 +55,8 @@ class Cluster implements ClusterInterface {
   }
 }
 
-class ClusterMap implements ClusterMapInterface {
-  map: Map<number, Cluster> = new Map();
+class SectorMap implements SectorMapInterface {
+  map: Map<number, Sector> = new Map();
   quantum: number;
   phase: number;
 
@@ -65,20 +65,20 @@ class ClusterMap implements ClusterMapInterface {
     this.phase = phase;
   }
 
-  getNeighbourhood(atom: AtomInterface): ClusterInterface[] {
+  getNeighbourhood(atom: AtomInterface): SectorInterface[] {
     const result = [];
-    const currentCluster = this.handleAtom(atom);
-    for (const coords of getNeighboursCoords(currentCluster.coords)) {
-      const cluster = this.getCluster(coords);
-      result.push(cluster);
+    const currentSector = this.handleAtom(atom);
+    for (const coords of getNeighboursCoords(currentSector.coords)) {
+      const sector = this.getSector(coords);
+      result.push(sector);
     }
     return result;
   }
 
   countAtoms(): number {
     let result = 0;
-    for (const [, cluster] of this.map) {
-      result += cluster.length;
+    for (const [, sector] of this.map) {
+      result += sector.length;
     }
     return result;
   }
@@ -87,37 +87,37 @@ class ClusterMap implements ClusterMapInterface {
     this.map.clear();
   }
 
-  public handleAtom(atom: AtomInterface): ClusterInterface {
-    const actualCluster = this.getClusterByAtom(atom);
-    const currentCluster = atom.cluster;
+  public handleAtom(atom: AtomInterface): SectorInterface {
+    const actualSector = this.getSectorByAtom(atom);
+    const currentSector = atom.sector;
 
-    if (actualCluster !== currentCluster) {
-      if (currentCluster !== undefined) {
-        currentCluster.remove(atom);
+    if (actualSector !== currentSector) {
+      if (currentSector !== undefined) {
+        currentSector.remove(atom);
       }
-      actualCluster.add(atom);
-      atom.cluster = actualCluster;
+      actualSector.add(atom);
+      atom.sector = actualSector;
     }
 
-    return actualCluster;
+    return actualSector;
   }
 
-  public getCluster(clusterCoords: NumericVector): ClusterInterface {
-    const key = clusterCoords.length === 3
-      ? clusterCoords[0] * 10000 + clusterCoords[1] * 100000000 + clusterCoords[2]
-      : clusterCoords[0] * 10000 + clusterCoords[1];
+  public getSector(sectorCoords: NumericVector): SectorInterface {
+    const key = sectorCoords.length === 3
+      ? sectorCoords[0] * 10000 + sectorCoords[1] * 100000000 + sectorCoords[2]
+      : sectorCoords[0] * 10000 + sectorCoords[1];
 
     if (!this.map.has(key)) {
-      this.map.set(key, new Cluster([...clusterCoords]));
+      this.map.set(key, new Sector([...sectorCoords]));
     }
 
-    return this.map.get(key) as Cluster;
+    return this.map.get(key) as Sector;
   }
 
   public findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined {
-    const clusterCoords = this.getClusterCoords(coords);
-    const cluster = this.getCluster(clusterCoords);
-    for (const atom of cluster) {
+    const sectorCoords = this.getSectorCoords(coords);
+    const sector = this.getSector(sectorCoords);
+    for (const atom of sector) {
       const dist = atom.position.clone().sub(coords).abs;
       if (dist <= radiusMap[atom.type] * radiusMultiplier) {
         return atom;
@@ -126,12 +126,12 @@ class ClusterMap implements ClusterMapInterface {
     return undefined;
   }
 
-  private getClusterByAtom(atom: AtomInterface): ClusterInterface {
-    const clusterCoords = this.getClusterCoords(atom.position);
-    return this.getCluster(clusterCoords);
+  private getSectorByAtom(atom: AtomInterface): SectorInterface {
+    const sectorCoords = this.getSectorCoords(atom.position);
+    return this.getSector(sectorCoords);
   }
 
-  private getClusterCoords(coords: NumericVector): NumericVector {
+  private getSectorCoords(coords: NumericVector): NumericVector {
     const result: NumericVector = new Array<number>(coords.length);
     for (let i=0; i<coords.length; ++i) {
       result[i] = Math.round(coords[i] / this.quantum) + this.phase;
@@ -140,11 +140,11 @@ class ClusterMap implements ClusterMapInterface {
   }
 }
 
-export class ClusterManager implements ClusterManagerInterface {
-  private readonly map: ClusterMap;
+export class SectorManager implements SectorManagerInterface {
+  private readonly map: SectorMap;
 
   constructor(quantum: number) {
-    this.map = new ClusterMap(quantum, 0);
+    this.map = new SectorMap(quantum, 0);
   }
 
   countAtoms(): number {
@@ -161,8 +161,8 @@ export class ClusterManager implements ClusterManagerInterface {
       for (let i=cc.coords[0]-1; i<=cc.coords[0]+1; ++i) {
         for (let j=cc.coords[1]-1; j<=cc.coords[1]+1; ++j) {
           for (let k=cc.coords[2]-1; k<=cc.coords[2]+1; ++k) {
-            const cluster = this.map.getCluster([i, j, k]);
-            for (const neighbour of cluster.atoms) {
+            const sector = this.map.getSector([i, j, k]);
+            for (const neighbour of sector.atoms) {
               callback(atom, neighbour);
             }
           }
@@ -172,8 +172,8 @@ export class ClusterManager implements ClusterManagerInterface {
       const cc = this.map.handleAtom(atom);
       for (let i=cc.coords[0]-1; i<=cc.coords[0]+1; ++i) {
         for (let j=cc.coords[1]-1; j<=cc.coords[1]+1; ++j) {
-          const cluster = this.map.getCluster([i, j]);
-          for (const neighbour of cluster.atoms) {
+          const sector = this.map.getSector([i, j]);
+          for (const neighbour of sector.atoms) {
             callback(atom, neighbour);
           }
         }
@@ -181,8 +181,8 @@ export class ClusterManager implements ClusterManagerInterface {
     } else {
       const neighborhood = this.map.getNeighbourhood(atom);
       for (let i=0; i<neighborhood.length; ++i) {
-        const cluster = neighborhood[i];
-        for (const neighbour of cluster.atoms) {
+        const sector = neighborhood[i];
+        for (const neighbour of sector.atoms) {
           callback(atom, neighbour);
         }
       }

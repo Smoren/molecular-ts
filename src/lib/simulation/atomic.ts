@@ -4,7 +4,7 @@ import type {
   LinkInterface,
 } from './types/atomic';
 import type { NumericVector, VectorInterface } from '../math/types';
-import type { ClusterInterface } from './types/cluster';
+import type { SectorInterface } from './types/sector';
 import { toVector } from '../math';
 
 class BondMap implements BondMapInterface {
@@ -72,7 +72,7 @@ export class Atom implements AtomInterface {
   readonly linkElasticFactors: number[];
   type: number;
   newType: number | undefined = undefined;
-  cluster?: ClusterInterface;
+  sector?: SectorInterface;
 
   constructor(id: number, type: number, position: NumericVector, speed?: NumericVector) {
     this.id = id;

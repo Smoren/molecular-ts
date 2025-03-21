@@ -1,5 +1,5 @@
 import type { VectorInterface } from '../../math/types';
-import type { ClusterInterface } from "./cluster";
+import type { SectorInterface } from "./sector";
 
 export interface BondMapInterface {
   length: number;
@@ -22,7 +22,7 @@ export interface AtomInterface {
   readonly linkElasticFactors: number[];
   type: number;
   newType: number | undefined;
-  cluster?: ClusterInterface;
+  sector?: SectorInterface;
   exportState(): Record<string, unknown>;
 }
 

@@ -1,7 +1,7 @@
 import type { AtomInterface } from './atomic';
 import type { NumericVector } from '../../math/types';
 
-export interface ClusterInterface extends Iterable<AtomInterface> {
+export interface SectorInterface extends Iterable<AtomInterface> {
   length: number;
   atoms: Set<AtomInterface>;
   coords: NumericVector;
@@ -10,16 +10,16 @@ export interface ClusterInterface extends Iterable<AtomInterface> {
   empty(): boolean;
 }
 
-export interface ClusterMapInterface {
-  getNeighbourhood(atom: AtomInterface): ClusterInterface[];
+export interface SectorMapInterface {
+  getNeighbourhood(atom: AtomInterface): SectorInterface[];
   countAtoms(): number;
   clear(): void;
-  handleAtom(atom: AtomInterface): ClusterInterface;
-  getCluster(clusterCoords: NumericVector): ClusterInterface;
+  handleAtom(atom: AtomInterface): SectorInterface;
+  getSector(sectorCoords: NumericVector): SectorInterface;
   findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined;
 }
 
-export interface ClusterManagerInterface {
+export interface SectorManagerInterface {
   handleAtom(atom: AtomInterface, callback: (lhs: AtomInterface, rhs: AtomInterface) => void): void;
   countAtoms(): number;
   clear(): void;
