@@ -30,5 +30,5 @@ export function calcFrequencies<T>(input: T[], hasher?: (x: T) => string): Map<T
 }
 
 export function calcFrequenciesForMatrixRows(input: number[][]): Map<number[], number> {
-  return calcFrequencies(input, (x) => JSON.stringify(x)).values();
+  return calcFrequencies(input, (x) => JSON.stringify(x));
 }
