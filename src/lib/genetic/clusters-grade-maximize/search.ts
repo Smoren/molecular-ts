@@ -41,8 +41,8 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
     : new DummyPhenomeCache();
 
   const populateStrategy = config.randomizeStartPopulation
-    ? new RandomPopulateStrategy(populateRandomTypesConfigCollection)
-    : new ZeroValuesPopulateStrategy(config.typesCount);
+    ? new RandomPopulateStrategy(populateRandomTypesConfigCollection, config.transformationConfig)
+    : new ZeroValuesPopulateStrategy(config.typesCount, config.transformationConfig);
 
   const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
     populate: populateStrategy,

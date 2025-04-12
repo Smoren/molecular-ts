@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import fetch from 'node-fetch';
 import type { CalcPhenomeTask, IdGeneratorInterface, Population } from "genetic-search";
-import type { InitialConfig, RandomTypesConfig, WorldConfig } from "@/lib/config/types";
+import type { InitialConfig, RandomTypesConfig, TransformationConfig, WorldConfig } from "@/lib/config/types";
 import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 import type { ClusterizationConfig, SimulationGenome } from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
@@ -38,6 +38,10 @@ export function getWorldConfig(fileName: string, initialConfig: InitialConfig): 
 
 export function getClusterizationConfig(fileName: string): ClusterizationConfig {
   return readJsonFile(`data/input/${fileName}`) as ClusterizationConfig;
+}
+
+export function getTransformationConfig(fileName: string): TransformationConfig {
+  return readJsonFile(`data/input/${fileName}`) as TransformationConfig;
 }
 
 export function getSourcePopulation(fileName: string, idGenerator: IdGeneratorInterface<SimulationGenome>): Population<SimulationGenome> {

@@ -1,5 +1,11 @@
 import type { GeneticSearchConfig, PhenomeRow } from "genetic-search";
-import type { InitialConfig, RandomTypesConfig, TypesConfig, WorldConfig } from "../../config/types";
+import type {
+  InitialConfig,
+  RandomTypesConfig,
+  TransformationConfig,
+  TypesConfig,
+  WorldConfig,
+} from "../../config/types";
 import type {
   ClusterizationConfig,
   ClusterizationParams,
@@ -22,6 +28,7 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   randomizeStartPopulation: boolean;
   worldConfig: WorldConfig;
   clusterizationConfig: ClusterizationConfig;
+  transformationConfig: TransformationConfig;
   typesCount: number;
   useCache: boolean;
   useComposedAlgo: boolean;

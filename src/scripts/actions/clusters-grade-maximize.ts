@@ -8,6 +8,7 @@ import {
   getGeneticMainConfig,
   writeJsonFile,
   getClusterizationConfig,
+  getTransformationConfig,
   getRandomizeConfigCollection,
   getPopulation,
   getCache,
@@ -20,11 +21,10 @@ import {
 import { createClusterGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/search";
 import { clusterizationGradeMultiprocessingTask } from "@/lib/genetic/clusters-grade-maximize/multiprocessing";
 import { StdoutInterceptor } from "@/scripts/lib/stdout";
-import { formatRounded, formatRoundedRecursive, getCurrentDateTime } from '@/scripts/lib/helpers';
+import { formatRoundedRecursive, getCurrentDateTime } from '@/scripts/lib/helpers';
 import type { RemoteApiConfig } from "@/scripts/lib/genetic/types";
 import { createSchedulerForClustersGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/scheduler";
 import type { SelectionStrategyFactoryConfig, SelectionStrategyType, SimulationGenome } from "@/lib/genetic/types";
-import { objectUnaryOperation } from "@/lib/math";
 
 export const actionClustersGradeMaximize = async (...args: string[]) => {
   const ts = Date.now();
@@ -46,6 +46,8 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       mutationRandomizeConfigCollectionFileName,
       crossoverRandomizeConfigCollectionFileName,
       selectionStrategyType,
+      useTransformations,
+      transformationConfigFileName,
       randomizeStartPopulation,
       worldConfigFileName,
       configFileName,
@@ -86,6 +88,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       crossoverRandomizeConfigCollection: getRandomizeConfigCollection(crossoverRandomizeConfigCollectionFileName),
       worldConfig: getWorldConfig(worldConfigFileName, mainConfig.initial),
       clusterizationConfig: getClusterizationConfig(configFileName),
+      transformationConfig: useTransformations ? getTransformationConfig(transformationConfigFileName) : {},
       selectionStrategyFactoryConfig,
       randomizeStartPopulation,
       typesCount,
@@ -192,6 +195,9 @@ function parseArgs(argsParser: ArgsParser) {
   const crossoverRandomizeConfigCollectionFileName = argsParser.getString('crossoverRandomizeConfigCollectionFileName', 'default-randomize-config-crossover-collection');
   const selectionStrategyType = argsParser.getString('selectionStrategyType', 'tournament') as SelectionStrategyType;
 
+  const useTransformations = argsParser.getBool('useTransformations', false);
+  const transformationConfigFileName = argsParser.getString('transformationConfigFileName', 'default-transformation-config');
+
   const randomizeStartPopulation = argsParser.getBool('randomizeStartPopulation', true);
 
   const worldConfigFileName = argsParser.getString('worldConfigFileName', 'default-world-config');
@@ -225,6 +231,8 @@ function parseArgs(argsParser: ArgsParser) {
     mutationRandomizeConfigCollectionFileName,
     crossoverRandomizeConfigCollectionFileName,
     selectionStrategyType,
+    useTransformations,
+    transformationConfigFileName,
     randomizeStartPopulation,
     worldConfigFileName,
     configFileName,

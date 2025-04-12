@@ -6,7 +6,7 @@ import type {
   Population,
 } from "genetic-search";
 import type { SimulationGenome } from './types';
-import type { RandomTypesConfig, TypesConfig } from '../config/types';
+import type { RandomTypesConfig, TransformationConfig, TypesConfig } from '../config/types';
 import {
   copyIndexInTypesConfig,
   createTransparentTypesConfig,
@@ -22,22 +22,26 @@ import { shuffleArray } from "../math/helpers";
 
 export class RandomPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly randomizeConfigCollection: RandomTypesConfig[];
+  private readonly transformationConfig: TransformationConfig;
 
-  constructor(randomizeConfigCollection: RandomTypesConfig[]) {
+  constructor(randomizeConfigCollection: RandomTypesConfig[], transformationConfig?: TransformationConfig) {
     this.randomizeConfigCollection = randomizeConfigCollection;
+    this.transformationConfig = transformationConfig ?? {};
   }
 
   public populate(size: number, idGenerator: IdGeneratorInterface<SimulationGenome>): Population<SimulationGenome> {
     const population: Population<SimulationGenome> = [];
     for (let i = 0; i < size; i++) {
       const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
-      population.push({
+      const genome: SimulationGenome = {
         id: idGenerator.nextId(),
         typesConfig: randomizeTypesConfig(
           randomizeConfig,
           createTransparentTypesConfig(randomizeConfig.TYPES_COUNT),
         ),
-      });
+      };
+      genome.typesConfig.TRANSFORMATION = this.transformationConfig;
+      population.push(genome);
     }
     return population;
   }
@@ -45,18 +49,22 @@ export class RandomPopulateStrategy implements PopulateStrategyInterface<Simulat
 
 export class ZeroValuesPopulateStrategy implements PopulateStrategyInterface<SimulationGenome> {
   private readonly typesCount: number;
+  private readonly transformationConfig: TransformationConfig;
 
-  constructor(typesCount: number) {
+  constructor(typesCount: number, transformationConfig?: TransformationConfig) {
     this.typesCount = typesCount;
+    this.transformationConfig = transformationConfig ?? {};
   }
 
   public populate(size: number, idGenerator: IdGeneratorInterface<SimulationGenome>): Population<SimulationGenome> {
     const population: Population<SimulationGenome> = [];
     for (let i = 0; i < size; i++) {
-      population.push({
+      const genome = {
         id: idGenerator.nextId(),
         typesConfig: createTransparentTypesConfig(this.typesCount),
-      });
+      };
+      genome.typesConfig.TRANSFORMATION = this.transformationConfig;
+      population.push(genome);
     }
     return population;
   }
