@@ -59,6 +59,7 @@ export function batchNormalizedClustersGradeMaximizeFitnessMul(
   const fitnessColumn = normalized.map((result) => clustersGradeMaximizeFitnessMul(result, weights));
   const [normalizedFitnessColumn] = normalizeArrayMinMax(fitnessColumn);
 
+  debugger;
   const [bestPhenome] = reduce.toMax(multi.zip(results, normalizedFitnessColumn), ([_, fitness]) => fitness)!;
   const referencedBestPhenome = applyReferenceWeightsToCompoundsClusterizationPhenomeRow(bestPhenome);
   const referencedBestPhenomeScore = clustersGradeMaximizeFitnessMul(referencedBestPhenome, weights);

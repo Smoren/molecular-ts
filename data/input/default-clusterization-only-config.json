@@ -24,6 +24,7 @@
     "relativeClusteredAtomsWeight": 1,
     "averageAtomLinksWeight": 0.5,
     "newLinksCreatedPerStepScoreWeight": 0.3,
+    "atomsFrequencyScoreWeight": 1,
     "relativePolymersCountWeight": 0,
     "maxPolymerSizeWeight": 0,
     "averageMonomerVertexesCountWeight": 0,

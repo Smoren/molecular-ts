@@ -21,6 +21,7 @@ export function convertCompoundsClusterizationScoreToPhenomeRow(score: Compounds
     score.relativeClusteredAtoms,
     score.averageAtomLinks,
     score.newLinksCreatedPerStepScore,
+    score.atomsFrequencyScore,
     score.relativePolymersCount,
     score.maxPolymerSize,
     score.averageMonomerVertexesCount,
@@ -49,6 +50,7 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     relativeClusteredAtoms,
     averageAtomLinks,
     newLinksCreatedPerStepScore,
+    atomsFrequencyScore,
     relativePolymersCount,
     maxPolymerSize,
     averageMonomerVertexesCount,
@@ -74,6 +76,7 @@ export function convertCompoundsClusterizationPhenomeRowToScoreObject(phenome: N
     relativeClusteredAtoms,
     averageAtomLinks,
     newLinksCreatedPerStepScore,
+    atomsFrequencyScore,
     relativePolymersCount,
     maxPolymerSize,
     averageMonomerVertexesCount,
@@ -108,6 +111,7 @@ export function weighCompoundClusterizationPhenomeRow(
   score.relativeClusteredAtoms = weigher(score.relativeClusteredAtoms, weights.relativeClusteredAtomsWeight);
   score.averageAtomLinks = weigher(score.averageAtomLinks, weights.averageAtomLinksWeight);
   score.newLinksCreatedPerStepScore = weigher(score.newLinksCreatedPerStepScore, weights.newLinksCreatedPerStepScoreWeight);
+  score.atomsFrequencyScore = weigher(score.atomsFrequencyScore, weights.atomsFrequencyScoreWeight);
   score.relativePolymersCount = weigher(score.relativePolymersCount, weights.relativePolymersCountWeight);
   score.maxPolymerSize = weigher(score.maxPolymerSize, weights.maxPolymerSizeWeight);
   score.averageMonomerVertexesCount = weigher(score.averageMonomerVertexesCount, weights.averageMonomerVertexesCountWeight);

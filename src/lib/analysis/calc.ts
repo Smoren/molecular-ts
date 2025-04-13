@@ -121,6 +121,7 @@ export function calcCompoundsClusterizationScore(
   const averageAtomLinks = simulation.links.length / simulation.atoms.length;
 
   const newLinksCreatedPerStepScore = calcClusterizationLinksCreatedScore(summary, simulation.summary);
+  const atomsFrequencyScore = calcAtomsFrequencyScore(simulation);
 
   return {
     maxClusterSize,
@@ -132,6 +133,7 @@ export function calcCompoundsClusterizationScore(
     relativeClusteredAtoms,
     averageAtomLinks,
     newLinksCreatedPerStepScore,
+    atomsFrequencyScore,
 
     maxClusteredCompoundVertexesCount: clusterScoresMax.compoundVertexesCount,
     averageClusteredCompoundVertexesCount: normalizedClusterSumScores.compoundVertexesCount,
@@ -347,4 +349,11 @@ export function calcAverageSpeed(cluster: GraphInterface[]): number {
 
 export function calcGraphRadius(graph: GraphInterface): number {
   return getGraphAverageRadius(graph, getGraphCentroid(graph));
+}
+
+export function calcAtomsFrequencyScore(simulation: SimulationInterface): number {
+  const actualVector = createVector(simulation.summary.ATOMS_TYPE_COUNT).normalize();
+  const expectedVector = createVector(simulation.config.typesConfig.FREQUENCIES).normalize();
+  const diff = actualVector.clone().sub(expectedVector).abs;
+  return (2 - diff) / 2;
 }
