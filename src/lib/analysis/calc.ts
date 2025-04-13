@@ -355,5 +355,5 @@ export function calcAtomsFrequencyScore(simulation: SimulationInterface): number
   const actualVector = createVector(simulation.summary.ATOMS_TYPE_COUNT).normalize();
   const expectedVector = createVector(simulation.config.typesConfig.FREQUENCIES).normalize();
   const diff = actualVector.clone().sub(expectedVector).abs;
-  return (2 - diff) / 2;
+  return (Math.sqrt(2) - diff) / Math.sqrt(2);
 }
