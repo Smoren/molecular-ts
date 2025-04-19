@@ -33,6 +33,9 @@ const createEmptyStepSummary = (typesCount: number): WorldSummary<number[]> => (
   TRANSFORMATION_COUNT: [0],
   TRANSFORMATION_TYPE_FROM_COUNT: Array(typesCount).fill(0),
   TRANSFORMATION_TYPE_TO_COUNT: Array(typesCount).fill(0),
+  TRANSFORMATION_MEAN_COUNT: [0],
+  TRANSFORMATION_TYPE_FROM_MEAN_COUNT: Array(typesCount).fill(0),
+  TRANSFORMATION_TYPE_TO_MEAN_COUNT: Array(typesCount).fill(0),
 });
 
 export class StepSummaryManager implements StepSummaryManagerInterface<number[]> {
@@ -111,6 +114,9 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
     TRANSFORMATION_COUNT: 0,
     TRANSFORMATION_TYPE_FROM_COUNT: 0,
     TRANSFORMATION_TYPE_TO_COUNT: 0,
+    TRANSFORMATION_MEAN_COUNT: 4,
+    TRANSFORMATION_TYPE_FROM_MEAN_COUNT: 4,
+    TRANSFORMATION_TYPE_TO_MEAN_COUNT: 4,
   }
 
   constructor(maxSize: number) {
@@ -136,6 +142,9 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
       TRANSFORMATION_COUNT: new Queue(maxSize),
       TRANSFORMATION_TYPE_FROM_COUNT: new Queue(maxSize),
       TRANSFORMATION_TYPE_TO_COUNT: new Queue(maxSize),
+      TRANSFORMATION_MEAN_COUNT: new Queue(maxSize),
+      TRANSFORMATION_TYPE_FROM_MEAN_COUNT: new Queue(maxSize),
+      TRANSFORMATION_TYPE_TO_MEAN_COUNT: new Queue(maxSize),
     }
   }
 
@@ -240,6 +249,14 @@ export class SummaryManager implements SummaryManagerInterface {
     this.stepManager.buffer.LINKS_TYPE_DELETED_MEAN = [...this.stepManager.buffer.LINKS_TYPE_DELETED];
     this.finishArrayMean('LINKS_TYPE_CREATED_MEAN', this.stepManager.buffer.ATOMS_TYPE_COUNT);
     this.finishArrayMean('LINKS_TYPE_DELETED_MEAN', this.stepManager.buffer.ATOMS_TYPE_COUNT);
+
+    this.stepManager.buffer.TRANSFORMATION_MEAN_COUNT = [...this.stepManager.buffer.TRANSFORMATION_COUNT];
+    this.finishMean('TRANSFORMATION_MEAN_COUNT', this.stepManager.buffer.ATOMS_COUNT);
+
+    this.stepManager.buffer.TRANSFORMATION_TYPE_FROM_MEAN_COUNT = [...this.stepManager.buffer.TRANSFORMATION_TYPE_FROM_COUNT];
+    this.stepManager.buffer.TRANSFORMATION_TYPE_TO_MEAN_COUNT = [...this.stepManager.buffer.TRANSFORMATION_TYPE_TO_COUNT];
+    this.finishArrayMean('TRANSFORMATION_TYPE_FROM_MEAN_COUNT', this.stepManager.buffer.ATOMS_TYPE_COUNT);
+    this.finishArrayMean('TRANSFORMATION_TYPE_TO_MEAN_COUNT', this.stepManager.buffer.ATOMS_TYPE_COUNT);
 
     this.updateFpsMetrics();
     this.stepManager.save();

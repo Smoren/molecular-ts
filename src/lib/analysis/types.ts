@@ -26,6 +26,9 @@ export type WorldSummary<T> = {
   TRANSFORMATION_COUNT: T,
   TRANSFORMATION_TYPE_FROM_COUNT: T,
   TRANSFORMATION_TYPE_TO_COUNT: T,
+  TRANSFORMATION_MEAN_COUNT: T,
+  TRANSFORMATION_TYPE_FROM_MEAN_COUNT: T,
+  TRANSFORMATION_TYPE_TO_MEAN_COUNT: T,
 }
 
 export type SummaryAttr = keyof WorldSummary<unknown>;
@@ -60,6 +63,9 @@ export type QueueSummary<T> = {
   TRANSFORMATION_COUNT: QueueInterface<T>,
   TRANSFORMATION_TYPE_FROM_COUNT: QueueInterface<T>,
   TRANSFORMATION_TYPE_TO_COUNT: QueueInterface<T>,
+  TRANSFORMATION_MEAN_COUNT: QueueInterface<T>,
+  TRANSFORMATION_TYPE_FROM_MEAN_COUNT: QueueInterface<T>,
+  TRANSFORMATION_TYPE_TO_MEAN_COUNT: QueueInterface<T>,
 }
 
 export interface QueueSummaryManagerInterface<T> {
@@ -81,8 +87,6 @@ export interface SummaryManagerInterface {
 }
 
 export type Compound = Set<AtomInterface>;
-
-export const STAT_SUMMARY_ARRAY_SIZE = 6;
 
 export type StatSummary = {
   min: number;
