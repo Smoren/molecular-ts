@@ -115,7 +115,7 @@ const timeSeriesAtomsTypeMeanSpeedConfig = {
   }),
 }
 const timeSeriesAtomsTypeLinksCountConfig = {
-  id: 'atoms-type-links-count-speed',
+  id: 'atoms-type-links-count',
   name: 'Atoms Type Links Count',
   height: 200,
   data: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_COUNT'],
@@ -131,7 +131,7 @@ const timeSeriesAtomsTypeLinksCountConfig = {
   }),
 }
 const timeSeriesAtomsTypeLinksMeanCountConfig = {
-  id: 'atoms-type-links-mean-count-speed',
+  id: 'atoms-type-links-mean-count',
   name: 'Atoms Type Links Mean Count',
   height: 200,
   data: () => getCurrentSimulation().summary['ATOMS_TYPE_LINKS_MEAN_COUNT'],
@@ -261,10 +261,59 @@ const timeSeriesLinksTypeDeletedMeanConfig = {
   }),
 }
 
+const timeSeriesTransformationsCountConfig: ChartConfig = {
+  id: 'transformations-count',
+  name: 'Transformations Count',
+  data: () => getCurrentSimulation().summary['TRANSFORMATION_COUNT'],
+  config: [
+    {
+      name: 'Transformations Count',
+      options: {
+        strokeStyle: 'rgb(13, 110, 253)',
+        fillStyle: 'rgba(13, 110, 253, 0.4)',
+        lineWidth: 3,
+      },
+    },
+  ],
+};
+const timeSeriesTransformationsTypeFromCountConfig = {
+  id: 'transformations-type-from-count',
+  name: 'Transformations Type From Count',
+  height: 200,
+  data: () => getCurrentSimulation().summary['TRANSFORMATION_TYPE_FROM_COUNT'],
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
+    return {
+      name: 'Transformations Type From Count',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+    };
+  }),
+}
+const timeSeriesTransformationsTypeToCountConfig = {
+  id: 'transformations-type-to-count',
+  name: 'Transformations Type To Count',
+  height: 200,
+  data: () => getCurrentSimulation().summary['TRANSFORMATION_TYPE_TO_COUNT'],
+  config: getCurrentSimulation().config.typesConfig.COLORS.map((color) => {
+    const strColor = color.join(', ');
+    return {
+      name: 'Transformations Type To Count',
+      options: {
+        strokeStyle: `rgb(${strColor})`,
+        lineWidth: 2,
+      },
+    };
+  }),
+}
+
 const timeSeriesConfigBase: ChartConfig[] = [
   timeSeriesFpsConfig,
   timeSeriesAtomsMeanSpeedConfig,
   timeSeriesLinksCountConfig,
+  timeSeriesTransformationsCountConfig,
 ];
 
 const timeSeriesConfigCount: ChartConfig[] = [
@@ -274,6 +323,8 @@ const timeSeriesConfigCount: ChartConfig[] = [
   timeSeriesLinksTypeCreatedConfig,
   timeSeriesLinksTypeDeletedConfig,
   timeSeriesAtomsTypeMeanSpeedConfig,
+  timeSeriesTransformationsTypeFromCountConfig,
+  timeSeriesTransformationsTypeToCountConfig,
 ];
 
 const timeSeriesConfigMean: ChartConfig[] = [

@@ -114,7 +114,12 @@ export class InteractionManager implements InteractionManagerInterface {
       dist2 <= (this.WORLD_CONFIG.MAX_LINK_RADIUS * this.getDistanceFactor(lhs, rhs) * this.getDistanceFactor(rhs, lhs)) ** 2
     ) {
       const link = this.linkManager.create(lhs, rhs);
-      this.ruleHelper.handleTransform(lhs, rhs);
+
+      const transformations = this.ruleHelper.handleTransform(lhs, rhs);
+      for (const transformation of transformations) {
+        this.summaryManager.noticeTransformation(...transformation);
+      }
+
       this.summaryManager.noticeLinkCreated(link, this.WORLD_CONFIG);
     }
   }

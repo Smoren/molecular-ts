@@ -87,9 +87,11 @@ export class RulesHelper implements RulesHelperInterface {
     return this._isLinkRedundant(lhs, rhs) || this._isLinkRedundant(rhs, lhs);
   }
 
-  handleTransform(lhs: AtomInterface, rhs: AtomInterface): void {
-    this._handleTransform(lhs, rhs);
-    this._handleTransform(rhs, lhs);
+  handleTransform(lhs: AtomInterface, rhs: AtomInterface): [number, number][] {
+    return [
+      ...this._handleTransform(lhs, rhs),
+      ...this._handleTransform(rhs, lhs),
+    ];
   }
 
   private _canLink(lhs: AtomInterface, rhs: AtomInterface): boolean {
@@ -107,11 +109,12 @@ export class RulesHelper implements RulesHelperInterface {
     return lhs.bonds.lengthOf(rhs.type) > this.TYPES_CONFIG.TYPE_LINKS[lhs.type][rhs.type];
   }
 
-  private _handleTransform(lhs: AtomInterface, rhs: AtomInterface): void {
+  private _handleTransform(lhs: AtomInterface, rhs: AtomInterface): [number, number][] {
     if (!this._issetTransformation(lhs, rhs)) {
-      return;
+      return [];
     }
     lhs.newType = this.TYPES_CONFIG.TRANSFORMATION[lhs.type][rhs.type];
+    return [[lhs.type, lhs.newType]];
   }
 
   private _issetTransformation(lhs: AtomInterface, rhs: AtomInterface): boolean {

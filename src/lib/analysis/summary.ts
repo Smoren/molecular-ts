@@ -30,6 +30,9 @@ const createEmptyStepSummary = (typesCount: number): WorldSummary<number[]> => (
   LINKS_COUNT: [0],
   STEP_DURATION: [0],
   STEP_FREQUENCY: [0],
+  TRANSFORMATION_COUNT: [0],
+  TRANSFORMATION_TYPE_FROM_COUNT: Array(typesCount).fill(0),
+  TRANSFORMATION_TYPE_TO_COUNT: Array(typesCount).fill(0),
 });
 
 export class StepSummaryManager implements StepSummaryManagerInterface<number[]> {
@@ -105,6 +108,9 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
     LINKS_TYPE_DELETED_MEAN: 4,
     STEP_DURATION: 2,
     STEP_FREQUENCY: 1,
+    TRANSFORMATION_COUNT: 0,
+    TRANSFORMATION_TYPE_FROM_COUNT: 0,
+    TRANSFORMATION_TYPE_TO_COUNT: 0,
   }
 
   constructor(maxSize: number) {
@@ -127,6 +133,9 @@ export class QueueSummaryManager implements QueueSummaryManagerInterface<number[
       LINKS_TYPE_DELETED_MEAN: new Queue(maxSize),
       STEP_DURATION: new Queue(maxSize),
       STEP_FREQUENCY: new Queue(maxSize),
+      TRANSFORMATION_COUNT: new Queue(maxSize),
+      TRANSFORMATION_TYPE_FROM_COUNT: new Queue(maxSize),
+      TRANSFORMATION_TYPE_TO_COUNT: new Queue(maxSize),
     }
   }
 
@@ -199,6 +208,13 @@ export class SummaryManager implements SummaryManagerInterface {
 
     this.stepManager.buffer.LINKS_TYPE_DELETED[link.lhs.type]++;
     this.stepManager.buffer.LINKS_TYPE_DELETED[link.rhs.type]++;
+  }
+
+  noticeTransformation(typeFrom: number, typeTo: number): void {
+    this.stepManager.buffer.TRANSFORMATION_COUNT[0]++;
+
+    this.stepManager.buffer.TRANSFORMATION_TYPE_FROM_COUNT[typeFrom]++;
+    this.stepManager.buffer.TRANSFORMATION_TYPE_TO_COUNT[typeTo]++;
   }
 
   startStep(typesConfig: TypesConfig): void {

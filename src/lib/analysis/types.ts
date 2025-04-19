@@ -23,6 +23,9 @@ export type WorldSummary<T> = {
   LINKS_TYPE_DELETED_MEAN: T;
   STEP_DURATION: T;
   STEP_FREQUENCY: T,
+  TRANSFORMATION_COUNT: T,
+  TRANSFORMATION_TYPE_FROM_COUNT: T,
+  TRANSFORMATION_TYPE_TO_COUNT: T,
 }
 
 export type SummaryAttr = keyof WorldSummary<unknown>;
@@ -54,6 +57,9 @@ export type QueueSummary<T> = {
   LINKS_TYPE_DELETED_MEAN: QueueInterface<T>;
   STEP_DURATION: QueueInterface<T>;
   STEP_FREQUENCY: QueueInterface<T>,
+  TRANSFORMATION_COUNT: QueueInterface<T>,
+  TRANSFORMATION_TYPE_FROM_COUNT: QueueInterface<T>,
+  TRANSFORMATION_TYPE_TO_COUNT: QueueInterface<T>,
 }
 
 export interface QueueSummaryManagerInterface<T> {
@@ -71,6 +77,7 @@ export interface SummaryManagerInterface {
   noticeLink(link: LinkInterface, worldConfig: WorldConfig): void;
   noticeLinkCreated(link: LinkInterface, worldConfig: WorldConfig): void;
   noticeLinkDeleted(link: LinkInterface, worldConfig: WorldConfig): void;
+  noticeTransformation(typeFrom: number, typeTo: number): void;
 }
 
 export type Compound = Set<AtomInterface>;
