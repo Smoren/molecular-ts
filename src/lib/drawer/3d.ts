@@ -9,7 +9,10 @@ import type { AtomInterface, LinkInterface } from '../simulation/types/atomic';
 import {
   Scene,
   Engine,
+  Camera,
+  FreeCamera,
   UniversalCamera,
+  AnaglyphFreeCamera,
   Vector3,
   Light,
   PointLight,
@@ -19,7 +22,6 @@ import {
 } from 'babylonjs';
 import type { NumericVector } from '../math/types';
 import type { LinkManagerInterface } from '../simulation/types/utils';
-import { createVector } from '../math';
 import { EventManager } from '../drawer/utils';
 
 export class Drawer3d implements DrawerInterface {
@@ -29,7 +31,6 @@ export class Drawer3d implements DrawerInterface {
   private readonly domElement: HTMLCanvasElement;
   private readonly engine: Engine;
   private readonly scene: Scene;
-  private readonly camera: UniversalCamera;
   private readonly lights: Light[];
   private readonly atomsMap: Map<AtomInterface, Mesh> = new Map();
   private readonly linksMap: Map<LinkInterface, Mesh> = new Map();
@@ -37,6 +38,10 @@ export class Drawer3d implements DrawerInterface {
     new Vector3(0, 0, 0),
     new Vector3(0, 0, 0),
   ];
+  private readonly DEFAULT_CAMERA_POSITION: NumericVector = [631, 679, 805];
+  private readonly DEFAULT_CAMERA_ROTATION: NumericVector = [0.54, 97.98, 0];
+  private readonly DEFAULT_CAMERA_INTERAXIAL_DISTANCE: number = 0.03;
+  private camera: FreeCamera;
 
   constructor({
     domElement,
@@ -48,7 +53,7 @@ export class Drawer3d implements DrawerInterface {
     this.TYPES_CONFIG = typesConfig;
     this.engine = new Engine(this.domElement, false, {}, true);
     this.scene = new Scene(this.engine);
-    this.camera = this.createCamera([631, 679, 805], [0.54, 97.98, 0]);
+    this.camera = this.createFreeCamera(this.DEFAULT_CAMERA_POSITION, this.DEFAULT_CAMERA_ROTATION);
     this.scene.activeCamera!.attachControl(this.domElement);
     this.lights = [
       this.createLight([1000, 1000, 1000], 0.006),
@@ -62,6 +67,7 @@ export class Drawer3d implements DrawerInterface {
     this.eventManager = new EventManager();
 
     this.initEventHandlers();
+    (window as any).toggleCamera = () => this.toggleCamera();
   }
 
   draw(atoms: Array<AtomInterface>, links: LinkManagerInterface): void {
@@ -124,8 +130,28 @@ export class Drawer3d implements DrawerInterface {
     }
   }
 
-  private createCamera(position: NumericVector, rotation: NumericVector): UniversalCamera {
-    const camera = new UniversalCamera('Camera', new Vector3(...position), this.scene);
+  private toggleCamera(): void {
+    const [position, rotation] = [this.camera.position, this.camera.rotation];
+    this.camera.detachControl();
+    this.camera.dispose();
+    if (this.camera instanceof AnaglyphFreeCamera) {
+      this.camera = this.createFreeCamera([position.x, position.y, position.z], [rotation.x, rotation.y, rotation.z]);
+    } else {
+      this.camera = this.createAnaglyphCamera([position.x, position.y, position.z], [rotation.x, rotation.y, rotation.z]);
+    }
+    this.scene.activeCamera = this.camera;
+    this.scene.activeCamera.attachControl(this.domElement);
+  }
+
+  private createFreeCamera(position: NumericVector, rotation: NumericVector): FreeCamera {
+    const camera = new FreeCamera('Camera', new Vector3(...position), this.scene);
+    camera.rotation = new Vector3(...rotation);
+    camera.speed = 15;
+    return camera;
+  }
+
+  private createAnaglyphCamera(position: NumericVector, rotation: NumericVector): FreeCamera {
+    const camera = new AnaglyphFreeCamera('AnaglyphCamera', new Vector3(...position), this.DEFAULT_CAMERA_INTERAXIAL_DISTANCE, this.scene);
     camera.rotation = new Vector3(...rotation);
     camera.speed = 15;
     return camera;
