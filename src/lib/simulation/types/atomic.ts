@@ -1,5 +1,5 @@
 import type { VectorInterface } from '../../math/types';
-import type { SectorInterface } from "./sector";
+import type { SpatialGridCellInterface } from "./spatial";
 
 export interface BondMapInterface {
   length: number;
@@ -22,7 +22,7 @@ export interface AtomInterface {
   readonly linkElasticFactors: number[];
   type: number;
   newType: number | undefined;
-  sector?: SectorInterface;
+  spatialGridCell?: SpatialGridCellInterface;
   exportState(): Record<string, unknown>;
 }
 

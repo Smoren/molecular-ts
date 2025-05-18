@@ -3,12 +3,12 @@ import type { AtomInterface } from './types/atomic';
 import type { DrawerInterface } from '../drawer/types';
 import type { LinkManagerInterface, RunningStateInterface } from './types/utils';
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
-import type { SectorManagerInterface } from './types/sector';
+import type { SpatialGridManagerManagerInterface } from './types/spatial';
 import type { WorldSummary, SummaryManagerInterface } from '../analysis/types';
 import type { GraphInterface } from "../graph/types";
 import type { NumericVector } from '../math/types';
 import type { Compound } from '../analysis/types';
-import { SectorManager } from './sector';
+import { SpatialGridManager } from './spatial';
 import { LinkManager, RulesHelper, RunningState } from '../utils/structs';
 import { InteractionManager } from './interaction';
 import { SummaryManager } from '../analysis/summary';
@@ -34,7 +34,7 @@ export class Simulation implements SimulationInterface {
   private readonly _links: LinkManagerInterface;
   private readonly drawer: DrawerInterface;
   private readonly interactionManager: InteractionManagerInterface;
-  private readonly sectorManager: SectorManagerInterface;
+  private readonly spatialGridManager: SpatialGridManagerManagerInterface;
   private readonly summaryManager: SummaryManagerInterface;
   private readonly runningState: RunningStateInterface;
 
@@ -53,7 +53,7 @@ export class Simulation implements SimulationInterface {
       new RulesHelper(this.config.worldConfig, this.config.typesConfig),
       this.summaryManager,
     );
-    this.sectorManager = new SectorManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
+    this.spatialGridManager = new SpatialGridManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
     this.runningState = new RunningState();
 
     this.initEventHandlers();
@@ -116,7 +116,7 @@ export class Simulation implements SimulationInterface {
 
   clear() {
     this._atoms.length = 0;
-    this.sectorManager.clear();
+    this.spatialGridManager.clear();
     this._links.clear();
     this.drawer.clear();
   }
@@ -190,12 +190,12 @@ export class Simulation implements SimulationInterface {
       this.summaryManager.noticeAtom(atom, this.config.worldConfig);
     }
     for (const atom of this._atoms) {
-      this.sectorManager.handleAtom(atom, (lhs, rhs) => {
+      this.spatialGridManager.handleAtom(atom, (lhs, rhs) => {
         this.interactionManager.interactAtomsStep1(lhs, rhs);
       });
     }
     for (const atom of this._atoms) {
-      this.sectorManager.handleAtom(atom, (lhs, rhs) => {
+      this.spatialGridManager.handleAtom(atom, (lhs, rhs) => {
         this.interactionManager.interactAtomsStep2(lhs, rhs);
       });
     }
@@ -242,7 +242,7 @@ export class Simulation implements SimulationInterface {
     this.drawer.eventManager.onMouseDown((event) => {
       console.log('MOUSE COORDS', event.coords);
       console.log('STEP INDEX', this.summaryManager.step);
-      const atom = this.sectorManager.findAtomByCoords(
+      const atom = this.spatialGridManager.findAtomByCoords(
         event.coords,
         this.config.typesConfig.RADIUS,
         this.config.worldConfig.ATOM_RADIUS*2,

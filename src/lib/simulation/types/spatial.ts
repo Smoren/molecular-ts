@@ -1,7 +1,7 @@
 import type { AtomInterface } from './atomic';
 import type { NumericVector } from '../../math/types';
 
-export interface SectorInterface extends Iterable<AtomInterface> {
+export interface SpatialGridCellInterface extends Iterable<AtomInterface> {
   length: number;
   atoms: Set<AtomInterface>;
   coords: NumericVector;
@@ -10,16 +10,16 @@ export interface SectorInterface extends Iterable<AtomInterface> {
   empty(): boolean;
 }
 
-export interface SectorMapInterface {
-  getNeighbourhood(atom: AtomInterface): SectorInterface[];
+export interface SpatialGridInterface {
+  getNeighbourhood(atom: AtomInterface): SpatialGridCellInterface[];
   countAtoms(): number;
   clear(): void;
-  handleAtom(atom: AtomInterface): SectorInterface;
-  getSector(sectorCoords: NumericVector): SectorInterface;
+  handleAtom(atom: AtomInterface): SpatialGridCellInterface;
+  getCell(cellCoords: NumericVector): SpatialGridCellInterface;
   findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined;
 }
 
-export interface SectorManagerInterface {
+export interface SpatialGridManagerManagerInterface {
   handleAtom(atom: AtomInterface, callback: (lhs: AtomInterface, rhs: AtomInterface) => void): void;
   countAtoms(): number;
   clear(): void;

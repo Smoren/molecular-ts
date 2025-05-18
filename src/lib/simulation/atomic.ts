@@ -4,7 +4,7 @@ import type {
   LinkInterface,
 } from './types/atomic';
 import type { NumericVector, VectorInterface } from '../math/types';
-import type { SectorInterface } from './types/sector';
+import type { SpatialGridCellInterface } from './types/spatial';
 import { toVector } from '../math';
 
 class BondMap implements BondMapInterface {
@@ -72,7 +72,7 @@ export class Atom implements AtomInterface {
   readonly linkElasticFactors: number[];
   type: number;
   newType: number | undefined = undefined;
-  sector?: SectorInterface;
+  spatialGridCell?: SpatialGridCellInterface;
 
   constructor(id: number, type: number, position: NumericVector, speed?: NumericVector) {
     this.id = id;

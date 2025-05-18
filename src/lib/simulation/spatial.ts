@@ -1,6 +1,6 @@
 import type { AtomInterface } from './types/atomic';
 import type { NumericVector } from '../math/types';
-import type { SectorInterface, SectorManagerInterface, SectorMapInterface } from './types/sector';
+import type { SpatialGridCellInterface, SpatialGridManagerManagerInterface, SpatialGridInterface } from './types/spatial';
 
 function incPoint(aPoint: NumericVector, aCenterPoint: NumericVector, aDim: number): boolean {
   aPoint[aDim]++;
@@ -26,7 +26,7 @@ function getNeighboursCoords(coords: NumericVector): Iterable<NumericVector> {
   return result;
 }
 
-class Sector implements SectorInterface {
+class SpatialGridCell implements SpatialGridCellInterface {
   atoms: Set<AtomInterface> = new Set<AtomInterface>();
   coords: NumericVector;
 
@@ -55,8 +55,8 @@ class Sector implements SectorInterface {
   }
 }
 
-class SectorMap implements SectorMapInterface {
-  map: Map<number, Sector> = new Map();
+class SpatialGrid implements SpatialGridInterface {
+  map: Map<number, SpatialGridCell> = new Map();
   quantum: number;
   phase: number;
 
@@ -65,20 +65,20 @@ class SectorMap implements SectorMapInterface {
     this.phase = phase;
   }
 
-  getNeighbourhood(atom: AtomInterface): SectorInterface[] {
+  getNeighbourhood(atom: AtomInterface): SpatialGridCellInterface[] {
     const result = [];
-    const currentSector = this.handleAtom(atom);
-    for (const coords of getNeighboursCoords(currentSector.coords)) {
-      const sector = this.getSector(coords);
-      result.push(sector);
+    const currentCell = this.handleAtom(atom);
+    for (const coords of getNeighboursCoords(currentCell.coords)) {
+      const cell = this.getCell(coords);
+      result.push(cell);
     }
     return result;
   }
 
   countAtoms(): number {
     let result = 0;
-    for (const [, sector] of this.map) {
-      result += sector.length;
+    for (const [, cell] of this.map) {
+      result += cell.length;
     }
     return result;
   }
@@ -87,37 +87,37 @@ class SectorMap implements SectorMapInterface {
     this.map.clear();
   }
 
-  public handleAtom(atom: AtomInterface): SectorInterface {
-    const actualSector = this.getSectorByAtom(atom);
-    const currentSector = atom.sector;
+  public handleAtom(atom: AtomInterface): SpatialGridCellInterface {
+    const actualCell = this.getCellByAtom(atom);
+    const currentCell = atom.spatialGridCell;
 
-    if (actualSector !== currentSector) {
-      if (currentSector !== undefined) {
-        currentSector.remove(atom);
+    if (actualCell !== currentCell) {
+      if (currentCell !== undefined) {
+        currentCell.remove(atom);
       }
-      actualSector.add(atom);
-      atom.sector = actualSector;
+      actualCell.add(atom);
+      atom.spatialGridCell = actualCell;
     }
 
-    return actualSector;
+    return actualCell;
   }
 
-  public getSector(sectorCoords: NumericVector): SectorInterface {
-    const key = sectorCoords.length === 3
-      ? sectorCoords[0] * 10000 + sectorCoords[1] * 100000000 + sectorCoords[2]
-      : sectorCoords[0] * 10000 + sectorCoords[1];
+  public getCell(cellCoords: NumericVector): SpatialGridCellInterface {
+    const key = cellCoords.length === 3
+      ? cellCoords[0] * 10000 + cellCoords[1] * 100000000 + cellCoords[2]
+      : cellCoords[0] * 10000 + cellCoords[1];
 
     if (!this.map.has(key)) {
-      this.map.set(key, new Sector([...sectorCoords]));
+      this.map.set(key, new SpatialGridCell([...cellCoords]));
     }
 
-    return this.map.get(key) as Sector;
+    return this.map.get(key) as SpatialGridCell;
   }
 
   public findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined {
-    const sectorCoords = this.getSectorCoords(coords);
-    const sector = this.getSector(sectorCoords);
-    for (const atom of sector) {
+    const cellCoords = this.getCellCoords(coords);
+    const cell = this.getCell(cellCoords);
+    for (const atom of cell) {
       const dist = atom.position.clone().sub(coords).abs;
       if (dist <= radiusMap[atom.type] * radiusMultiplier) {
         return atom;
@@ -126,12 +126,12 @@ class SectorMap implements SectorMapInterface {
     return undefined;
   }
 
-  private getSectorByAtom(atom: AtomInterface): SectorInterface {
-    const sectorCoords = this.getSectorCoords(atom.position);
-    return this.getSector(sectorCoords);
+  private getCellByAtom(atom: AtomInterface): SpatialGridCellInterface {
+    const cellCoords = this.getCellCoords(atom.position);
+    return this.getCell(cellCoords);
   }
 
-  private getSectorCoords(coords: NumericVector): NumericVector {
+  private getCellCoords(coords: NumericVector): NumericVector {
     const result: NumericVector = new Array<number>(coords.length);
     for (let i=0; i<coords.length; ++i) {
       result[i] = Math.round(coords[i] / this.quantum) + this.phase;
@@ -140,11 +140,11 @@ class SectorMap implements SectorMapInterface {
   }
 }
 
-export class SectorManager implements SectorManagerInterface {
-  private readonly map: SectorMap;
+export class SpatialGridManager implements SpatialGridManagerManagerInterface {
+  private readonly map: SpatialGrid;
 
   constructor(quantum: number) {
-    this.map = new SectorMap(quantum, 0);
+    this.map = new SpatialGrid(quantum, 0);
   }
 
   countAtoms(): number {
@@ -161,8 +161,8 @@ export class SectorManager implements SectorManagerInterface {
       for (let i=cc.coords[0]-1; i<=cc.coords[0]+1; ++i) {
         for (let j=cc.coords[1]-1; j<=cc.coords[1]+1; ++j) {
           for (let k=cc.coords[2]-1; k<=cc.coords[2]+1; ++k) {
-            const sector = this.map.getSector([i, j, k]);
-            for (const neighbour of sector.atoms) {
+            const cell = this.map.getCell([i, j, k]);
+            for (const neighbour of cell.atoms) {
               callback(atom, neighbour);
             }
           }
@@ -172,8 +172,8 @@ export class SectorManager implements SectorManagerInterface {
       const cc = this.map.handleAtom(atom);
       for (let i=cc.coords[0]-1; i<=cc.coords[0]+1; ++i) {
         for (let j=cc.coords[1]-1; j<=cc.coords[1]+1; ++j) {
-          const sector = this.map.getSector([i, j]);
-          for (const neighbour of sector.atoms) {
+          const cell = this.map.getCell([i, j]);
+          for (const neighbour of cell.atoms) {
             callback(atom, neighbour);
           }
         }
@@ -181,8 +181,8 @@ export class SectorManager implements SectorManagerInterface {
     } else {
       const neighborhood = this.map.getNeighbourhood(atom);
       for (let i=0; i<neighborhood.length; ++i) {
-        const sector = neighborhood[i];
-        for (const neighbour of sector.atoms) {
+        const cell = neighborhood[i];
+        for (const neighbour of cell.atoms) {
           callback(atom, neighbour);
         }
       }
