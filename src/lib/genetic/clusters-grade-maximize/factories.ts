@@ -6,7 +6,7 @@ export function createDefaultClusterizationConfig(): ClusterizationConfig {
       minCompoundSize: 5,
       minUniqueTypesCount: 2,
       monomerCandidateVertexesCountBounds: [2, 10],
-      polymerCandidateVertexesCountBounds: [5, 50],
+      polymerCandidateVertexesCountBounds: [5, 100],
       minPolymerSize: 2,
       minPolymerConfidenceScore: 0.5,
     },
