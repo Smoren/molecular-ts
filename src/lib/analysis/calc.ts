@@ -222,7 +222,7 @@ export function calcClusterizationPolymersScore(
   const polymerCandidates = allGraphs.filter(
     (graph) => (
       graph.vertexes.length > polymerVertexesCountBounds[0] &&
-      graph.edges.length < polymerVertexesCountBounds[1]
+      graph.vertexes.length < polymerVertexesCountBounds[1]
     ),
   );
 
