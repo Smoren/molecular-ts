@@ -21,7 +21,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/vue-fontawesome": "^3.0.6",
     "@vueuse/core": "^12.8.2",
-    "babylonjs": "^6.0.0",
+    "babylonjs": "^8.13.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "browser-process": "^0.0.1",
