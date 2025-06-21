@@ -94,6 +94,7 @@ export class Drawer3d implements DrawerInterface {
       for (const [link, drawObject] of this.linksMap) {
         if (!links.has(link)) {
           drawObject.dispose();
+          drawObject.material?.dispose();
           this.linksMap.delete(link);
         }
       }
@@ -118,6 +119,8 @@ export class Drawer3d implements DrawerInterface {
     material.diffuseColor.g = color[1];
     material.diffuseColor.b = color[2];
     material.freeze();
+
+    drawObject.material?.dispose();
     drawObject.material = material;
   }
 
@@ -230,6 +233,7 @@ export class Drawer3d implements DrawerInterface {
     material.diffuseColor.g = color[1];
     material.diffuseColor.b = color[2];
     material.freeze();
+    mesh.material?.dispose();
     mesh.material = material;
   }
 
