@@ -4,7 +4,7 @@ import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { NumericVector, VectorInterface } from '../math/types';
 import type { InteractionManagerInterface } from './types/interaction';
 import type { PhysicModelInterface } from './types/interaction';
-import { Vector } from '../math';
+import { isEqual, Vector } from '../math';
 import { getViewModeConfig } from '../utils/functions';
 import type { SummaryManagerInterface } from '../analysis/types';
 
@@ -200,6 +200,9 @@ export class InteractionManager implements InteractionManagerInterface {
   }
 
   private handleTemperature(atom: AtomInterface): void {
+    if (isEqual(this.WORLD_CONFIG.TEMPERATURE_MULTIPLIER, 0)) {
+      return;
+    }
     const func = this.WORLD_CONFIG.TEMPERATURE_FUNCTION;
     const mult = this.WORLD_CONFIG.TEMPERATURE_MULTIPLIER;
     const v = atom.speed
