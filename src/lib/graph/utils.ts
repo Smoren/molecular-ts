@@ -15,7 +15,7 @@ export function getGraphCentroid(graph: GraphInterface): VectorInterface {
 
   return graph.vertexes.reduce<VectorInterface>(
     (acc, v) => acc.add(v.position),
-    createVector([0, 0]),
+    createVector(Array(graph.vertexes[0].position.length).fill(0)),
   ).div(graph.vertexes.length);
 }
 
