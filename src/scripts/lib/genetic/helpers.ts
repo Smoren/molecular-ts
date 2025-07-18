@@ -22,11 +22,15 @@ export function printGenerationSummary(generation: number, bestGenome: Simulatio
 export function modifyMacroConfig(
   config: GeneticSearchConfig,
   populationSize: number | undefined,
+  startPopulationSize: number | undefined,
   survivalRate: number | undefined,
   crossoverRate: number | undefined,
 ): void {
   if (populationSize !== undefined) {
     config.populationSize = populationSize;
+  }
+  if (startPopulationSize !== undefined) {
+    config.startPopulationSize = startPopulationSize;
   }
   if (survivalRate !== undefined) {
     config.survivalRate = survivalRate;

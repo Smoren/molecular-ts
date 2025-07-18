@@ -38,6 +38,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
       poolSize,
       typesCount,
       generationsCount,
+      startPopulationSize,
       populationSize,
       survivalRate,
       crossoverRate,
@@ -73,7 +74,7 @@ export const actionClustersGradeMaximize = async (...args: string[]) => {
     };
 
     const mainConfig = getGeneticMainConfig(mainConfigFileName, poolSize, clusterizationGradeMultiprocessingTask);
-    modifyMacroConfig(mainConfig.macro, populationSize, survivalRate, crossoverRate);
+    modifyMacroConfig(mainConfig.macro, populationSize, startPopulationSize, survivalRate, crossoverRate);
 
     const selectionStrategyFactoryConfig: SelectionStrategyFactoryConfig = {
       type: selectionStrategyType,
@@ -185,6 +186,7 @@ function parseArgs(argsParser: ArgsParser) {
   const typesCount = argsParser.getInt('typesCount', 3);
   const generationsCount = argsParser.getNullableInt('generationsCount');
   const populationSize = argsParser.getNullableInt('populationSize');
+  const startPopulationSize = argsParser.getNullableInt('startPopulationSize');
   const survivalRate = argsParser.getNullableFloat('survivalRate');
   const crossoverRate = argsParser.getNullableFloat('crossoverRate');
 
@@ -224,6 +226,7 @@ function parseArgs(argsParser: ArgsParser) {
     typesCount,
     generationsCount,
     populationSize,
+    startPopulationSize,
     survivalRate,
     crossoverRate,
     mainConfigFileName,
