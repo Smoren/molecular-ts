@@ -15,7 +15,7 @@ export function isEqual(lhs: number, rhs: number) {
 }
 
 export function round(value: number, precision: number): number {
-  return Number(value.toFixed(precision));
+  return Number(value.toFixed(Math.min(precision, 100)));
 }
 
 export function roundWithStep(value: number, step: number, precision?: number): number {
