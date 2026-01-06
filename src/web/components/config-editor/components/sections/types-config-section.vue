@@ -207,7 +207,7 @@ const linkElasticFactorConfigDescription = computed(() => {
         <input-header
           name="Transformations on link creation"
           tooltip="Experimental feature. A + B ➔ C means that when the particle of type A connects to a particle of type B,
-                   then the particle of type A changes its type to C."
+                   then the particle of type B changes its type to C."
         />
         <div style="margin-top: 10px;"></div>
         <transformation-config :colors="typesConfig.COLORS" v-model="typesConfig.TRANSFORMATION" />
