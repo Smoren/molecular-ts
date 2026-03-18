@@ -2,7 +2,7 @@ import type {
   TypesConfig,
   WorldConfig,
 } from "../../../config/types";
-import { create2dDrawer } from "../../../drawer/2d";
+import { create2dDrawer, createDefaultShowConfig } from "../../../drawer/2d";
 import { creatDefaultTypesConfig } from "../../../config/atom-types";
 import { createBaseWorldConfig } from "../../../config/world";
 import { create2dRandomDistribution } from "../../../config/atoms";
@@ -19,6 +19,6 @@ export function create2dSimulationWithConstTypes() {
     typesConfig: TYPES_CONFIG,
     physicModel: new PhysicModelV1(WORLD_CONFIG, TYPES_CONFIG),
     atomsFactory: create2dRandomDistribution,
-    drawer: create2dDrawer('canvas', WORLD_CONFIG, TYPES_CONFIG),
+    drawer: create2dDrawer('canvas', WORLD_CONFIG, TYPES_CONFIG, createDefaultShowConfig()),
   });
 }

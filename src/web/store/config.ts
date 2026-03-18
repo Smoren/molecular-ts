@@ -26,14 +26,18 @@ import {
   convertWorldConfigForBackwardCompatibility,
   convertTypesSymmetricConfigForBackwardCompatibility,
 } from '@/web/utils/backward';
+import type { ShowConfig } from "@/lib/drawer/types";
+import { createDefaultShowConfig } from "@/lib/drawer/2d";
 
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
   const typesConfigRaw: TypesConfig = creatDefaultTypesConfig();
+  const showConfigRaw: ShowConfig = createDefaultShowConfig();
 
   const worldConfig: Ref<WorldConfig> = ref(fullCopyObject(worldConfigRaw));
   const typesConfig: Ref<TypesConfig> = ref(fullCopyObject(typesConfigRaw));
   const randomTypesConfig: Ref<RandomTypesConfig> = ref(createDefaultRandomTypesConfig(typesConfigRaw.COLORS.length));
+  const showConfig: Ref<ShowConfig> = ref(fullCopyObject(showConfigRaw));
 
   const flash = useFlash();
   const FLASH_IMPORT_STARTED = Symbol();
@@ -57,6 +61,7 @@ export const useConfigStore = defineStore("config", () => {
     return {
       worldConfig: worldConfigRaw,
       typesConfig: typesConfigRaw,
+      showConfig: showConfigRaw,
     }
   }
 
@@ -91,6 +96,13 @@ export const useConfigStore = defineStore("config", () => {
     const buf = fullCopyObject(newConfig);
     for (const i in newConfig) {
       (worldConfigRaw[i as keyof WorldConfig] as T) = buf[i as keyof WorldConfig] as T;
+    }
+  }
+
+  const setShowConfigRaw = <T>(newConfig: ShowConfig) => {
+    const buf = fullCopyObject(newConfig);
+    for (const i in newConfig) {
+      (showConfigRaw[i as keyof ShowConfig] as T) = buf[i as keyof ShowConfig] as T;
     }
   }
 
@@ -279,9 +291,14 @@ export const useConfigStore = defineStore("config", () => {
     setTypesConfigRaw(newConfig);
   }, { deep: true });
 
+  watch(showConfig, (newConfig: ShowConfig) => {
+    setShowConfigRaw(newConfig);
+  }, { deep: true });
+
   return {
     worldConfig,
     typesConfig,
+    showConfig,
     randomTypesConfig,
     typesSymmetricConfig,
     syncConfigBounds,

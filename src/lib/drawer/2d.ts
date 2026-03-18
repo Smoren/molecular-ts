@@ -4,8 +4,8 @@ import type {
   Drawer2dConfigInterface,
   DrawerInterface,
   EventManagerInterface,
-  MouseEventListenerCallback,
-  ViewConfigInterface,
+  ShowConfig,
+  ViewConfig,
 } from './types';
 import type { ColorVector, TypesConfig, WorldConfig } from '../config/types';
 import type { AtomInterface, LinkInterface } from '../simulation/types/atomic';
@@ -43,17 +43,20 @@ export class Drawer2d implements DrawerInterface {
   private readonly WORLD_CONFIG: WorldConfig;
   private readonly TYPES_CONFIG: TypesConfig;
   private readonly domElement: HTMLCanvasElement;
-  private readonly viewConfig: ViewConfigInterface;
+  private readonly viewConfig: ViewConfig;
+  private readonly showConfig: ShowConfig;
   private readonly context: CanvasRenderingContext2D;
 
   constructor({
     domElement,
     viewConfig,
+    showConfig,
     worldConfig,
     typesConfig,
   }: Drawer2dConfigInterface) {
     this.domElement = domElement;
     this.viewConfig = viewConfig;
+    this.showConfig = showConfig;
     this.WORLD_CONFIG = worldConfig;
     this.TYPES_CONFIG = typesConfig;
     this.context = domElement.getContext('2d') as CanvasRenderingContext2D;
@@ -71,59 +74,62 @@ export class Drawer2d implements DrawerInterface {
     const canvasWidth = this.domElement.width;
     const canvasHeight = this.domElement.height;
 
-    // Фильтруем связи, которые попадают в видимую область
-    for (const link of links) {
-      // Применяем трансформации к позициям обоих атомов связи
-      const lhsX = link.lhs.position[0] * this.viewConfig.scale[0] + this.viewConfig.offset[0];
-      const lhsY = link.lhs.position[1] * this.viewConfig.scale[1] + this.viewConfig.offset[1];
-      const rhsX = link.rhs.position[0] * this.viewConfig.scale[0] + this.viewConfig.offset[0];
-      const rhsY = link.rhs.position[1] * this.viewConfig.scale[1] + this.viewConfig.offset[1];
+    if (this.showConfig.showLinks) {
+      for (const link of links) {
+        // Применяем трансформации к позициям обоих атомов связи
+        const lhsX = link.lhs.position[0] * this.viewConfig.scale[0] + this.viewConfig.offset[0];
+        const lhsY = link.lhs.position[1] * this.viewConfig.scale[1] + this.viewConfig.offset[1];
+        const rhsX = link.rhs.position[0] * this.viewConfig.scale[0] + this.viewConfig.offset[0];
+        const rhsY = link.rhs.position[1] * this.viewConfig.scale[1] + this.viewConfig.offset[1];
 
-      // Получаем максимальную ширину связи
-      const linkWidth = this.getLinkWidth(link) * this.viewConfig.scale[0];
+        // Получаем максимальную ширину связи
+        const linkWidth = this.getLinkWidth(link) * this.viewConfig.scale[0];
 
-      // Проверяем, попадает ли линия в видимую область
-      // Используем AABB (axis-aligned bounding box) линии с учетом ширины
-      const minX = Math.min(lhsX, rhsX) - linkWidth;
-      const maxX = Math.max(lhsX, rhsX) + linkWidth;
-      const minY = Math.min(lhsY, rhsY) - linkWidth;
-      const maxY = Math.max(lhsY, rhsY) + linkWidth;
+        // Проверяем, попадает ли линия в видимую область
+        // Используем AABB (axis-aligned bounding box) линии с учетом ширины
+        const minX = Math.min(lhsX, rhsX) - linkWidth;
+        const maxX = Math.max(lhsX, rhsX) + linkWidth;
+        const minY = Math.min(lhsY, rhsY) - linkWidth;
+        const maxY = Math.max(lhsY, rhsY) + linkWidth;
 
-      // Проверяем пересечение с видимой областью
-      if (maxX >= 0 && minX <= canvasWidth && maxY >= 0 && minY <= canvasHeight) {
-        // Рисуем только отфильтрованные связи
-        this.drawLine(
-          link.lhs.position,
-          link.rhs.position,
-          this.getLinkWidth(link),
-          `rgb(${this.getLinkColor(link).join(', ')})`,
-        );
+        // Проверяем пересечение с видимой областью
+        if (maxX >= 0 && minX <= canvasWidth && maxY >= 0 && minY <= canvasHeight) {
+          // Рисуем только отфильтрованные связи
+          this.drawLine(
+            link.lhs.position,
+            link.rhs.position,
+            this.getLinkWidth(link),
+            `rgb(${this.getLinkColor(link).join(', ')})`,
+          );
+        }
       }
     }
 
-    for (let i=0; i<atoms.length; ++i) {
-      const atom = atoms[i];
+    if (this.showConfig.showAtoms) {
+      for (let i=0; i<atoms.length; ++i) {
+        const atom = atoms[i];
 
-      // Применяем текущие трансформации к позиции атома
-      const transformedX = atom.position[0] * this.viewConfig.scale[0] + this.viewConfig.offset[0];
-      const transformedY = atom.position[1] * this.viewConfig.scale[1] + this.viewConfig.offset[1];
+        // Применяем текущие трансформации к позиции атома
+        const transformedX = atom.position[0] * this.viewConfig.scale[0] + this.viewConfig.offset[0];
+        const transformedY = atom.position[1] * this.viewConfig.scale[1] + this.viewConfig.offset[1];
 
-      // Получаем радиус атома в пикселях после трансформации
-      const atomRadius = this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS * this.viewConfig.scale[0];
+        // Получаем радиус атома в пикселях после трансформации
+        const atomRadius = this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS * this.viewConfig.scale[0];
 
-      // Проверяем, попадает ли атом в видимую область (с небольшим запасом)
-      if (
-        transformedX + atomRadius >= 0 &&
-        transformedX - atomRadius <= canvasWidth &&
-        transformedY + atomRadius >= 0 &&
-        transformedY - atomRadius <= canvasHeight
-      ) {
-        // Рисуем только отфильтрованные связи
-        this.drawCircle(
-          atom.position,
-          this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS,
-          this.TYPES_CONFIG.COLORS[atom.type],
-        );
+        // Проверяем, попадает ли атом в видимую область (с небольшим запасом)
+        if (
+          transformedX + atomRadius >= 0 &&
+          transformedX - atomRadius <= canvasWidth &&
+          transformedY + atomRadius >= 0 &&
+          transformedY - atomRadius <= canvasHeight
+        ) {
+          // Рисуем только отфильтрованные связи
+          this.drawCircle(
+            atom.position,
+            this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS,
+            this.TYPES_CONFIG.COLORS[atom.type],
+          );
+        }
       }
     }
 
@@ -343,6 +349,7 @@ export function create2dDrawer(
   canvasId: string,
   worldConfig: WorldConfig,
   typesConfig: TypesConfig,
+  showConfig: ShowConfig,
 ) {
   return new Drawer2d({
     domElement: document.getElementById(canvasId) as HTMLCanvasElement,
@@ -350,7 +357,15 @@ export function create2dDrawer(
       offset: [0, 0],
       scale: [1, 1],
     },
+    showConfig,
     worldConfig,
     typesConfig,
   });
+}
+
+export function createDefaultShowConfig(): ShowConfig {
+  return {
+    showAtoms: true,
+    showLinks: true,
+  }
 }

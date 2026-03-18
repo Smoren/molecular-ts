@@ -6,7 +6,7 @@ import type { ViewMode } from "@/lib/config/types";
 import { useConfigStore } from "@/web/store/config";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
-import { create2dDrawer } from "@/lib/drawer/2d";
+import { create2dDrawer, createDefaultShowConfig } from "@/lib/drawer/2d";
 import { createPhysicModel } from '@/lib/utils/functions';
 import { Simulation } from "@/lib/simulation/simulation";
 
@@ -15,6 +15,7 @@ export const useSimulationStore = defineStore("simulation", () => {
   const {
     worldConfig,
     typesConfig,
+    showConfig,
   } = configStore.getConfigValues();
 
   let simulation2d: Simulation | null = null;
@@ -39,7 +40,7 @@ export const useSimulationStore = defineStore("simulation", () => {
         typesConfig: typesConfig,
         physicModel: createPhysicModel(worldConfig, typesConfig),
         atomsFactory: create2dRandomDistribution,
-        drawer: create2dDrawer('canvas2d', worldConfig, typesConfig),
+        drawer: create2dDrawer('canvas2d', worldConfig, typesConfig, showConfig),
       });
     }
 

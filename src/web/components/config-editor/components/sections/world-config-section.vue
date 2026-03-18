@@ -14,6 +14,7 @@ const { physicModelName } = toRefs(physicsStore);
 const configStore = useConfigStore();
 const rightBarStore = useRightBarStore();
 const worldConfig = configStore.worldConfig;
+const showConfig = configStore.showConfig;
 
 const simulation = useSimulationStore();
 
@@ -221,6 +222,20 @@ watch(() => configStore.worldConfig.VIEW_MODE, () => {
           </tbody>
         </table>
       </div>
+        <div v-show="configStore.worldConfig.VIEW_MODE == '2d'">
+          <div>
+            <label>
+              <input type="checkbox" v-model="showConfig.showAtoms" />
+              Show atoms
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" v-model="showConfig.showLinks" />
+              Show links
+            </label>
+          </div>
+        </div>
     </template>
   </config-section>
 </template>
