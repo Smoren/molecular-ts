@@ -68,22 +68,63 @@ export class Drawer2d implements DrawerInterface {
     this.context.translate(this.viewConfig.offset[0], this.viewConfig.offset[1]);
     this.context.scale(this.viewConfig.scale[0], this.viewConfig.scale[1]);
 
+    const canvasWidth = this.domElement.width;
+    const canvasHeight = this.domElement.height;
+
+    // Фильтруем связи, которые попадают в видимую область
     for (const link of links) {
-      this.drawLine(
-        link.lhs.position,
-        link.rhs.position,
-        this.getLinkWidth(link),
-        `rgb(${this.getLinkColor(link).join(', ')})`,
-      );
+      // Применяем трансформации к позициям обоих атомов связи
+      const lhsX = link.lhs.position[0] * this.viewConfig.scale[0] + this.viewConfig.offset[0];
+      const lhsY = link.lhs.position[1] * this.viewConfig.scale[1] + this.viewConfig.offset[1];
+      const rhsX = link.rhs.position[0] * this.viewConfig.scale[0] + this.viewConfig.offset[0];
+      const rhsY = link.rhs.position[1] * this.viewConfig.scale[1] + this.viewConfig.offset[1];
+
+      // Получаем максимальную ширину связи
+      const linkWidth = this.getLinkWidth(link) * this.viewConfig.scale[0];
+
+      // Проверяем, попадает ли линия в видимую область
+      // Используем AABB (axis-aligned bounding box) линии с учетом ширины
+      const minX = Math.min(lhsX, rhsX) - linkWidth;
+      const maxX = Math.max(lhsX, rhsX) + linkWidth;
+      const minY = Math.min(lhsY, rhsY) - linkWidth;
+      const maxY = Math.max(lhsY, rhsY) + linkWidth;
+
+      // Проверяем пересечение с видимой областью
+      if (maxX >= 0 && minX <= canvasWidth && maxY >= 0 && minY <= canvasHeight) {
+        // Рисуем только отфильтрованные связи
+        this.drawLine(
+          link.lhs.position,
+          link.rhs.position,
+          this.getLinkWidth(link),
+          `rgb(${this.getLinkColor(link).join(', ')})`,
+        );
+      }
     }
 
     for (let i=0; i<atoms.length; ++i) {
       const atom = atoms[i];
-      this.drawCircle(
-        atom.position,
-        this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS,
-        this.TYPES_CONFIG.COLORS[atom.type],
-      );
+
+      // Применяем текущие трансформации к позиции атома
+      const transformedX = atom.position[0] * this.viewConfig.scale[0] + this.viewConfig.offset[0];
+      const transformedY = atom.position[1] * this.viewConfig.scale[1] + this.viewConfig.offset[1];
+
+      // Получаем радиус атома в пикселях после трансформации
+      const atomRadius = this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS * this.viewConfig.scale[0];
+
+      // Проверяем, попадает ли атом в видимую область (с небольшим запасом)
+      if (
+        transformedX + atomRadius >= 0 &&
+        transformedX - atomRadius <= canvasWidth &&
+        transformedY + atomRadius >= 0 &&
+        transformedY - atomRadius <= canvasHeight
+      ) {
+        // Рисуем только отфильтрованные связи
+        this.drawCircle(
+          atom.position,
+          this.TYPES_CONFIG.RADIUS[atom.type] * this.WORLD_CONFIG.ATOM_RADIUS,
+          this.TYPES_CONFIG.COLORS[atom.type],
+        );
+      }
     }
 
     this.context.restore();
