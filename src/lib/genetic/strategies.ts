@@ -161,17 +161,19 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface<Sim
 export class DynamicProbabilityMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
   private readonly probabilities: number[];
   private readonly randomizeConfigCollection: RandomTypesConfig[];
+  private readonly submatrixSeparator?: number;
 
-  constructor(probabilities: number[], randomizeConfigCollection: RandomTypesConfig[]) {
+  constructor(probabilities: number[], randomizeConfigCollection: RandomTypesConfig[], submatrixSeparator?: number) {
     this.probabilities = probabilities;
     this.randomizeConfigCollection = randomizeConfigCollection;
+    this.submatrixSeparator = submatrixSeparator;
   }
 
   mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
     const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
     const probability = getRandomArrayItem(this.probabilities);
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
-    const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig);
+    const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig, this.submatrixSeparator);
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
     return { id: newGenomeId, typesConfig: mutatedTypesConfig };
