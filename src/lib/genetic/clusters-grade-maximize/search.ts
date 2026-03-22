@@ -4,7 +4,10 @@ import type {
   ComposedGeneticSearchConfig,
 } from "genetic-search";
 import type { SimulationGenome } from '../types';
-import type { ClusterGradeMaximizeConfigFactoryConfig } from "./types";
+import type {
+  ClusterGradeMaximizeConfigFactoryConfig,
+  CrossedSubmatricesClusterGradeMaximizeConfigFactoryConfig,
+} from "./types";
 import {
   ComposedGeneticSearch,
   GeneticSearch,
@@ -18,7 +21,7 @@ import { setTypesCountToRandomizeConfigCollection } from '../utils';
 import {
   RandomPopulateStrategy,
   ClassicCrossoverStrategy,
-  ZeroValuesPopulateStrategy,
+  ZeroValuesPopulateStrategy, DynamicProbabilityMutationStrategy, SourceMutationPopulateStrategy,
 } from '../strategies';
 import { createComposedMutationStrategy, createSelectionStrategy } from "../factories";
 import { ClusterizationMultiprocessingPhenomeStrategy } from "./multiprocessing";
@@ -77,4 +80,40 @@ export function createClusterGradeMaximize(config: ClusterGradeMaximizeConfigFac
   }
 
   return result;
+}
+
+export function createCrossedSubmatricesClusterGradeMaximize(config: CrossedSubmatricesClusterGradeMaximizeConfigFactoryConfig): GeneticSearchInterface<SimulationGenome> {
+  config.phenomeStrategyConfig.worldConfig = config.worldConfig;
+
+  if (config.sourceConfigCollection.length == 0) {
+    throw new Error('sourceConfigCollection must be not empty')
+  }
+
+  const typesConfig = config.sourceConfigCollection[0].FREQUENCIES.length;
+
+  const populateRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
+    config.populateRandomizeConfigCollection,
+    typesConfig,
+  );
+  const mutationRandomTypesConfigCollection = setTypesCountToRandomizeConfigCollection(
+    config.mutationRandomizeConfigCollection,
+    typesConfig,
+  );
+
+  const cache = config.useCache
+    ? new WeightedAgeAveragePhenomeCache(config.genomeAgeWeight)
+    : new DummyPhenomeCache();
+
+  const strategyConfig: GeneticSearchStrategyConfig<SimulationGenome> = {
+    populate: new SourceMutationPopulateStrategy(config.sourceConfigCollection, populateRandomTypesConfigCollection, [1], config.submatrixSeparator), // TODO probabilities to config
+    phenome: new ClusterizationMultiprocessingPhenomeStrategy(config.phenomeStrategyConfig, config.clusterizationConfig.params),
+    fitness: new ClustersGradeMaximizeNormalizedFitnessStrategy(config.clusterizationConfig.weights),
+    sorting: new DescendingSortingStrategy(),
+    selection: createSelectionStrategy(config.selectionStrategyFactoryConfig),
+    mutation: new DynamicProbabilityMutationStrategy(config.mutationStrategyConfig.dynamicProbabilities, mutationRandomTypesConfigCollection, config.submatrixSeparator),
+    crossover: new ClassicCrossoverStrategy(),
+    cache,
+  };
+
+  return new GeneticSearch<SimulationGenome>(config.geneticSearchMacroConfig, strategyConfig);
 }

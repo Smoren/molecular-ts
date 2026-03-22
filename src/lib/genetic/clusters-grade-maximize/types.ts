@@ -14,6 +14,7 @@ import type {
   SelectionStrategyFactoryConfig,
   SimulationMultiprocessingPhenomeStrategyConfig,
 } from "../types";
+import { createCrossedSubmatricesClusterGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/search";
 
 export type ClustersGradeMaximizeTaskConfig = [number, WorldConfig, TypesConfig, ClusterizationParams, number[], number];
 
@@ -34,6 +35,24 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   useComposedAlgo: boolean;
   composedFinalPopulation: number;
   genomeAgeWeight: number;
+}
+
+export type CrossedSubmatricesClusterGradeMaximizeConfigFactoryConfig = {
+  geneticSearchMacroConfig: GeneticSearchConfig;
+  phenomeStrategyConfig: SimulationMultiprocessingPhenomeStrategyConfig<ClustersGradeMaximizeTaskConfig>;
+  mutationStrategyConfig: MutationStrategyConfig;
+  sourceConfigCollection: TypesConfig[];
+  populateRandomizeConfigCollection: RandomTypesConfig[];
+  mutationRandomizeConfigCollection: RandomTypesConfig[];
+  crossoverRandomizeConfigCollection: RandomTypesConfig[];
+  selectionStrategyFactoryConfig: SelectionStrategyFactoryConfig;
+  randomizeStartPopulation: boolean;
+  worldConfig: WorldConfig;
+  clusterizationConfig: ClusterizationConfig;
+  transformationConfig: TransformationConfig;
+  useCache: boolean;
+  genomeAgeWeight: number;
+  submatrixSeparator: number;
 }
 
 export type ClusterGradeMaximizeGeneticMainConfig<TTaskConfig> = {
