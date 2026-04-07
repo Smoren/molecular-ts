@@ -14,7 +14,6 @@ import type {
   SelectionStrategyFactoryConfig,
   SimulationMultiprocessingPhenomeStrategyConfig,
 } from "../types";
-import { createCrossedSubmatricesClusterGradeMaximize } from "@/lib/genetic/clusters-grade-maximize/search";
 
 export type ClustersGradeMaximizeTaskConfig = [number, WorldConfig, TypesConfig, ClusterizationParams, number[], number];
 
