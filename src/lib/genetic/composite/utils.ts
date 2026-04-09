@@ -1,6 +1,7 @@
 import type { SimulationGenome } from "../types";
-import type { TypesConfig } from "../../config/types";
+import type { RandomTypesConfig, TypesConfig } from "../../config/types";
 import type { CompositeSimulationGenome } from "./types";
+import { createRandomTypesConfig } from "../../config/atom-types";
 
 type RecursiveArray<T> = Array<T | RecursiveArray<T>>;
 
@@ -39,4 +40,59 @@ export function express<T extends RecursiveArray<number>>(chromosomes: T[], indi
     const subChromosomes = chromosomes.map(c => (c as any)[i]);
     return express(subChromosomes, subIndices);
   }) as unknown as T;
+}
+
+export function createRandomCompositeGenome(id: number, chromosomesCount: number, chromosomeRandomizeConfig: RandomTypesConfig): CompositeSimulationGenome {
+  return {
+    id,
+    expressionIndices: createRandomExpressedIndices(chromosomeRandomizeConfig.TYPES_COUNT, chromosomesCount),
+    chromosomes: createRandomChromosomes(chromosomesCount, chromosomeRandomizeConfig),
+  };
+}
+
+export function createRandomChromosomes(chromosomesCount: number, randomizeConfig: RandomTypesConfig): TypesConfig[] {
+  const result: TypesConfig[] = [];
+  for (let i=0; i<chromosomesCount; ++i) {
+    result.push(createRandomTypesConfig(randomizeConfig));
+  }
+  return result;
+}
+
+export function createRandomExpressedIndices(typesCount: number, chromosomesCount: number): TypesConfig {
+  return createRandomTypesConfig(createRandomExpressedIndicesConfig(typesCount, chromosomesCount));
+}
+
+export function createRandomExpressedIndicesConfig(typesCount: number, chromosomesCount: number): RandomTypesConfig {
+  return {
+    TYPES_COUNT: typesCount,
+
+    USE_RADIUS_BOUNDS: true,
+    USE_FREQUENCY_BOUNDS: true,
+    USE_GRAVITY_BOUNDS: true,
+    USE_LINK_GRAVITY_BOUNDS: true,
+    USE_LINK_BOUNDS: true,
+    USE_LINK_TYPE_BOUNDS: true,
+    USE_LINK_TYPE_WEIGHT_BOUNDS: true,
+    USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
+    USE_LINK_FACTOR_ELASTIC_BOUNDS: true,
+
+    RADIUS_BOUNDS: [0, chromosomesCount-1],
+    FREQUENCY_BOUNDS: [0, chromosomesCount-1],
+    GRAVITY_BOUNDS: [0, chromosomesCount-1],
+    LINK_GRAVITY_BOUNDS: [0, chromosomesCount-1],
+    LINK_BOUNDS: [0, chromosomesCount-1],
+    LINK_TYPE_BOUNDS: [0, chromosomesCount-1],
+    LINK_TYPE_WEIGHT_BOUNDS: [0, chromosomesCount-1],
+    LINK_FACTOR_DISTANCE_BOUNDS: [0, chromosomesCount-1],
+    LINK_FACTOR_ELASTIC_BOUNDS: [0, chromosomesCount-1],
+
+    GRAVITY_MATRIX_SYMMETRIC: false,
+    LINK_GRAVITY_MATRIX_SYMMETRIC: false,
+    LINK_TYPE_MATRIX_SYMMETRIC: false,
+    LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
+    LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false,
+  };
 }
