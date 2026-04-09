@@ -7,3 +7,7 @@ export type CompositeSimulationGenome = BaseGenome & {
   expressionIndices: TypesConfig; // индексы доминантных генов
   chromosomes: TypesConfig[];     // много разных вариантов генома, из которых происходит выборочная экспрессия
 }
+
+export type CompositeGenomeConfig = {
+  chromosomesCount: number;
+}
