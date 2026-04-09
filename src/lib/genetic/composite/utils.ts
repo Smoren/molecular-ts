@@ -1,5 +1,6 @@
-import type { CompositeSimulationGenome, SimulationGenome } from "./types";
-import type { TypesConfig } from "../config/types";
+import type { SimulationGenome } from "../types";
+import type { TypesConfig } from "../../config/types";
+import type { CompositeSimulationGenome } from "./types";
 
 type RecursiveArray<T> = Array<T | RecursiveArray<T>>;
 
