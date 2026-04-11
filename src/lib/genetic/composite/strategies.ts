@@ -3,8 +3,6 @@ import type { CompositeSimulationGenome } from "./types";
 import type { RandomTypesConfig, TransformationConfig } from "../../config/types";
 import { getRandomArrayItem } from "../../math/random";
 import { createRandomCompositeGenome, createTransparentCompositeGenome } from "./utils";
-import type { SimulationGenome } from "@/lib/genetic/types";
-import { createTransparentTypesConfig } from "@/lib/config/atom-types";
 
 export class CompositeGenomeRandomPopulateStrategy implements PopulateStrategyInterface<CompositeSimulationGenome> {
   private readonly chromosomesCount: number;

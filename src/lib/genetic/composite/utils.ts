@@ -1,7 +1,11 @@
 import type { SimulationGenome } from "../types";
 import type { RandomTypesConfig, TypesConfig } from "../../config/types";
 import type { CompositeSimulationGenome } from "./types";
-import { createRandomTypesConfig, createTransparentTypesConfig } from "../../config/atom-types";
+import {
+  createRandomIntTypesConfig,
+  createRandomTypesConfig,
+  createTransparentTypesConfig,
+} from "../../config/atom-types";
 
 type RecursiveArray<T> = Array<T | RecursiveArray<T>>;
 
@@ -75,7 +79,7 @@ export function createTransparentChromosomes(typesCount: number, chromosomesCoun
 }
 
 export function createRandomExpressedIndices(typesCount: number, chromosomesCount: number): TypesConfig {
-  return createRandomTypesConfig(createRandomExpressedIndicesConfig(typesCount, chromosomesCount));
+  return createRandomIntTypesConfig(createRandomExpressedIndicesConfig(typesCount, chromosomesCount));
 }
 
 export function createRandomExpressedIndicesConfig(typesCount: number, chromosomesCount: number): RandomTypesConfig {
