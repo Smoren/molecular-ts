@@ -10,6 +10,7 @@ import { create2dDrawer, createDefaultShowConfig } from "@/lib/drawer/2d";
 import { createPhysicModel } from '@/lib/utils/functions';
 import { Simulation } from "@/lib/simulation/simulation";
 import type { NumericVector } from "@/lib/math/types";
+import { createTemperatureFunction } from "@/lib/config/world";
 
 export const useSimulationStore = defineStore("simulation", () => {
   const configStore = useConfigStore();
@@ -23,22 +24,7 @@ export const useSimulationStore = defineStore("simulation", () => {
   let simulation3d: Simulation | null = null;
 
   // TODO add temperature function params
-  // worldConfig.TEMPERATURE_FUNCTION = (c: NumericVector, t: number) => {
-  //   const freqParam = 500;
-  //   const timeParam = 1000;
-  //
-  //   let cv1 = Math.cos(c[0]/freqParam) * Math.cos(c[1]/freqParam);
-  //   if (c.length === 3) {
-  //     cv1 *= Math.cos(c[2]/freqParam);
-  //   }
-  //
-  //   let cv2 = Math.sin(c[0]/freqParam) * Math.sin(c[1]/freqParam);
-  //   if (c.length === 3) {
-  //     cv2 *= Math.sin(c[2]/freqParam);
-  //   }
-  //
-  //   return cv1*Math.sin(t/timeParam) + cv2*Math.cos(t/timeParam);
-  // };
+  // worldConfig.TEMPERATURE_FUNCTION = createTemperatureFunction(2000, 3000);
 
   const init = async () => {
     if (!simulation3d) {

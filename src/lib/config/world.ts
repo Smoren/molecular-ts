@@ -61,7 +61,6 @@ export function createWorldConfig2d(initialConfig: InitialConfig, worldConfig?: 
   };
 }
 
-
 export function createWorldConfig3d(initialConfig: InitialConfig, worldConfig?: WorldConfig): WorldConfig {
   return {
     ...(worldConfig ?? createBaseWorldConfig()),
@@ -74,5 +73,21 @@ export function createWorldConfig3d(initialConfig: InitialConfig, worldConfig?: 
         MAX_POSITION: initialConfig.MAX_POSITION,
       },
     },
+  };
+}
+
+export function createTemperatureFunction(coordsPeriod: number, timePeriod: number): (p: NumericVector, t: number) => number {
+  const coordsFactor = 2*Math.PI / coordsPeriod;
+  const timeFactor = 2*Math.PI / timePeriod;
+
+  return (c: NumericVector, t: number) => {
+    let space = Math.cos(c[0] * coordsFactor) * Math.cos(c[1] * coordsFactor);
+    if (c.length === 3) {
+        space *= Math.cos(c[2] * coordsFactor);
+    }
+
+    const result = space * Math.cos(t*timeFactor);
+
+    return (result + 1) / 2;
   };
 }
