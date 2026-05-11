@@ -36,6 +36,24 @@ export type ClusterGradeMaximizeConfigFactoryConfig = {
   genomeAgeWeight: number;
 }
 
+export type CrossedSubmatricesClusterGradeMaximizeConfigFactoryConfig = {
+  geneticSearchMacroConfig: GeneticSearchConfig;
+  phenomeStrategyConfig: SimulationMultiprocessingPhenomeStrategyConfig<ClustersGradeMaximizeTaskConfig>;
+  mutationStrategyConfig: MutationStrategyConfig;
+  sourceConfigCollection: TypesConfig[];
+  populateRandomizeConfigCollection: RandomTypesConfig[];
+  mutationRandomizeConfigCollection: RandomTypesConfig[];
+  crossoverRandomizeConfigCollection: RandomTypesConfig[];
+  selectionStrategyFactoryConfig: SelectionStrategyFactoryConfig;
+  randomizeStartPopulation: boolean;
+  worldConfig: WorldConfig;
+  clusterizationConfig: ClusterizationConfig;
+  transformationConfig: TransformationConfig;
+  useCache: boolean;
+  genomeAgeWeight: number;
+  submatrixSeparator: number;
+}
+
 export type ClusterGradeMaximizeGeneticMainConfig<TTaskConfig> = {
   macro: GeneticSearchConfig;
   initial: InitialConfig;

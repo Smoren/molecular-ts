@@ -74,11 +74,13 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
   private readonly sourceTypesConfigCollection: TypesConfig[];
   private readonly randomizeConfigCollection: RandomTypesConfig[];
   private readonly probabilities: number[];
+  private readonly submatrixSeparator?: number;
 
-  constructor(sourceTypesConfigCollection: TypesConfig[], randomizeConfigCollection: RandomTypesConfig[], probabilities: number[]) {
+  constructor(sourceTypesConfigCollection: TypesConfig[], randomizeConfigCollection: RandomTypesConfig[], probabilities: number[], submatrixSeparator?: number) {
     this.sourceTypesConfigCollection = sourceTypesConfigCollection;
     this.randomizeConfigCollection = randomizeConfigCollection;
     this.probabilities = probabilities;
+    this.submatrixSeparator = submatrixSeparator;
   }
 
   public populate(size: number, idGenerator: IdGeneratorInterface<SimulationGenome>): Population<SimulationGenome> {
@@ -87,7 +89,7 @@ export class SourceMutationPopulateStrategy implements PopulateStrategyInterface
       const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
       const probability = getRandomArrayItem(this.probabilities);
       const inputTypesConfig = fullCopyObject(getRandomArrayItem(this.sourceTypesConfigCollection));
-      const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig);
+      const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig, this.submatrixSeparator);
       const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
       population.push({
@@ -159,17 +161,19 @@ export class ComposedCrossoverStrategy implements CrossoverStrategyInterface<Sim
 export class DynamicProbabilityMutationStrategy implements MutationStrategyInterface<SimulationGenome> {
   private readonly probabilities: number[];
   private readonly randomizeConfigCollection: RandomTypesConfig[];
+  private readonly submatrixSeparator?: number;
 
-  constructor(probabilities: number[], randomizeConfigCollection: RandomTypesConfig[]) {
+  constructor(probabilities: number[], randomizeConfigCollection: RandomTypesConfig[], submatrixSeparator?: number) {
     this.probabilities = probabilities;
     this.randomizeConfigCollection = randomizeConfigCollection;
+    this.submatrixSeparator = submatrixSeparator;
   }
 
   mutate(genome: SimulationGenome, newGenomeId: number): SimulationGenome {
     const randomizeConfig = getRandomArrayItem(this.randomizeConfigCollection);
     const probability = getRandomArrayItem(this.probabilities);
     const inputTypesConfig = fullCopyObject(genome.typesConfig);
-    const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig);
+    const randomizedTypesConfig = randomizeTypesConfig(randomizeConfig, inputTypesConfig, this.submatrixSeparator);
     const mutatedTypesConfig = randomCrossTypesConfigs(randomizedTypesConfig, inputTypesConfig, probability);
 
     return { id: newGenomeId, typesConfig: mutatedTypesConfig };

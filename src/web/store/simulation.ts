@@ -9,6 +9,8 @@ import { create3dDrawer } from "@/lib/drawer/3d";
 import { create2dDrawer, createDefaultShowConfig } from "@/lib/drawer/2d";
 import { createPhysicModel } from '@/lib/utils/functions';
 import { Simulation } from "@/lib/simulation/simulation";
+import type { NumericVector } from "@/lib/math/types";
+import { createTemperatureFunction } from "@/lib/config/world";
 
 export const useSimulationStore = defineStore("simulation", () => {
   const configStore = useConfigStore();
@@ -20,6 +22,9 @@ export const useSimulationStore = defineStore("simulation", () => {
 
   let simulation2d: Simulation | null = null;
   let simulation3d: Simulation | null = null;
+
+  // TODO add temperature function params
+  // worldConfig.TEMPERATURE_FUNCTION = createTemperatureFunction(2000, 3000);
 
   const init = async () => {
     if (!simulation3d) {

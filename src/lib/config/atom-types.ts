@@ -290,6 +290,120 @@ export function createRandomTypesConfig({
   };
 }
 
+export function createRandomIntTypesConfig({
+  TYPES_COUNT,
+  RADIUS_BOUNDS,
+  FREQUENCY_BOUNDS,
+  GRAVITY_BOUNDS,
+  LINK_GRAVITY_BOUNDS,
+  LINK_BOUNDS,
+  LINK_TYPE_BOUNDS,
+  LINK_TYPE_WEIGHT_BOUNDS,
+  LINK_FACTOR_DISTANCE_BOUNDS,
+  LINK_FACTOR_ELASTIC_BOUNDS,
+  GRAVITY_MATRIX_SYMMETRIC,
+  LINK_GRAVITY_MATRIX_SYMMETRIC,
+  LINK_TYPE_MATRIX_SYMMETRIC,
+  LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC,
+  LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
+  LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE,
+  LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC,
+  LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE,
+}: RandomTypesConfig): TypesConfig {
+  const radius: number[] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    radius.push(createRandomInteger([RADIUS_BOUNDS[0], RADIUS_BOUNDS[1]]));
+  }
+
+  const gravity = randomizeMatrix(
+    TYPES_COUNT,
+    GRAVITY_BOUNDS,
+    createRandomInteger,
+    GRAVITY_MATRIX_SYMMETRIC,
+    0,
+  );
+
+  const frequencies: number[] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    frequencies.push(createRandomInteger([FREQUENCY_BOUNDS[0], FREQUENCY_BOUNDS[1]]));
+  }
+
+  const linkGravity = randomizeMatrix(
+    TYPES_COUNT,
+    LINK_GRAVITY_BOUNDS,
+    createRandomInteger,
+    LINK_GRAVITY_MATRIX_SYMMETRIC,
+    0,
+  );
+
+  const links: number[] = [];
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    links.push(createRandomInteger(LINK_BOUNDS));
+  }
+
+  const typeLinks = randomizeMatrix(
+    TYPES_COUNT,
+    LINK_TYPE_BOUNDS,
+    createRandomInteger,
+    LINK_TYPE_MATRIX_SYMMETRIC,
+    0,
+  );
+
+  const typeLinkWeights = randomizeMatrix(
+    TYPES_COUNT,
+    LINK_TYPE_WEIGHT_BOUNDS,
+    createRandomInteger,
+    LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC,
+    0,
+  );
+
+  const linkFactorDistance: LinkFactorDistanceConfig = [];
+
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    linkFactorDistance.push(randomizeMatrix(
+      TYPES_COUNT,
+      LINK_FACTOR_DISTANCE_BOUNDS,
+      createRandomInteger,
+      LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC,
+      0,
+    ));
+
+    if (LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE) {
+      setTensorMainDiagonal(linkFactorDistance, 1);
+    }
+  }
+
+  const linkFactorElastic: LinkFactorElasticConfig = [];
+
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    linkFactorElastic.push(randomizeMatrix(
+      TYPES_COUNT,
+      LINK_FACTOR_ELASTIC_BOUNDS,
+      createRandomInteger,
+      LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC,
+      0,
+    ));
+
+    if (LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE) {
+      setTensorMainDiagonal(linkFactorElastic, 1);
+    }
+  }
+
+  return {
+    RADIUS: radius,
+    GRAVITY: gravity,
+    FREQUENCIES: frequencies,
+    LINK_GRAVITY: linkGravity,
+    LINKS: links,
+    TYPE_LINKS: typeLinks,
+    TYPE_LINK_WEIGHTS: typeLinkWeights,
+    LINK_FACTOR_DISTANCE: linkFactorDistance,
+    LINK_FACTOR_ELASTIC: linkFactorElastic,
+    COLORS: createColors(TYPES_COUNT),
+    TRANSFORMATION: {}, // TODO randomize it
+  };
+}
+
 export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesConfig {
   return {
     TYPES_COUNT: typesCount,
