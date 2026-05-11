@@ -11,6 +11,7 @@ import { createBaseWorldConfig } from "@/lib/config/world";
 import {
   copyIndexInTypesConfig,
   creatDefaultTypesConfig,
+  createColors,
   createDefaultRandomTypesConfig,
   createDisabledTypesSymmetricConfig,
   createSingleTypeConfig,
@@ -201,6 +202,19 @@ export const useConfigStore = defineStore("config", () => {
     applySymmetricTypesConfig();
   }
 
+  const randomizeColors = () => {
+    const newConfig = fullCopyObject(typesConfig.value);
+
+    const colors = createColors(Math.max(10, newConfig.COLORS.length));
+    console.log(colors);
+    colors.sort(() => Math.random() - 0.5);
+    newConfig.COLORS = colors.slice(0, newConfig.COLORS.length);
+
+    flash.turnOn(FLASH_IMPORT_STARTED);
+    setTypesConfig(newConfig);
+    setTypesConfigRaw(newConfig);
+  }
+
   const setDefaultTypesConfig = <T>() => {
     const newConfig = creatDefaultTypesConfig();
 
@@ -309,6 +323,7 @@ export const useConfigStore = defineStore("config", () => {
     setWorldConfig,
     handleSyncWorldConfigBounds,
     randomizeTypesConfig,
+    randomizeColors,
     setDefaultTypesConfig,
     setRandomTypesConfig,
     syncRandomTypesCount,
