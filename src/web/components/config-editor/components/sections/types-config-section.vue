@@ -3,7 +3,7 @@
 import { computed } from "vue";
 import { useConfigStore } from '@/web/store/config';
 import { useSimulationStore } from "@/web/store/simulation";
-import { clearInactiveParams, creatDefaultTypesConfig } from "@/lib/config/atom-types";
+import { clearInactiveParams, createDefaultTypesConfig } from "@/lib/config/atom-types";
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
 import ConfigMatrix from '@/web/components/inputs/config-matrix.vue';
 import ConfigList from '@/web/components/inputs/config-list.vue';
@@ -32,7 +32,7 @@ const setDefaultTypesConfig = () => {
     return;
   }
 
-  const defaultConfig = creatDefaultTypesConfig();
+  const defaultConfig = createDefaultTypesConfig();
 
   if (defaultConfig.COLORS.length !== typesConfig.COLORS.length) {
     defaultConfig.COLORS = typesConfig.COLORS;

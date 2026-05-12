@@ -1,17 +1,18 @@
 import type { AtomInterface } from '../simulation/types/atomic';
 import type { NumericVector } from '../math/types';
 import type {
-  LinkFactorDistanceConfig,
   PhysicModelName,
   ViewModeConfig,
   WorldConfig,
   TypesConfig,
   ViewMode,
+  ColorVector,
 } from '../config/types';
 import type { PhysicModelConstructor, PhysicModelInterface } from '../simulation/types/interaction';
 import { Atom } from '../simulation/atomic';
 import { PhysicModelV1 } from '../physics/v1';
 import { PhysicModelV2 } from '../physics/v2';
+import { createVector } from "@/lib/math";
 
 export const fullCopyObject = <T extends Record<string, any>>(obj: T) => JSON.parse(JSON.stringify(obj)) as T;
 
@@ -44,6 +45,28 @@ export function getRandomColor(): [number, number, number] {
     [r, g, b] = [r+delta, g+delta, b+delta];
   }
   return [r, g, b];
+}
+
+export function getDifferentRandomColor(previousColors: ColorVector[], minDistance: number = 64, maxTries: number = 16): [number, number, number] {
+  let triesCount = 0;
+  while (true) {
+    const candidate = getRandomColor();
+    let isCandidateValid = true;
+    for (const prevColor of previousColors) {
+      if (createVector(prevColor).sub(candidate).abs < minDistance) {
+        isCandidateValid = false;
+        console.warn(`inappropriate color | prevColors: ${previousColors.length} | minDistance: ${minDistance} | try: ${triesCount}`);
+        break;
+      }
+    }
+    if (isCandidateValid) {
+      return candidate;
+    }
+    if (++triesCount === maxTries) {
+      triesCount = 0;
+      minDistance = Math.round(minDistance/2);
+    }
+  }
 }
 
 export function createPhysicModel(

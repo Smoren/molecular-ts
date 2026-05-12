@@ -9,6 +9,7 @@ import type {
 import {
   getRandomColor,
   fullCopyObject,
+  getDifferentRandomColor,
 } from '../utils/functions';
 import {
   concatArrays,
@@ -55,13 +56,14 @@ export const COLORS_PREDEFINED: Array<ColorVector> = [
   [121, 242, 52],
 ];
 
-export function createColors(count: number, usePredefined: boolean = true): Array<ColorVector> {
+export function createColors(count: number, usePredefined: boolean = true, smartChoice: boolean = false): Array<ColorVector> {
   const predefined: Array<ColorVector> = usePredefined ? fullCopyObject(COLORS_PREDEFINED.reverse()) as Array<ColorVector> : [];
-  console.log('predef', predefined, usePredefined);
   const result: Array<ColorVector> = [];
   for (let i=0; i<count; ++i) {
     if (predefined.length) {
       result.push(predefined.pop() as ColorVector);
+    } else if (smartChoice) {
+      result.push(getDifferentRandomColor(result));
     } else {
       result.push(getRandomColor());
     }
@@ -69,7 +71,7 @@ export function createColors(count: number, usePredefined: boolean = true): Arra
   return result;
 }
 
-export function creatDefaultTypesConfig(): TypesConfig {
+export function createDefaultTypesConfig(): TypesConfig {
   return {
     COLORS: createColors(5),
     FREQUENCIES: [1, 1, 0.5, 0.5, 1],

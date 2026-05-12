@@ -11,7 +11,7 @@ import { createBaseWorldConfig } from "@/lib/config/world";
 import {
   COLORS_PREDEFINED,
   copyIndexInTypesConfig,
-  creatDefaultTypesConfig,
+  createDefaultTypesConfig,
   createColors,
   createDefaultRandomTypesConfig,
   createDisabledTypesSymmetricConfig,
@@ -33,7 +33,7 @@ import { createDefaultShowConfig } from "@/lib/drawer/2d";
 
 export const useConfigStore = defineStore("config", () => {
   const worldConfigRaw: WorldConfig = createBaseWorldConfig();
-  const typesConfigRaw: TypesConfig = creatDefaultTypesConfig();
+  const typesConfigRaw: TypesConfig = createDefaultTypesConfig();
   const showConfigRaw: ShowConfig = createDefaultShowConfig();
 
   const worldConfig: Ref<WorldConfig> = ref(fullCopyObject(worldConfigRaw));
@@ -206,7 +206,7 @@ export const useConfigStore = defineStore("config", () => {
   const randomizeColors = (usePredefined: boolean = true) => {
     const newConfig = fullCopyObject(typesConfig.value);
 
-    const colors = createColors(Math.max(COLORS_PREDEFINED.length, newConfig.COLORS.length), usePredefined);
+    const colors = createColors(Math.max(COLORS_PREDEFINED.length, newConfig.COLORS.length), usePredefined, true);
     colors.sort(() => Math.random() - 0.5);
     newConfig.COLORS = colors.slice(0, newConfig.COLORS.length);
 
@@ -216,7 +216,7 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const setDefaultTypesConfig = <T>() => {
-    const newConfig = creatDefaultTypesConfig();
+    const newConfig = createDefaultTypesConfig();
 
     for (const i in newConfig) {
       (typesConfig.value[i as keyof TypesConfig] as T) = newConfig[i as keyof TypesConfig] as T;

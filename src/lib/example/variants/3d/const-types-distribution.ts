@@ -2,7 +2,7 @@ import type {
   TypesConfig,
   WorldConfig,
 } from "../../../config/types";
-import { creatDefaultTypesConfig } from "../../../config/atom-types";
+import { createDefaultTypesConfig } from "../../../config/atom-types";
 import { createBaseWorldConfig } from "../../../config/world";
 import { create3dRandomDistribution } from "../../../config/atoms";
 import { Simulation } from "../../../simulation/simulation";
@@ -10,7 +10,7 @@ import { create3dDrawer } from "../../../drawer/3d";
 import { PhysicModelV1 } from "../../../physics/v1";
 
 const WORLD_CONFIG: WorldConfig = createBaseWorldConfig();
-const TYPES_CONFIG: TypesConfig = creatDefaultTypesConfig();
+const TYPES_CONFIG: TypesConfig = createDefaultTypesConfig();
 
 export function create3dSimulationWithConstTypes() {
   return new Simulation({
