@@ -42,19 +42,22 @@ import {
   removeIndexFromTensor,
 } from '../math/operations';
 
-export function createColors(count: number): Array<ColorVector> {
-  const predefined: Array<ColorVector> = [
-    [250, 20, 20],
-    [200, 140, 100],
-    [80, 170, 140],
-    [180, 180, 80],
-    [70, 120, 250],
-    [250, 100, 250],
-    [206, 255, 182],
-    [157, 68, 216],
-    [61, 192, 249],
-    [121, 242, 52],
-  ].reverse() as Array<ColorVector>;
+export const COLORS_PREDEFINED: Array<ColorVector> = [
+  [250, 20, 20],
+  [200, 140, 100],
+  [80, 170, 140],
+  [180, 180, 80],
+  [70, 120, 250],
+  [250, 100, 250],
+  [206, 255, 182],
+  [157, 68, 216],
+  [61, 192, 249],
+  [121, 242, 52],
+];
+
+export function createColors(count: number, usePredefined: boolean = true): Array<ColorVector> {
+  const predefined: Array<ColorVector> = usePredefined ? fullCopyObject(COLORS_PREDEFINED.reverse()) as Array<ColorVector> : [];
+  console.log('predef', predefined, usePredefined);
   const result: Array<ColorVector> = [];
   for (let i=0; i<count; ++i) {
     if (predefined.length) {

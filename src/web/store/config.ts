@@ -9,6 +9,7 @@ import type {
 } from "@/lib/config/types";
 import { createBaseWorldConfig } from "@/lib/config/world";
 import {
+  COLORS_PREDEFINED,
   copyIndexInTypesConfig,
   creatDefaultTypesConfig,
   createColors,
@@ -202,11 +203,10 @@ export const useConfigStore = defineStore("config", () => {
     applySymmetricTypesConfig();
   }
 
-  const randomizeColors = () => {
+  const randomizeColors = (usePredefined: boolean = true) => {
     const newConfig = fullCopyObject(typesConfig.value);
 
-    const colors = createColors(Math.max(10, newConfig.COLORS.length));
-    console.log(colors);
+    const colors = createColors(Math.max(COLORS_PREDEFINED.length, newConfig.COLORS.length), usePredefined);
     colors.sort(() => Math.random() - 0.5);
     newConfig.COLORS = colors.slice(0, newConfig.COLORS.length);
 

@@ -283,7 +283,12 @@ const randomizeTypesConfig = () => {
       </button>
       <br />
       <br />
-      <button class="btn btn-outline-secondary" @click="configStore.randomizeColors" style="width: 100%;">
+      <button
+        class="btn btn-outline-secondary"
+        @click.passive="configStore.randomizeColors(true)"
+        @dblclick="configStore.randomizeColors(false)"
+        style="width: 100%;"
+      >
         Randomize colors
       </button>
       <br />
