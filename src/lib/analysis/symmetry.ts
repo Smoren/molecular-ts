@@ -22,13 +22,13 @@ type ScoreSymmetryAxisFunctionArguments = {
   axis: LineCoefficients;
   centroid: NumericVector;
   radius: number;
-  magic: number;
+  axisThickness: number;
 }
 
 type ScoreSymmetryFunctionArguments = {
   graph: GraphInterface;
   scoreAxisFunction: ScoreSymmetryAxisFunction;
-  magic?: number;
+  axisThickness?: number;
   eps?: number;
   normCoefficient?: number;
 }
@@ -39,12 +39,12 @@ export function scoreSymmetryAxis({
   graph,
   axis,
   radius,
-  magic,
+  axisThickness,
 }: ScoreSymmetryAxisFunctionArguments): number {
-  // Если расстояние от точки (вершина) до прямой (ось-кандидат с коэффициентом k) не превышает R * MAGIC,
-  // где MAGIC — некая экспериментально подобранная константа, считаем, что эта вершина лежит на оси симметрии
-  // minDistance = R * MAGIC
-  const [lhsGraph, rhsGraph] = splitGraphByLine(graph, axis, radius*magic);
+  // Если расстояние от точки (вершина) до прямой (ось-кандидат с коэффициентом k) не превышает R * AXIS_THICKNESS,
+  // где AXIS_THICKNESS — толщина оси симметрии (лежит ли вершина лежит на оси симметрии)
+  // minDistance = R * AXIS_THICKNESS
+  const [lhsGraph, rhsGraph] = splitGraphByLine(graph, axis, radius*axisThickness);
 
   return -calcDistanceBetweenGraphsByTypesCombined(lhsGraph, rhsGraph);
 }
@@ -54,14 +54,14 @@ export function scoreSymmetryAxisByQuartering({
   axis,
   centroid,
   radius,
-  magic,
+  axisThickness,
 }: ScoreSymmetryAxisFunctionArguments): number {
-  const [lhsGraph, rhsGraph] = splitGraphByLine(graph, axis, radius*magic);
+  const [lhsGraph, rhsGraph] = splitGraphByLine(graph, axis, radius*axisThickness);
 
   const orthogonalAxis = findOrthogonalLine(axis, centroid[0]);
 
-  const [lhsLhsGraph, rhsLhsGraph] = splitGraphByLine(lhsGraph, orthogonalAxis, radius*magic);
-  const [lhsRhsGraph, rhsRhsGraph] = splitGraphByLine(rhsGraph, orthogonalAxis, radius*magic);
+  const [lhsLhsGraph, rhsLhsGraph] = splitGraphByLine(lhsGraph, orthogonalAxis, radius*axisThickness);
+  const [lhsRhsGraph, rhsRhsGraph] = splitGraphByLine(rhsGraph, orthogonalAxis, radius*axisThickness);
 
   return -calcDistanceBetweenGraphsByTypesCombined(lhsGraph, rhsGraph) +
     -calcDistanceBetweenGraphsByTypesCombined(lhsLhsGraph, lhsRhsGraph) +
@@ -71,7 +71,7 @@ export function scoreSymmetryAxisByQuartering({
 export function scoreBilateralSymmetry({
   graph,
   scoreAxisFunction,
-  magic = 0.3,
+  axisThickness = 0.3,
   eps = 1e-10,
   normCoefficient = 0.5,
 }: ScoreSymmetryFunctionArguments): [number, LineCoefficients] {
@@ -100,7 +100,7 @@ export function scoreBilateralSymmetry({
       axis,
       centroid,
       radius,
-      magic,
+      axisThickness,
     });
 
     if (score > bestScore) {
@@ -135,7 +135,7 @@ export function scoreBilateralSymmetry({
         axis,
         centroid,
         radius,
-        magic,
+        axisThickness,
       });
 
       if (score > bestScore) {
