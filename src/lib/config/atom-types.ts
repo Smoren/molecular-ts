@@ -614,7 +614,7 @@ export function randomizeTypesConfig(
 export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesConfig {
   const result = fullCopyObject(lhs);
 
-  result.COLORS = createColors(lhs.COLORS.length + rhs.COLORS.length);
+  result.COLORS = createColors(lhs.COLORS.length + rhs.COLORS.length, true, true);
   result.RADIUS = concatArrays(lhs.RADIUS, rhs.RADIUS);
   result.FREQUENCIES = concatArrays(lhs.FREQUENCIES, rhs.FREQUENCIES);
 
