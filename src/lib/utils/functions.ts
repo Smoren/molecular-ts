@@ -47,7 +47,7 @@ export function getRandomColor(): [number, number, number] {
   return [r, g, b];
 }
 
-export function getDifferentRandomColor(previousColors: ColorVector[], minDistance: number = 64, maxTries: number = 16): [number, number, number] {
+export function getDifferentRandomColor(previousColors: ColorVector[], minDistance: number = 200, maxTries: number = 16): [number, number, number] {
   let triesCount = 0;
   while (true) {
     const candidate = getRandomColor();
