@@ -211,6 +211,7 @@ export function calcClusterizationPolymersScore(
     maxMonomerVertexesCount: 0,
     maxPolymerSize: 0,
     polymersGrades: [],
+    polymersGradesBest: [],
   };
 
   const monomerCandidates = clusterGrades.map((cluster) => cluster.graphExample).filter(
@@ -249,6 +250,7 @@ export function calcClusterizationPolymersScore(
   summary.averagePolymerSize = summary.count > 0 ? summary.averagePolymerSize / summary.count : 0;
   summary.averageConfidenceScore = summary.count > 0 ? summary.averageConfidenceScore / summary.count : 0;
   summary.polymersGrades.sort((lhs, rhs) => rhs.polymerVertexesCount - lhs.polymerVertexesCount);
+  summary.polymersGradesBest = summary.polymersGrades.filter((g) => g.confidenceScore > 0.9999 && g.polymerSize >= 3);
 
   return summary;
 }

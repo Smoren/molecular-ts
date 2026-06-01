@@ -170,6 +170,7 @@ export type PolymerCollectionSummary = {
   maxMonomerVertexesCount: number;
   maxPolymerSize: number;
   polymersGrades: PolymerSummary[];
+  polymersGradesBest: PolymerSummary[];
 }
 
 export type CompoundsClusterizationScore = {
