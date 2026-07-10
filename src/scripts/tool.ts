@@ -2,7 +2,6 @@ import { createRouter } from '@/scripts/lib/helpers';
 import { actionClustersGradeMaximize } from '@/scripts/actions/clusters-grade-maximize';
 import { actionClustersGradeMaximizeCrossed } from "@/scripts/actions/clusters-grade-maximize-crossed";
 import { actionPopulate } from "@/scripts/actions/populate";
-import { actionTest } from "@/scripts/actions/test";
 
 const router = createRouter();
 
@@ -10,6 +9,5 @@ const router = createRouter();
 router.add('clusters-grade-maximize', actionClustersGradeMaximize);
 router.add('clusters-grade-maximize-crossed', actionClustersGradeMaximizeCrossed);
 router.add('populate', actionPopulate);
-router.add('test', actionTest);
 
 router.run(process.argv);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 import type { Edge, GraphConfig, Vertex } from "../../src/lib/graph/types";
-import type { PolymerSummary } from "../../src/lib/analysis/polymers";
+import type { PolymerSummary } from "../../src/lib/analysis/types";
 import { Graph } from "../../src/lib/graph/models";
 import { gradeMonomerPolymerPair } from "../../src/lib/analysis/polymers";
 
@@ -95,7 +95,10 @@ function dataProviderForScoreBilateralSymmetry(): Array<[() => [GraphConfig, Gra
       },
       {
         confidenceScore: 1,
-        monomerSize: 4,
+        monomerUniqueTypesCount: 2,
+        monomerTypesVector: [2, 2],
+        monomerVertexesCount: 4,
+        polymerVertexesCount: 12,
         polymerSize: 3,
       },
     ],

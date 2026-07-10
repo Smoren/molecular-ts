@@ -8,7 +8,8 @@
     },
     "lib": ["es2017", "dom"],
     "types": ["unplugin-vue-macros/macros-global", "node"],
-    "ignoreDeprecations": "5.0"
+    "ignoreDeprecations": "5.0",
+    "preserveValueImports": false
   },
 
   "references": [
