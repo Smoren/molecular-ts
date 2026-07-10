@@ -20,7 +20,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/vue-fontawesome": "^3.0.6",
     "@vueuse/core": "^12.8.2",
-    "babylonjs": "^8.13.0",
+    "babylonjs": "^9.16.1",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "browser-process": "^0.0.1",
@@ -46,7 +46,7 @@
     "tsx": "^4.10.1",
     "typescript": "~5.4.5",
     "vite": "^6.4.3",
-    "vue-tsc": "^1.0.12"
+    "vue-tsc": "^3.3.7"
   },
   "jest": {
     "rootDir": ".",

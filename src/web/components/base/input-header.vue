@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import type { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import Tooltip from "@/web/components/base/tooltip.vue";
 
 type Position = 'center' | 'left' | 'right';
