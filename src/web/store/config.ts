@@ -204,6 +204,7 @@ export const useConfigStore = defineStore("config", () => {
   }
 
   const randomizeColors = (usePredefined: boolean = true) => {
+    console.log('randomizeColors')
     const newConfig = fullCopyObject(typesConfig.value);
 
     const colors = createColors(Math.max(COLORS_PREDEFINED.length, newConfig.COLORS.length), usePredefined, true);

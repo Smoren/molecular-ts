@@ -1,20 +1,21 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "lib": ["es2017", "dom"],
+    "lib": ["esnext", "dom"],
     "types": ["unplugin-vue-macros/macros-global", "node"],
-    "ignoreDeprecations": "5.0",
-    "preserveValueImports": false
+    "skipLibCheck": true
   },
-
-  "references": [
-    {
-      "path": "./tsconfig.config.json"
-    }
-  ]
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"]
 }

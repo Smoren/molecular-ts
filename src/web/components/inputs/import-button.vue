@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import type { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import type { Ref } from "vue";
 import { ref } from "vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 defineProps<{
   title: string;
