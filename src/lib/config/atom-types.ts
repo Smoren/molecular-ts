@@ -56,7 +56,11 @@ export const COLORS_PREDEFINED: Array<ColorVector> = [
   [121, 242, 52],
 ];
 
-export function createColors(count: number, usePredefined: boolean = true, smartChoice: boolean = false): Array<ColorVector> {
+export function createColors(count: number, randomize: boolean = false, usePredefined: boolean = true, smartChoice: boolean = false): Array<ColorVector> {
+  if (!randomize) {
+    return fullCopyObject(COLORS_PREDEFINED).slice(0, count);
+  }
+
   const predefined: Array<ColorVector> = usePredefined ? fullCopyObject(COLORS_PREDEFINED.reverse()) as Array<ColorVector> : [];
   const result: Array<ColorVector> = [];
   for (let i=0; i<count; ++i) {
@@ -515,6 +519,8 @@ export function randomizeTypesConfig(
   oldConfig = oldConfig ?? createRandomTypesConfig(randomTypesConfig);
   const newConfig = createRandomTypesConfig(randomTypesConfig);
 
+  newConfig.COLORS = fullCopyObject(oldConfig.COLORS);
+
   if (!randomTypesConfig.USE_FREQUENCY_BOUNDS || skipSubMatricesBoundaryIndex !== undefined) {
     copyConfigListValue(oldConfig.FREQUENCIES, newConfig.FREQUENCIES, 1);
   }
@@ -614,7 +620,7 @@ export function randomizeTypesConfig(
 export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesConfig {
   const result = fullCopyObject(lhs);
 
-  result.COLORS = createColors(lhs.COLORS.length + rhs.COLORS.length, true, true);
+  result.COLORS = createColors(lhs.COLORS.length + rhs.COLORS.length);
   result.RADIUS = concatArrays(lhs.RADIUS, rhs.RADIUS);
   result.FREQUENCIES = concatArrays(lhs.FREQUENCIES, rhs.FREQUENCIES);
 

@@ -207,7 +207,7 @@ export const useConfigStore = defineStore("config", () => {
     console.log('randomizeColors')
     const newConfig = fullCopyObject(typesConfig.value);
 
-    const colors = createColors(Math.max(COLORS_PREDEFINED.length, newConfig.COLORS.length), usePredefined, true);
+    const colors = createColors(Math.max(COLORS_PREDEFINED.length, newConfig.COLORS.length), true, usePredefined, true);
     colors.sort(() => Math.random() - 0.5);
     newConfig.COLORS = colors.slice(0, newConfig.COLORS.length);
 
