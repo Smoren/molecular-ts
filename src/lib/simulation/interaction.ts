@@ -18,6 +18,7 @@ export class InteractionManager implements InteractionManagerInterface {
   private physicModel: PhysicModelInterface;
   private time: number;
   private bufVector: VectorInterface = new Vector([0, 0]);
+  private readonly onLinkDeleted?: (link: LinkInterface) => void;
 
   constructor(
     viewMode: ViewMode,
@@ -26,7 +27,8 @@ export class InteractionManager implements InteractionManagerInterface {
     linkManager: LinkManagerInterface,
     physicModel: PhysicModelInterface,
     ruleHelper: RulesHelperInterface,
-    summaryManager: SummaryManagerInterface
+    summaryManager: SummaryManagerInterface,
+    onLinkDeleted?: (link: LinkInterface) => void,
   ) {
     this.VIEW_MODE = viewMode;
     this.WORLD_CONFIG = worldConfig;
@@ -35,6 +37,7 @@ export class InteractionManager implements InteractionManagerInterface {
     this.physicModel = physicModel;
     this.ruleHelper = ruleHelper;
     this.summaryManager = summaryManager;
+    this.onLinkDeleted = onLinkDeleted;
     this.time = 0;
   }
 
@@ -67,6 +70,7 @@ export class InteractionManager implements InteractionManagerInterface {
     ) {
       this.linkManager.delete(link);
       this.summaryManager.noticeLinkDeleted(link, this.WORLD_CONFIG);
+      this.onLinkDeleted?.(link);
     }
 
     if (dist2 > this.physicModel.geometry.getAtomsRadiusSum(link.lhs, link.rhs)) {

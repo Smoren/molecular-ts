@@ -1,5 +1,5 @@
 import type { SimulationConfig, SimulationInterface } from './types/simulation';
-import type { AtomInterface } from './types/atomic';
+import type { AtomInterface, LinkInterface } from './types/atomic';
 import type { DrawerInterface } from '../drawer/types';
 import type { LinkManagerInterface, RunningStateInterface } from './types/utils';
 import type { InteractionManagerInterface, PhysicModelInterface } from './types/interaction';
@@ -52,6 +52,7 @@ export class Simulation implements SimulationInterface {
       this.config.physicModel,
       new RulesHelper(this.config.worldConfig, this.config.typesConfig),
       this.summaryManager,
+      (link) => this.noticeLinkBreak(link),
     );
     this.spatialGridManager = new SpatialGridManager(this.config.worldConfig.MAX_INTERACTION_RADIUS);
     this.runningState = new RunningState();
@@ -183,6 +184,9 @@ export class Simulation implements SimulationInterface {
 
   private interact(): void {
     for (const atom of this._atoms) {
+      if (atom.isTypeChanged) {
+        this.noticeReaction(atom.position, atom.newType as number);
+      }
       this.interactionManager.updateAtomType(atom);
       this.interactionManager.clearDistanceFactor(atom);
       this.interactionManager.clearElasticFactor(atom);
@@ -204,6 +208,31 @@ export class Simulation implements SimulationInterface {
       this.summaryManager.noticeLink(link, this.config.worldConfig);
     }
     this.interactionManager.handleTime();
+  }
+
+  private noticeReaction(position: NumericVector, type: number): void {
+    const color = this.config.typesConfig.COLORS[type];
+    if (color) {
+      this.drawer.pushReactionEffect?.(position, color);
+    }
+  }
+
+  private noticeLinkBreak(link: LinkInterface): void {
+    const colors = this.config.typesConfig.COLORS;
+    const c0 = colors[link.lhs.type];
+    const c1 = colors[link.rhs.type];
+    if (!c0 || !c1) {
+      return;
+    }
+    this.drawer.pushLinkBreakEffect?.(
+      link.lhs.position,
+      link.rhs.position,
+      [
+        (c0[0] + c1[0]) / 2,
+        (c0[1] + c1[1]) / 2,
+        (c0[2] + c1[2]) / 2,
+      ],
+    );
   }
 
   private tick() {
