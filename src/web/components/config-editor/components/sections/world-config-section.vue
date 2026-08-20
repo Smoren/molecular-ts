@@ -4,6 +4,7 @@ import { ref, toRefs, watch } from "vue";
 import { useConfigStore } from '@/web/store/config';
 import { useSimulationStore } from "@/web/store/simulation";
 import { usePhysicsStore } from '@/web/store/physics';
+import { useI18nStore } from "@/web/store/i18n";
 import ConfigSection from '@/web/components/config-editor/components/containers/config-section.vue';
 import InputHeader from "@/web/components/base/input-header.vue";
 import { useRightBarStore } from '@/web/store/right-bar';
@@ -17,6 +18,7 @@ const worldConfig = configStore.worldConfig;
 const showConfig = configStore.showConfig;
 
 const simulation = useSimulationStore();
+const i18n = useI18nStore();
 
 const {
   clearAtoms,
@@ -24,13 +26,13 @@ const {
 } = useSimulationStore();
 
 const clear = () => {
-  if (confirm('Are you sure?')) {
+  if (confirm(i18n.t('Are you sure?'))) {
     clearAtoms!();
   }
 };
 
 const refill = () => {
-  if (confirm('Are you sure?')) {
+  if (confirm(i18n.t('Are you sure?'))) {
     refillAtoms!();
   }
 };
@@ -55,16 +57,16 @@ watch(() => configStore.worldConfig.VIEW_MODE, () => {
     <template #body>
       <div class="btn-group" role="group">
         <button class="btn btn-outline-secondary" @click="togglePause">
-          {{ pausedTitle }}
+          {{ i18n.t(pausedTitle) }}
         </button>
         <button class="btn btn-outline-secondary" @click="clear">
-          Clear
+          {{ i18n.t('Clear') }}
         </button>
         <button class="btn btn-outline-secondary" @click="refill">
-          Refill
+          {{ i18n.t('Refill') }}
         </button>
         <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.SUMMARY)">
-          Summary
+          {{ i18n.t('Summary') }}
         </button>
       </div>
       <div>
@@ -226,13 +228,19 @@ watch(() => configStore.worldConfig.VIEW_MODE, () => {
           <div>
             <label>
               <input type="checkbox" v-model="showConfig.showAtoms" />
-              Show atoms
+              {{ i18n.t('Show atoms') }}
             </label>
           </div>
           <div>
             <label>
               <input type="checkbox" v-model="showConfig.showLinks" />
-              Show links
+              {{ i18n.t('Show links') }}
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" v-model="showConfig.showBounds" />
+              {{ i18n.t('Show bounds') }}
             </label>
           </div>
         </div>

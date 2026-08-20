@@ -1,7 +1,7 @@
 import type { NumericVector } from '../math/types';
 import type { AtomInterface } from '../simulation/types/atomic';
 import type { LinkManagerInterface } from '../simulation/types/utils';
-import type { TypesConfig, WorldConfig } from '../config/types';
+import type { TypesConfig, WorldConfig, ColorVector } from '../config/types';
 
 export type ViewConfig = {
   offset: NumericVector;
@@ -11,6 +11,7 @@ export type ViewConfig = {
 export type ShowConfig = {
   showAtoms: boolean;
   showLinks: boolean;
+  showBounds: boolean;
 }
 
 export type MouseEventData = {
@@ -27,6 +28,8 @@ export interface DrawerInterface {
   readonly eventManager?: EventManagerInterface;
   draw(atoms: Array<AtomInterface>, links: LinkManagerInterface): void;
   clear(): void;
+  pushReactionEffect?(position: NumericVector, color: ColorVector): void;
+  pushLinkBreakEffect?(from: NumericVector, to: NumericVector, color: ColorVector): void;
 }
 
 export interface EventManagerInterface {
