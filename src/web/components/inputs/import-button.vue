@@ -3,6 +3,7 @@
 import type { Ref } from "vue";
 import { ref } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { useI18nStore } from "@/web/store/i18n";
 
 defineProps<{
   title: string;
@@ -14,6 +15,7 @@ const emit = defineEmits<{
   error: [e: Error];
 }>();
 
+const i18n = useI18nStore();
 const uploadFile: Ref<HTMLInputElement | null> = ref(null);
 
 const onClick = () => {
@@ -51,7 +53,7 @@ const importFile = () => {
   <button class="btn btn-outline-secondary" @click="onClick">
     <font-awesome-icon icon="fa-solid fa-file-import" style="color: #bbb" />
     &nbsp;
-    {{ title }}
+    {{ i18n.t(title) }}
   </button>
   <div v-show="false">
     <input

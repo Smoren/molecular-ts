@@ -3,6 +3,7 @@
 import { getColorString } from '@/web/components/config-editor/utils';
 import { watch } from "vue";
 import Tooltip from "@/web/components/base/tooltip.vue";
+import { useI18nStore } from "@/web/store/i18n";
 
 const symmetric = defineModel<boolean | undefined>('symmetric');
 
@@ -42,6 +43,8 @@ watch(symmetric, () => {
   applySymmetric();
 });
 
+const i18n = useI18nStore();
+
 </script>
 
 <template>
@@ -49,8 +52,8 @@ watch(symmetric, () => {
     <tbody>
       <tr>
         <td>
-          <tooltip text="Make matrix symmetric" :nowrap="true" position="left" v-if="!hideSymmetric">
-            <input type="checkbox" v-model="symmetric" title="Symmetric" />
+          <tooltip :text="i18n.t('Make matrix symmetric')" :nowrap="true" position="left" v-if="!hideSymmetric">
+            <input type="checkbox" v-model="symmetric" :title="i18n.t('Symmetric')" />
           </tooltip>
         </td>
         <td v-for="color in colors" :style="{ backgroundColor: getColorString(color) }">

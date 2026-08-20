@@ -19,6 +19,13 @@
 
   .btn-group {
     width: 100%;
+    max-width: 100%;
+    flex-wrap: wrap;
+
+    > .btn {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
   }
 }
 

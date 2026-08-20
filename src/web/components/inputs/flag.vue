@@ -1,9 +1,13 @@
 <script setup lang="ts">
 
+import { useI18nStore } from "@/web/store/i18n";
+
 const modelValue = defineModel<boolean>();
 defineProps<{
   title: string;
 }>();
+
+const i18n = useI18nStore();
 
 </script>
 
@@ -11,7 +15,7 @@ defineProps<{
   <div :style="{ marginBottom: '10px' }">
     <label>
       <input type="checkbox" v-model="modelValue" />
-      {{ title }}
+      {{ i18n.t(title) }}
     </label>
   </div>
 </template>

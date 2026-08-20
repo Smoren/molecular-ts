@@ -12,6 +12,7 @@ import ConfigTensor from "@/web/components/inputs/config-tensor.vue";
 import TransformationConfig from "@/web/components/config-editor/components/widgets/transformation-config.vue";
 import { useRightBarStore } from '@/web/store/right-bar';
 import ConfigActions from "@/web/components/inputs/config-actions.vue";
+import { useI18nStore } from "@/web/store/i18n";
 
 const configStore = useConfigStore();
 const rightBarStore = useRightBarStore();
@@ -22,13 +23,14 @@ const {
   clearAtoms,
   refillAtoms,
 } = useSimulationStore();
+const i18n = useI18nStore();
 
 const clean = () => {
   clearInactiveParams(typesConfig);
 }
 
 const setDefaultTypesConfig = () => {
-  if (!confirm('Are you sure?')) {
+  if (!confirm(i18n.t('Are you sure?'))) {
     return;
   }
 
@@ -48,7 +50,7 @@ const setDefaultTypesConfig = () => {
 };
 
 const refill = () => {
-  if (confirm('Are you sure?')) {
+  if (confirm(i18n.t('Are you sure?'))) {
     refillAtoms!();
   }
 };
@@ -69,13 +71,13 @@ const linkElasticFactorConfigDescription = computed(() => {
   <config-section>
     <template #body>
       <div class="btn-group" role="group">
-        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.RANDOMIZE)">Randomize</button>
-        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.EDIT_TYPES)">Edit</button>
+        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.RANDOMIZE)">{{ i18n.t('Randomize') }}</button>
+        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.EDIT_TYPES)">{{ i18n.t('Edit') }}</button>
         <!-- <button class="btn btn-outline-secondary" @click="clean">Clean</button> -->
         <!-- <button class="btn btn-outline-secondary" @click="setDefaultTypesConfig">Default</button> -->
-        <button class="btn btn-outline-secondary" @click="refill">Refill</button>
-        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.GENETIC)">Genetic</button>
-        <button class="btn btn-outline-secondary" @click="configStore.appendType">Add type</button>
+        <button class="btn btn-outline-secondary" @click="refill">{{ i18n.t('Refill') }}</button>
+        <button class="btn btn-outline-secondary" @click="rightBarStore.toggle(rightBarStore.modes.GENETIC)">{{ i18n.t('Genetic') }}</button>
+        <button class="btn btn-outline-secondary" @click="configStore.appendType">{{ i18n.t('Add type') }}</button>
       </div>
       <div>
         <input-header

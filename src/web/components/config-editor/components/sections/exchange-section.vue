@@ -6,9 +6,11 @@ import type { TypesConfig } from "@/lib/config/types";
 import ImportButton from "@/web/components/inputs/import-button.vue";
 import ExportButton from "@/web/components/inputs/export-button.vue";
 import InputHeader from "@/web/components/base/input-header.vue";
+import { useI18nStore } from "@/web/store/i18n";
 
 const configStore = useConfigStore();
 const simulation = useSimulationStore();
+const i18n = useI18nStore();
 
 const exportConfigGetter = () => {
   return configStore.exportConfig();
@@ -33,7 +35,7 @@ const exportStateGetter = () => {
 }
 
 const onImportError = (e: Error) => {
-  alert('Import error: ' + e.message);
+  alert(i18n.t('Import error: {0}', e.message));
   console.warn(e);
 }
 

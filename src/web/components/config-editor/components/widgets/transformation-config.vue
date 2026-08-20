@@ -3,12 +3,15 @@
 import type { TransformationConfig } from "@/lib/config/types";
 import { ref, watch } from "vue";
 import TypeSelect from "@/web/components/inputs/type-select.vue";
+import { useI18nStore } from "@/web/store/i18n";
 
 const modelValue = defineModel<TransformationConfig>();
 defineProps<{
   colors: [number, number, number][];
   names?: string[];
 }>();
+
+const i18n = useI18nStore();
 
 const transformations = ref<[number, number, number][]>([]);
 const syncForward = () => {
@@ -48,7 +51,7 @@ const removeTransformation = (index: number) => {
 <template>
   <div class="input-group mb-3">
     <div class="input-group-append">
-      <button class="btn btn-outline-secondary" @click="addTransformation">Add rule</button>
+      <button class="btn btn-outline-secondary" @click="addTransformation">{{ i18n.t('Add rule') }}</button>
     </div>
   </div>
   <div class="list-group">
@@ -71,7 +74,7 @@ const removeTransformation = (index: number) => {
         </div>
       </div>
       <div class="btn-group">
-        <button class="btn btn-outline-secondary" @click="removeTransformation(index)">Remove</button>
+        <button class="btn btn-outline-secondary" @click="removeTransformation(index)">{{ i18n.t('Remove') }}</button>
       </div>
     </div>
   </div>

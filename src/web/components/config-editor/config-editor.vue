@@ -19,9 +19,11 @@ import { useLeftBarStore } from '@/web/store/left-bar';
 import { useRightBarStore } from '@/web/store/right-bar';
 import EditTypesConfigSection from '@/web/components/config-editor/components/sections/edit-types-config-section.vue';
 import GeneticSection from "@/web/components/config-editor/components/sections/genetic-section.vue";
+import { useI18nStore } from "@/web/store/i18n";
 
 const leftBarStore = useLeftBarStore();
 const rightBarStore = useRightBarStore();
+const i18n = useI18nStore();
 
 const activeAccordionItem = ref();
 
@@ -39,6 +41,15 @@ const openLeftBar = () => {
     <template #title>
       MolecuLarva
       <img :src="logo" alt="MolecuLarva" style="height: 30px; margin-left: 10px; margin-right: -10px">
+      <select
+        class="locale-select"
+        :value="i18n.currentCode"
+        @change="i18n.setLocale(($event.target as HTMLSelectElement).value)"
+      >
+        <option v-for="pack in i18n.locales" :key="pack.code" :value="pack.code">
+          {{ pack.name }}
+        </option>
+      </select>
     </template>
     <template #body>
       <sidebar
@@ -48,21 +59,21 @@ const openLeftBar = () => {
         style="overflow: hidden; resize: horizontal;"
       >
         <template #title>
-          Config
+          {{ i18n.t('Config') }}
         </template>
         <template #body>
           <view-mode-section />
           <MDBAccordion v-model="activeAccordionItem">
-            <MDBAccordionItem headerTitle="World" collapseId="collapse-world">
+            <MDBAccordionItem :headerTitle="i18n.t('World')" collapseId="collapse-world">
               <world-config-section />
             </MDBAccordionItem>
-            <MDBAccordionItem headerTitle="Types" collapseId="collapse-types">
+            <MDBAccordionItem :headerTitle="i18n.t('Types')" collapseId="collapse-types">
               <types-config-section />
             </MDBAccordionItem>
-            <MDBAccordionItem headerTitle="Initial" collapseId="collapse-initial">
+            <MDBAccordionItem :headerTitle="i18n.t('Initial')" collapseId="collapse-initial">
               <initial-config-section :with-title="false" />
             </MDBAccordionItem>
-            <MDBAccordionItem headerTitle="Exchange" collapseId="collapse-exchange">
+            <MDBAccordionItem :headerTitle="i18n.t('Exchange')" collapseId="collapse-exchange">
               <exchange-section />
             </MDBAccordionItem>
           </MDBAccordion>
@@ -76,7 +87,7 @@ const openLeftBar = () => {
         position="right"
       >
         <template #title>
-          {{ rightBarStore.currentMode?.title ?? '' }}
+          {{ i18n.t(rightBarStore.currentMode?.title ?? '') }}
         </template>
         <template #body>
           <div v-if="rightBarStore.isOpened">
@@ -94,5 +105,12 @@ const openLeftBar = () => {
 <style scoped lang="scss">
 
 @use "./assets/config-editor.scss";
+
+.locale-select {
+  margin-left: 16px;
+  height: 28px;
+  font-size: 14px;
+  vertical-align: middle;
+}
 
 </style>

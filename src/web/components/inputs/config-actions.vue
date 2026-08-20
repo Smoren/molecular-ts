@@ -5,6 +5,7 @@ import { useConfigStore } from "@/web/store/config";
 import { useSimulationStore } from "@/web/store/simulation";
 import { hexToRgb, rgbToHex, getColorString } from "@/web/components/config-editor/utils";
 import { defaultTypeName } from "@/lib/config/atom-types";
+import { useI18nStore } from "@/web/store/i18n";
 
 const props = defineProps<{
   colors: [number, number, number][];
@@ -13,6 +14,7 @@ const props = defineProps<{
 
 const configStore = useConfigStore();
 const { refillAtoms } = useSimulationStore();
+const i18n = useI18nStore();
 const openMenuIndex = ref<number | null>(null);
 
 const onColorInput = (index: number, event: Event) => {
@@ -38,7 +40,7 @@ const cloneType = (index: number) => {
 
 const removeType = (index: number) => {
   closeMenu();
-  if (confirm('Are you sure to remove type?')) {
+  if (confirm(i18n.t('Are you sure to remove type?'))) {
     configStore.removeTypeFromConfig(index);
     refillAtoms!(true);
   }
@@ -60,7 +62,7 @@ const removeType = (index: number) => {
           <label
             class="swatch"
             :style="{ backgroundColor: getColorString(color) }"
-            :title="`Change ${names[index] ?? defaultTypeName(index)} color`"
+            :title="i18n.t('Change {0} color', names[index] ?? defaultTypeName(index))"
           >
             <input
               type="color"
@@ -73,21 +75,21 @@ const removeType = (index: number) => {
             type="text"
             :value="names[index]"
             maxlength="8"
-            :title="`Type ${index} name`"
+            :title="i18n.t('Type {0} name', index)"
             @input="onNameInput(index, $event)"
           />
           <div class="menu" :class="{ open: openMenuIndex === index }">
             <button
               type="button"
               class="menu-toggle"
-              title="Type actions"
+              :title="i18n.t('Type actions')"
               @click="toggleMenu(index)"
             >
               ⋯
             </button>
             <ul v-show="openMenuIndex === index" class="menu-list">
-              <li @mousedown.prevent="cloneType(index)">Clone</li>
-              <li @mousedown.prevent="removeType(index)">Remove</li>
+              <li @mousedown.prevent="cloneType(index)">{{ i18n.t('Clone') }}</li>
+              <li @mousedown.prevent="removeType(index)">{{ i18n.t('Remove') }}</li>
             </ul>
           </div>
         </td>

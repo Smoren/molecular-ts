@@ -3,6 +3,7 @@
 import { onMounted, onUnmounted, ref, type Ref } from 'vue';
 import type { ITimeSeriesPresentationOptions } from 'smoothie';
 import { SmoothieChart, TimeSeries } from 'smoothie';
+import { useI18nStore } from "@/web/store/i18n";
 
 export type TimeSeriesConfig = {
   name: string;
@@ -18,6 +19,8 @@ const props = defineProps<{
   width: number;
   height: number;
 }>();
+
+const i18n = useI18nStore();
 
 const chart = new SmoothieChart({
   grid: {
@@ -81,7 +84,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <h5>{{ name }}</h5>
+  <h5>{{ i18n.t(name) }}</h5>
   <canvas :id="`chart-${id}`" class="chart" :width="width" :height="height"></canvas>
 </template>
 

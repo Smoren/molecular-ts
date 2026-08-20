@@ -1,12 +1,15 @@
 <script setup lang="ts">
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { useI18nStore } from "@/web/store/i18n";
 
 const props = defineProps<{
   title: string;
   fileName: string;
   dataGetter: (() => Record<string, unknown>) | (() => Promise<Record<string, unknown>>);
 }>();
+
+const i18n = useI18nStore();
 
 const formatJsonString = (jsonStr: string) => {
   const regex = /(\[)([\d\s.,-]+)(])/g;
@@ -45,6 +48,6 @@ const exportData = async () => {
   <button class="btn btn-outline-secondary" @click="exportData">
     <font-awesome-icon icon="fa-solid fa-download" style="color: #bbb" />
     &nbsp;
-    {{ title }}
+    {{ i18n.t(title) }}
   </button>
 </template>

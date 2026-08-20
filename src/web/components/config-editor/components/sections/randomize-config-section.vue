@@ -9,6 +9,7 @@ import InitialConfigSection from "@/web/components/config-editor/components/sect
 import Flag from "@/web/components/inputs/flag.vue";
 import InputHeader from "@/web/components/base/input-header.vue";
 import RandomizeConfigSnippets from "@/web/components/config-editor/components/widgets/randomize-config-snippets.vue";
+import { useI18nStore } from "@/web/store/i18n";
 
 const configStore = useConfigStore();
 const { randomTypesConfig, typesConfig } = configStore;
@@ -17,6 +18,7 @@ const {
   clearAtoms,
   refillAtoms,
 } = useSimulationStore();
+const i18n = useI18nStore();
 
 const forceRefill = ref(true);
 
@@ -279,7 +281,7 @@ const randomizeTypesConfig = () => {
       </div>
       <br />
       <button class="btn btn-outline-primary" @click="randomizeTypesConfig" style="width: 100%;">
-        {{ needRefill ? 'Randomize and Refill' : 'Randomize' }}
+        {{ i18n.t(needRefill ? 'Randomize and Refill' : 'Randomize') }}
       </button>
       <br />
       <br />
@@ -289,12 +291,12 @@ const randomizeTypesConfig = () => {
         @dblclick="configStore.randomizeColors(false)"
         style="width: 100%;"
       >
-        Randomize colors
+        {{ i18n.t('Randomize colors') }}
       </button>
       <br />
       <br />
       <br />
-      <h4>Snippets</h4>
+      <h4>{{ i18n.t('Snippets') }}</h4>
       <randomize-config-snippets />
     </template>
   </config-section>

@@ -3,8 +3,10 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { ref } from "vue";
 import { useConfigStore } from "@/web/store/config";
+import { useI18nStore } from "@/web/store/i18n";
 
 const configStore = useConfigStore();
+const i18n = useI18nStore();
 
 const getShareLink = async () => {
   return `${location.origin}${location.pathname}#${await configStore.exportConfigBase64()}`;
@@ -40,7 +42,7 @@ const onClick = async () => {
       <font-awesome-icon icon="fa-solid fa-link" style="color: #fff" />
       &nbsp;
     </span>
-    {{ title }}
+    {{ i18n.t(title) }}
   </button>
 </template>
 
