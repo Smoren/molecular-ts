@@ -34,7 +34,7 @@ const formatTypeName = (key: string): string => {
 };
 
 const getItemsAvailable = (item?: keyof TypesConfig): TypesConfigItem[] => {
-  const excludeKeys = ['COLORS', 'TRANSFORMATION'];
+  const excludeKeys = ['COLORS', 'NAMES', 'TRANSFORMATION'];
   const result = Object.keys(configStore.typesConfig)
     .filter((key) => !excludeKeys.includes(key))
     .map((key) => ({ name: formatTypeName(key), alias: key })) as TypesConfigItem[];

@@ -1,5 +1,6 @@
 import type { TypesConfig, TypesSymmetricConfig, WorldConfig } from '@/lib/config/types';
 import { fullCopyObject } from '@/lib/utils/functions';
+import { ensureTypeNames } from '@/lib/config/atom-types';
 
 export function convertWorldConfigForBackwardCompatibility(inputConfig: WorldConfig): WorldConfig {
   return fullCopyObject(inputConfig);
@@ -10,6 +11,7 @@ export function convertTypesConfigForBackwardCompatibility(inputConfig: TypesCon
 
   renameKey(config, 'LINK_FACTOR_DISTANCE_EXTENDED', 'LINK_FACTOR_DISTANCE');
   deleteKey(config, 'LINK_FACTOR_DISTANCE_USE_EXTENDED');
+  config.NAMES = ensureTypeNames(config.NAMES, config.COLORS?.length ?? config.RADIUS?.length ?? 0);
 
   return config;
 }

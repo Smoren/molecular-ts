@@ -7,6 +7,7 @@ import TypeSelect from "@/web/components/inputs/type-select.vue";
 const modelValue = defineModel<TransformationConfig>();
 defineProps<{
   colors: [number, number, number][];
+  names?: string[];
 }>();
 
 const transformations = ref<[number, number, number][]>([]);
@@ -54,19 +55,19 @@ const removeTransformation = (index: number) => {
     <div class="list-group-item d-flex justify-content-between align-items-center" v-for="(transform, index) in transformations" :key="`${transform[0]}-${transform[1]}`">
       <div class="list-item__name">
         <div>
-          <type-select :colors="colors" v-model="transform[1]" />
+          <type-select :colors="colors" :names="names" v-model="transform[1]" />
         </div>
         <div>
           🔗
         </div>
         <div>
-          <type-select :colors="colors" v-model="transform[0]" />
+          <type-select :colors="colors" :names="names" v-model="transform[0]" />
         </div>
         <div>
           ➔
         </div>
         <div>
-          <type-select :colors="colors" v-model="transform[2]" />
+          <type-select :colors="colors" :names="names" v-model="transform[2]" />
         </div>
       </div>
       <div class="btn-group">

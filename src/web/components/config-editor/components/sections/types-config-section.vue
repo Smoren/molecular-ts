@@ -80,10 +80,10 @@ const linkElasticFactorConfigDescription = computed(() => {
       <div>
         <input-header
           name="Actions"
-          tooltip="Dropdown menu of actions for each type."
+          tooltip="Type names, colors, clone and remove."
           position="center"
         />
-        <config-actions :colors="typesConfig.COLORS" />
+        <config-actions :colors="typesConfig.COLORS" :names="typesConfig.NAMES" />
       </div>
       <div>
         <input-header
@@ -210,7 +210,7 @@ const linkElasticFactorConfigDescription = computed(() => {
                    then the particle of type B changes its type to C."
         />
         <div style="margin-top: 10px;"></div>
-        <transformation-config :colors="typesConfig.COLORS" v-model="typesConfig.TRANSFORMATION" />
+        <transformation-config :colors="typesConfig.COLORS" :names="typesConfig.NAMES" v-model="typesConfig.TRANSFORMATION" />
       </div>
     </template>
   </config-section>

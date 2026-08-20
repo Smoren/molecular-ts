@@ -38,6 +38,7 @@ export type TypesConfig = {
   LINK_FACTOR_ELASTIC: LinkFactorElasticConfig;
   FREQUENCIES: FrequenciesConfig;
   COLORS: ColorsConfig;
+  NAMES: string[];
   TRANSFORMATION: TransformationConfig;
 };
 export type WorldConfig = {

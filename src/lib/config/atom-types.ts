@@ -56,6 +56,40 @@ export const COLORS_PREDEFINED: Array<ColorVector> = [
   [121, 242, 52],
 ];
 
+export function defaultTypeName(index: number): string {
+  let n = index;
+  let name = '';
+  do {
+    name = String.fromCharCode(65 + (n % 26)) + name;
+    n = Math.floor(n / 26) - 1;
+  } while (n >= 0);
+  return name;
+}
+
+export function createDefaultTypeNames(count: number): string[] {
+  return Array.from({ length: count }, (_, i) => defaultTypeName(i));
+}
+
+export function ensureTypeNames(names: string[] | undefined, count: number): string[] {
+  const result: string[] = [];
+  for (let i = 0; i < count; ++i) {
+    const name = names?.[i]?.trim();
+    result.push(name ? name : defaultTypeName(i));
+  }
+  return result;
+}
+
+export function pickUnusedTypeName(existing: string[]): string {
+  const used = new Set(existing.map((name) => name.trim().toLowerCase()));
+  for (let i = 0; i < existing.length + 32; ++i) {
+    const name = defaultTypeName(i);
+    if (!used.has(name.toLowerCase())) {
+      return name;
+    }
+  }
+  return defaultTypeName(existing.length);
+}
+
 export function createColors(count: number, randomize: boolean = false, usePredefined: boolean = true, smartChoice: boolean = false): Array<ColorVector> {
   if (!randomize) {
     return fullCopyObject(COLORS_PREDEFINED).slice(0, count);
@@ -78,6 +112,7 @@ export function createColors(count: number, randomize: boolean = false, usePrede
 export function createDefaultTypesConfig(): TypesConfig {
   return {
     COLORS: createColors(5),
+    NAMES: createDefaultTypeNames(5),
     FREQUENCIES: [1, 1, 0.5, 0.5, 1],
     RADIUS: [1, 1, 1, 1, 1],
     GRAVITY: [
@@ -163,15 +198,17 @@ export function createTransparentTypesConfig(typesCount: number): TypesConfig {
     LINK_FACTOR_ELASTIC: createFilledTensor(typesCount, typesCount, typesCount, 1),
     FREQUENCIES: createFilledArray(typesCount, 1),
     COLORS: createColors(typesCount),
+    NAMES: createDefaultTypeNames(typesCount),
     TRANSFORMATION: {},
   }
 }
 
-export function createSingleTypeConfig(): TypesConfig {
+export function createSingleTypeConfig(existingNames: string[] = []): TypesConfig {
   return {
     RADIUS: [1],
     FREQUENCIES: [1],
     COLORS: createColors(1),
+    NAMES: [pickUnusedTypeName(existingNames)],
     GRAVITY: [[0]],
     LINK_GRAVITY: [[0]],
     LINKS: [0],
@@ -295,6 +332,7 @@ export function createRandomTypesConfig({
     LINK_FACTOR_DISTANCE: linkFactorDistance,
     LINK_FACTOR_ELASTIC: linkFactorElastic,
     COLORS: createColors(TYPES_COUNT),
+    NAMES: createDefaultTypeNames(TYPES_COUNT),
     TRANSFORMATION: {}, // TODO randomize it
   };
 }
@@ -409,6 +447,7 @@ export function createRandomIntTypesConfig({
     LINK_FACTOR_DISTANCE: linkFactorDistance,
     LINK_FACTOR_ELASTIC: linkFactorElastic,
     COLORS: createColors(TYPES_COUNT),
+    NAMES: createDefaultTypeNames(TYPES_COUNT),
     TRANSFORMATION: {}, // TODO randomize it
   };
 }
@@ -520,6 +559,7 @@ export function randomizeTypesConfig(
   const newConfig = createRandomTypesConfig(randomTypesConfig);
 
   newConfig.COLORS = fullCopyObject(oldConfig.COLORS);
+  newConfig.NAMES = ensureTypeNames(oldConfig.NAMES, newConfig.COLORS.length);
 
   if (!randomTypesConfig.USE_FREQUENCY_BOUNDS || skipSubMatricesBoundaryIndex !== undefined) {
     copyConfigListValue(oldConfig.FREQUENCIES, newConfig.FREQUENCIES, 1);
@@ -621,6 +661,10 @@ export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesCon
   const result = fullCopyObject(lhs);
 
   result.COLORS = createColors(lhs.COLORS.length + rhs.COLORS.length);
+  result.NAMES = concatArrays(
+    ensureTypeNames(lhs.NAMES, lhs.COLORS.length),
+    ensureTypeNames(rhs.NAMES, rhs.COLORS.length),
+  );
   result.RADIUS = concatArrays(lhs.RADIUS, rhs.RADIUS);
   result.FREQUENCIES = concatArrays(lhs.FREQUENCIES, rhs.FREQUENCIES);
 
@@ -641,6 +685,7 @@ export function crossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, separator:
   const result = fullCopyObject(lhs);
 
   result.COLORS = createColors(lhs.COLORS.length);
+  result.NAMES = ensureTypeNames(lhs.NAMES, lhs.COLORS.length);
   result.RADIUS = crossArrays(lhs.RADIUS, rhs.RADIUS, separator);
   result.FREQUENCIES = crossArrays(lhs.FREQUENCIES, rhs.FREQUENCIES, separator);
 
@@ -661,6 +706,7 @@ export function randomCrossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, sepa
   const result = fullCopyObject(lhs);
 
   result.COLORS = createColors(lhs.COLORS.length);
+  result.NAMES = ensureTypeNames(lhs.NAMES, lhs.COLORS.length);
   result.RADIUS = randomCrossArrays(lhs.RADIUS, rhs.RADIUS, separator);
   result.FREQUENCIES = randomCrossArrays(lhs.FREQUENCIES, rhs.FREQUENCIES, separator);
 
@@ -681,6 +727,7 @@ export function crossTypesConfigsByIndexes(lhs: TypesConfig, rhs: TypesConfig, i
   const result = fullCopyObject(lhs);
 
   result.COLORS = createColors(lhs.COLORS.length);
+  result.NAMES = ensureTypeNames(lhs.NAMES, lhs.COLORS.length);
   result.RADIUS = crossArraysByIndexes(lhs.RADIUS, rhs.RADIUS, indexes);
   result.FREQUENCIES = crossArraysByIndexes(lhs.FREQUENCIES, rhs.FREQUENCIES, indexes);
 
@@ -701,6 +748,7 @@ export function removeIndexFromTypesConfig(input: TypesConfig, index: number): T
   const result = fullCopyObject(input);
 
   result.COLORS = removeIndexFromArray(input.COLORS, index);
+  result.NAMES = removeIndexFromArray(ensureTypeNames(input.NAMES, input.COLORS.length), index);
   result.RADIUS = removeIndexFromArray(input.RADIUS, index);
   result.FREQUENCIES = removeIndexFromArray(input.FREQUENCIES, index);
 
@@ -722,6 +770,7 @@ export function removeIndexFromTypesConfig(input: TypesConfig, index: number): T
 export function copyIndexInTypesConfig(input: TypesConfig, indexFrom: number, indexTo: number): TypesConfig {
   const result = fullCopyObject(input);
 
+  result.NAMES = copyArrayIndex(ensureTypeNames(input.NAMES, input.COLORS.length), indexFrom, indexTo);
   result.RADIUS = copyArrayIndex(input.RADIUS, indexFrom, indexTo);
   result.FREQUENCIES = copyArrayIndex(input.FREQUENCIES, indexFrom, indexTo);
 
