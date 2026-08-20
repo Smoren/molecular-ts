@@ -14,15 +14,15 @@ const getCanvasStyle = (mode: ViewMode) => {
   return { display: isMode(mode) ? 'block' : 'none' };
 }
 
-const importDataFromHash = () => {
+const importDataFromHash = async () => {
   const hash = window.location.hash.slice(1);
   if (hash) {
-    configStore.importConfigBase64(hash);
+    await configStore.importConfigBase64(hash);
   }
 }
 
-onMounted(() => {
-  importDataFromHash();
+onMounted(async () => {
+  await importDataFromHash();
   restart();
 });
 

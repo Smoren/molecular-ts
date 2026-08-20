@@ -6,25 +6,26 @@ import { useConfigStore } from "@/web/store/config";
 
 const configStore = useConfigStore();
 
-const getShareLink = () => {
-  return `${location.origin}${location.pathname}#${configStore.exportConfigBase64()}`;
+const getShareLink = async () => {
+  return `${location.origin}${location.pathname}#${await configStore.exportConfigBase64()}`;
 }
 
-const copyShareLink = () => {
-  navigator.clipboard.writeText(getShareLink());
+const copyShareLink = async () => {
+  await navigator.clipboard.writeText(await getShareLink());
 }
 
 const DEFAULT_TITLE = "Copy configuration share link";
 const TEMP_TITLE = "[ COPIED ] Click another time to shorten!";
 const title = ref(DEFAULT_TITLE);
 
-const onClick = () => {
+const onClick = async () => {
   if (title.value === TEMP_TITLE) {
-    window.open(`https://linker.smoren.me/#${getShareLink()}`, '_blank')?.focus();
+    const link = await getShareLink();
+    window.open(`https://linker.smoren.me/#${encodeURIComponent(link)}`, '_blank')?.focus();
     return;
   }
 
-  copyShareLink();
+  await copyShareLink();
   title.value = TEMP_TITLE;
   setTimeout(() => {
     title.value = DEFAULT_TITLE;
