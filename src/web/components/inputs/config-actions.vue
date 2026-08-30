@@ -67,7 +67,7 @@ const removeType = (index: number) => {
             <input
               type="color"
               :value="rgbToHex(color)"
-              @input="onColorInput(index, $event)"
+              @change="onColorInput(index, $event)"
             />
           </label>
           <input
