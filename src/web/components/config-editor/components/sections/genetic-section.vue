@@ -6,8 +6,10 @@ import InputHeader from "@/web/components/base/input-header.vue";
 import { computed, ref } from "vue";
 import { MDBAccordion, MDBAccordionItem } from "mdb-vue-ui-kit";
 import ChartStatic from "@/web/components/config-editor/components/widgets/chart-static.vue";
+import { useI18nStore } from "@/web/store/i18n";
 
 const geneticStore = useGeneticStore();
+const i18n = useI18nStore();
 const activeAccordionItem = ref('collapse-macro');
 const fitnessChartData = computed(() => geneticStore.populationFitness.map((y, x) => ({x, y})));
 const bestFitnessHistoryChartData = computed(() => geneticStore.bestGenomeStatsHistory.map((stats, x) => ({x, y: stats.fitness})));
@@ -19,15 +21,15 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
 <template>
   <div class="btn-group" style="width: 100%;">
     <button class="btn btn-outline-secondary" @click="geneticStore.start" :disabled="geneticStore.isRunning">
-      Start
+      {{ i18n.t('Start') }}
     </button>
     <button class="btn btn-outline-secondary" @click="geneticStore.stop" :disabled="!geneticStore.isRunning || geneticStore.isStopping">
-      Stop
+      {{ i18n.t('Stop') }}
     </button>
   </div>
   <div class="progress-block" v-if="geneticStore.isRunning">
-    Genomes handled: <b>{{ geneticStore.genomesHandled }} / {{ geneticStore.populationSize }}</b>
-    <span v-if="geneticStore.isStopping">&nbsp;(stopping...)</span>
+    {{ i18n.t('Genomes handled: {0} / {1}', geneticStore.genomesHandled, geneticStore.populationSize) }}
+    <span v-if="geneticStore.isStopping">&nbsp;{{ i18n.t('(stopping...)') }}</span>
     <div class="progress">
       <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{ width: geneticStore.progress + '%'}"></div>
     </div>
@@ -36,62 +38,62 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
     <table class="table" style="width: 100%">
       <tbody>
         <tr v-if="geneticStore.generation">
-          <td width="50%">Generation</td>
+          <td width="50%">{{ i18n.t('Generation') }}</td>
           <td>{{ geneticStore.generation }}</td>
         </tr>
         <tr v-if="geneticStore.populationSummary">
-          <td>Stagnation counter</td>
+          <td>{{ i18n.t('Stagnation counter') }}</td>
           <td>{{ geneticStore.populationSummary!.stagnationCounter }}</td>
         </tr>
         <tr v-if="geneticStore.populationSummary">
-          <td>Average genome age</td>
+          <td>{{ i18n.t('Average genome age') }}</td>
           <td>{{ geneticStore.populationSummary!.ageSummary.mean }}</td>
         </tr>
         <tr v-if="geneticStore.bestGenome">
-          <td>Best genome ID</td>
+          <td>{{ i18n.t('Best genome ID') }}</td>
           <td>{{ geneticStore.bestGenome!.id }}</td>
         </tr>
         <tr v-if="geneticStore.bestGenome">
-          <td>Best genome origin</td>
-          <td>{{ geneticStore.bestGenome!.stats!.origin }}</td>
+          <td>{{ i18n.t('Best genome origin') }}</td>
+          <td>{{ i18n.t(String(geneticStore.bestGenome!.stats!.origin)) }}</td>
         </tr>
         <tr v-if="geneticStore.populationSummary">
-          <td>Best genome score</td>
+          <td>{{ i18n.t('Best genome score') }}</td>
           <td>{{ round(geneticStore.populationSummary!.fitnessSummary.best, 4) }}</td>
         </tr>
         <tr v-if="geneticStore.populationSummary">
-          <td>Second genome score</td>
+          <td>{{ i18n.t('Second genome score') }}</td>
           <td>{{ round(geneticStore.populationSummary!.fitnessSummary.second, 4) }}</td>
         </tr>
         <tr v-if="geneticStore.populationSummary">
-          <td>Average population score</td>
+          <td>{{ i18n.t('Average population score') }}</td>
           <td>{{ round(geneticStore.populationSummary!.fitnessSummary.mean, 4) }}</td>
         </tr>
         <tr v-if="geneticStore.populationSummary">
-          <td>Median population score</td>
+          <td>{{ i18n.t('Median population score') }}</td>
           <td>{{ round(geneticStore.populationSummary!.fitnessSummary.median, 4) }}</td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="genetic-charts-container" v-if="fitnessChartData.length">
-    <h6>Population fitness</h6>
+    <h6>{{ i18n.t('Population fitness') }}</h6>
     <chart-static :data="fitnessChartData" />
   </div>
   <div class="genetic-charts-container" v-if="bestFitnessHistoryChartData.length > 1">
-    <h6>Best fitness history</h6>
+    <h6>{{ i18n.t('Best fitness history') }}</h6>
     <chart-static :data="bestFitnessHistoryChartData" />
   </div>
   <div class="genetic-charts-container" v-if="meanFitnessHistoryChartData.length > 1">
-    <h6>Mean fitness history</h6>
+    <h6>{{ i18n.t('Mean fitness history') }}</h6>
     <chart-static :data="meanFitnessHistoryChartData" />
   </div>
   <div class="genetic-charts-container" v-if="meanAgeHistoryChartData.length > 1">
-    <h6>Mean age history</h6>
+    <h6>{{ i18n.t('Mean age history') }}</h6>
     <chart-static :data="meanAgeHistoryChartData" />
   </div>
   <MDBAccordion v-model="activeAccordionItem">
-    <MDBAccordionItem headerTitle="Macro config" collapseId="collapse-macro">
+    <MDBAccordionItem :headerTitle="i18n.t('Macro config')" collapseId="collapse-macro">
       <div class="config-block">
         <div>
           <input-header name="Population size" />
@@ -109,19 +111,19 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
           <div>
             <label>
               <input type="checkbox" v-model="geneticStore.launchConfig.addCurrentTypesConfig" />
-              Add current types config to population
+              {{ i18n.t('Add current types config to population') }}
             </label>
           </div>
           <div>
             <label>
               <input type="checkbox" v-model="geneticStore.launchConfig.randomizeStartPopulation" />
-              Randomize start population
+              {{ i18n.t('Randomize start population') }}
             </label>
           </div>
         </div>
       </div>
     </MDBAccordionItem>
-    <MDBAccordionItem headerTitle="Params config" collapseId="collapse-params">
+    <MDBAccordionItem :headerTitle="i18n.t('Params config')" collapseId="collapse-params">
       <div class="config-block">
         <div>
           <input-header name="Min compound size" />
@@ -151,7 +153,7 @@ const meanAgeHistoryChartData = computed(() => geneticStore.populationSummaryHis
         </div>
       </div>
     </MDBAccordionItem>
-    <MDBAccordionItem headerTitle="Weights config" collapseId="collapse-weights">
+    <MDBAccordionItem :headerTitle="i18n.t('Weights config')" collapseId="collapse-weights">
       <div class="config-block">
         <div>
           <input-header name="Weight of clusters count" />

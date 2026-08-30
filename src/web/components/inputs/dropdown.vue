@@ -1,6 +1,9 @@
 <script setup lang="ts">
 
+import { useI18nStore } from "@/web/store/i18n";
+
 const modelValue = defineModel<unknown | undefined>();
+const i18n = useI18nStore();
 
 withDefaults(defineProps<{
   options: Record<string, unknown>[];
@@ -27,7 +30,7 @@ const emit = defineEmits<{
       :value="item[valueKey as keyof typeof item]"
       @change="emit('change', modelValue)"
     >
-      {{ item[titleKey as keyof typeof item] }}
+      {{ i18n.t(String(item[titleKey as keyof typeof item] ?? '')) }}
     </option>
   </select>
 </template>

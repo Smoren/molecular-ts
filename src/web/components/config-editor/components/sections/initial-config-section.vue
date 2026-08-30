@@ -9,6 +9,7 @@ import InputHeader from "@/web/components/base/input-header.vue";
 import type { InitialConfig } from "@/lib/config/types";
 import { ref, type Ref, watch } from "vue";
 import { getViewModeConfig } from "@/lib/utils/functions";
+import { useI18nStore } from "@/web/store/i18n";
 
 withDefaults(defineProps<{
   withButtons?: boolean;
@@ -20,6 +21,7 @@ withDefaults(defineProps<{
 
 const configStore = useConfigStore();
 const { refillAtoms } = useSimulationStore();
+const i18n = useI18nStore();
 
 const getActualInitialConfig = () => {
   return getViewModeConfig(configStore.worldConfig).INITIAL;
@@ -45,7 +47,7 @@ watch(() => configStore.syncConfigBounds, () => {
 });
 
 const refill = () => {
-  if (confirm('Are you sure?')) {
+  if (confirm(i18n.t('Are you sure?'))) {
     refillAtoms!();
   }
 };
@@ -55,7 +57,7 @@ const refill = () => {
 <template>
   <config-section>
     <template #title v-if="withTitle">
-      Initial Params
+      {{ i18n.t('Initial Params') }}
     </template>
     <template #body>
       <div>
@@ -82,7 +84,7 @@ const refill = () => {
         <br />
         <div class="btn-group" role="group">
           <button class="btn btn-outline-secondary" @click="refill">
-            Refill
+            {{ i18n.t('Refill') }}
           </button>
         </div>
       </div>

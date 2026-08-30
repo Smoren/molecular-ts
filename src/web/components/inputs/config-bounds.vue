@@ -1,5 +1,9 @@
 <script setup lang="ts">
 
+import { useI18nStore } from "@/web/store/i18n";
+
+const i18n = useI18nStore();
+
 withDefaults(defineProps<{
   values: [number, number, number?, number?];
   min?: number;
@@ -15,10 +19,10 @@ withDefaults(defineProps<{
   <table>
     <tbody>
       <tr>
-        <td>min</td>
-        <td>max</td>
-        <td>median</td>
-        <td v-if="values[3] !== undefined" width="25%">step</td>
+        <td>{{ i18n.t('min') }}</td>
+        <td>{{ i18n.t('max') }}</td>
+        <td>{{ i18n.t('median') }}</td>
+        <td v-if="values[3] !== undefined" width="25%">{{ i18n.t('step') }}</td>
       </tr>
       <tr>
         <td>

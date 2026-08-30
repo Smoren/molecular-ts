@@ -12,6 +12,7 @@ import ConfigSection from "@/web/components/config-editor/components/containers/
 import InputHeader from '@/web/components/base/input-header.vue';
 import Dropdown from "@/web/components/inputs/dropdown.vue";
 import RadioGroup from "@/web/components/inputs/radio-group.vue";
+import { useI18nStore } from "@/web/store/i18n";
 
 type TypesConfigKey = keyof TypesConfig;
 type TypesConfigItem = {
@@ -28,6 +29,7 @@ type OperationTypeItem = {
 }
 
 const configStore = useConfigStore();
+const i18n = useI18nStore();
 
 const formatTypeName = (key: string): string => {
   return key.toLowerCase().split('_').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -68,7 +70,7 @@ const removeOperation = () => {
 }
 
 const applyOperation = () => {
-  if (!confirm('Are you sure?')) {
+  if (!confirm(i18n.t('Are you sure?'))) {
     return;
   }
   (configStore.typesConfig[inputType.value] as Tensor<number>) = pipe.value.run();
@@ -123,7 +125,7 @@ watch(() => inputType.value, () => {
       </div>
       <hr v-if="pipe.operations.length" />
       <div v-for="(operation, index) in pipe.operations" :key="index">
-        <input-header :name="`Operation ${index + 1}`" />
+        <input-header :name="i18n.t('Operation {0}', index + 1)" />
         <br />
         <div>
           <div style="display: inline-block; width: 50%">
@@ -147,7 +149,7 @@ watch(() => inputType.value, () => {
         <div>
           <table>
             <tr v-if="operation.config.type === OperationType.BINARY">
-              <td>Right argument</td>
+              <td>{{ i18n.t('Right argument') }}</td>
               <td>
                 <dropdown
                   v-model="operation.config.rightArgument"
@@ -158,7 +160,7 @@ watch(() => inputType.value, () => {
               </td>
             </tr>
             <tr v-for="(arg, index) in operation.factoryArgs" :key="index">
-              <td style="width: 20%;">{{ arg.name }}</td>
+              <td style="width: 20%;">{{ i18n.t(arg.name) }}</td>
               <td>
                 <input type="number" v-model="operation.factoryArgs[index].value">
               </td>
@@ -170,13 +172,13 @@ watch(() => inputType.value, () => {
       <div>
         <div class="btn-group" role="group">
           <button class="btn btn-outline-secondary" @click="addOperation">
-            Append
+            {{ i18n.t('Append') }}
           </button>
           <button class="btn btn-outline-secondary" @click="removeOperation">
-            Remove
+            {{ i18n.t('Remove') }}
           </button>
           <button class="btn btn-outline-primary" @click="applyOperation">
-            Apply
+            {{ i18n.t('Apply') }}
           </button>
         </div>
       </div>

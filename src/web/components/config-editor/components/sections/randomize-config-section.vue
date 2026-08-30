@@ -37,7 +37,7 @@ watch(useIgnoreSubMatricesBoundaryIndex, () => {
 });
 
 const randomizeTypesConfig = () => {
-  if (!confirm('Are you sure?')) {
+  if (!confirm(i18n.t('Are you sure?'))) {
     return;
   }
 
@@ -265,7 +265,7 @@ const randomizeTypesConfig = () => {
           v-show="useIgnoreSubMatricesBoundaryIndex"
           type="number"
           v-model="ignoreSubMatricesBoundaryIndex"
-          placeholder="Cross position"
+          :placeholder="i18n.t('Cross position')"
           style="margin-top: 10px;"
         />
       </div>
