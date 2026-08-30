@@ -85,9 +85,7 @@ export class Drawer3d implements DrawerInterface {
       drawObject.position.y = atom.position[1];
       drawObject.position.z = atom.position[2];
 
-      if (atom.isTypeChanged) {
-        this.updateAtomColor(atom, drawObject);
-      }
+      this.applyMeshColor(drawObject, this.TYPES_CONFIG.COLORS[atom.type]);
     }
 
     if (!this.WORLD_CONFIG.SIMPLIFIED_VIEW_MODE) {
@@ -112,16 +110,25 @@ export class Drawer3d implements DrawerInterface {
     this.linksMap.clear();
   }
 
-  private updateAtomColor(atom: AtomInterface, drawObject: Mesh): void {
-    const color = this.TYPES_CONFIG.COLORS[atom.newType!];
+  private applyMeshColor(mesh: Mesh, color: NumericVector): void {
+    const current = mesh.material as StandardMaterial | undefined;
+    if (
+      current?.diffuseColor
+      && current.diffuseColor.r === color[0]
+      && current.diffuseColor.g === color[1]
+      && current.diffuseColor.b === color[2]
+    ) {
+      return;
+    }
+
     const material = new StandardMaterial('material', this.scene);
     material.diffuseColor.r = color[0];
     material.diffuseColor.g = color[1];
     material.diffuseColor.b = color[2];
     material.freeze();
 
-    drawObject.material?.dispose();
-    drawObject.material = material;
+    mesh.material?.dispose();
+    mesh.material = material;
   }
 
   private normalizeFrame(): void {
@@ -176,13 +183,7 @@ export class Drawer3d implements DrawerInterface {
     atomMesh.position.y = coords[1];
     atomMesh.position.z = coords[2];
 
-    const material = new StandardMaterial('material', this.scene);
-    material.diffuseColor.r = color[0];
-    material.diffuseColor.g = color[1];
-    material.diffuseColor.b = color[2];
-    material.freeze();
-
-    atomMesh.material = material;
+    this.applyMeshColor(atomMesh, color);
     atomMesh.freezeNormals();
     // atomMesh.isPickable = false;
     atomMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION;
@@ -202,39 +203,18 @@ export class Drawer3d implements DrawerInterface {
     this.bufVectors[1].z = rhsCoords[2];
 
     if (mesh) {
-      if (link.lhs.isTypeChanged || link.rhs.isTypeChanged) {
-        this.updateLinkColor(link, mesh);
-      }
+      this.applyMeshColor(mesh, this.getLinkColor(link));
       return this.createLinkMeshFromInstance(this.bufVectors, radius, mesh);
     }
 
     const newMesh = this.createNewLinkMesh(this.bufVectors, radius, link.id);
-
-    const color = this.getLinkColor(link);
-    const material = new StandardMaterial('material', this.scene);
-    material.diffuseColor.r = color[0];
-    material.diffuseColor.g = color[1];
-    material.diffuseColor.b = color[2];
-    material.freeze();
-
-    newMesh.material = material;
+    this.applyMeshColor(newMesh, this.getLinkColor(link));
     newMesh.receiveShadows = false;
     newMesh.freezeWorldMatrix();
     newMesh.isPickable = false;
     newMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION;
 
     return newMesh;
-  }
-
-  private updateLinkColor(link: LinkInterface, mesh: Mesh) {
-    const color = this.getLinkColor(link);
-    const material = new StandardMaterial('material', this.scene);
-    material.diffuseColor.r = color[0];
-    material.diffuseColor.g = color[1];
-    material.diffuseColor.b = color[2];
-    material.freeze();
-    mesh.material?.dispose();
-    mesh.material = material;
   }
 
   private createNewLinkMesh(path: Vector3[], radius: number, id: string): Mesh {
