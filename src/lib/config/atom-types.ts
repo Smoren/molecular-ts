@@ -92,7 +92,11 @@ export function pickUnusedTypeName(existing: string[]): string {
 
 export function createColors(count: number, randomize: boolean = false, usePredefined: boolean = true, smartChoice: boolean = false): Array<ColorVector> {
   if (!randomize) {
-    return fullCopyObject(COLORS_PREDEFINED).slice(0, count);
+    const colors = fullCopyObject(COLORS_PREDEFINED);
+    while (count > colors.length) {
+      colors.push(getRandomColor());
+    }
+    return colors.slice(0, count);
   }
 
   const predefined: Array<ColorVector> = usePredefined ? fullCopyObject(COLORS_PREDEFINED.reverse()) as Array<ColorVector> : [];
@@ -660,7 +664,10 @@ export function randomizeTypesConfig(
 export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesConfig {
   const result = fullCopyObject(lhs);
 
-  result.COLORS = createColors(lhs.COLORS.length + rhs.COLORS.length);
+  result.COLORS = [
+    ...result.COLORS,
+    ...createColors(lhs.COLORS.length + rhs.COLORS.length).slice(lhs.COLORS.length),
+  ];
   result.NAMES = concatArrays(
     ensureTypeNames(lhs.NAMES, lhs.COLORS.length),
     ensureTypeNames(rhs.NAMES, rhs.COLORS.length),
