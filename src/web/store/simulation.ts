@@ -6,11 +6,9 @@ import type { ViewMode } from "@/lib/config/types";
 import { useConfigStore } from "@/web/store/config";
 import { create2dRandomDistribution, create3dRandomDistribution } from "@/lib/config/atoms";
 import { create3dDrawer } from "@/lib/drawer/3d";
-import { create2dDrawer, createDefaultShowConfig } from "@/lib/drawer/2d";
+import { create2dDrawer } from "@/lib/drawer/2d";
 import { createPhysicModel } from '@/lib/utils/functions';
 import { Simulation } from "@/lib/simulation/simulation";
-import type { NumericVector } from "@/lib/math/types";
-import { createTemperatureFunction } from "@/lib/config/world";
 
 export const useSimulationStore = defineStore("simulation", () => {
   const configStore = useConfigStore();
@@ -26,7 +24,7 @@ export const useSimulationStore = defineStore("simulation", () => {
   // TODO add temperature function params
   // worldConfig.TEMPERATURE_FUNCTION = createTemperatureFunction(2000, 3000);
 
-  const init = async () => {
+  const sureSimulationsCreated = () => {
     if (!simulation3d) {
       simulation3d = new Simulation({
         viewMode: '3d',
@@ -48,9 +46,12 @@ export const useSimulationStore = defineStore("simulation", () => {
         drawer: create2dDrawer('canvas2d', worldConfig, typesConfig, showConfig),
       });
     }
+  }
 
-    await simulation3d.stop();
-    await simulation2d.stop();
+  const init = async () => {
+    sureSimulationsCreated();
+    await simulation3d?.stop();
+    await simulation2d?.stop();
   }
 
   const start3dSimulation = async () => {
@@ -66,6 +67,7 @@ export const useSimulationStore = defineStore("simulation", () => {
   const isMode = (mode: ViewMode) => configStore.worldConfig.VIEW_MODE === mode;
 
   const getCurrentSimulation = (): SimulationInterface => {
+    sureSimulationsCreated();
     return (configStore.worldConfig.VIEW_MODE === '3d' ? simulation3d : simulation2d) as SimulationInterface;
   }
 

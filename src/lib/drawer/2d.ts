@@ -186,7 +186,7 @@ export class Drawer2d implements DrawerInterface {
       color: [color[0], color[1], color[2]],
       kind: 'break',
       age: 0,
-      life: 14,
+      life: 5,
     });
   }
 
