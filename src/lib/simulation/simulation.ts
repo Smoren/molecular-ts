@@ -37,6 +37,7 @@ export class Simulation implements SimulationInterface {
   private readonly spatialGridManager: SpatialGridManagerManagerInterface;
   private readonly summaryManager: SummaryManagerInterface;
   private readonly runningState: RunningStateInterface;
+  private rafId: number | null = null;
 
   constructor(config: SimulationConfig) {
     this.config = config;
@@ -83,6 +84,11 @@ export class Simulation implements SimulationInterface {
 
   async stop() {
     await this.runningState.stop();
+    // Отменяем запланированный кадр, чтобы после stop()->start() не осталось параллельного цикла
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
   }
 
   step() {
@@ -240,13 +246,8 @@ export class Simulation implements SimulationInterface {
 
     this.step();
 
-    if (this.summaryManager.step % 30 === 0) {
-      // console.log('time', this.summaryManager.step)
-      // console.log('SUMMARY', this.summary);
-    }
-
     if (this.runningState.isRunning) {
-      requestAnimationFrame(() => this.tick());
+      this.rafId = requestAnimationFrame(() => this.tick());
     } else {
       this.runningState.confirmStop();
     }
@@ -337,7 +338,7 @@ export class Simulation implements SimulationInterface {
       }
     });
 
-    this.drawer.eventManager.onMouseUp((event) => {
+    this.drawer.eventManager.onMouseUp(() => {
       grabbedAtom = undefined;
     });
   }

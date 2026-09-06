@@ -213,16 +213,16 @@ export class RunningState implements RunningStateInterface {
   }
 
   start() {
-    if (this._isRunningConfirmed) {
-      return;
-    }
     this._isRunning = true;
     this._isRunningConfirmed = true;
   }
 
+  // Остановка детерминирована: сбрасываем флаги синхронно, не ждём rAF-кадр.
+  // Ожидание кадра здесь приводило к вечному зависанию, когда кадр не приходит
+  // (скрытая вкладка, гонка stop()/start(), мёртвый цикл).
   async stop() {
     this._isRunning = false;
-    await this.waitUntil(() => !this._isRunningConfirmed);
+    this._isRunningConfirmed = false;
   }
 
   togglePause() {
@@ -235,16 +235,5 @@ export class RunningState implements RunningStateInterface {
 
   confirmStop() {
     this._isRunningConfirmed = false;
-  }
-
-  private async waitUntil(condition: () => boolean) {
-    return await new Promise(resolve => {
-      const interval = setInterval(() => {
-        if (condition()) {
-          resolve(null);
-          clearInterval(interval);
-        }
-      }, 0);
-    });
   }
 }
