@@ -23,7 +23,7 @@ const importDataFromHash = async () => {
 
 onMounted(async () => {
   await importDataFromHash();
-  restart();
+  await restart();
 });
 
 </script>

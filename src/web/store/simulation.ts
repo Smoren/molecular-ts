@@ -20,11 +20,12 @@ export const useSimulationStore = defineStore("simulation", () => {
 
   let simulation2d: Simulation | null = null;
   let simulation3d: Simulation | null = null;
+  let started = false;
 
   // TODO add temperature function params
   // worldConfig.TEMPERATURE_FUNCTION = createTemperatureFunction(2000, 3000);
 
-  const sureSimulationsCreated = () => {
+  const ensureSimulationsCreated = () => {
     if (!simulation3d) {
       simulation3d = new Simulation({
         viewMode: '3d',
@@ -49,7 +50,7 @@ export const useSimulationStore = defineStore("simulation", () => {
   }
 
   const init = async () => {
-    sureSimulationsCreated();
+    ensureSimulationsCreated();
     await simulation3d?.stop();
     await simulation2d?.stop();
   }
@@ -67,7 +68,7 @@ export const useSimulationStore = defineStore("simulation", () => {
   const isMode = (mode: ViewMode) => configStore.worldConfig.VIEW_MODE === mode;
 
   const getCurrentSimulation = (): SimulationInterface => {
-    sureSimulationsCreated();
+    ensureSimulationsCreated();
     return (configStore.worldConfig.VIEW_MODE === '3d' ? simulation3d : simulation2d) as SimulationInterface;
   }
 
@@ -81,6 +82,7 @@ export const useSimulationStore = defineStore("simulation", () => {
     } else {
       await start2dSimulation();
     }
+    started = true;
   };
 
   const clearAtoms = (globally: boolean = false) => {
@@ -140,14 +142,14 @@ export const useSimulationStore = defineStore("simulation", () => {
   }
 
   const setViewMode = async (viewMode: ViewMode) => {
-    await stop();
+    if (started) {
+      await stop();
+    }
     configStore.setViewMode(viewMode);
-    await restart();
+    if (started) {
+      await restart();
+    }
   }
-
-  // watch(() => configStore.worldConfig.VIEW_MODE, async () => {
-  //   await restart();
-  // });
 
   return {
     simulation,
