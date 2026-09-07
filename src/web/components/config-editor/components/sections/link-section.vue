@@ -23,7 +23,7 @@ const title = ref(DEFAULT_TITLE);
 const onClick = async () => {
   if (title.value === TEMP_TITLE) {
     const link = await getShareLink();
-    window.open(`https://linker.smoren.me/#${encodeURIComponent(link)}`, '_blank')?.focus();
+    window.open(`https://linker.smoren.me/#${link}`, '_blank')?.focus();
     return;
   }
 
