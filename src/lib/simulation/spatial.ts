@@ -2,6 +2,12 @@ import type { AtomInterface } from './types/atomic';
 import type { NumericVector } from '../math/types';
 import type { SpatialGridCellInterface, SpatialGridManagerManagerInterface, SpatialGridInterface } from './types/spatial';
 
+// Множители числового ключа клетки в Map: ключ = i * STRIDE + j (2D)
+// или i * STRIDE + j * STRIDE^2 + k (3D). STRIDE задаёт максимум клеток
+// по одной оси (координаты клетки за пределами [0, STRIDE) дадут коллизии).
+const CELL_KEY_STRIDE = 10000;
+const CELL_KEY_STRIDE_SQUARED = CELL_KEY_STRIDE * CELL_KEY_STRIDE;
+
 function incPoint(aPoint: NumericVector, aCenterPoint: NumericVector, aDim: number): boolean {
   aPoint[aDim]++;
   if (aPoint[aDim] > aCenterPoint[aDim] + 1) {
@@ -27,7 +33,10 @@ function getNeighboursCoords(coords: NumericVector): Iterable<NumericVector> {
 }
 
 class SpatialGridCell implements SpatialGridCellInterface {
-  atoms: Set<AtomInterface> = new Set<AtomInterface>();
+  // Массив вместо Set: итерация в горячем цикле быстрее. Порядок обхода
+  // идентичен Set: push добавляет в конец, splice сохраняет относительный
+  // порядок остальных элементов.
+  atoms: AtomInterface[] = [];
   coords: NumericVector;
 
   constructor(coords: NumericVector) {
@@ -35,19 +44,22 @@ class SpatialGridCell implements SpatialGridCellInterface {
   }
 
   get length(): number {
-    return this.atoms.size;
+    return this.atoms.length;
   }
 
   add(atom: AtomInterface): void {
-    this.atoms.add(atom);
+    this.atoms.push(atom);
   }
 
   remove(atom: AtomInterface): void {
-    this.atoms.delete(atom);
+    const index = this.atoms.indexOf(atom);
+    if (index >= 0) {
+      this.atoms.splice(index, 1);
+    }
   }
 
   empty(): boolean {
-    return this.atoms.size === 0;
+    return this.atoms.length === 0;
   }
 
   [Symbol.iterator](): IterableIterator<AtomInterface> {
@@ -104,25 +116,32 @@ class SpatialGrid implements SpatialGridInterface {
 
   public getCell(cellCoords: NumericVector): SpatialGridCellInterface {
     const key = cellCoords.length === 3
-      ? cellCoords[0] * 10000 + cellCoords[1] * 100000000 + cellCoords[2]
-      : cellCoords[0] * 10000 + cellCoords[1];
+      ? cellCoords[0] * CELL_KEY_STRIDE + cellCoords[1] * CELL_KEY_STRIDE_SQUARED + cellCoords[2]
+      : cellCoords[0] * CELL_KEY_STRIDE + cellCoords[1];
 
-    if (!this.map.has(key)) {
-      this.map.set(key, new SpatialGridCell([...cellCoords]));
+    return this.getCellByKey(key, cellCoords);
+  }
+
+  // Единственный поиск в Map вместо has+get; координатный массив создаётся
+  // только при первом появлении клетки
+  private getCellByKey(key: number, cellCoords: NumericVector): SpatialGridCell {
+    let cell = this.map.get(key);
+    if (cell === undefined) {
+      cell = new SpatialGridCell([...cellCoords]);
+      this.map.set(key, cell);
     }
-
-    return this.map.get(key) as SpatialGridCell;
+    return cell;
   }
 
   // Возвращает существующую клетку по координатам без создания новой.
   // Используется в горячем цикле обхода соседей, чтобы не аллоцировать
   // координатные массивы и не порождать пустые клетки.
   public getExistingCell2d(i: number, j: number): SpatialGridCellInterface | undefined {
-    return this.map.get(i * 10000 + j);
+    return this.map.get(i * CELL_KEY_STRIDE + j);
   }
 
   public getExistingCell3d(i: number, j: number, k: number): SpatialGridCellInterface | undefined {
-    return this.map.get(i * 10000 + j * 100000000 + k);
+    return this.map.get(i * CELL_KEY_STRIDE + j * CELL_KEY_STRIDE_SQUARED + k);
   }
 
   public findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined {
@@ -137,9 +156,34 @@ class SpatialGrid implements SpatialGridInterface {
     return undefined;
   }
 
-  private getCellByAtom(atom: AtomInterface): SpatialGridCellInterface {
-    const cellCoords = this.getCellCoords(atom.position);
-    return this.getCell(cellCoords);
+  private getCellByAtom(atom: AtomInterface): SpatialGridCell {
+    // Горячий путь (2 вызова на атом на шаг): вычисляем ключ напрямую из
+    // позиции, без аллокации координатного массива и без двойного поиска.
+    // Формула ключа и округление идентичны прежним getCellCoords/getCell.
+    const pos = atom.position;
+    const q = this.quantum;
+    const phase = this.phase;
+    const i = Math.round(pos[0] / q) + phase;
+    const j = Math.round(pos[1] / q) + phase;
+
+    if (pos.length === 3) {
+      const k = Math.round(pos[2] / q) + phase;
+      const key = i * CELL_KEY_STRIDE + j * CELL_KEY_STRIDE_SQUARED + k;
+      let cell = this.map.get(key);
+      if (cell === undefined) {
+        cell = new SpatialGridCell([i, j, k]);
+        this.map.set(key, cell);
+      }
+      return cell;
+    }
+
+    const key = i * CELL_KEY_STRIDE + j;
+    let cell = this.map.get(key);
+    if (cell === undefined) {
+      cell = new SpatialGridCell([i, j]);
+      this.map.set(key, cell);
+    }
+    return cell;
   }
 
   private getCellCoords(coords: NumericVector): NumericVector {

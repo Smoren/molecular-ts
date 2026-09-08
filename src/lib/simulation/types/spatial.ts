@@ -3,7 +3,9 @@ import type { NumericVector } from '../../math/types';
 
 export interface SpatialGridCellInterface extends Iterable<AtomInterface> {
   length: number;
-  atoms: Set<AtomInterface>;
+  // Массив вместо Set: итерация в горячем цикле быстрее, а порядок обхода
+  // идентичен Set (push в конец / splice сохраняет относительный порядок)
+  atoms: AtomInterface[];
   coords: NumericVector;
   add(atom: AtomInterface): void;
   remove(atom: AtomInterface): void;
