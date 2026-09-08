@@ -14,6 +14,7 @@ import {
   UniversalCamera,
   AnaglyphFreeCamera,
   Vector3,
+  Quaternion,
   Light,
   PointLight,
   Mesh,
@@ -23,6 +24,9 @@ import {
 import type { NumericVector } from '../math/types';
 import type { LinkManagerInterface } from '../simulation/types/utils';
 import { EventManager } from '../drawer/utils';
+
+// Единичная ось Y: цилиндр в Babylon ориентирован вдоль неё
+const UNIT_Y = new Vector3(0, 1, 0);
 
 export class Drawer3d implements DrawerInterface {
   public readonly eventManager: EventManagerInterface;
@@ -34,10 +38,15 @@ export class Drawer3d implements DrawerInterface {
   private readonly lights: Light[];
   private readonly atomsMap: Map<AtomInterface, Mesh> = new Map();
   private readonly linksMap: Map<LinkInterface, Mesh> = new Map();
+  // Кэш материалов по цветовому ключу "r_g_b": материалы шарятся между
+  // мешами одинакового цвета и не диспозятся вместе с мешами
+  private readonly materialsCache: Map<string, StandardMaterial> = new Map();
   private readonly bufVectors: Vector3[] = [
     new Vector3(0, 0, 0),
     new Vector3(0, 0, 0),
   ];
+  // Направление связи для кватерниона ориентации (переиспользуемый буфер)
+  private readonly bufDirection: Vector3 = new Vector3(0, 1, 0);
   private readonly DEFAULT_CAMERA_POSITION: NumericVector = [631, 679, 805];
   private readonly DEFAULT_CAMERA_ROTATION: NumericVector = [0.54, 97.98, 0];
   private readonly DEFAULT_CAMERA_INTERAXIAL_DISTANCE: number = 0.03;
@@ -92,7 +101,8 @@ export class Drawer3d implements DrawerInterface {
       for (const [link, drawObject] of this.linksMap) {
         if (!links.has(link)) {
           drawObject.dispose();
-          drawObject.material?.dispose();
+          // Материал не диспозим: он кэширован и может использоваться
+          // другими мешами
           this.linksMap.delete(link);
         }
       }
@@ -111,24 +121,26 @@ export class Drawer3d implements DrawerInterface {
   }
 
   private applyMeshColor(mesh: Mesh, color: NumericVector): void {
-    const current = mesh.material as StandardMaterial | undefined;
-    if (
-      current?.diffuseColor
-      && current.diffuseColor.r === color[0]
-      && current.diffuseColor.g === color[1]
-      && current.diffuseColor.b === color[2]
-    ) {
-      return;
+    // Материалы кэшируются по цвету и переиспользуются всеми мешами:
+    // раньше каждый меш имел собственный StandardMaterial, и при смене
+    // цвета (трансформации атомов меняют типы) материал пересоздавался,
+    // а Material.freeze() внутри вызывает markDirty — обход ВСЕХ мешей
+    // сцены. Теперь новый материал создаётся только для нового цвета.
+    const key = color[0] + '_' + color[1] + '_' + color[2];
+
+    let material = this.materialsCache.get(key);
+    if (material === undefined) {
+      material = new StandardMaterial('material_' + key, this.scene);
+      material.diffuseColor.r = color[0];
+      material.diffuseColor.g = color[1];
+      material.diffuseColor.b = color[2];
+      material.freeze();
+      this.materialsCache.set(key, material);
     }
 
-    const material = new StandardMaterial('material', this.scene);
-    material.diffuseColor.r = color[0];
-    material.diffuseColor.g = color[1];
-    material.diffuseColor.b = color[2];
-    material.freeze();
-
-    mesh.material?.dispose();
-    mesh.material = material;
+    if (mesh.material !== material) {
+      mesh.material = material;
+    }
   }
 
   private normalizeFrame(): void {
@@ -194,49 +206,61 @@ export class Drawer3d implements DrawerInterface {
   private createLinkMesh(lhsCoords: NumericVector, rhsCoords: NumericVector, link: LinkInterface, mesh?: Mesh): Mesh {
     const radius = this.getLinkWidth(link)/4;
 
-    this.bufVectors[0].x = lhsCoords[0];
-    this.bufVectors[0].y = lhsCoords[1];
-    this.bufVectors[0].z = lhsCoords[2];
-
-    this.bufVectors[1].x = rhsCoords[0];
-    this.bufVectors[1].y = rhsCoords[1];
-    this.bufVectors[1].z = rhsCoords[2];
-
     if (mesh) {
       this.applyMeshColor(mesh, this.getLinkColor(link));
-      return this.createLinkMeshFromInstance(this.bufVectors, radius, mesh);
+      return this.updateLinkMeshTransform(lhsCoords, rhsCoords, radius, mesh);
     }
 
-    const newMesh = this.createNewLinkMesh(this.bufVectors, radius, link.id);
+    const newMesh = this.createNewLinkMesh(radius, link.id);
+    this.updateLinkMeshTransform(lhsCoords, rhsCoords, radius, newMesh);
     this.applyMeshColor(newMesh, this.getLinkColor(link));
     newMesh.receiveShadows = false;
-    newMesh.freezeWorldMatrix();
     newMesh.isPickable = false;
     newMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION;
 
     return newMesh;
   }
 
-  private createNewLinkMesh(path: Vector3[], radius: number, id: string): Mesh {
-    return MeshBuilder.CreateTube(`link_${id}`, {
-      path: [
-        path[0],
-        path[1],
-      ],
-      updatable: true,
-      radius: radius,
-      tessellation: 6,
-    }, this.scene);
+  // Статичная геометрия цилиндра (единичная высота, диаметр 2), каждый кадр
+  // меняется только трансформ: позиция середины, ориентация вдоль связи,
+  // масштаб (толщина и длина). Раньше здесь был MeshBuilder.CreateTube с
+  // instance — он пересобирал vertex-буферы и нормали каждой связи каждый
+  // кадр, что доминировало в профиле кадра.
+  private updateLinkMeshTransform(lhsCoords: NumericVector, rhsCoords: NumericVector, radius: number, mesh: Mesh): Mesh {
+    const dx = rhsCoords[0] - lhsCoords[0];
+    const dy = rhsCoords[1] - lhsCoords[1];
+    const dz = rhsCoords[2] - lhsCoords[2];
+    const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+    if (dist < 1e-9) {
+      mesh.scaling.setAll(0);
+      return mesh;
+    }
+
+    this.bufDirection.set(dx/dist, dy/dist, dz/dist);
+    if (mesh.rotationQuaternion === null) {
+      mesh.rotationQuaternion = new Quaternion();
+    }
+    Quaternion.FromUnitVectorsToRef(UNIT_Y, this.bufDirection, mesh.rotationQuaternion);
+
+    mesh.position.set(
+      (lhsCoords[0] + rhsCoords[0]) / 2,
+      (lhsCoords[1] + rhsCoords[1]) / 2,
+      (lhsCoords[2] + rhsCoords[2]) / 2,
+    );
+    mesh.scaling.x = radius;
+    mesh.scaling.y = dist;
+    mesh.scaling.z = radius;
+
+    return mesh;
   }
 
-  private createLinkMeshFromInstance(path: Vector3[], radius: number, mesh: Mesh): Mesh {
-    return MeshBuilder.CreateTube(mesh.name, {
-      path: [
-        path[0],
-        path[1],
-      ],
-      radius: radius,
-      instance: mesh,
+  private createNewLinkMesh(radius: number, id: string): Mesh {
+    return MeshBuilder.CreateCylinder(`link_${id}`, {
+      height: 1,
+      diameter: 2,
+      tessellation: 6,
+      updatable: false,
     }, this.scene);
   }
 
