@@ -9,7 +9,10 @@ import { toVector } from '../math';
 
 class BondMap implements BondMapInterface {
   private storage: Record<number, AtomInterface> = {};
-  private typesCount: Record<number, number> = {};
+  // Обычный массив вместо Record: горячий цикл (_countWeightedBonds) читает
+  // его на каждой проверке связи, а for-in по Record в V8 работает через
+  // dictionary-mode и в разы медленнее. Порядок итерации идентичен.
+  private typesCount: number[] = [];
   private count: number = 0;
 
   get length(): number {
@@ -26,10 +29,7 @@ class BondMap implements BondMapInterface {
 
   add(atom: AtomInterface): void {
     this.storage[atom.id] = atom;
-    if (!this.typesCount.hasOwnProperty(atom.type)) {
-      this.typesCount[atom.type] = 0;
-    }
-    this.typesCount[atom.type]++;
+    this.typesCount[atom.type] = (this.typesCount[atom.type] ?? 0) + 1;
     this.count++;
   }
 
@@ -42,11 +42,8 @@ class BondMap implements BondMapInterface {
   update(atom: AtomInterface): void {
     const newType = atom.newType as number;
     if (atom.isTypeChanged) {
-      if (!this.typesCount.hasOwnProperty(newType)) {
-        this.typesCount[newType] = 0;
-      }
+      this.typesCount[newType] = (this.typesCount[newType] ?? 0) + 1;
       this.typesCount[atom.type]--;
-      this.typesCount[newType]++;
 
       if (this.typesCount[atom.type] < 0 || this.typesCount[newType] < 0) {
         console.warn('error', this.typesCount[atom.type], this.typesCount[newType]);
@@ -54,7 +51,7 @@ class BondMap implements BondMapInterface {
     }
   }
 
-  getTypesCountMap(): Record<number, number> {
+  getTypesCountMap(): number[] {
     return this.typesCount;
   }
 

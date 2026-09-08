@@ -123,10 +123,17 @@ export class RulesHelper implements RulesHelperInterface {
   }
 
   private _countWeightedBonds(atom: AtomInterface): number {
-    let result = 0;
+    // Быстрый индексный обход вместо for-in: тот же порядок суммирования
+    // (по возрастанию типа), пропускаем отсутствующие и нулевые значения —
+    // результат идентичен прежнему бит-в-бит.
     const typesCountMap = atom.bonds.getTypesCountMap();
-    for (const type in typesCountMap) {
-      result += this.TYPES_CONFIG.TYPE_LINK_WEIGHTS[atom.type][type] * typesCountMap[type];
+    const weights = this.TYPES_CONFIG.TYPE_LINK_WEIGHTS[atom.type];
+    let result = 0;
+    for (let t = 0; t < typesCountMap.length; ++t) {
+      const count = typesCountMap[t];
+      if (count !== undefined && count !== 0) {
+        result += weights[t] * count;
+      }
     }
     return result;
   }
