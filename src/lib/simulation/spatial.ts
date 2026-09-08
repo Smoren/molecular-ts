@@ -114,6 +114,17 @@ class SpatialGrid implements SpatialGridInterface {
     return this.map.get(key) as SpatialGridCell;
   }
 
+  // Возвращает существующую клетку по координатам без создания новой.
+  // Используется в горячем цикле обхода соседей, чтобы не аллоцировать
+  // координатные массивы и не порождать пустые клетки.
+  public getExistingCell2d(i: number, j: number): SpatialGridCellInterface | undefined {
+    return this.map.get(i * 10000 + j);
+  }
+
+  public getExistingCell3d(i: number, j: number, k: number): SpatialGridCellInterface | undefined {
+    return this.map.get(i * 10000 + j * 100000000 + k);
+  }
+
   public findAtomByCoords(coords: NumericVector, radiusMap: number[], radiusMultiplier: number): AtomInterface | undefined {
     const cellCoords = this.getCellCoords(coords);
     const cell = this.getCell(cellCoords);
@@ -161,7 +172,10 @@ export class SpatialGridManager implements SpatialGridManagerManagerInterface {
       for (let i=cc.coords[0]-1; i<=cc.coords[0]+1; ++i) {
         for (let j=cc.coords[1]-1; j<=cc.coords[1]+1; ++j) {
           for (let k=cc.coords[2]-1; k<=cc.coords[2]+1; ++k) {
-            const cell = this.map.getCell([i, j, k]);
+            const cell = this.map.getExistingCell3d(i, j, k);
+            if (cell === undefined) {
+              continue;
+            }
             for (const neighbour of cell.atoms) {
               callback(atom, neighbour);
             }
@@ -172,7 +186,10 @@ export class SpatialGridManager implements SpatialGridManagerManagerInterface {
       const cc = this.map.handleAtom(atom);
       for (let i=cc.coords[0]-1; i<=cc.coords[0]+1; ++i) {
         for (let j=cc.coords[1]-1; j<=cc.coords[1]+1; ++j) {
-          const cell = this.map.getCell([i, j]);
+          const cell = this.map.getExistingCell2d(i, j);
+          if (cell === undefined) {
+            continue;
+          }
           for (const neighbour of cell.atoms) {
             callback(atom, neighbour);
           }

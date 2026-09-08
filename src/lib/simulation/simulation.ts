@@ -38,6 +38,14 @@ export class Simulation implements SimulationInterface {
   private readonly summaryManager: SummaryManagerInterface;
   private readonly runningState: RunningStateInterface;
   private rafId: number | null = null;
+  // Обработчики для handleAtom создаются один раз: замыкание в горячем цикле
+  // interact() на каждый атом мешает инлайнингу и создаёт мусор
+  private readonly step1Handler = (lhs: AtomInterface, rhs: AtomInterface): void => {
+    this.interactionManager.interactAtomsStep1(lhs, rhs);
+  };
+  private readonly step2Handler = (lhs: AtomInterface, rhs: AtomInterface): void => {
+    this.interactionManager.interactAtomsStep2(lhs, rhs);
+  };
 
   constructor(config: SimulationConfig) {
     this.config = config;
@@ -200,14 +208,10 @@ export class Simulation implements SimulationInterface {
       this.summaryManager.noticeAtom(atom, this.config.worldConfig);
     }
     for (const atom of this._atoms) {
-      this.spatialGridManager.handleAtom(atom, (lhs, rhs) => {
-        this.interactionManager.interactAtomsStep1(lhs, rhs);
-      });
+      this.spatialGridManager.handleAtom(atom, this.step1Handler);
     }
     for (const atom of this._atoms) {
-      this.spatialGridManager.handleAtom(atom, (lhs, rhs) => {
-        this.interactionManager.interactAtomsStep2(lhs, rhs);
-      });
+      this.spatialGridManager.handleAtom(atom, this.step2Handler);
     }
     for (const link of this._links) {
       this.interactionManager.interactLink(link);
