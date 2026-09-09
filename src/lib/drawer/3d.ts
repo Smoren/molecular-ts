@@ -15,9 +15,11 @@ import {
   AnaglyphFreeCamera,
   Vector3,
   Quaternion,
+  Matrix,
   Light,
   PointLight,
   Mesh,
+  AbstractMesh,
   StandardMaterial,
   MeshBuilder,
 } from 'babylonjs';
@@ -36,15 +38,27 @@ export class Drawer3d implements DrawerInterface {
   private readonly engine: Engine;
   private readonly scene: Scene;
   private readonly lights: Light[];
-  private readonly atomsMap: Map<AtomInterface, Mesh> = new Map();
   private readonly linksMap: Map<LinkInterface, Mesh> = new Map();
   // Кэш материалов по цветовому ключу "r_g_b": материалы шарятся между
   // мешами одинакового цвета и не диспозятся вместе с мешами
   private readonly materialsCache: Map<string, StandardMaterial> = new Map();
-  private readonly bufVectors: Vector3[] = [
-    new Vector3(0, 0, 0),
-    new Vector3(0, 0, 0),
-  ];
+  // Атомы рисуются одним thin-instance мешем: цвет — per-instance атрибут,
+  // радиус — масштаб в матрице инстанса. Все атомы = один draw call.
+  private atomMesh: Mesh | undefined;
+  private atomInstanceCapacity: number = 0;
+  // Буферы thin instances: матрица (16 float) и цвет (4 float) на инстанс.
+  // Создаются один раз и обновляются на месте (thinInstanceBufferUpdated),
+  // т.к. thinInstanceSetBuffer пересоздаёт GPU-буфер.
+  private atomMatrices: Float32Array = new Float32Array(0);
+  private atomColors: Float32Array = new Float32Array(0);
+  // индекс инстанса -> атом: для событий мыши (пикинг thin instances).
+  // Перезаписывается каждый кадр без очистки: пикинг возвращает только
+  // валидные индексы (< thinInstanceCount), устаревшие записи недостижимы.
+  private readonly pickedAtomByIndex: Map<number, AtomInterface> = new Map();
+  private readonly bufMatrix: Matrix = Matrix.Identity();
+  private readonly bufScale: Vector3 = new Vector3(1, 1, 1);
+  private readonly bufTranslation: Vector3 = new Vector3(0, 0, 0);
+  private static readonly IDENTITY_QUATERNION: Quaternion = Quaternion.Identity();
   // Направление связи для кватерниона ориентации (переиспользуемый буфер)
   private readonly bufDirection: Vector3 = new Vector3(0, 1, 0);
   private readonly DEFAULT_CAMERA_POSITION: NumericVector = [631, 679, 805];
@@ -80,22 +94,7 @@ export class Drawer3d implements DrawerInterface {
   }
 
   draw(atoms: Array<AtomInterface>, links: LinkManagerInterface): void {
-    for (const atom of atoms) {
-      const radius = this.TYPES_CONFIG.RADIUS[atom.type];
-      const drawObject = this.getAtomDrawObject(atom);
-
-      if (drawObject.position.x !== radius) {
-        drawObject.scaling.x = radius;
-        drawObject.scaling.y = radius;
-        drawObject.scaling.z = radius;
-      }
-
-      drawObject.position.x = atom.position[0];
-      drawObject.position.y = atom.position[1];
-      drawObject.position.z = atom.position[2];
-
-      this.applyMeshColor(drawObject, this.TYPES_CONFIG.COLORS[atom.type]);
-    }
+    this.drawAtomsThinstanced(atoms);
 
     if (!this.WORLD_CONFIG.SIMPLIFIED_VIEW_MODE) {
       for (const [link, drawObject] of this.linksMap) {
@@ -113,10 +112,97 @@ export class Drawer3d implements DrawerInterface {
     }
   }
 
+  // Атомы через thin instances: один меш, один draw call на все атомы.
+  // Буферы матриц/цветов создаются один раз и обновляются на месте.
+  private drawAtomsThinstanced(atoms: Array<AtomInterface>): void {
+    if (this.atomMesh === undefined) {
+      this.atomMesh = this.createAtomMesh();
+    }
+
+    // Расширение буферов при росте числа атомов (с запасом 1.5x,
+    // чтобы не пересоздавать GPU-буфер каждый кадр)
+    if (atoms.length > this.atomInstanceCapacity) {
+      this.atomInstanceCapacity = Math.ceil(atoms.length * 1.5);
+      this.atomMatrices = new Float32Array(this.atomInstanceCapacity * 16);
+      this.atomColors = new Float32Array(this.atomInstanceCapacity * 4);
+      // staticBuffer=false: буфер обновляемый, данные заливаются
+      // через thinInstanceBufferUpdated
+      this.atomMesh.thinInstanceSetBuffer('matrix', this.atomMatrices, 16, false);
+      this.atomMesh.thinInstanceSetBuffer('color', this.atomColors, 4, false);
+    }
+
+    const matrices = this.atomMatrices;
+    const colors = this.atomColors;
+    const lookup = this.pickedAtomByIndex;
+    const radiusBase = this.WORLD_CONFIG.ATOM_RADIUS;
+    const radiusMap = this.TYPES_CONFIG.RADIUS;
+    const colorsMap = this.TYPES_CONFIG.COLORS;
+
+    for (let i=0; i<atoms.length; ++i) {
+      const atom = atoms[i];
+      const position = atom.position;
+
+      this.bufScale.setAll(radiusBase * radiusMap[atom.type]);
+      this.bufTranslation.set(position[0], position[1], position[2]);
+      Matrix.ComposeToRef(this.bufScale, Drawer3d.IDENTITY_QUATERNION, this.bufTranslation, this.bufMatrix);
+      this.bufMatrix.copyToArray(matrices, i * 16);
+
+      const color = colorsMap[atom.type];
+      const c = i * 4;
+      colors[c] = color[0];
+      colors[c+1] = color[1];
+      colors[c+2] = color[2];
+      colors[c+3] = 1;
+
+      lookup.set(i, atom);
+    }
+
+    this.atomMesh.thinInstanceCount = atoms.length;
+    // Заливка обновлённых данных в GPU-буферы без их пересоздания
+    this.atomMesh.thinInstanceBufferUpdated('matrix');
+    this.atomMesh.thinInstanceBufferUpdated('color');
+    // Актуализация bounding info для пикинга thin instances
+    this.atomMesh.thinInstanceRefreshBoundingInfo();
+  }
+
+  private createAtomMesh(): Mesh {
+    const mesh = MeshBuilder.CreateSphere('atoms', {
+      segments: 8,
+      diameter: 2,
+      updatable: false,
+    }, this.scene);
+    // Диаметр 2 (радиус 1): реальный радиус задаётся масштабом в матрице
+    // инстанса
+    mesh.material = this.getWhiteMaterial();
+    mesh.thinInstanceEnablePicking = true;
+    mesh.alwaysSelectAsActiveMesh = true;
+    return mesh;
+  }
+
+  // Единый белый материал: итоговый цвет задаётся per-instance атрибутом
+  // (INSTANCESCOLOR умножает diffuse на цвет инстанса)
+  private getWhiteMaterial(): StandardMaterial {
+    const key = '1_1_1';
+    let material = this.materialsCache.get(key);
+    if (material === undefined) {
+      material = new StandardMaterial('material_' + key, this.scene);
+      material.diffuseColor.r = 1;
+      material.diffuseColor.g = 1;
+      material.diffuseColor.b = 1;
+      material.freeze();
+      this.materialsCache.set(key, material);
+    }
+    return material;
+  }
+
   public clear() {
-    this.atomsMap.forEach((item) => this.scene.removeMesh(item));
+    this.atomMesh?.dispose();
+    this.atomMesh = undefined;
+    this.atomInstanceCapacity = 0;
+    this.atomMatrices = new Float32Array(0);
+    this.atomColors = new Float32Array(0);
+    this.pickedAtomByIndex.clear();
     this.linksMap.forEach((item) => this.scene.removeMesh(item));
-    this.atomsMap.clear();
     this.linksMap.clear();
   }
 
@@ -185,24 +271,6 @@ export class Drawer3d implements DrawerInterface {
     return light;
   }
 
-  private createAtomMesh(radius: number, coords: NumericVector, color: NumericVector, id: number): Mesh {
-    const atomMesh = MeshBuilder.CreateSphere(`atom_${id}`, {
-      segments: 8,
-      diameter: radius * 2,
-      updatable: false,
-    }, this.scene);
-    atomMesh.position.x = coords[0];
-    atomMesh.position.y = coords[1];
-    atomMesh.position.z = coords[2];
-
-    this.applyMeshColor(atomMesh, color);
-    atomMesh.freezeNormals();
-    // atomMesh.isPickable = false;
-    atomMesh.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_OPTIMISTIC_INCLUSION;
-
-    return atomMesh;
-  }
-
   private createLinkMesh(lhsCoords: NumericVector, rhsCoords: NumericVector, link: LinkInterface, mesh?: Mesh): Mesh {
     const radius = this.getLinkWidth(link)/4;
 
@@ -264,22 +332,6 @@ export class Drawer3d implements DrawerInterface {
     }, this.scene);
   }
 
-  private getAtomDrawObject(atom: AtomInterface): Mesh {
-    return this.atomsMap.get(atom) ?? this.addAtomToMap(atom);
-  }
-
-  private addAtomToMap(atom: AtomInterface): Mesh {
-    const drawObject = this.createAtomMesh(
-      this.WORLD_CONFIG.ATOM_RADIUS,
-      atom.position,
-      this.TYPES_CONFIG.COLORS[atom.type],
-      atom.id,
-    );
-    this.atomsMap.set(atom, drawObject);
-
-    return drawObject;
-  }
-
   private getLinkDrawObject(link: LinkInterface): Mesh {
     const mesh = this.linksMap.get(link) ?? false;
     if (mesh) {
@@ -321,6 +373,18 @@ export class Drawer3d implements DrawerInterface {
     return (1-maxValue)/maxLength * dist + maxValue;
   }
 
+  // Позиция точки пикинга: для thin instances — позиция конкретного атома,
+  // для обычных мешей (связи) — позиция меша
+  private getPickedAtomPosition(mesh: AbstractMesh, thinInstanceIndex: number): Vector3 {
+    if (thinInstanceIndex >= 0) {
+      const atom = this.pickedAtomByIndex.get(thinInstanceIndex);
+      if (atom) {
+        return new Vector3(atom.position[0], atom.position[1], atom.position[2]);
+      }
+    }
+    return mesh.getAbsolutePosition();
+  }
+
   private initEventHandlers(): void {
     let keyDown: number | undefined = undefined;
 
@@ -337,7 +401,9 @@ export class Drawer3d implements DrawerInterface {
 
     this.scene.onPointerDown = (event, pickResult) => {
       if (pickResult.pickedMesh) {
-        const pos = pickResult.pickedMesh.getAbsolutePosition();
+        // Для thin instances позиция базового меша не имеет смысла —
+        // берём позицию конкретного атома-инстанса
+        const pos = this.getPickedAtomPosition(pickResult.pickedMesh, pickResult.thinInstanceIndex);
         try {
           if (event.ctrlKey) {
             this.camera.detachControl();
