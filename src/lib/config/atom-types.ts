@@ -562,8 +562,19 @@ export function randomizeTypesConfig(
   oldConfig = oldConfig ?? createRandomTypesConfig(randomTypesConfig);
   const newConfig = createRandomTypesConfig(randomTypesConfig);
 
-  newConfig.COLORS = fullCopyObject(oldConfig.COLORS);
-  newConfig.NAMES = ensureTypeNames(oldConfig.NAMES, newConfig.COLORS.length);
+  const typesCount = newConfig.FREQUENCIES.length;
+  const colors = createColors(
+    typesCount,
+    false,
+    true,
+    false,
+  ).slice(0, typesCount);
+  const oldColors = oldConfig.COLORS ?? [];
+  for (let i = 0; i < Math.min(oldColors.length, typesCount); ++i) {
+    colors[i] = fullCopyObject(oldColors[i]);
+  }
+  newConfig.COLORS = colors;
+  newConfig.NAMES = ensureTypeNames(oldConfig.NAMES, typesCount);
 
   if (!randomTypesConfig.USE_FREQUENCY_BOUNDS || skipSubMatricesBoundaryIndex !== undefined) {
     copyConfigListValue(oldConfig.FREQUENCIES, newConfig.FREQUENCIES, 1);
