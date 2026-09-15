@@ -27,6 +27,7 @@ export function extractExpressedTypesConfig(typesConfigs: TypesConfig[], express
     TYPE_LINK_WEIGHTS: express(typesConfigs.map((x) => x.TYPE_LINK_WEIGHTS), expressionIndices.TYPE_LINK_WEIGHTS),
     LINK_FACTOR_DISTANCE: express(typesConfigs.map((x) => x.LINK_FACTOR_DISTANCE), expressionIndices.LINK_FACTOR_DISTANCE),
     LINK_FACTOR_ELASTIC: express(typesConfigs.map((x) => x.LINK_FACTOR_ELASTIC), expressionIndices.LINK_FACTOR_ELASTIC),
+    LINK_FACTOR_GRAVITY: express(typesConfigs.map((x) => x.LINK_FACTOR_GRAVITY), expressionIndices.LINK_FACTOR_GRAVITY),
     FREQUENCIES: express(typesConfigs.map((x) => x.FREQUENCIES), expressionIndices.FREQUENCIES),
     COLORS: express(typesConfigs.map((x) => x.COLORS), expressionIndices.COLORS),
     NAMES: ensureTypeNames(typesConfigs[0]?.NAMES, typesConfigs[0]?.COLORS.length ?? 0),
@@ -97,6 +98,7 @@ export function createRandomExpressedIndicesConfig(typesCount: number, chromosom
     USE_LINK_TYPE_WEIGHT_BOUNDS: true,
     USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
     USE_LINK_FACTOR_ELASTIC_BOUNDS: true,
+    USE_LINK_FACTOR_GRAVITY_BOUNDS: true,
 
     RADIUS_BOUNDS: [0, chromosomesCount-1],
     FREQUENCY_BOUNDS: [0, chromosomesCount-1],
@@ -107,6 +109,7 @@ export function createRandomExpressedIndicesConfig(typesCount: number, chromosom
     LINK_TYPE_WEIGHT_BOUNDS: [0, chromosomesCount-1],
     LINK_FACTOR_DISTANCE_BOUNDS: [0, chromosomesCount-1],
     LINK_FACTOR_ELASTIC_BOUNDS: [0, chromosomesCount-1],
+    LINK_FACTOR_GRAVITY_BOUNDS: [0, chromosomesCount-1],
 
     GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_GRAVITY_MATRIX_SYMMETRIC: false,
@@ -116,5 +119,7 @@ export function createRandomExpressedIndicesConfig(typesCount: number, chromosom
     LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
     LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false,
+    LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC: false,
+    LINK_FACTOR_GRAVITY_IGNORE_SELF_TYPE: false,
   };
 }

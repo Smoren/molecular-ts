@@ -90,6 +90,7 @@ export class InteractionManager implements InteractionManagerInterface {
     if (dist2 <= this.WORLD_CONFIG.MAX_LINK_RADIUS ** 2) {
       this.updateDistanceFactor(lhs, rhs);
       this.updateElasticFactor(lhs, rhs);
+      this.updateLinkGravityDelta(lhs, rhs);
     }
   }
 
@@ -106,7 +107,7 @@ export class InteractionManager implements InteractionManagerInterface {
     }
 
     const dist = Math.sqrt(dist2);
-    const force = this.normalizeForce(this.physicModel.getGravityForce(lhs, rhs, dist2));
+    const force = this.normalizeForce(this.physicModel.getGravityForce(lhs, rhs, dist2, this.getLinkGravityDelta(lhs, rhs)));
     for (let i=0; i<distVector.length; ++i) {
       distVector[i] = distVector[i] / dist * force;
     }
@@ -144,12 +145,22 @@ export class InteractionManager implements InteractionManagerInterface {
     }
   }
 
+  clearLinkGravityDelta(atom: AtomInterface): void {
+    for (let i = 0; i < this.TYPES_CONFIG.FREQUENCIES.length; ++i) {
+      atom.linkGravityDeltas[i] = 0;
+    }
+  }
+
   getDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): number {
     return lhs.linkDistanceFactors[rhs.type];
   }
 
   getElasticFactor(lhs: AtomInterface, rhs: AtomInterface): number {
     return lhs.linkElasticFactors[rhs.type];
+  }
+
+  getLinkGravityDelta(lhs: AtomInterface, rhs: AtomInterface): number {
+    return lhs.linkGravityDeltas[rhs.type];
   }
 
   updateDistanceFactor(lhs: AtomInterface, rhs: AtomInterface): void {
@@ -163,6 +174,13 @@ export class InteractionManager implements InteractionManagerInterface {
     const mults = this.TYPES_CONFIG.LINK_FACTOR_ELASTIC[rhs.type][lhs.type];
     for (let i=0; i<mults.length; ++i) {
       lhs.linkElasticFactors[i] *= mults[i];
+    }
+  }
+
+  updateLinkGravityDelta(lhs: AtomInterface, rhs: AtomInterface): void {
+    const deltas = this.TYPES_CONFIG.LINK_FACTOR_GRAVITY[rhs.type][lhs.type];
+    for (let i=0; i<deltas.length; ++i) {
+      lhs.linkGravityDeltas[i] += deltas[i];
     }
   }
 

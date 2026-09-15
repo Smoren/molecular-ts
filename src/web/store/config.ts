@@ -52,6 +52,7 @@ export const useConfigStore = defineStore("config", () => {
     LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
     LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
+    LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC: true,
   });
 
   const syncConfigBounds = ref(true);
@@ -246,6 +247,9 @@ export const useConfigStore = defineStore("config", () => {
     if (config.USE_LINK_FACTOR_ELASTIC_BOUNDS) {
       typesSymmetricConfig.value.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC = config.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC;
     }
+    if (config.USE_LINK_FACTOR_GRAVITY_BOUNDS) {
+      typesSymmetricConfig.value.LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC = config.LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC;
+    }
   }
 
   const applySymmetricTypesConfig = () => {
@@ -266,6 +270,9 @@ export const useConfigStore = defineStore("config", () => {
     }
     if (typesSymmetricConfig.value.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC) {
       makeTensorSymmetric(typesConfig.value.LINK_FACTOR_ELASTIC);
+    }
+    if (typesSymmetricConfig.value.LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC) {
+      makeTensorSymmetric(typesConfig.value.LINK_FACTOR_GRAVITY);
     }
   }
 

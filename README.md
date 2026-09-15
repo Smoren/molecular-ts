@@ -17,6 +17,7 @@ Particles of different types are visualized in different colors. Their propertie
 5. **Connection weight matrix** shows the weight occupied by the link between a particle of type A and a particle of type B in the overall limit on the number of bonds of a particle of type A (in Connection limit map).
 6. **Tensor of influence on neighbors links length** shows how particles of type A affect the maximum link lengths of particles of type B with particles of type C.
 7. **Tensor of influence on neighbors links elastic force** shows how particles of type A affect the elastic force of links between particles of type B and type C.
+8. **Tensor of influence on neighbors links gravity force** shows how particles of type A affect the gravity force between particles of type B and type C in the case when they are linked to each other. Unlike the other tensors, the influence is additive: the values of the tensor are added to the gravity coefficient of the linked pair.
 
 The main goal of this project is to study self-organizing systems and explore configurations in which conditions for 
 spontaneous emergence of artificial life will be present.

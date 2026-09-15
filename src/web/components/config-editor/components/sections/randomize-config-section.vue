@@ -253,6 +253,39 @@ const randomizeTypesConfig = () => {
       </div>
       <div>
         <input-header
+            name="Links Gravity Factor"
+            tooltip="Matrix of influence on neighbors links shows how particles of each type affect the gravity force
+                   between neighboring particles of different types and particles linked to them."
+            tooltip-position="left"
+        >
+          <input type="checkbox" class="title-flag" v-model="randomTypesConfig.USE_LINK_FACTOR_GRAVITY_BOUNDS" />
+        </input-header>
+        <div v-show="randomTypesConfig.USE_LINK_FACTOR_GRAVITY_BOUNDS">
+          <config-bounds
+            name="Links Gravity Factor"
+            :step="0.1"
+            :values="randomTypesConfig.LINK_FACTOR_GRAVITY_BOUNDS"
+          />
+          <div class="grid-wrapper">
+            <div>
+              <flag
+                title="Symmetric"
+                v-model="randomTypesConfig.LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC"
+              />
+            </div>
+            <div></div>
+            <div>
+              <flag
+                  title="Ignore self type"
+                  v-model="randomTypesConfig.LINK_FACTOR_GRAVITY_IGNORE_SELF_TYPE"
+                  style="text-align: center;"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <input-header
           name="Change only crossed submatrices"
           tooltip="Apply changes only to the upper right and lower left quadrants of a matrix divided by
                    a specified number of types."

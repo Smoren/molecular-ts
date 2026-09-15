@@ -37,6 +37,7 @@ import {
   RandomPopulateStrategy, ZeroValuesPopulateStrategy,
 } from "@/lib/genetic/strategies";
 import { fullCopyObject } from "@/lib/utils/functions";
+import { ensureTypesConfigDefaults } from "@/lib/config/atom-types";
 import {
   createDefaultMutationRandomTypesConfigCollection,
   createDefaultPopulateRandomTypesConfigCollection,
@@ -214,7 +215,7 @@ export const useGeneticStore = defineStore("genetic", () => {
     if (bestGenome.value === undefined) {
       throw new Error('Best genome is undefined');
     }
-    configStore.setTypesConfig(bestGenome.value?.typesConfig);
+    configStore.setTypesConfig(ensureTypesConfigDefaults(fullCopyObject(bestGenome.value.typesConfig)));
   }
 
   const createPopulateRandomTypesConfigCollection = () => [

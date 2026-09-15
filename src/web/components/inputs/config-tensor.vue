@@ -44,8 +44,8 @@ const activeTabId = ref('tab-0');
             <config-matrix
               :values="matrix"
               :colors="colors"
-              :step="0.1"
-              :min="0"
+              :step="step"
+              :min="min"
               v-model:symmetric="symmetric"
             />
           </div>

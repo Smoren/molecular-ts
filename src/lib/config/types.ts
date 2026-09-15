@@ -11,6 +11,7 @@ export type TypeLinksConfig = number[][];
 export type TypeLinkWeightsConfig = number[][];
 export type LinkFactorDistanceConfig = number[][][];
 export type LinkFactorElasticConfig = number[][][];
+export type LinkFactorGravityConfig = number[][][];
 export type FrequenciesConfig = number[];
 export type ColorsConfig = Array<ColorVector>;
 export type TransformationConfig = Record<number, Record<number, number>>;
@@ -36,6 +37,7 @@ export type TypesConfig = {
   TYPE_LINK_WEIGHTS: TypeLinkWeightsConfig;
   LINK_FACTOR_DISTANCE: LinkFactorDistanceConfig;
   LINK_FACTOR_ELASTIC: LinkFactorElasticConfig;
+  LINK_FACTOR_GRAVITY: LinkFactorGravityConfig;
   FREQUENCIES: FrequenciesConfig;
   COLORS: ColorsConfig;
   NAMES: string[];
@@ -73,6 +75,7 @@ export type RandomTypesConfig = {
   USE_LINK_TYPE_WEIGHT_BOUNDS: boolean;
   USE_LINK_FACTOR_DISTANCE_BOUNDS: boolean;
   USE_LINK_FACTOR_ELASTIC_BOUNDS: boolean;
+  USE_LINK_FACTOR_GRAVITY_BOUNDS: boolean;
 
   RADIUS_BOUNDS: [number, number, number?, number?];
   FREQUENCY_BOUNDS: [number, number, number?, number?];
@@ -83,6 +86,7 @@ export type RandomTypesConfig = {
   LINK_TYPE_WEIGHT_BOUNDS: [number, number, number?, number?];
   LINK_FACTOR_DISTANCE_BOUNDS: [number, number, number?, number?];
   LINK_FACTOR_ELASTIC_BOUNDS: [number, number, number?, number?];
+  LINK_FACTOR_GRAVITY_BOUNDS: [number, number, number?, number?];
 
   GRAVITY_MATRIX_SYMMETRIC: boolean;
   LINK_GRAVITY_MATRIX_SYMMETRIC: boolean;
@@ -92,6 +96,8 @@ export type RandomTypesConfig = {
   LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: boolean;
   LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: boolean;
+  LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC: boolean;
+  LINK_FACTOR_GRAVITY_IGNORE_SELF_TYPE: boolean;
 };
 
 export type TypesSymmetricConfig = {
@@ -101,4 +107,5 @@ export type TypesSymmetricConfig = {
   LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: boolean;
   LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: boolean;
+  LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC: boolean;
 }

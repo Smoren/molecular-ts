@@ -20,6 +20,7 @@ export interface AtomInterface {
   readonly isTypeChanged: boolean;
   readonly linkDistanceFactors: number[];
   readonly linkElasticFactors: number[];
+  readonly linkGravityDeltas: number[];
   type: number;
   newType: number | undefined;
   spatialGridCell?: SpatialGridCellInterface;

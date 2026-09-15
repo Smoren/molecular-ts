@@ -5,6 +5,7 @@ import type { InitialConfig, RandomTypesConfig, TransformationConfig, WorldConfi
 import type { RemoteApiConfig, SendGenomeRequestData, SendStateRequestData } from "@/scripts/lib/genetic/types";
 import type { ClusterizationConfig, SimulationGenome } from "@/lib/genetic/types";
 import { createWorldConfig2d } from "@/lib/config/world";
+import { ensureTypesConfigDefaults } from "@/lib/config/atom-types";
 import { addLeadingZeros, formatJsonString, formatRounded } from "@/scripts/lib/helpers";
 import type { ClusterGradeMaximizeGeneticMainConfig } from "@/lib/genetic/clusters-grade-maximize/types";
 import { round } from "@/lib/math";
@@ -49,7 +50,7 @@ export function getSourcePopulation(fileName: string, idGenerator: IdGeneratorIn
   const sourcePopulation = Array.isArray(source) ? source : [source];
   return sourcePopulation.map(genome => ({
     id: idGenerator.nextId(),
-    typesConfig: genome.typesConfig,
+    typesConfig: ensureTypesConfigDefaults(genome.typesConfig),
   }))
 }
 
@@ -57,7 +58,11 @@ export function getPopulation(fileName?: string): Population<SimulationGenome> |
   if (fileName === undefined) {
     return undefined;
   }
-  return readJsonFile(getPopulationInputFilePath(fileName)) as Population<SimulationGenome>;
+  const population = readJsonFile(getPopulationInputFilePath(fileName)) as Population<SimulationGenome>;
+  return population.map(genome => ({
+    ...genome,
+    typesConfig: ensureTypesConfigDefaults(genome.typesConfig),
+  }));
 }
 
 export function getCache(fileName?: string): Record<number, unknown> | undefined {

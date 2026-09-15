@@ -42,6 +42,51 @@ describe('type names', () => {
     const imported = convertTypesConfigForBackwardCompatibility(raw);
     expect(imported.NAMES).toEqual(['C', 'H', 'O', 'N', 'X']);
   });
+
+  it('fills link gravity tensor with zeros on import when the field is missing', () => {
+    const raw = createDefaultTypesConfig();
+    const expected = raw.LINK_FACTOR_GRAVITY;
+    delete (raw as { LINK_FACTOR_GRAVITY?: number[][][] }).LINK_FACTOR_GRAVITY;
+
+    const imported = convertTypesConfigForBackwardCompatibility(raw);
+    expect(imported.LINK_FACTOR_GRAVITY).toEqual(expected);
+    expect(imported.LINK_FACTOR_GRAVITY.every(
+      (matrix) => matrix.every((row) => row.every((value) => value === 0)),
+    )).toBe(true);
+  });
+
+  it('fills all missing fields with neutral defaults on import', () => {
+    const raw = createDefaultTypesConfig();
+    const typesCount = raw.FREQUENCIES.length;
+    const numericKeys = [
+      'RADIUS',
+      'FREQUENCIES',
+      'LINKS',
+      'GRAVITY',
+      'LINK_GRAVITY',
+      'TYPE_LINKS',
+      'TYPE_LINK_WEIGHTS',
+      'LINK_FACTOR_DISTANCE',
+      'LINK_FACTOR_ELASTIC',
+      'LINK_FACTOR_GRAVITY',
+    ] as const;
+    for (const key of numericKeys) {
+      delete (raw as Record<string, unknown>)[key];
+    }
+
+    const imported = convertTypesConfigForBackwardCompatibility(raw);
+
+    expect(imported.RADIUS).toEqual(new Array(typesCount).fill(1));
+    expect(imported.FREQUENCIES).toEqual(new Array(typesCount).fill(1));
+    expect(imported.LINKS).toEqual(new Array(typesCount).fill(0));
+    expect(imported.GRAVITY.every((row) => row.every((x) => x === 0))).toBe(true);
+    expect(imported.LINK_GRAVITY.every((row) => row.every((x) => x === 0))).toBe(true);
+    expect(imported.TYPE_LINKS.every((row) => row.every((x) => x === 0))).toBe(true);
+    expect(imported.TYPE_LINK_WEIGHTS.every((row) => row.every((x) => x === 1))).toBe(true);
+    expect(imported.LINK_FACTOR_DISTANCE.every((m) => m.every((r) => r.every((x) => x === 1)))).toBe(true);
+    expect(imported.LINK_FACTOR_ELASTIC.every((m) => m.every((r) => r.every((x) => x === 1)))).toBe(true);
+    expect(imported.LINK_FACTOR_GRAVITY.every((m) => m.every((r) => r.every((x) => x === 0)))).toBe(true);
+  });
 });
 
 describe('color picker hex', () => {

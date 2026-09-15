@@ -15,7 +15,7 @@ export class PhysicModelV2 implements PhysicModelInterface {
     this.geometry = new GeometryHelper(this.WORLD_CONFIG, this.TYPES_CONFIG);
   }
 
-  getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number): number {
+  getGravityForce(lhs: AtomInterface, rhs: AtomInterface, dist2: number, linkGravityDelta: number): number {
     let multiplier: number;
 
     const bounceDistance = this.geometry.getAtomsRadiusSum(lhs, rhs);
@@ -29,7 +29,7 @@ export class PhysicModelV2 implements PhysicModelInterface {
     if (!lhs.bonds.has(rhs)) {
       multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.GRAVITY[lhs.type][rhs.type];
     } else {
-      multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * this.TYPES_CONFIG.LINK_GRAVITY[lhs.type][rhs.type];
+      multiplier = this.WORLD_CONFIG.GRAVITY_FORCE_MULTIPLIER * (this.TYPES_CONFIG.LINK_GRAVITY[lhs.type][rhs.type] + linkGravityDelta);
     }
 
     const gravityForce = multiplier / dist2;
