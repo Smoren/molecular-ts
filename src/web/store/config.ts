@@ -243,7 +243,7 @@ export const useConfigStore = defineStore("config", () => {
     if (config.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
       typesSymmetricConfig.value.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC = config.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC;
     }
-    if (config.USE_LINK_FACTOR_DISTANCE_BOUNDS) {
+    if (config.USE_LINK_FACTOR_ELASTIC_BOUNDS) {
       typesSymmetricConfig.value.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC = config.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC;
     }
   }
@@ -263,6 +263,9 @@ export const useConfigStore = defineStore("config", () => {
     }
     if (typesSymmetricConfig.value.LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC) {
       makeTensorSymmetric(typesConfig.value.LINK_FACTOR_DISTANCE);
+    }
+    if (typesSymmetricConfig.value.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC) {
+      makeTensorSymmetric(typesConfig.value.LINK_FACTOR_ELASTIC);
     }
   }
 
