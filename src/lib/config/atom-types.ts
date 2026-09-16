@@ -1,5 +1,6 @@
 import type {
   ColorVector,
+  GravityFactorConfig,
   LinkFactorDistanceConfig,
   LinkFactorElasticConfig,
   LinkFactorGravityConfig,
@@ -123,6 +124,10 @@ export function ensureTypesConfigDefaults(config: TypesConfig): TypesConfig {
     config.LINK_FACTOR_ELASTIC = createFilledTensor(typesCount, typesCount, typesCount, 1);
   }
 
+  if (config.GRAVITY_FACTOR === undefined) {
+    config.GRAVITY_FACTOR = createFilledTensor(typesCount, typesCount, typesCount, 0);
+  }
+
   if (config.LINK_FACTOR_GRAVITY === undefined) {
     config.LINK_FACTOR_GRAVITY = createFilledTensor(typesCount, typesCount, typesCount, 0);
   }
@@ -237,6 +242,7 @@ export function createDefaultTypesConfig(): TypesConfig {
       ]
     ],
     LINK_FACTOR_ELASTIC: createFilledTensor(5, 5, 5, 1),
+    GRAVITY_FACTOR: createFilledTensor(5, 5, 5, 0),
     LINK_FACTOR_GRAVITY: createFilledTensor(5, 5, 5, 0),
     TRANSFORMATION: {},
   };
@@ -252,6 +258,7 @@ export function createTransparentTypesConfig(typesCount: number): TypesConfig {
     TYPE_LINK_WEIGHTS: createFilledMatrix(typesCount, typesCount, 1),
     LINK_FACTOR_DISTANCE: createFilledTensor(typesCount, typesCount, typesCount, 1),
     LINK_FACTOR_ELASTIC: createFilledTensor(typesCount, typesCount, typesCount, 1),
+    GRAVITY_FACTOR: createFilledTensor(typesCount, typesCount, typesCount, 0),
     LINK_FACTOR_GRAVITY: createFilledTensor(typesCount, typesCount, typesCount, 0),
     FREQUENCIES: createFilledArray(typesCount, 1),
     COLORS: createColors(typesCount),
@@ -273,6 +280,7 @@ export function createSingleTypeConfig(existingNames: string[] = []): TypesConfi
     TYPE_LINK_WEIGHTS: [[1]],
     LINK_FACTOR_DISTANCE: [[[1]]],
     LINK_FACTOR_ELASTIC: [[[1]]],
+    GRAVITY_FACTOR: [[[0]]],
     LINK_FACTOR_GRAVITY: [[[0]]],
     TRANSFORMATION: {},
   };
@@ -289,6 +297,7 @@ export function createRandomTypesConfig({
   LINK_TYPE_WEIGHT_BOUNDS,
   LINK_FACTOR_DISTANCE_BOUNDS,
   LINK_FACTOR_ELASTIC_BOUNDS,
+  GRAVITY_FACTOR_BOUNDS,
   LINK_FACTOR_GRAVITY_BOUNDS,
   GRAVITY_MATRIX_SYMMETRIC,
   LINK_GRAVITY_MATRIX_SYMMETRIC,
@@ -298,6 +307,8 @@ export function createRandomTypesConfig({
   LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE,
   LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC,
   LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE,
+  GRAVITY_FACTOR_MATRIX_SYMMETRIC,
+  GRAVITY_FACTOR_IGNORE_SELF_TYPE,
   LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC,
   LINK_FACTOR_GRAVITY_IGNORE_SELF_TYPE,
 }: RandomTypesConfig): TypesConfig {
@@ -382,6 +393,22 @@ export function createRandomTypesConfig({
     }
   }
 
+  const gravityFactor: GravityFactorConfig = [];
+
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    gravityFactor.push(randomizeMatrix(
+      TYPES_COUNT,
+      GRAVITY_FACTOR_BOUNDS,
+      createRandomFloat,
+      GRAVITY_FACTOR_MATRIX_SYMMETRIC,
+      precision,
+    ));
+
+    if (GRAVITY_FACTOR_IGNORE_SELF_TYPE) {
+      setTensorMainDiagonal(gravityFactor, 0);
+    }
+  }
+
   const linkFactorGravity: LinkFactorGravityConfig = [];
 
   for (let i=0; i<TYPES_COUNT; ++i) {
@@ -408,6 +435,7 @@ export function createRandomTypesConfig({
     TYPE_LINK_WEIGHTS: typeLinkWeights,
     LINK_FACTOR_DISTANCE: linkFactorDistance,
     LINK_FACTOR_ELASTIC: linkFactorElastic,
+    GRAVITY_FACTOR: gravityFactor,
     LINK_FACTOR_GRAVITY: linkFactorGravity,
     COLORS: createColors(TYPES_COUNT),
     NAMES: createDefaultTypeNames(TYPES_COUNT),
@@ -426,6 +454,7 @@ export function createRandomIntTypesConfig({
   LINK_TYPE_WEIGHT_BOUNDS,
   LINK_FACTOR_DISTANCE_BOUNDS,
   LINK_FACTOR_ELASTIC_BOUNDS,
+  GRAVITY_FACTOR_BOUNDS,
   LINK_FACTOR_GRAVITY_BOUNDS,
   GRAVITY_MATRIX_SYMMETRIC,
   LINK_GRAVITY_MATRIX_SYMMETRIC,
@@ -435,6 +464,8 @@ export function createRandomIntTypesConfig({
   LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE,
   LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC,
   LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE,
+  GRAVITY_FACTOR_MATRIX_SYMMETRIC,
+  GRAVITY_FACTOR_IGNORE_SELF_TYPE,
   LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC,
   LINK_FACTOR_GRAVITY_IGNORE_SELF_TYPE,
 }: RandomTypesConfig): TypesConfig {
@@ -517,6 +548,22 @@ export function createRandomIntTypesConfig({
     }
   }
 
+  const gravityFactor: GravityFactorConfig = [];
+
+  for (let i=0; i<TYPES_COUNT; ++i) {
+    gravityFactor.push(randomizeMatrix(
+      TYPES_COUNT,
+      GRAVITY_FACTOR_BOUNDS,
+      createRandomInteger,
+      GRAVITY_FACTOR_MATRIX_SYMMETRIC,
+      0,
+    ));
+
+    if (GRAVITY_FACTOR_IGNORE_SELF_TYPE) {
+      setTensorMainDiagonal(gravityFactor, 0);
+    }
+  }
+
   const linkFactorGravity: LinkFactorGravityConfig = [];
 
   for (let i=0; i<TYPES_COUNT; ++i) {
@@ -543,6 +590,7 @@ export function createRandomIntTypesConfig({
     TYPE_LINK_WEIGHTS: typeLinkWeights,
     LINK_FACTOR_DISTANCE: linkFactorDistance,
     LINK_FACTOR_ELASTIC: linkFactorElastic,
+    GRAVITY_FACTOR: gravityFactor,
     LINK_FACTOR_GRAVITY: linkFactorGravity,
     COLORS: createColors(TYPES_COUNT),
     NAMES: createDefaultTypeNames(TYPES_COUNT),
@@ -563,6 +611,7 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     USE_LINK_TYPE_WEIGHT_BOUNDS: true,
     USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
     USE_LINK_FACTOR_ELASTIC_BOUNDS: true,
+    USE_GRAVITY_FACTOR_BOUNDS: true,
     USE_LINK_FACTOR_GRAVITY_BOUNDS: true,
 
     RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
@@ -574,6 +623,7 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     LINK_TYPE_WEIGHT_BOUNDS: [0.5, 2, 1, 0.5],
     LINK_FACTOR_DISTANCE_BOUNDS: [0.7, 1.2, 1, 0.1],
     LINK_FACTOR_ELASTIC_BOUNDS: [0.5, 1, 1, 0.1],
+    GRAVITY_FACTOR_BOUNDS: [-1, 1, 0, 0.1],
     LINK_FACTOR_GRAVITY_BOUNDS: [-1, 1, 0, 0.1],
 
     GRAVITY_MATRIX_SYMMETRIC: false,
@@ -584,6 +634,8 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: true,
     LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
     LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: true,
+    GRAVITY_FACTOR_MATRIX_SYMMETRIC: true,
+    GRAVITY_FACTOR_IGNORE_SELF_TYPE: true,
     LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC: true,
     LINK_FACTOR_GRAVITY_IGNORE_SELF_TYPE: true,
   };
@@ -597,6 +649,7 @@ export function createDisabledTypesSymmetricConfig(): TypesSymmetricConfig {
     LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: false,
+    GRAVITY_FACTOR_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC: false,
   };
 }
@@ -768,6 +821,22 @@ export function randomizeTypesConfig(
     }
   }
 
+  if (!randomTypesConfig.USE_GRAVITY_FACTOR_BOUNDS) {
+    copyConfigTensorValue(oldConfig.GRAVITY_FACTOR, newConfig.GRAVITY_FACTOR, 0);
+  } else {
+    if (randomTypesConfig.GRAVITY_FACTOR_MATRIX_SYMMETRIC) {
+      makeTensorSymmetric(newConfig.GRAVITY_FACTOR);
+    }
+    if (skipSubMatricesBoundaryIndex !== undefined) {
+      copyConfigTensorValue(
+        oldConfig.GRAVITY_FACTOR,
+        newConfig.GRAVITY_FACTOR,
+        0,
+        skipSubMatricesBoundaryIndex,
+      );
+    }
+  }
+
   if (!randomTypesConfig.USE_LINK_FACTOR_GRAVITY_BOUNDS) {
     copyConfigTensorValue(oldConfig.LINK_FACTOR_GRAVITY, newConfig.LINK_FACTOR_GRAVITY, 0);
   } else {
@@ -810,6 +879,7 @@ export function concatTypesConfigs(lhs: TypesConfig, rhs: TypesConfig): TypesCon
 
   result.LINK_FACTOR_DISTANCE = concatTensors(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, 1);
   result.LINK_FACTOR_ELASTIC = concatTensors(lhs.LINK_FACTOR_ELASTIC, rhs.LINK_FACTOR_ELASTIC, 1);
+  result.GRAVITY_FACTOR = concatTensors(lhs.GRAVITY_FACTOR, rhs.GRAVITY_FACTOR, 0);
   result.LINK_FACTOR_GRAVITY = concatTensors(lhs.LINK_FACTOR_GRAVITY, rhs.LINK_FACTOR_GRAVITY, 0);
 
   return result;
@@ -832,6 +902,7 @@ export function crossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, separator:
 
   result.LINK_FACTOR_DISTANCE = crossTensors(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, separator, 1);
   result.LINK_FACTOR_ELASTIC = crossTensors(lhs.LINK_FACTOR_ELASTIC, rhs.LINK_FACTOR_ELASTIC, separator, 1);
+  result.GRAVITY_FACTOR = crossTensors(lhs.GRAVITY_FACTOR, rhs.GRAVITY_FACTOR, separator, 0);
   result.LINK_FACTOR_GRAVITY = crossTensors(lhs.LINK_FACTOR_GRAVITY, rhs.LINK_FACTOR_GRAVITY, separator, 0);
 
   return result;
@@ -854,6 +925,7 @@ export function randomCrossTypesConfigs(lhs: TypesConfig, rhs: TypesConfig, sepa
 
   result.LINK_FACTOR_DISTANCE = randomCrossTensors(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, separator);
   result.LINK_FACTOR_ELASTIC = randomCrossTensors(lhs.LINK_FACTOR_ELASTIC, rhs.LINK_FACTOR_ELASTIC, separator);
+  result.GRAVITY_FACTOR = randomCrossTensors(lhs.GRAVITY_FACTOR, rhs.GRAVITY_FACTOR, separator);
   result.LINK_FACTOR_GRAVITY = randomCrossTensors(lhs.LINK_FACTOR_GRAVITY, rhs.LINK_FACTOR_GRAVITY, separator);
 
   return result;
@@ -876,6 +948,7 @@ export function crossTypesConfigsByIndexes(lhs: TypesConfig, rhs: TypesConfig, i
 
   result.LINK_FACTOR_DISTANCE = crossTensorsByIndexes(lhs.LINK_FACTOR_DISTANCE, rhs.LINK_FACTOR_DISTANCE, indexes);
   result.LINK_FACTOR_ELASTIC = crossTensorsByIndexes(lhs.LINK_FACTOR_ELASTIC, rhs.LINK_FACTOR_ELASTIC, indexes);
+  result.GRAVITY_FACTOR = crossTensorsByIndexes(lhs.GRAVITY_FACTOR, rhs.GRAVITY_FACTOR, indexes);
   result.LINK_FACTOR_GRAVITY = crossTensorsByIndexes(lhs.LINK_FACTOR_GRAVITY, rhs.LINK_FACTOR_GRAVITY, indexes);
 
   return result;
@@ -898,6 +971,7 @@ export function removeIndexFromTypesConfig(input: TypesConfig, index: number): T
 
   result.LINK_FACTOR_DISTANCE = removeIndexFromTensor(input.LINK_FACTOR_DISTANCE, index);
   result.LINK_FACTOR_ELASTIC = removeIndexFromTensor(input.LINK_FACTOR_ELASTIC, index);
+  result.GRAVITY_FACTOR = removeIndexFromTensor(input.GRAVITY_FACTOR, index);
   result.LINK_FACTOR_GRAVITY = removeIndexFromTensor(input.LINK_FACTOR_GRAVITY, index);
 
   result.TRANSFORMATION = {};
@@ -921,6 +995,7 @@ export function copyIndexInTypesConfig(input: TypesConfig, indexFrom: number, in
 
   result.LINK_FACTOR_DISTANCE = copyTensorIndex(input.LINK_FACTOR_DISTANCE, indexFrom, indexTo);
   result.LINK_FACTOR_ELASTIC = copyTensorIndex(input.LINK_FACTOR_ELASTIC, indexFrom, indexTo);
+  result.GRAVITY_FACTOR = copyTensorIndex(input.GRAVITY_FACTOR, indexFrom, indexTo);
   result.LINK_FACTOR_GRAVITY = copyTensorIndex(input.LINK_FACTOR_GRAVITY, indexFrom, indexTo);
 
   // TODO do not need to clear transformation, but maybe need to copy it
@@ -964,6 +1039,9 @@ export function clearInactiveParams(config: TypesConfig) {
     }
     for (const matrix of config.LINK_FACTOR_ELASTIC) {
       matrix[i][j] = 1;
+    }
+    for (const matrix of config.GRAVITY_FACTOR) {
+      matrix[i][j] = 0;
     }
     for (const matrix of config.LINK_FACTOR_GRAVITY) {
       matrix[i][j] = 0;

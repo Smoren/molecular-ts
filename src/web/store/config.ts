@@ -52,6 +52,7 @@ export const useConfigStore = defineStore("config", () => {
     LINK_TYPE_WEIGHT_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_DISTANCE_MATRIX_SYMMETRIC: true,
     LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: true,
+    GRAVITY_FACTOR_MATRIX_SYMMETRIC: true,
     LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC: true,
   });
 
@@ -247,6 +248,9 @@ export const useConfigStore = defineStore("config", () => {
     if (config.USE_LINK_FACTOR_ELASTIC_BOUNDS) {
       typesSymmetricConfig.value.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC = config.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC;
     }
+    if (config.USE_GRAVITY_FACTOR_BOUNDS) {
+      typesSymmetricConfig.value.GRAVITY_FACTOR_MATRIX_SYMMETRIC = config.GRAVITY_FACTOR_MATRIX_SYMMETRIC;
+    }
     if (config.USE_LINK_FACTOR_GRAVITY_BOUNDS) {
       typesSymmetricConfig.value.LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC = config.LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC;
     }
@@ -270,6 +274,9 @@ export const useConfigStore = defineStore("config", () => {
     }
     if (typesSymmetricConfig.value.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC) {
       makeTensorSymmetric(typesConfig.value.LINK_FACTOR_ELASTIC);
+    }
+    if (typesSymmetricConfig.value.GRAVITY_FACTOR_MATRIX_SYMMETRIC) {
+      makeTensorSymmetric(typesConfig.value.GRAVITY_FACTOR);
     }
     if (typesSymmetricConfig.value.LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC) {
       makeTensorSymmetric(typesConfig.value.LINK_FACTOR_GRAVITY);

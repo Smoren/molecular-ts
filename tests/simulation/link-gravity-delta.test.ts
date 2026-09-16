@@ -84,7 +84,7 @@ describe('link gravity delta', () => {
       * (typesConfig.LINK_GRAVITY[0][1] + 0.5)
       * massMultiplier / dist2;
 
-    expect(model.getGravityForce(lhs, rhs, dist2, 0.5)).toBe(expected);
+    expect(model.getGravityForce(lhs, rhs, dist2, 0, 0.5)).toBe(expected);
   });
 
   it('applies delta to link gravity of linked pairs in PhysicModelV2', () => {
@@ -103,10 +103,10 @@ describe('link gravity delta', () => {
       / dist2
       * massMultiplier;
 
-    expect(model.getGravityForce(lhs, rhs, dist2, 0.5)).toBe(expected);
+    expect(model.getGravityForce(lhs, rhs, dist2, 0, 0.5)).toBe(expected);
   });
 
-  it('ignores delta for unlinked pairs', () => {
+  it('ignores link gravity delta for unlinked pairs', () => {
     const worldConfig = createWorldConfig();
     const typesConfig = createTypesConfig();
     const lhs = createAtom(0, [0, 0]);
@@ -119,6 +119,40 @@ describe('link gravity delta', () => {
       * typesConfig.GRAVITY[0][1]
       * massMultiplier / dist2;
 
-    expect(model.getGravityForce(lhs, rhs, dist2, 0.5)).toBe(expected);
+    expect(model.getGravityForce(lhs, rhs, dist2, 0, 0.5)).toBe(expected);
+  });
+
+  it('applies gravity delta to unlinked pairs', () => {
+    const worldConfig = createWorldConfig();
+    const typesConfig = createTypesConfig();
+    const lhs = createAtom(0, [0, 0]);
+    const rhs = createAtom(1, [1, 0]);
+
+    const model = new PhysicModelV1(worldConfig, typesConfig);
+    const dist2 = 400;
+    const massMultiplier = model.geometry.getMassMultiplier(lhs, rhs);
+    const expected = worldConfig.GRAVITY_FORCE_MULTIPLIER
+      * (typesConfig.GRAVITY[0][1] + 0.7)
+      * massMultiplier / dist2;
+
+    expect(model.getGravityForce(lhs, rhs, dist2, 0.7, 0)).toBe(expected);
+  });
+
+  it('ignores gravity delta for linked pairs', () => {
+    const worldConfig = createWorldConfig();
+    const typesConfig = createTypesConfig();
+    const links = new LinkManager();
+    const lhs = createAtom(0, [0, 0]);
+    const rhs = createAtom(1, [1, 0]);
+    links.create(lhs, rhs);
+
+    const model = new PhysicModelV1(worldConfig, typesConfig);
+    const dist2 = 400;
+    const massMultiplier = model.geometry.getMassMultiplier(lhs, rhs);
+    const expected = worldConfig.GRAVITY_FORCE_MULTIPLIER
+      * typesConfig.LINK_GRAVITY[0][1]
+      * massMultiplier / dist2;
+
+    expect(model.getGravityForce(lhs, rhs, dist2, 0.7, 0)).toBe(expected);
   });
 });

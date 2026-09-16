@@ -54,4 +54,17 @@ describe('config store symmetric config', () => {
     expect(store.typesSymmetricConfig.LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC).toBe(true);
     expect(isTensorMatrixSymmetric(store.typesConfig.LINK_FACTOR_GRAVITY)).toBe(true);
   });
+
+  it('symmetrizes unlinked gravity tensor when gravity factor symmetric flag is set', () => {
+    const store = useConfigStore();
+    store.setRandomTypesConfig(createRandomizeConfig({
+      USE_GRAVITY_FACTOR_BOUNDS: true,
+      GRAVITY_FACTOR_MATRIX_SYMMETRIC: true,
+    }));
+
+    store.randomizeTypesConfig();
+
+    expect(store.typesSymmetricConfig.GRAVITY_FACTOR_MATRIX_SYMMETRIC).toBe(true);
+    expect(isTensorMatrixSymmetric(store.typesConfig.GRAVITY_FACTOR)).toBe(true);
+  });
 });

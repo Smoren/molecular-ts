@@ -20,13 +20,14 @@ import {
 const TYPES_COUNT = 4;
 
 const MATRIX_KEYS = ['GRAVITY', 'LINK_GRAVITY', 'TYPE_LINKS', 'TYPE_LINK_WEIGHTS'] as const;
-const TENSOR_KEYS = ['LINK_FACTOR_DISTANCE', 'LINK_FACTOR_ELASTIC', 'LINK_FACTOR_GRAVITY'] as const;
+const TENSOR_KEYS = ['LINK_FACTOR_DISTANCE', 'LINK_FACTOR_ELASTIC', 'LINK_FACTOR_GRAVITY', 'GRAVITY_FACTOR'] as const;
 
-// Нейтральные элементы операций: мультипликативные тензоры — 1, аддитивный — 0
+// Нейтральные элементы операций: мультипликативные тензоры — 1, аддитивные — 0
 const TENSOR_NEUTRAL: Record<(typeof TENSOR_KEYS)[number], number> = {
   LINK_FACTOR_DISTANCE: 1,
   LINK_FACTOR_ELASTIC: 1,
   LINK_FACTOR_GRAVITY: 0,
+  GRAVITY_FACTOR: 0,
 };
 
 function expectValidShape(config: TypesConfig): void {
@@ -139,6 +140,7 @@ describe('types config randomization invariants', () => {
     expect(isTensorSymmetric(config.LINK_FACTOR_DISTANCE)).toBe(true);
     expect(isTensorSymmetric(config.LINK_FACTOR_ELASTIC)).toBe(true);
     expect(isTensorSymmetric(config.LINK_FACTOR_GRAVITY)).toBe(true);
+    expect(isTensorSymmetric(config.GRAVITY_FACTOR)).toBe(true);
   });
 
   it.each(TENSOR_KEYS)('respects ignore self type flag for %s', (key) => {
@@ -152,12 +154,15 @@ describe('types config randomization invariants', () => {
   it('keeps values on disabled bounds', () => {
     const oldConfig = createDefaultTypesConfig();
     oldConfig.LINK_FACTOR_GRAVITY[0][1][2] = 42;
+    oldConfig.GRAVITY_FACTOR[0][1][2] = 43;
 
     const newConfig = randomizeTypesConfig(createRandomizeConfig({
       USE_LINK_FACTOR_GRAVITY_BOUNDS: false,
+      USE_GRAVITY_FACTOR_BOUNDS: false,
     }), oldConfig);
 
     expect(newConfig.LINK_FACTOR_GRAVITY[0][1][2]).toBe(42);
+    expect(newConfig.GRAVITY_FACTOR[0][1][2]).toBe(43);
   });
 
   it('produces valid shape with skip submatrices boundary index', () => {
@@ -235,6 +240,7 @@ describe('types config operations invariants', () => {
     config.LINK_FACTOR_DISTANCE[0][1][2] = 5;
     config.LINK_FACTOR_ELASTIC[0][1][2] = 5;
     config.LINK_FACTOR_GRAVITY[0][1][2] = 5;
+    config.GRAVITY_FACTOR[0][1][2] = 5;
 
     clearInactiveParams(config);
 
@@ -242,5 +248,6 @@ describe('types config operations invariants', () => {
     expect(config.LINK_FACTOR_DISTANCE[0][1][2]).toBe(1);
     expect(config.LINK_FACTOR_ELASTIC[0][1][2]).toBe(1);
     expect(config.LINK_FACTOR_GRAVITY[0][1][2]).toBe(0);
+    expect(config.GRAVITY_FACTOR[0][1][2]).toBe(0);
   });
 });

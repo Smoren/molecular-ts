@@ -68,6 +68,7 @@ export class Atom implements AtomInterface {
   readonly linkDistanceFactors: number[];
   readonly linkElasticFactors: number[];
   readonly linkGravityDeltas: number[];
+  readonly gravityDeltas: number[];
   type: number;
   newType: number | undefined = undefined;
   spatialGridCell?: SpatialGridCellInterface;
@@ -81,6 +82,7 @@ export class Atom implements AtomInterface {
     this.linkDistanceFactors = [];
     this.linkElasticFactors = [];
     this.linkGravityDeltas = [];
+    this.gravityDeltas = [];
   }
 
   get isTypeChanged(): boolean {

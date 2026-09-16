@@ -69,6 +69,7 @@ describe('type names', () => {
       'LINK_FACTOR_DISTANCE',
       'LINK_FACTOR_ELASTIC',
       'LINK_FACTOR_GRAVITY',
+      'GRAVITY_FACTOR',
     ] as const;
     for (const key of numericKeys) {
       delete (raw as Record<string, unknown>)[key];
@@ -86,6 +87,7 @@ describe('type names', () => {
     expect(imported.LINK_FACTOR_DISTANCE.every((m) => m.every((r) => r.every((x) => x === 1)))).toBe(true);
     expect(imported.LINK_FACTOR_ELASTIC.every((m) => m.every((r) => r.every((x) => x === 1)))).toBe(true);
     expect(imported.LINK_FACTOR_GRAVITY.every((m) => m.every((r) => r.every((x) => x === 0)))).toBe(true);
+    expect(imported.GRAVITY_FACTOR.every((m) => m.every((r) => r.every((x) => x === 0)))).toBe(true);
   });
 });
 

@@ -27,6 +27,7 @@ export function extractExpressedTypesConfig(typesConfigs: TypesConfig[], express
     TYPE_LINK_WEIGHTS: express(typesConfigs.map((x) => x.TYPE_LINK_WEIGHTS), expressionIndices.TYPE_LINK_WEIGHTS),
     LINK_FACTOR_DISTANCE: express(typesConfigs.map((x) => x.LINK_FACTOR_DISTANCE), expressionIndices.LINK_FACTOR_DISTANCE),
     LINK_FACTOR_ELASTIC: express(typesConfigs.map((x) => x.LINK_FACTOR_ELASTIC), expressionIndices.LINK_FACTOR_ELASTIC),
+    GRAVITY_FACTOR: express(typesConfigs.map((x) => x.GRAVITY_FACTOR), expressionIndices.GRAVITY_FACTOR),
     LINK_FACTOR_GRAVITY: express(typesConfigs.map((x) => x.LINK_FACTOR_GRAVITY), expressionIndices.LINK_FACTOR_GRAVITY),
     FREQUENCIES: express(typesConfigs.map((x) => x.FREQUENCIES), expressionIndices.FREQUENCIES),
     COLORS: express(typesConfigs.map((x) => x.COLORS), expressionIndices.COLORS),
@@ -98,6 +99,7 @@ export function createRandomExpressedIndicesConfig(typesCount: number, chromosom
     USE_LINK_TYPE_WEIGHT_BOUNDS: true,
     USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
     USE_LINK_FACTOR_ELASTIC_BOUNDS: true,
+    USE_GRAVITY_FACTOR_BOUNDS: true,
     USE_LINK_FACTOR_GRAVITY_BOUNDS: true,
 
     RADIUS_BOUNDS: [0, chromosomesCount-1],
@@ -109,6 +111,7 @@ export function createRandomExpressedIndicesConfig(typesCount: number, chromosom
     LINK_TYPE_WEIGHT_BOUNDS: [0, chromosomesCount-1],
     LINK_FACTOR_DISTANCE_BOUNDS: [0, chromosomesCount-1],
     LINK_FACTOR_ELASTIC_BOUNDS: [0, chromosomesCount-1],
+    GRAVITY_FACTOR_BOUNDS: [0, chromosomesCount-1],
     LINK_FACTOR_GRAVITY_BOUNDS: [0, chromosomesCount-1],
 
     GRAVITY_MATRIX_SYMMETRIC: false,
@@ -119,6 +122,8 @@ export function createRandomExpressedIndicesConfig(typesCount: number, chromosom
     LINK_FACTOR_DISTANCE_IGNORE_SELF_TYPE: false,
     LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_ELASTIC_IGNORE_SELF_TYPE: false,
+    GRAVITY_FACTOR_MATRIX_SYMMETRIC: false,
+    GRAVITY_FACTOR_IGNORE_SELF_TYPE: false,
     LINK_FACTOR_GRAVITY_MATRIX_SYMMETRIC: false,
     LINK_FACTOR_GRAVITY_IGNORE_SELF_TYPE: false,
   };

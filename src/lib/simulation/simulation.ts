@@ -205,6 +205,7 @@ export class Simulation implements SimulationInterface {
       this.interactionManager.clearDistanceFactor(atom);
       this.interactionManager.clearElasticFactor(atom);
       this.interactionManager.clearLinkGravityDelta(atom);
+      this.interactionManager.clearGravityDelta(atom);
       this.interactionManager.moveAtom(atom);
       this.summaryManager.noticeAtom(atom, this.config.worldConfig);
     }

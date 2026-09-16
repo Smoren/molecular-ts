@@ -110,10 +110,24 @@ export const russianLocale: LocalePack = {
       'Матрица весов связей показывает вес связи каждой пары типов в лимите связей слева.',
     'Links Distance Factor': 'Фактор длины связей',
     'Links Elastic Factor': 'Фактор упругости связей',
+    'Gravity Factor': 'Фактор гравитации',
+    'Links Gravity Factor': 'Фактор гравитации связей',
     'Tensor of influence on neighbors links shows how particles of each type affect the maximum length of links of neighboring particles of different types with particles of specific types.':
       'Тензор влияния на связи соседей показывает, как частицы каждого типа влияют на максимальную длину связей соседних частиц разных типов с частицами конкретных типов.',
     'Tensor of influence on neighbors links shows how particles of each type affect the elastic force of links of neighboring particles of different types with particles of specific types.':
       'Тензор влияния на связи соседей показывает, как частицы каждого типа влияют на упругость связей соседних частиц разных типов с частицами конкретных типов.',
+    'Tensor of influence on neighbors shows how particles of each type affect the gravity force between neighboring particles of different types and particles of specific types in the case when they are not linked to each other.':
+      'Тензор влияния на соседей показывает, как частицы каждого типа влияют на силу гравитации между соседними частицами разных типов и частицами конкретных типов, когда они не связаны друг с другом.',
+    'Tensor of influence on neighbors links shows how particles of each type affect the gravity force between neighboring particles of different types and particles of specific types linked to them.':
+      'Тензор влияния на связи соседей показывает, как частицы каждого типа влияют на силу гравитации между соседними частицами разных типов и связанными с ними частицами конкретных типов.',
+    'Matrix of influence on neighbors links shows how particles of each type affect the maximum length of links of neighboring particles of different types.':
+      'Матрица влияния на связи соседей показывает, как частицы каждого типа влияют на максимальную длину связей соседних частиц разных типов.',
+    'Matrix of influence on neighbors links shows how particles of each type affect the elastic force of links of neighboring particles of different types.':
+      'Матрица влияния на связи соседей показывает, как частицы каждого типа влияют на упругость связей соседних частиц разных типов.',
+    'Matrix of influence on neighbors links shows how particles of each type affect the gravity force between neighboring particles of different types and particles linked to them.':
+      'Матрица влияния на связи соседей показывает, как частицы каждого типа влияют на силу гравитации между соседними частицами разных типов и связанными с ними частицами.',
+    'Matrix of influence on neighbors shows how particles of each type affect the gravity force between neighboring particles of different types and particles of specific types in the case when they are not linked to each other.':
+      'Матрица влияния на соседей показывает, как частицы каждого типа влияют на силу гравитации между соседними частицами разных типов и частицами конкретных типов, когда они не связаны друг с другом.',
     'Experimental feature. A + B ➔ C means that when the particle of type A connects to a particle of type B, then the particle of type B changes its type to C.':
       'Экспериментально. A + B ➔ C значит: когда частица типа A связывается с частицей типа B, частица B меняет тип на C.',
     Genetic: 'Генетика',

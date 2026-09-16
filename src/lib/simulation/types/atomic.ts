@@ -21,6 +21,7 @@ export interface AtomInterface {
   readonly linkDistanceFactors: number[];
   readonly linkElasticFactors: number[];
   readonly linkGravityDeltas: number[];
+  readonly gravityDeltas: number[];
   type: number;
   newType: number | undefined;
   spatialGridCell?: SpatialGridCellInterface;

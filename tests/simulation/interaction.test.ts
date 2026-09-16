@@ -99,6 +99,22 @@ describe('interaction manager factor lifecycle', () => {
     // Дельта связи lhs с частицей типа 0 (цель влияния соседа типа 1)
     expect(interactionManager.getLinkGravityDelta(lhs, createAtom(0, [0, 0]))).toBe(1);
   });
+
+  it('accumulates gravity delta additively', () => {
+    const typesConfig = createTypesConfig();
+    typesConfig.GRAVITY_FACTOR[1][0] = [0, 0.25, 0];
+    const { interactionManager } = createInteractionManager(createWorldConfig(), typesConfig);
+    const lhs = createAtom(0, [100, 100]);
+    const rhs = createAtom(1, [110, 100]);
+
+    interactionManager.clearGravityDelta(lhs);
+    interactionManager.updateGravityDelta(lhs, rhs);
+    interactionManager.updateGravityDelta(lhs, rhs);
+
+    expect(lhs.gravityDeltas).toEqual([0, 0.5, 0]);
+    // Дельта гравитации lhs с частицей типа 1 (цель влияния соседа типа 1)
+    expect(interactionManager.getGravityDelta(lhs, rhs)).toBe(0.5);
+  });
 });
 
 describe('interaction manager link lifecycle', () => {

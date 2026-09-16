@@ -44,7 +44,7 @@ describe.each([
     const dist2 = 900;
     const massMultiplier = model.geometry.getMassMultiplier(lhs, rhs);
 
-    const force = model.getGravityForce(lhs, rhs, dist2, 0);
+    const force = model.getGravityForce(lhs, rhs, dist2, 0, 0);
 
     // GRAVITY_FORCE_MULTIPLIER = 1 в базовом конфиге
     expect(force).toBe(typesConfig.GRAVITY[0][1] * massMultiplier / dist2);
@@ -58,7 +58,7 @@ describe.each([
     const dist2 = 900;
     const massMultiplier = model.geometry.getMassMultiplier(lhs, rhs);
 
-    const force = model.getGravityForce(lhs, rhs, dist2, 0);
+    const force = model.getGravityForce(lhs, rhs, dist2, 0, 0);
 
     expect(force).toBe(typesConfig.LINK_GRAVITY[0][1] * massMultiplier / dist2);
   });
@@ -74,7 +74,7 @@ describe('physic model v1', () => {
     const dist2 = 1;
     const massMultiplier = model.geometry.getMassMultiplier(lhs, rhs);
 
-    const force = model.getGravityForce(lhs, rhs, dist2, 0);
+    const force = model.getGravityForce(lhs, rhs, dist2, 0, 0);
 
     expect(force).toBe(-worldConfig.BOUNCE_FORCE_MULTIPLIER * massMultiplier / dist2);
   });
@@ -115,7 +115,7 @@ describe('physic model v2', () => {
       * -worldConfig.BOUNCE_FORCE_MULTIPLIER * BOUNCE_CORRECTION_FACTOR;
     const gravityForce = typesConfig.LINK_GRAVITY[0][1] / dist2;
 
-    expect(model.getGravityForce(lhs, rhs, dist2, 0)).toBe(
+    expect(model.getGravityForce(lhs, rhs, dist2, 0, 0)).toBe(
       (gravityForce + bounceForce) * massMultiplier,
     );
   });

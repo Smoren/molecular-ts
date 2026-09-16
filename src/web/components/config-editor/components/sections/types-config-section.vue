@@ -70,6 +70,12 @@ const linkGravityFactorConfigDescription = computed(() => {
       "the gravity force between neighboring particles of different types and particles of specific types linked to them.";
 });
 
+const gravityFactorConfigDescription = computed(() => {
+  return "Tensor of influence on neighbors shows how particles of each type affect " +
+      "the gravity force between neighboring particles of different types and particles of specific types " +
+      "in the case when they are not linked to each other.";
+});
+
 </script>
 
 <template>
@@ -208,6 +214,19 @@ const linkGravityFactorConfigDescription = computed(() => {
           :step="0.1"
           :min="0"
           v-model:symmetric="typesSymmetricConfig.LINK_FACTOR_ELASTIC_MATRIX_SYMMETRIC"
+        />
+      </div>
+      <div>
+        <input-header
+          name="Gravity Factor"
+          :tooltip="gravityFactorConfigDescription"
+          position="center"
+        />
+        <config-tensor
+          :values="typesConfig.GRAVITY_FACTOR"
+          :colors="typesConfig.COLORS"
+          :step="0.1"
+          v-model:symmetric="typesSymmetricConfig.GRAVITY_FACTOR_MATRIX_SYMMETRIC"
         />
       </div>
       <div>
