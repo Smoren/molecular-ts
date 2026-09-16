@@ -610,9 +610,9 @@ export function createDefaultRandomTypesConfig(typesCount: number): RandomTypesC
     USE_LINK_TYPE_BOUNDS: true,
     USE_LINK_TYPE_WEIGHT_BOUNDS: true,
     USE_LINK_FACTOR_DISTANCE_BOUNDS: true,
-    USE_LINK_FACTOR_ELASTIC_BOUNDS: true,
-    USE_GRAVITY_FACTOR_BOUNDS: true,
-    USE_LINK_FACTOR_GRAVITY_BOUNDS: true,
+    USE_LINK_FACTOR_ELASTIC_BOUNDS: false,
+    USE_GRAVITY_FACTOR_BOUNDS: false,
+    USE_LINK_FACTOR_GRAVITY_BOUNDS: false,
 
     RADIUS_BOUNDS: [0.8, 1.3, 1, 0.1],
     FREQUENCY_BOUNDS: [0.1, 1, 0.5, 0.1],
